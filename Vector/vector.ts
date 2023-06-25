@@ -5,26 +5,65 @@ import type { Vector as VectorType } from "./vector-types";
 import { VectorError } from "../Errors/validation-error";
 
 
+/**
+ * Vector class representing a mathematical vector.
+ * @class
+ * @implements {VectorType}
+ */
 class Vector implements VectorType {
+    /**
+     * Shape of the vector, represented as a string.
+     * @type {string}
+     */
+    public shape: string = "0";
 
-    //Shape
-    public shape = "0";
+    /**
+     * Indicates if the vector is a row vector.
+     * @type {boolean}
+     */
+    public isRow: boolean = false;
 
-    //Row or column
-    public isRow = false;
-    public isColumn = false;
-    public rows = Infinity;
-    public columns = Infinity;
+    /**
+     * Indicates if the vector is a column vector.
+     * @type {boolean}
+     */
+    public isColumn: boolean = false;
 
+    /**
+     * Number of rows in the vector.
+     * @type {number}
+     */
+    public rows: number = Infinity;
 
-    //Properties
-    public norm = Infinity;
-    public size = Infinity
+    /**
+     * Number of columns in the vector.
+     * @type {number}
+     */
+    public columns: number = Infinity;
 
-    //Element Data
+    /**
+     * Euclidean norm of the vector.
+     * @type {number}
+     */
+    public norm: number = Infinity;
+
+    /**
+     * Size of the vector.
+     * @type {number}
+     */
+    public size: number = Infinity;
+
+    /**
+     * Element data of the vector.
+     */
     public elements;
 
 
+    /**
+       * Creates a new Vector instance.
+       * @constructor
+       * @param {number[] | number[][]} elements - Elements of the vector.
+       */
     constructor(elements: number[] | number[][]) {
         this.elements = elements;
         this.size = elements.length;
@@ -34,6 +73,10 @@ class Vector implements VectorType {
     }
 
 
+    /**
+       * Validates the vector, updating its properties accordingly.
+       * @private
+       */
     private ValidateVector(): void {
         if (Array.isArray(this.elements[0])) {
             this.isColumn = true;
@@ -43,9 +86,71 @@ class Vector implements VectorType {
             this.isRow = true;
         }
 
-        this.ChangeRowsColumns();
+        this.ChangeRowsToColumns();
         this.ChangeSize(this.rows, this.columns)
     }
+
+
+
+
+
+
+
+    /**
+      * Computes the Euclidean norm of the vector.
+      * @public
+      */
+    public Norm() {
+
+    }
+
+
+    //
+    // CHANGEING PROPERTIES
+    //
+
+    /**
+     * Changes the size property of the vector.
+     * @private
+     * @param {number} rows - The number of rows.
+     * @param {number} columns - The number of columns.
+     */
+    private ChangeSize(rows: number, columns: number): void {
+        this.shape = `(${rows},${columns})`
+    }
+
+
+    /**
+      * Changes the rows and columns properties of the vector.
+      * @private
+      */
+    private ChangeRowsToColumns(): void {
+        let rows = Infinity, columns = Infinity;
+
+        if (this.isRow) { //Row vector
+            rows = this.size;
+            columns = 1;
+        } else if (this.isColumn) { //Column vector
+            columns = this.size;
+            rows = 1
+        } else {
+            throw new VectorError("Error changeing rows and columns?")
+        }
+
+        this.rows = rows;
+        this.columns = columns;
+
+    }
+
+    /**
+     * Changes the Euclidean norm property of the vector.
+     * @private
+     * @param {number} newNorm - The new norm.
+    */
+    private ChangeNorm(newNorm: number): void {
+        this.norm = newNorm
+    }
+
 
     //Validating the vector DEPRICATED
     // private ValidateVector(): void {
@@ -80,58 +185,6 @@ class Vector implements VectorType {
     //     this.ChangeRowsColumns();
     //     this.ChangeSize(this.rows, this.columns)
     // }
-
-
-
-    //
-    // CHANGEING PROPERTIES
-    //
-
-    /**
-     * Changes the size properties
-     * @param rows The amount of rows
-     * @param columns  The amount of columns
-     */
-    private ChangeSize(rows: number, columns: number): void {
-        this.shape = `(${rows},${columns})`
-    }
-
-
-    /**
-     * Changes the rows and columns properties
-     */
-    private ChangeRowsColumns(): void {
-        let rows = Infinity, columns = Infinity;
-
-        if (this.isRow) { //Row vector
-            rows = this.size;
-            columns = 1;
-        } else if (this.isColumn) { //Column vector
-            columns = this.size;
-            rows = 1
-        } else {
-            throw new VectorError("Error changeing rows and columns?")
-        }
-
-        this.rows = rows;
-        this.columns = columns;
-
-    }
-
-    /**
-     * Changes the euclidian norm property
-     * @param newNorm The new norm
-     */
-    private ChangeNorm(newNorm: number): void {
-        this.norm = newNorm
-    }
-
-
-    public Norm() {
-
-    }
-
-
 }
 
 
