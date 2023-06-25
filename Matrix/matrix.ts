@@ -43,6 +43,8 @@ export default class Matrix implements MatrixType {
     constructor(elements: number[][]) {
         this.elements = elements
         this.rows = this.elements.length
+        this.ValidateMatrix()
+        this.SetShape()
 
     }
 
