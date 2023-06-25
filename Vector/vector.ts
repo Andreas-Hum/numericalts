@@ -87,7 +87,7 @@ export default class Vector implements VectorType {
         }
 
         this.ChangeRowsToColumns();
-        this.ChangeSize(this.rows, this.columns)
+        this.SetShape()
     }
 
 
@@ -97,13 +97,11 @@ export default class Vector implements VectorType {
     //
 
     /**
-     * Changes the size property of the vector.
+     * Sets the shape property of the vector.
      * @private
-     * @param {number} rows - The number of rows.
-     * @param {number} columns - The number of columns.
      */
-    private ChangeSize(rows: number, columns: number): void {
-        this.shape = `(${rows},${columns})`
+    private SetShape(): void {
+        this.shape = `(${this.rows},${this.columns})`
     }
 
 
