@@ -40,26 +40,39 @@ export default class Matrix implements MatrixType {
      */
     public elements: number[][]
 
+    /**
+ * Constructs a matrix object.
+ * @class
+ * @constructor
+ * @param {number[][]} elements - The elements of the matrix.
+ */
     constructor(elements: number[][]) {
         this.elements = elements
         this.rows = this.elements.length
         this.ValidateMatrix()
         this.SetShape()
-
     }
 
+    /**
+     * Validates the dimensions of the matrix.
+     * @private
+     * @returns {void}
+     */
     private ValidateMatrix(): void {
         if (!this.ValidDimentions()) {
             throw new MatrixError("Error, missing columns")
         }
-
     }
 
+    /**
+     * Checks if the matrix has valid dimensions.
+     * @private
+     * @returns {boolean} - True if the dimensions are valid, false otherwise.
+     */
     private ValidDimentions(): boolean {
         if (!this.elements.some(Array.isArray)) {
             return true;
         }
-
 
         const first_sub_vector: number = this.elements[0].length;
         let amount_of_entries: number = first_sub_vector;
@@ -75,11 +88,14 @@ export default class Matrix implements MatrixType {
         this.size = amount_of_entries;
         this.columns = amount_of_entries / this.rows
         return true;
-
     }
 
-    private SetShape() {
+    /**
+     * Sets the shape of the matrix.
+     * @private
+     * @returns {void}
+     */
+    private SetShape(): void {
         this.shape = `(${this.rows},${this.columns})`
     }
-
 }
