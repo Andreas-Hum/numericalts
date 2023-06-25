@@ -1,14 +1,14 @@
 //Type imports
-import type { Matrix as MatrixType } from "./matrix-types";
+import type MatrixTypes from "./MatrixTypes";
 
 //Error import
-import { MatrixError } from "../Errors/matrix-error";
+import MatrixError  from "../errors/MatrixError";
 
 //Vector import
-import Vector from "../Vector/vector";
+import Vector from "../vector/Vector";
 
 
-export default class Matrix implements MatrixType {
+export default class Matrix implements MatrixTypes {
     /**
     * Shape of the vector, represented as a string.
     * @type {string}
@@ -49,8 +49,8 @@ export default class Matrix implements MatrixType {
     constructor(elements: number[][]) {
         this.elements = elements
         this.rows = this.elements.length
-        this.ValidateMatrix()
-        this.SetShape()
+        this.validateMatrix()
+        this.updateShape()
     }
 
     /**
@@ -58,8 +58,8 @@ export default class Matrix implements MatrixType {
      * @private
      * @returns {void}
      */
-    private ValidateMatrix(): void {
-        if (!this.ValidDimentions()) {
+    private validateMatrix(): void {
+        if (!this.validDimentions()) {
             throw new MatrixError("Error, missing columns")
         }
     }
@@ -69,7 +69,7 @@ export default class Matrix implements MatrixType {
      * @private
      * @returns {boolean} - True if the dimensions are valid, false otherwise.
      */
-    private ValidDimentions(): boolean {
+    private validDimentions(): boolean {
         if (this.rows === 1) {
             this.columns = this.elements[0].length
             return true;
@@ -96,16 +96,8 @@ export default class Matrix implements MatrixType {
      * @private
      * @returns {void}
      */
-    private SetShape(): void {
+    private updateShape(): void {
         this.shape = `(${this.rows},${this.columns})`
     }
 }
 
-
-const test = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [7, 8, 9], [7, 8, 9], [7, 8, 9], [7, 8, 9]])
-const test2 = new Matrix([[7, 8, 9]])
-
-console.log(test.shape)
-console.log(test.rows, test.columns)
-console.log(test2.shape)
-const test1 = new Matrix([[1, 2], [4, 5, 6], [7, 8, 9]])

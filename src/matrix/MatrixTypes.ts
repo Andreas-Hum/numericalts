@@ -1,8 +1,5 @@
-export type {
-    Matrix
-}
 
-interface Matrix {
+export default interface Matrix {
     //Shape type
     shape: string
 

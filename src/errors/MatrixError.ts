@@ -1,4 +1,4 @@
-export class MatrixError extends Error {
+export default class MatrixError extends Error {
     public readonly timestamp: string;
 
     constructor(message: string) {
