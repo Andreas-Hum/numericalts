@@ -56,7 +56,7 @@ class Vector implements VectorType {
     /**
      * Element data of the vector.
      */
-    public elements;
+    public elements: any[];
 
 
     /**
@@ -96,12 +96,17 @@ class Vector implements VectorType {
 
 
 
+
+
     /**
       * Computes the Euclidean norm of the vector.
       * @public
       */
-    public Norm() {
+    public Norm(): number {
+        let norm: number = 0;
+        const vector_copy: number[] = this.elements.flat()
 
+        return norm
     }
 
 
