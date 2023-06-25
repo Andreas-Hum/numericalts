@@ -10,7 +10,7 @@ import { VectorError } from "../Errors/vector-error";
  * @class
  * @implements {VectorType}
  */
-class Vector implements VectorType {
+export default class Vector implements VectorType {
     /**
      * Shape of the vector, represented as a string.
      * @type {string}
