@@ -55,8 +55,10 @@ class Vector implements VectorType {
 
     /**
      * Element data of the vector.
+     * @type {number[] | number[][]}
+     *
      */
-    public elements: any[];
+    public elements: number[] | number[][]
 
 
     /**
@@ -104,6 +106,7 @@ class Vector implements VectorType {
       */
     public Norm(): number {
         let norm: number = 0;
+
         const vector_copy: number[] = this.elements.flat()
 
         return norm
