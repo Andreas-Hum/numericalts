@@ -70,7 +70,8 @@ export default class Matrix implements MatrixType {
      * @returns {boolean} - True if the dimensions are valid, false otherwise.
      */
     private ValidDimentions(): boolean {
-        if (!this.elements.some(Array.isArray)) {
+        if (this.rows === 1) {
+            this.columns = this.elements[0].length
             return true;
         }
 
@@ -99,3 +100,12 @@ export default class Matrix implements MatrixType {
         this.shape = `(${this.rows},${this.columns})`
     }
 }
+
+
+const test = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [7, 8, 9], [7, 8, 9], [7, 8, 9], [7, 8, 9]])
+const test2 = new Matrix([[7, 8, 9]])
+
+console.log(test.shape)
+console.log(test.rows, test.columns)
+console.log(test2.shape)
+const test1 = new Matrix([[1, 2], [4, 5, 6], [7, 8, 9]])

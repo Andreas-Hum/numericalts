@@ -77,7 +77,7 @@ export default class Vector implements VectorType {
         if (Array.isArray(this.elements[0])) {
             this.isColumn = true;
             this.isRow = false;
-            const dimention_test: number = this.elements.findIndex((entry: any) => entry.length > 0)
+            const dimention_test: number = this.elements.findIndex((entry: any) => entry.length > 1)
             if (dimention_test !== -1) {
                 throw new VectorError(`Dimentions of entries can't be greater than 1: At entry ${this.elements[dimention_test]}`);
             }
@@ -128,38 +128,66 @@ export default class Vector implements VectorType {
     }
 
 
-    //Validating the vector DEPRICATED
-    // private ValidateVector(): void {
-    //     let column_elements = 0
+    //
+    // ADDING ELEMENTS
+    //
 
-    //     //Validates that the vector is either a column or row vector
-    //     for (let i = 0; i < this.size; i++) {
-    //         if (Array.isArray(this.elements[i])) {
-    //             column_elements++;
-    //         }
-    //     }
+    /**
+  * Adds an element to the vector.
+  * @public
+  * @param {number|number[]} element - The element to be added.
+  */
+    public addElement(element: number | number[]): void {
+        if (this.isRow && typeof element === 'number') {
+            // Add to a row vector.
+            (this.elements as number[]).push(element);
+        } else if (this.isColumn && typeof element === 'number') {
+            // Add to a column vector.
+            // The element is a number, so we wrap it in an array to make it a single-element array.
+            (this.elements as number[][]).push([element]);
+        } else if (this.isColumn && Array.isArray(element) && element.length === 1) {
+            // Add to a column vector.
+            (this.elements as number[][]).push(element);
+        } else {
+            throw new VectorError('Invalid element for the vector');
+        }
 
-    //     if (column_elements > 0 && column_elements !== this.size) {
-    //         throw new VectorError("The vector should either be a column or row vector")
-    //     } else if (column_elements === this.size) { //Column vector
-    //         //Checks if the dimentions of entrys are 1 if the list
-    //         const dimention_test: number = this.elements.findIndex((entry: number[]) => entry.length > 0)
+        // Update the size of the vector.
+        this.size++;
 
-    //         if (dimention_test !== -1) {
-    //             throw new VectorError(`Dimentions of entries can't be greater than 1: At entry ${this.elements[dimention_test]}`);
-    //         }
+        // Update the vector's properties
+        this.ValidateVector();
+    }
 
-    //         //Change the type to column;
-    //         this.isColumn = true;
-    //         this.isRow = false;
 
-    //     } else { //Row vector
-    //         this.isColumn = false;
-    //         this.isRow = true;
-    //     }
 
-    //     this.ChangeRowsColumns();
-    //     this.ChangeSize(this.rows, this.columns)
-    // }
+    /**
+     * Adds multiple elements to the vector.
+     * @public
+     * @param {...(number|number[])} elements - The elements to be added.
+     */
+    public addElements(elements: number | number[] | (number | number[])[]): void {
+        // If it's a single number or single-element array, convert it to an array
+        if (typeof elements === 'number' ||
+            (Array.isArray(elements) && elements.length === 1 && typeof elements[0] === 'number')) {
+            elements = [elements as number];
+        }
+
+        // If it's a multidimensional array, flatten the array
+        if (Array.isArray(elements) && Array.isArray(elements[0])) {
+            elements = (elements as any[]).flat();
+        }
+
+        (elements as any[]).forEach(element => {
+            this.addElement(element);
+        });
+
+        // Update the vector's properties
+        this.ValidateVector();
+    }
+
+
+
+
 }
 
