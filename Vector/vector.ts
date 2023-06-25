@@ -70,6 +70,7 @@ class Vector implements VectorType {
         this.elements = elements;
         this.size = elements.length;
         this.ValidateVector()
+        this.Norm()
 
 
     }
@@ -105,9 +106,13 @@ class Vector implements VectorType {
       * @public
       */
     public Norm(): number {
-        let norm: number = 0;
 
         const vector_copy: number[] = this.elements.flat()
+        let norm: number = Math.hypot(...vector_copy)
+
+        if (norm !== this.norm) {
+            this.ChangeNorm(norm)
+        }
 
         return norm
     }
@@ -194,5 +199,22 @@ class Vector implements VectorType {
     //     this.ChangeSize(this.rows, this.columns)
     // }
 }
+
+
+const test1 = new Vector([1, 2, 3, 4, 5])
+const test2 = new Vector([1, 2, 3])
+const test3 = new Vector([1])
+const test4 = new Vector([[1], [2], [3]])
+
+console.log(test1.shape)
+console.log(test2.shape)
+console.log(test3.shape)
+console.log(test4.shape)
+
+console.log(test1.norm)
+console.log(test2.norm)
+console.log(test3.norm)
+console.log(test4.norm)
+
 
 
