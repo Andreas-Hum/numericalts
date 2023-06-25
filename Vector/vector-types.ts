@@ -8,6 +8,8 @@ interface Vector {
     shape: string
 
     //Column or row
+    isRow: boolean
+    isColumn: boolean
     rows: number
     columns: number
 
@@ -16,5 +18,5 @@ interface Vector {
     size: number
 
     //element Data
-    elements: number[] | number[][]
+    elements: number[] | number[][] |null
 }
