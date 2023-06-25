@@ -95,12 +95,6 @@ class Vector implements VectorType {
 
 
 
-
-
-
-
-
-
     /**
       * Computes the Euclidean norm of the vector.
       * @public
