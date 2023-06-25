@@ -2,7 +2,7 @@
 import type { Vector as VectorType } from "./vector-types";
 
 //Error import
-import { VectorError } from "../Errors/validation-error";
+import { VectorError } from "../Errors/vector-error";
 
 
 /**
