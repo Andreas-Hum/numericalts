@@ -38,9 +38,14 @@ export default class Matrix implements MatrixType {
      * @type {number[] | number[][]}
      *
      */
-    public elements: number[][] | number[][][]
+    public elements: number[][]
 
-    constructor(elements:number[][] | number[][]){
+    constructor(elements: number[][]) {
         this.elements = elements
+
+    }
+
+    private ValidateMatrix(): void {
+        
     }
 }

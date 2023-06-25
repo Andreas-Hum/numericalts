@@ -77,6 +77,10 @@ export default class Vector implements VectorType {
         if (Array.isArray(this.elements[0])) {
             this.isColumn = true;
             this.isRow = false;
+            const dimention_test: number = this.elements.findIndex((entry: any) => entry.length > 0)
+            if (dimention_test !== -1) {
+                throw new VectorError(`Dimentions of entries can't be greater than 1: At entry ${this.elements[dimention_test]}`);
+            }
         } else {
             this.isColumn = false;
             this.isRow = true;

@@ -17,5 +17,5 @@ interface Vector {
     size: number
 
     //element Data
-    elements: number[] | number[][] |null
+    elements: number[] | number[][]
 }
