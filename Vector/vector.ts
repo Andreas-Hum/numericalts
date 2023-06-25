@@ -42,12 +42,6 @@ class Vector implements VectorType {
     public columns: number = Infinity;
 
     /**
-     * Euclidean norm of the vector.
-     * @type {number}
-     */
-    public norm: number = Infinity;
-
-    /**
      * Size of the vector.
      * @type {number}
      */
@@ -70,7 +64,6 @@ class Vector implements VectorType {
         this.elements = elements;
         this.size = elements.length;
         this.ValidateVector()
-        this.Norm()
 
 
     }
@@ -93,23 +86,6 @@ class Vector implements VectorType {
         this.ChangeSize(this.rows, this.columns)
     }
 
-
-
-    /**
-      * Computes the Euclidean norm of the vector.
-      * @public
-      */
-    public Norm(): number {
-
-        const vector_copy: number[] = this.elements.flat()
-        let norm: number = Math.hypot(...vector_copy)
-
-        if (norm !== this.norm) {
-            this.ChangeNorm(norm)
-        }
-
-        return norm
-    }
 
 
     //
@@ -149,15 +125,6 @@ class Vector implements VectorType {
 
     }
 
-    /**
-     * Changes the Euclidean norm property of the vector.
-     * @private
-     * @param {number} newNorm - The new norm.
-    */
-    private ChangeNorm(newNorm: number): void {
-        this.norm = newNorm
-    }
-
 
     //Validating the vector DEPRICATED
     // private ValidateVector(): void {
@@ -193,22 +160,4 @@ class Vector implements VectorType {
     //     this.ChangeSize(this.rows, this.columns)
     // }
 }
-
-
-const test1 = new Vector([1, 2, 3, 4, 5])
-const test2 = new Vector([1, 2, 3])
-const test3 = new Vector([1])
-const test4 = new Vector([[1], [2], [3]])
-
-console.log(test1.shape)
-console.log(test2.shape)
-console.log(test3.shape)
-console.log(test4.shape)
-
-console.log(test1.norm)
-console.log(test2.norm)
-console.log(test3.norm)
-console.log(test4.norm)
-
-
 

@@ -14,7 +14,6 @@ interface Vector {
     columns: number
 
     //properties
-    norm: number
     size: number
 
     //element Data
