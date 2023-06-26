@@ -192,6 +192,42 @@ export class Vector implements VectorTypes {
 
 
     /**
+    * Subtract vectors (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
+    * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to subract.
+    * @throws {VectorError} If the dimensions of the vectors don't match.
+    * @returns {void}
+    */
+    public subtract(...vectors: (Vector | number[] | number[][])[]): void {
+        for (let vector of vectors) {
+            if (!(vector instanceof Vector)) {
+                vector = new Vector(vector)
+            }
+
+            if (this.shape !== vector.shape) {
+                throw new VectorError(`Dimension mismatch: can't subtract a ${this.shape} vector to a ${vector.shape} vector`,
+                    701,
+                    { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape })
+            }
+
+            let vector_one_copy: number[] = this.elements.flat()
+            let vector_two_copy: number[] = vector.elements.flat()
+
+            if (this.isColumn) {
+                for (let i = 0; i < this.size; i++) {
+                    this.elements[i] = [vector_one_copy[i] - vector_two_copy[i]]
+                }
+            } else {
+                for (let i = 0; i < this.size; i++) {
+                    this.elements[i] = vector_one_copy[i] - vector_two_copy[i]
+                }
+            }
+
+            this.validateVector()
+        }
+    }
+
+
+    /**
      * Scales the vector by the provided scalar.
      * This modifies the original vector.
      * @param {number} scalar - The scalar to multiply the vector by.
@@ -237,6 +273,12 @@ export class Vector implements VectorTypes {
     }
 
 
+    /**
+     * Computes the dot (inner) product with another vector.
+     * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
+     * @returns {number} - The dot product of this vector and the given vector.
+     * @throws {VectorError} If the given vector is not of the same size as this vector.
+     */
     public dot(vector: Vector | number[] | number[][]): number {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector)
