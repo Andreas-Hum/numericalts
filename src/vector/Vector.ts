@@ -27,14 +27,15 @@ export class Vector implements VectorTypes {
     * @param {number[] | number[][]} elements - The elements of the Vector.
     */
     constructor(elements: number[] | number[][]) {
-        try {
-            this.elements = elements;
-            this.size = elements.length;
-            this.validateVector();
-        } catch (error) {
-            console.error(error);
-            return;
+
+        if (!Array.isArray(elements)) {
+            throw new VectorError('Elements input must be an array.', 601);
         }
+
+        this.elements = elements;
+        this.size = elements.length;
+        this.validateVector();
+
     }
 
     /**
@@ -43,27 +44,29 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     private validateVector(): void {
-        try {
-            if (Array.isArray(this.elements[0])) {
-                this.isColumn = true;
-                this.isRow = false;
 
-                const invalidDimensionIndex = this.elements.findIndex((element: any) => Array.isArray(element) && element.length > 1);
+        if ((this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
+            this.isColumn = true;
+            this.isRow = false;
 
-                if (invalidDimensionIndex !== -1) {
-                    throw new VectorError(`Dimensions of entries cannot be greater than 1. Invalid entry found at ${invalidDimensionIndex}.`, 601);
-                }
-            } else {
-                this.isColumn = false;
-                this.isRow = true;
+            const invalidDimensionIndex = this.elements.findIndex((element: any) => Array.isArray(element) && element.length > 1);
+            const levelDimentionFailure = this.elements.flat().findIndex((element: any) => Array.isArray(element))
+            if (invalidDimensionIndex !== -1) {
+                throw new VectorError(`Dimensions of entries cannot be greater than 1. Invalid entry found at ${invalidDimensionIndex}.`, 601, { invalidEntry: this.elements[invalidDimensionIndex] });
+            } else if (levelDimentionFailure !== -1) {
+                throw new VectorError(`The depth of entries cannot be greater than 1. Invalid entry found at ${levelDimentionFailure}.`, 601, { invalidEntry: this.elements[levelDimentionFailure] })
             }
+        } else if ((this.elements as number[]).every((e: number) => !Array.isArray(e))) {
+            this.isColumn = false;
+            this.isRow = true;
 
-            this.updateDimensions();
-            this.updateShape();
-        } catch (error) {
-            console.error(error);
-            return;
+        } else {
+            throw new VectorError("Entry missmatch, got columns and row entries", 601, this.elements)
         }
+
+        this.updateDimensions();
+        this.updateShape();
+
     }
 
     /**
@@ -72,20 +75,17 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     private updateDimensions(): void {
-        try {
-            if (this.isRow) {
-                this.rows = this.size;
-                this.columns = 1;
-            } else if (this.isColumn) {
-                this.columns = this.size;
-                this.rows = 1;
-            } else {
-                throw new VectorError("Vector must be either a row vector or a column vector.", 602);
-            }
-        } catch (error) {
-            console.error(error);
-            return;
+
+        if (this.isRow) {
+            this.rows = this.size;
+            this.columns = 1;
+        } else if (this.isColumn) {
+            this.columns = this.size;
+            this.rows = 1;
+        } else {
+            throw new VectorError("Vector must be either a row vector or a column vector.", 602);
         }
+
     }
 
     /**
@@ -94,12 +94,7 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     private updateShape(): void {
-        try {
-            this.shape = `(${this.rows},${this.columns})`;
-        } catch (error) {
-            console.error(error);
-            return;
-        }
+        this.shape = `(${this.rows},${this.columns})`;
     }
 
     /**
@@ -109,23 +104,20 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     public addElement(element: number | number[]): void {
-        try {
-            if (this.isRow && typeof element === 'number') {
-                (this.elements as number[]).push(element);
-            } else if (this.isColumn && typeof element === 'number') {
-                (this.elements as number[][]).push([element]);
-            } else if (this.isColumn && Array.isArray(element) && element.length === 1) {
-                (this.elements as number[][]).push(element);
-            } else {
-                throw new VectorError('Invalid element for the vector', 603, { invalidElement: element });
-            }
 
-            this.size++;
-            this.validateVector();
-        } catch (error) {
-            console.error(error);
-            return;
+        if (this.isRow && typeof element === 'number') {
+            (this.elements as number[]).push(element);
+        } else if (this.isColumn && typeof element === 'number') {
+            (this.elements as number[][]).push([element]);
+        } else if (this.isColumn && Array.isArray(element) && element.length === 1) {
+            (this.elements as number[][]).push(element);
+        } else {
+            throw new VectorError('Invalid element for the vector', 603, { invalidElement: element });
         }
+
+        this.size++;
+        this.validateVector();
+
     }
 
     /**
@@ -135,23 +127,39 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     public addElements(elements: number | number[] | (number | number[])[]): void {
-        try {
-            if (typeof elements === 'number' || (Array.isArray(elements) && elements.length === 1 && typeof elements[0] === 'number')) {
-                elements = [elements as number];
-            }
 
-            if (Array.isArray(elements) && Array.isArray(elements[0])) {
-                elements = (elements as any[]).flat();
-            }
+        if (typeof elements === 'number' || (Array.isArray(elements) && elements.length === 1 && typeof elements[0] === 'number')) {
+            elements = [elements as number];
+        }
 
-            (elements as any[]).forEach(element => {
-                this.addElement(element);
-            });
+        if (Array.isArray(elements) && (this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
+            elements = (elements as any[]).flat();
+        }
 
-            this.validateVector();
-        } catch (error) {
-            console.error(error);
-            return;
+        (elements as any[]).forEach(element => {
+            this.addElement(element);
+        });
+
+        this.validateVector();
+
+
+    }
+
+
+
+    /**
+     *
+     *
+     * VECTOR OPERATIONS
+     *
+     *
+     */
+
+    public add(vector: Vector) {
+        if (!(vector instanceof Vector)) {
+
         }
     }
+
+
 }

@@ -5,6 +5,7 @@ describe('Vector', () => {
     describe('When initialized with valid input', () => {
         it('correctly validates a row vector', () => {
             const vector = new Vector([1, 2, 3]);
+            console.log(vector)
             expect(vector.isRow).toBe(true);
             expect(vector.size).toBe(3);
             expect(vector.shape).toBe('(3,1)');
