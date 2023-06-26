@@ -64,6 +64,13 @@ describe('Vector', () => {
             vector_one.add(vector_two)
             expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
         });
+
+        it("Throws an error when vectors have different shapes", () => {
+            const vector_one = new Vector([1, 2, 3]);
+            const vector_two = new Vector([[1], [2], [3]]);
+            expect(() => vector_one.add(vector_two)).toThrow();
+        });
+
     });
 
     describe('Adding a vector instance with a non vector instance', () => {
@@ -79,6 +86,33 @@ describe('Vector', () => {
             const vector_two = [[1], [2], [3]];
             vector_one.add(vector_two)
             expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
+        });
+    });
+
+    describe('Adding multiple vector instances together', () => {
+        it("Adds multiple row vectors together", () => {
+            const vector_one = new Vector([1, 2, 3]);
+            const vector_two = new Vector([4, 5, 6]);
+            const vector_three = new Vector([7, 8, 9]);
+            vector_one.add(vector_two, vector_three);
+            expect(vector_one.elements).toStrictEqual([12, 15, 18]);
+        });
+
+        it("Adds multiple column vectors together", () => {
+            const vector_one = new Vector([[1], [2], [3]]);
+            const vector_two = new Vector([[4], [5], [6]]);
+            const vector_three = new Vector([[7], [8], [9]]);
+            vector_one.add(vector_two, vector_three);
+            expect(vector_one.elements).toStrictEqual([[12], [15], [18]]);
+        });
+
+
+        it("Adds a vector and an array together", () => {
+            const vector_one = new Vector([1, 2, 3]);
+            const array_two = [4, 5, 6];
+            const array_three = [7, 8, 9];
+            vector_one.add(array_two, array_three);
+            expect(vector_one.elements).toStrictEqual([12, 15, 18]);
         });
     });
 });

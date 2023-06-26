@@ -155,30 +155,38 @@ export class Vector implements VectorTypes {
      *
      */
 
-    public add(vector: Vector | number[] | number[][]) {
-
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector)
-        }
-
-        if (this.shape !== vector.shape) {
-            throw new VectorError(`Dimension missmatch can't add a ${this.shape} vector to a ${vector.shape} vector`, 701, { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape })
-        }
-
-        let vector_one_copy: number[] = this.elements.flat()
-        let vector_two_copy: number[] = vector.elements.flat()
-
-        if (this.isColumn) {
-            for (let i = 0; i < this.size; i++) {
-                this.elements[i] = [vector_one_copy[i] + vector_two_copy[i]]
+    /**
+  * Add vectors (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
+  * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
+  * @throws {VectorError} If the dimensions of the vectors don't match.
+  */
+    public add(...vectors: (Vector | number[] | number[][])[]) {
+        for (let vector of vectors) {
+            if (!(vector instanceof Vector)) {
+                vector = new Vector(vector)
             }
-        } else {
-            for (let i = 0; i < this.size; i++) {
-                this.elements[i] = vector_one_copy[i] + vector_two_copy[i]
-            }
-        }
 
-        this.validateVector()
+            if (this.shape !== vector.shape) {
+                throw new VectorError(`Dimension mismatch: can't add a ${this.shape} vector to a ${vector.shape} vector`,
+                    701,
+                    { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape })
+            }
+
+            let vector_one_copy: number[] = this.elements.flat()
+            let vector_two_copy: number[] = vector.elements.flat()
+
+            if (this.isColumn) {
+                for (let i = 0; i < this.size; i++) {
+                    this.elements[i] = [vector_one_copy[i] + vector_two_copy[i]]
+                }
+            } else {
+                for (let i = 0; i < this.size; i++) {
+                    this.elements[i] = vector_one_copy[i] + vector_two_copy[i]
+                }
+            }
+
+            this.validateVector()
+        }
     }
 
 
