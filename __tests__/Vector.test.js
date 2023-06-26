@@ -16,6 +16,10 @@ describe('Vector', () => {
             expect(vector.size).toBe(3);
             expect(vector.shape).toBe('(3,1)');
         });
+
+        it('Throws an error if there are different types of entries', () => {
+            expect(() => new Vector([1, [1], 3])).toThrow();
+        })
     });
 
     describe('addElement', () => {
@@ -32,6 +36,13 @@ describe('Vector', () => {
             expect(vector.size).toBe(4);
             expect(vector.shape).toBe('(4,1)');
         });
+
+        it('Throws an error if a non valid element is added', () => {
+            const vector = new Vector([1, 2, 3]);
+            expect(() => vector.addElements("4")).toThrow();
+        })
+
+
     });
 
     describe('addElements', () => {
@@ -48,6 +59,12 @@ describe('Vector', () => {
             expect(vector.size).toBe(5);
             expect(vector.shape).toBe('(5,1)');
         });
+
+        it('Throws an error if non valid elements are added', () => {
+            const vector = new Vector([1, 2, 3]);
+            expect(() => vector.addElements("4","2")).toThrow();
+        })
+
     });
 
     describe('Adding two vector instances together', () => {
@@ -73,7 +90,7 @@ describe('Vector', () => {
 
     });
 
-    describe('Adding a vector instance with a non vector instance', () => {
+    describe('Adding a vector with an array', () => {
         it("correctly add's two row vectors together", () => {
             const vector_one = new Vector([1, 2, 3]);
             const vector_two = [1, 2, 3];
