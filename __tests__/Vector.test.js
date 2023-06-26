@@ -247,6 +247,40 @@ describe('Vector', () => {
     });
 
 
+    describe('Vector cross product', () => {
+        it('Calculates cross product correctly for row vectors', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([4, 5, 6]);
+            vector1.cross(vector2);
+            // The cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
+            expect(vector1.elements).toEqual([-3, 6, -3]);
+        });
+
+        it('Calculates cross product correctly for column vectors', () => {
+            const vector1 = new Vector([[1], [2], [3]]);
+            const vector2 = new Vector([[4], [5], [6]]);
+            vector1.cross(vector2);
+            console.log(vector1)
+            // The cross product of [[1],[2],[3]] and [[4],[5],[6]] is [[-3], [6], [-3]]
+            expect(vector1.elements).toEqual([[-3], [6], [-3]]);
+        });
+
+        it('Throws an error for vectors of mismatched size', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([1, 2]);
+            expect(() => vector1.cross(vector2)).toThrow();
+        });
+
+        it('Calculates cross product correctly for vectors passed as arrays', () => {
+            const vector = new Vector([1, 2, 3]);
+            const array = [4, 5, 6];
+            vector.cross(array);
+            // The cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
+            expect(vector.elements).toEqual([-3, 6, -3]);
+        });
+    });
+
+
     describe('Vector dot product', () => {
         it('Calculates dot product correctly for row vectors', () => {
             const vector1 = new Vector([1, 2, 3]);
@@ -326,6 +360,38 @@ describe('Vector', () => {
             const vector1 = new Vector([1, 0]);
             const vector2 = new Vector([0, 0]);
             expect(() => vector1.angle(vector2, true)).toThrow();
+        });
+    });
+
+    describe('Vector distance', () => {
+        it('Calculates distance correctly for row vectors', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([4, 5, 6]);
+            let distance = vector1.distance(vector2);
+            // Calculation of distance needs to be replaced with the correct implementation
+            expect(distance).toBeCloseTo(5.2);
+        });
+
+        it('Calculates distance correctly for column vectors', () => {
+            const vector1 = new Vector([[1], [2], [3]]);
+            const vector2 = new Vector([[4], [5], [6]]);
+            let distance = vector1.distance(vector2);
+            // Calculation of distance needs to be replaced with the correct implementation
+            expect(distance).toBeCloseTo(5.2);
+        });
+
+        it('Throws an error for vectors of mismatched size', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([1, 2]);
+            expect(() => vector1.distance(vector2)).toThrow();
+        });
+
+        it('Calculates distance correctly for vectors passed as arrays', () => {
+            const vector = new Vector([1, 2, 3]);
+            const array = [4, 5, 6];
+            let distance = vector.distance(array);
+            // Calculation of distance needs to be replaced with the correct implementation
+            expect(distance).toBeCloseTo(5.2);
         });
     });
 

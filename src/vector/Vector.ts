@@ -328,8 +328,8 @@ export class Vector implements VectorTypes {
         if (this.isColumn) {
 
             (this.elements as number[][])[0][0] = first;
-            (this.elements as number[][])[0][1] = second;
-            (this.elements as number[][])[0][2] = third;
+            (this.elements as number[][])[1][0] = second;
+            (this.elements as number[][])[2][0] = third;
 
 
         } else {
@@ -372,6 +372,34 @@ export class Vector implements VectorTypes {
         let angleInRadians = Math.acos(numerator / denominator);
 
         return inDegrees ? angleInRadians * (180 / Math.PI) : angleInRadians;
+    }
+
+
+    /**
+     * Calculates the Euclidean distance between the current vector and the provided vector.
+     *
+     * @param {Vector | number[] | number[][]} vector - The other vector to calculate the distance with. It can be a Vector instance or a 2D/3D array.
+     * @returns {number} - The Euclidean distance between the two vectors.
+     * @throws {VectorError} - Throws an error if the dimensions of the vectors do not match.
+     */
+    public distance(vector: Vector | number[] | number[][]): number {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector);
+        }
+
+        if (this.size !== vector.size) {
+            throw new VectorError(`Dimension mismatch: Sizes does not match`,
+                703,
+                { vectorOne_size: this.size, vectorTwo_size: vector.size });
+        }
+
+        let vector_one_copy: number[] = this.elements.flat()
+        let vector_two_copy: number[] = vector.elements.flat()
+        let distance: number = vector_one_copy.reduce((acc: number, cur: number, index: number) => acc + Math.pow(vector_two_copy[index] - cur, 2),0);
+
+
+
+        return Math.sqrt(distance);
     }
 
 
