@@ -5,10 +5,6 @@ import type VectorTypes from "./VectorTypes";
 // Importing a custom Error class dedicated for errors related to Vectors
 import VectorError from "../errors/VectorError";
 
-// Importing constants
-import { RADIENTCONSTANT } from "../util/constants";
-
-
 /**
 * A class that represents a mathemathical Vector.
 * @exports Vector
@@ -306,33 +302,35 @@ export class Vector implements VectorTypes {
 
 
     /**
-    * Computes the angle between this vector and another vector.
-    * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
-    * @returns {number} - The angle in radians between this vector and the given vector.
-    * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
-    */
-    public angle(vector: Vector | number[] | number[][]): number {
+ * Computes the angle between this vector and another vector.
+ * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
+ * @param inDegrees - If true, the method returns the angle in degrees, otherwise it returns the angle in radians.
+ * @returns {number} - The angle between this vector and the given vector.
+ * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
+ */
+    public angle(vector: Vector | number[] | number[][], inDegrees: boolean = false): number {
         if (!(vector instanceof Vector)) {
-            vector = new Vector(vector)
+            vector = new Vector(vector);
         }
 
         if (this.size !== vector.size) {
             throw new VectorError(`Dimension mismatch: Sizes does not match`,
                 703,
-                { vectorOne_size: this.size, vectorTwo_size: vector.size })
+                { vectorOne_size: this.size, vectorTwo_size: vector.size });
         }
 
-        const denominator: number = this.norm() * vector.norm()
+        const denominator: number = this.norm() * vector.norm();
 
         if (denominator === 0) {
-            throw new VectorError("Cannot take the angle of a zero vector.", 704)
+            throw new VectorError("Cannot take the angle of a zero vector.", 704);
         }
-        const numerator: number = this.dot(vector)
 
+        const numerator: number = this.dot(vector);
+        let angleInRadians = Math.acos(numerator / denominator);
 
-
-        return Math.acos(numerator / denominator)
+        return inDegrees ? angleInRadians * (180 / Math.PI) : angleInRadians;
     }
+
 
 
 }

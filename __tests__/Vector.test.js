@@ -279,5 +279,56 @@ describe('Vector', () => {
         });
     });
 
+    describe('Vector angle', () => {
+        it('Calculates angle between two vectors correctly in degrees', () => {
+            const vector1 = new Vector([1, 0]);
+            const vector2 = new Vector([0, 1]);
+            const resultInDegrees = vector1.angle(vector2, true);
+            // The angle between [1,0] and [0,1] given in degrees should be 90
+            expect(resultInDegrees).toBeCloseTo(90);
+        });
+
+        it('Calculates angle between two vectors correctly in radians', () => {
+            const vector1 = new Vector([1, 0]);
+            const vector2 = new Vector([0, 1]);
+            const resultInRadians = vector1.angle(vector2, false);
+            // The angle between [1,0] and [0,1] given in radians should be Math.PI / 2
+            expect(resultInRadians).toBeCloseTo(Math.PI / 2);
+        });
+
+        it('Calculates angle correctly when the inDegrees parameter is not provided', () => {
+            const vector1 = new Vector([1, 0]);
+            const vector2 = new Vector([0, 1]);
+            const result = vector1.angle(vector2);
+            // Given no inDegrees parameter, function should default to radians
+            // So, the angle between [1,0] and [0,1] should be Math.PI / 2
+            expect(result).toBeCloseTo(Math.PI / 2);
+        });
+        it('Throws an error for vectors of mismatched size', () => {
+            const vector1 = new Vector([1, 0, 0]);
+            const vector2 = new Vector([0, 1]);
+            expect(() => vector1.angle(vector2)).toThrow();
+        });
+
+        it('Throws an error for a zero vector', () => {
+            const vector1 = new Vector([1, 0]);
+            const vector2 = new Vector([0, 0]);
+            expect(() => vector1.angle(vector2)).toThrow();
+        });
+
+        it('Throws an error for vectors of mismatched size even when inDegrees option is set', () => {
+            const vector1 = new Vector([1, 0, 0]);
+            const vector2 = new Vector([0, 1]);
+            expect(() => vector1.angle(vector2, true)).toThrow();
+        });
+
+        it('Throws an error for a zero vector even when inDegrees option is set', () => {
+            const vector1 = new Vector([1, 0]);
+            const vector2 = new Vector([0, 0]);
+            expect(() => vector1.angle(vector2, true)).toThrow();
+        });
+    });
+
+
 
 });
