@@ -191,17 +191,24 @@ export class Vector implements VectorTypes {
     }
 
 
+    /**
+     * Scales the vector by the provided scalar.
+     * This modifies the original vector.
+     * @param {number} scalar - The scalar to multiply the vector by.
+     * @throws {VectorError} If the scalar is not a number.
+     */
     public scale(scalar: number): void {
-        if (typeof (scalar) !== "number") {
+        if (typeof scalar !== "number") {
             throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
         }
 
         if (this.isColumn) {
-            this.elements = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
+            this.elements = (this.elements as number[][]).map((entry: number[]) => entry[0] * scalar)
         } else {
             this.elements = (this.elements as number[]).map((entry: number) => entry * scalar)
         }
     }
+
 
 
     /**

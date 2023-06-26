@@ -198,7 +198,8 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "test": "npm run tsc && jest"
+    "build-test": "npm run tsc && jest",
+    "test": "jest"
   },
   "author": "Andreas Hummelmose",
   "license": "ISC"
