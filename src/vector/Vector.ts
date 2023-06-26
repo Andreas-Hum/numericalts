@@ -207,6 +207,8 @@ export class Vector implements VectorTypes {
         } else {
             this.elements = (this.elements as number[]).map((entry: number) => entry * scalar)
         }
+
+
     }
 
 
@@ -232,6 +234,29 @@ export class Vector implements VectorTypes {
      */
     public norm(): number {
         return Math.hypot(...this.elements.flat())
+    }
+
+
+    public dot(vector: Vector | number[] | number[][]): number {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector)
+        }
+
+        if (this.size !== vector.size) {
+            throw new VectorError(`Dimension mismatch: Sizes does not match`,
+                703,
+                { vectorOne_size: this.size, vectorTwo_size: vector.size })
+        }
+
+        let vector_one_copy: number[] = this.elements.flat()
+        let vector_two_copy: number[] = vector.elements.flat()
+        let result: number = 0;
+
+        for (let i = 0; i < vector.size; i++) {
+            result += vector_one_copy[i] * vector_two_copy[i]
+        }
+
+        return result;
     }
 
 
