@@ -2,13 +2,13 @@
 import type MatrixTypes from "./MatrixTypes";
 
 //Error import
-import MatrixError  from "../errors/MatrixError";
+import MatrixError from "../errors/MatrixError";
 
 //Vector import
-import Vector from "../vector/Vector";
+import { Vector } from "../vector/Vector";
 
 
-export default class Matrix implements MatrixTypes {
+export class Matrix implements MatrixTypes {
     /**
     * Shape of the vector, represented as a string.
     * @type {string}

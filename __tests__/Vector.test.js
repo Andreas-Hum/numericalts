@@ -1,4 +1,5 @@
-import Vector from "../dist/vector/Vector";
+const vector_module = require("../dist/vector/Vector")
+const Vector = vector_module.Vector
 
 describe('Vector', () => {
     describe('When initialized with valid input', () => {

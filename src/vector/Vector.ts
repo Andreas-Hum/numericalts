@@ -12,7 +12,7 @@ import VectorError from "../errors/VectorError";
 * @class
 * @implements {VectorType}
 */
-export default class Vector implements VectorTypes {
+export class Vector implements VectorTypes {
     //Setting up default information
     public shape: string = "0";
     public isRow: boolean = false;
