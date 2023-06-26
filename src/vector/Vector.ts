@@ -310,7 +310,7 @@ export class Vector implements VectorTypes {
      * @returns {void} - The function doesn't return a value, it mutates the `elements` property of the class with the result of the cross product.
      * @throws {VectorError} - Throws an error if the vectors aren't both 3D.
      */
-    public cross(vector: Vector | number[] | number[][]): void {
+    public cross(vector: Vector | number[] | number[][], rowVector: boolean = true): Vector {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector)
         }
@@ -328,19 +328,13 @@ export class Vector implements VectorTypes {
 
 
 
-        if (this.isColumn) {
+        if (!rowVector) {
 
-            (this.elements as number[][])[0][0] = first;
-            (this.elements as number[][])[1][0] = second;
-            (this.elements as number[][])[2][0] = third;
-
+            return new Vector([[first], [second], [third]])
 
         } else {
 
-
-            (this.elements as number[])[0] = first;
-            (this.elements as number[])[1] = second;
-            (this.elements as number[])[2] = third;
+            return new Vector([first, second, third])
 
         }
 
@@ -402,6 +396,7 @@ export class Vector implements VectorTypes {
 
         return Math.sqrt(distance);
     }
+
 
     /**
      *
