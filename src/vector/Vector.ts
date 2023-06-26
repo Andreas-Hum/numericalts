@@ -191,6 +191,19 @@ export class Vector implements VectorTypes {
     }
 
 
+    public scale(scalar: number): void {
+        if (typeof (scalar) !== "number") {
+            throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
+        }
+
+        if (this.isColumn) {
+            this.elements = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
+        } else {
+            this.elements = (this.elements as number[]).map((entry: number) => entry * scalar)
+        }
+    }
+
+
     /**
      * Returns the norm (magnitude) of the vector.
      * @returns {number} the norm (magnitude) or length of the vector.
@@ -198,6 +211,8 @@ export class Vector implements VectorTypes {
     public norm(): number {
         return Math.hypot(...this.elements.flat())
     }
+
+
 
 
 
