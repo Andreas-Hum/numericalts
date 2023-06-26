@@ -395,7 +395,7 @@ describe('Vector', () => {
         });
     });
 
-    describe('Testing isOrthogonal', () => {
+    describe('isOrthogonal', () => {
         const vectorA = new Vector([1, 0]);
         const vectorB = new Vector([[0], [1]]);
         const vectorC = new Vector([1, 2]);
@@ -417,6 +417,39 @@ describe('Vector', () => {
             expect(vectorC.isOrthogonal([[1], [2]])).toBe(false);
         });
     });
+
+    describe('isOrthonormal', () => {
+        const vectorA = new Vector([1, 0]);
+        const vectorB = new Vector([[0], [1]]);
+        const unitVector = new Vector([1 / Math.sqrt(2), 1 / Math.sqrt(2)]);
+
+        it('Testing orthonormal vectors', () => {
+            expect(vectorA.isOrthonormal(vectorB)).toBe(true);
+        });
+
+        it('Testing non-orthogonal vectors', () => {
+            expect(vectorA.isOrthonormal(vectorA)).toBe(false);  // Not orthogonal to itself
+        });
+
+        it('Testing non-unit vectors', () => {
+            const vectorC = new Vector([1, 2]);
+            expect(vectorA.isOrthonormal(vectorC)).toBe(false);  // Not a unit vector
+        });
+
+        it('Testing unit vectors', () => {
+            expect(vectorA.isOrthonormal(unitVector)).toBe(false);  // Unit but not orthogonal
+        });
+
+        it('Testing orthonormal array vectors', () => {
+            expect(vectorA.isOrthonormal([0, 1])).toBe(true);
+            expect(vectorA.isOrthonormal([[1], [2]])).toBe(false);
+        });
+
+        it('Throws an error for non-array inputs', () => {
+            expect(() => vectorA.isOrthonormal("Test")).toThrow();
+        });
+    });
+
 
 
 

@@ -401,12 +401,34 @@ export class Vector implements VectorTypes {
     }
 
     /**
+     *
+     *
+     * BOOLEAN TEST
+     *
+     *
+     */
+
+    /**
      * Checks if the given vector is orthogonal to the vector instance
      * @param {Vector | number[] | number[][]} vector - The vector object, one-dimensional number array or two-dimensional number array to compare.
      * @returns {boolean} True if the dot product of this vector and the given vector is zero, otherwise false.
      */
     public isOrthogonal(vector: Vector | number[] | number[][]): boolean {
         return this.dot(vector) === 0;
+    }
+
+    /**
+     * Checks if the given vector is orthonormal to the vector instance
+     * @param {Vector | number[] | number[][]} vector - The vector object, one-dimensional number array or two-dimensional number array to compare.
+     * @returns {boolean} True if the dot product of this vector and the given vector is zero
+     * and both the vectors have unit length, otherwise returns False.
+     */
+    public isOrthonormal(vector: Vector | number[] | number[][]): boolean {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector);
+        }
+        return this.dot(vector) === 0 && this.norm() === 1 && vector.norm() === 1;
+
     }
 
 
