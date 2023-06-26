@@ -197,7 +197,8 @@
     "yocto-queue": "^0.1.0"
   },
   "scripts": {
-    "test": "jest"
+    "tsc": "tsc",
+    "test": "npm run tsc && jest"
   },
   "author": "Andreas Hummelmose",
   "license": "ISC"
