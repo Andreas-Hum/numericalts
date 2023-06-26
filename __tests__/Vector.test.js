@@ -451,6 +451,34 @@ describe('Vector', () => {
     });
 
 
+    describe('Vector equality ', () => {
+        const vector1 = new Vector([[1], [2], [3], [4]]);
+        const vector2 = new Vector([1, 2, 3, 4 + 1e-11]);  // a tiny difference on last element
+        const vector3 = new Vector([1, 2, 3, 4, 5, 6]);  // different shape
+        const vector4 = [1, 2, 3, 4]
+
+        it('Vectors are equal in non-strict mode', () => {
+            expect(vector1.equal(vector2)).toBe(true);
+        });
+
+        it('Vectors are equal in strict mode', () => {
+            expect(vector2.equal(vector4, true)).toBe(true);
+        });
+
+        it('Vectors are equal to array', () => {
+            expect(vector2.equal(vector4)).toBe(true);
+        });
+
+        it('Vectors are not equal in strict mode', () => {
+            expect(() => vector1.equal(vector2, true)).toThrow();
+        });
+
+        it('Different shapes cause an exception', () => {
+            expect(() => vector1.equal(vector3)).toThrow();
+        });
+    });
+
+
 
 
 });

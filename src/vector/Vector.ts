@@ -257,7 +257,7 @@ export class Vector implements VectorTypes {
      */
     public normalize(): void {
         const norm = this.norm();
-        if (norm < DELTA) {
+        if (Math.abs(norm) < DELTA) {
             throw new VectorError("Cannot normalize a zero vector.", 704)
         }
         this.scale(1 / norm);
@@ -367,12 +367,12 @@ export class Vector implements VectorTypes {
 
         const denominator: number = this.norm() * vector.norm();
 
-        if (denominator === 0) {
+        if (Math.abs(denominator) < DELTA) {
             throw new VectorError("Cannot take the angle of a zero vector.", 704);
         }
 
         const numerator: number = this.dot(vector);
-        let angleInRadians = Math.acos(numerator / denominator);
+        const angleInRadians: number = Math.acos(numerator / denominator);
 
         return inDegrees ? angleInRadians * (180 / Math.PI) : angleInRadians;
     }
@@ -417,7 +417,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} True if the dot product of this vector and the given vector is zero, otherwise false.
      */
     public isOrthogonal(vector: Vector | number[] | number[][]): boolean {
-        return this.dot(vector) === 0;
+        return Math.abs(this.dot(vector)) < DELTA;
     }
 
     /**
@@ -430,10 +430,20 @@ export class Vector implements VectorTypes {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector);
         }
-        return this.dot(vector) === 0 && this.norm() === 1 && vector.norm() === 1;
+        return Math.abs(this.dot(vector)) < DELTA && Math.abs(this.norm()) - 1 < DELTA && Math.abs(vector.norm()) - 1 < DELTA;
 
     }
 
+    /**
+ * Checks if two vectors are equal within a defined tolerance. 
+    * 
+    * @param {Vector | number[] | number[][]} vector - The vector to be compared with.
+    * @param {boolean} [strict=false] - Setting this to `true` will also check if their shapes are equal. Default is `false`.
+    * 
+    * @throws {VectorError} If the vectors' sizes or, when strict is set to true, their shapes do not match.
+    * 
+    * @returns {boolean} Returns `true` if the elements of the two vectors are equal within the tolerance, `false` otherwise.
+    */
     public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector);
@@ -454,15 +464,12 @@ export class Vector implements VectorTypes {
         let vector_two_copy: number[] = vector.elements.flat()
 
         for (let i = 0; i < this.size; i++) {
-            if (vector_one_copy[i] !== vector_two_copy[i]) {
-
+            if (vector_one_copy[i] - vector_two_copy[i] > DELTA) {
+                return false
             }
         }
 
         return true;
-
-
-
 
 
     }
