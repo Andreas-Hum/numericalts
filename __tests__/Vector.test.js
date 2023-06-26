@@ -169,7 +169,6 @@ describe('Vector', () => {
             const vector = new Vector([[1], [2], [3]]);
             vector.scale(2);
             // The result of scaling [[1],[2],[3]] by 2 should be [[2],[4],[6]]
-            console.log(vector)
             expect(vector.elements).toStrictEqual([[2], [4], [6]]);
         });
 
