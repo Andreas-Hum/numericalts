@@ -5,6 +5,9 @@ import type VectorTypes from "./VectorTypes";
 // Importing a custom Error class dedicated for errors related to Vectors
 import VectorError from "../errors/VectorError";
 
+// Importing constants;
+import { DELTA } from "../utils/constants";
+
 /**
 * A class that represents a mathemathical Vector.
 * @exports Vector
@@ -127,7 +130,7 @@ export class Vector implements VectorTypes {
     */
     public addElements(elements: number | number[] | (number | number[])[]): void {
 
-        if (typeof elements === 'number' || (Array.isArray(elements) && elements.length === 1 && typeof elements[0] === 'number')) {
+        if (typeof elements === 'number' || (Array.isArray(elements) && elements.length === 1 && elements.every((e: number) => typeof e === "number"))) {
             elements = [elements as number];
         }
 
@@ -254,7 +257,7 @@ export class Vector implements VectorTypes {
      */
     public normalize(): void {
         const norm = this.norm();
-        if (norm === 0) {
+        if (norm < DELTA) {
             throw new VectorError("Cannot normalize a zero vector.", 704)
         }
         this.scale(1 / norm);
@@ -428,6 +431,39 @@ export class Vector implements VectorTypes {
             vector = new Vector(vector);
         }
         return this.dot(vector) === 0 && this.norm() === 1 && vector.norm() === 1;
+
+    }
+
+    public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector);
+        }
+
+        if (this.size !== vector.size) {
+            throw new VectorError(`Dimension mismatch: Sizes does not match`,
+                703,
+                { vectorOne_size: this.size, vectorTwo_size: vector.size });
+        }
+
+        if (strict && this.shape !== vector.shape) {
+            throw new VectorError(`Dimension mismatch: shapes does not match`,
+                703,
+                { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape });
+        }
+        let vector_one_copy: number[] = this.elements.flat()
+        let vector_two_copy: number[] = vector.elements.flat()
+
+        for (let i = 0; i < this.size; i++) {
+            if (vector_one_copy[i] !== vector_two_copy[i]) {
+
+            }
+        }
+
+        return true;
+
+
+
+
 
     }
 
