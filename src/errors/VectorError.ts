@@ -13,6 +13,7 @@ export default class VectorError extends Error {
         // 601: Vector validation error
         // 602: Vector dimension error
         // 603: Invalid element for vector error
+        // 604: Not an instance of vector
 
         // 701: Vector Addition/Subtraction Error - Occurs when vectors of different dimensions are added or subtracted
         // 702: Invalid Scalar for Vector Multiplication Error - Occurs when a non-numeric value is used for scalar multiplication
