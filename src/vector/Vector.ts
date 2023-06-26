@@ -210,6 +210,11 @@ export class Vector implements VectorTypes {
     }
 
 
+    public normalize(): void {
+        this.scale(this.norm())
+    }
+
+
 
     /**
      * Returns the norm (magnitude) of the vector.
