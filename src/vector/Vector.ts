@@ -300,14 +300,57 @@ export class Vector implements VectorTypes {
         return result;
     }
 
+    /**
+     * Cross product operation between the current vector and the provided vector.
+     *
+     * @param {Vector | number[] | number[][]} vector - The second vector to calculate the cross product with. It can be a Vector instance or a 2D/3D array.
+     * @returns {void} - The function doesn't return a value, it mutates the `elements` property of the class with the result of the cross product.
+     * @throws {VectorError} - Throws an error if the vectors aren't both 3D.
+     */
+    public cross(vector: Vector | number[] | number[][]): void {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector)
+        }
+
+        if (this.size !== 3 || vector.size !== 3) {
+            throw new VectorError("Vectors should be 3-dimensional for the cross product", 707, { vectorOne_size: this.size, vectorTwo_size: vector.size })
+        }
+
+        let vector_one_copy: number[] = this.elements.flat()
+        let vector_two_copy: number[] = vector.elements.flat()
+
+        const first: number = vector_one_copy[1] * vector_two_copy[2] - vector_one_copy[2] * vector_two_copy[1];
+        const second: number = vector_one_copy[2] * vector_two_copy[0] - vector_one_copy[0] * vector_two_copy[2];
+        const third: number = vector_one_copy[0] * vector_two_copy[1] - vector_one_copy[1] * vector_two_copy[0];
+
+
+
+        if (this.isColumn) {
+
+            (this.elements as number[][])[0][0] = first;
+            (this.elements as number[][])[0][1] = second;
+            (this.elements as number[][])[0][2] = third;
+
+
+        } else {
+
+
+            (this.elements as number[])[0] = first;
+            (this.elements as number[])[1] = second;
+            (this.elements as number[])[2] = third;
+
+        }
+
+    }
+
 
     /**
- * Computes the angle between this vector and another vector.
- * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
- * @param inDegrees - If true, the method returns the angle in degrees, otherwise it returns the angle in radians.
- * @returns {number} - The angle between this vector and the given vector.
- * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
- */
+     * Computes the angle between this vector and another vector.
+     * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
+     * @param inDegrees - If true, the method returns the angle in degrees, otherwise it returns the angle in radians.
+     * @returns {number} - The angle between this vector and the given vector.
+     * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
+     */
     public angle(vector: Vector | number[] | number[][], inDegrees: boolean = false): number {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector);

@@ -21,6 +21,7 @@ export default class VectorError extends Error {
         // 704: Zero Vector Normalization Error - Occurs when a normalization operation is attempted on a zero vector 
         // 705: Vector Equality Check Error - Occurs when an equality check is made between vectors of different dimensions
         // 706: Vector Orthogonality Check Error - Occurs when an orthogonality check is made between vectors of different dimensions
+        // 707: Vector cross product error
 
 
         this.statusCode = statusCode;
