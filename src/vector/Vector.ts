@@ -159,8 +159,9 @@ export class Vector implements VectorTypes {
   * Add vectors (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
   * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
   * @throws {VectorError} If the dimensions of the vectors don't match.
+  * @returns {void}
   */
-    public add(...vectors: (Vector | number[] | number[][])[]) {
+    public add(...vectors: (Vector | number[] | number[][])[]): void {
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
@@ -188,6 +189,16 @@ export class Vector implements VectorTypes {
             this.validateVector()
         }
     }
+
+
+    /**
+     * Returns the norm (magnitude) of the vector.
+     * @returns {number} the norm (magnitude) or length of the vector.
+     */
+    public norm(): number {
+        return Math.hypot(...this.elements.flat())
+    }
+
 
 
 }

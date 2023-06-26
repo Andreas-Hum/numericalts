@@ -62,7 +62,7 @@ describe('Vector', () => {
 
         it('Throws an error if non valid elements are added', () => {
             const vector = new Vector([1, 2, 3]);
-            expect(() => vector.addElements("4","2")).toThrow();
+            expect(() => vector.addElements("4", "2")).toThrow();
         })
 
     });
@@ -132,4 +132,28 @@ describe('Vector', () => {
             expect(vector_one.elements).toStrictEqual([12, 15, 18]);
         });
     });
+
+    describe('Vector norm', () => {
+        it('Returns the correct norm for a row vector', () => {
+            const vector = new Vector([3, 4]);
+            const norm = vector.norm();
+            // The norm (or length) of a [3,4] vector is 5
+            expect(norm).toBeCloseTo(5);
+        });
+
+        it('Returns the correct norm for a column vector', () => {
+            const vector = new Vector([[3], [4]]);
+            const norm = vector.norm();
+            // The norm (or length) of a [[3],[4]] vector is also 5
+            expect(norm).toBeCloseTo(5);
+        });
+
+        it('Returns the correct norm when vector has multiple dimensions', () => {
+            const vector = new Vector([3, 4, 0, -5]);
+            const norm = vector.norm();
+            // The norm (or length) of a [3,4,0,-5] vector is sqrt(3*3 + 4*4 + 0*0 +(-5)*(-5)) = sqrt(9+16+0+25) = sqrt(50) = 7.071
+            expect(norm).toBeCloseTo(Math.sqrt(50));
+        });
+    });
+
 });
