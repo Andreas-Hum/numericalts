@@ -5,17 +5,16 @@ describe('Vector', () => {
     describe('When initialized with valid input', () => {
         it('correctly validates a row vector', () => {
             const vector = new Vector([1, 2, 3]);
-            console.log(vector)
             expect(vector.isRow).toBe(true);
             expect(vector.size).toBe(3);
-            expect(vector.shape).toBe('(3,1)');
+            expect(vector.shape).toBe('(1,3)');
         });
 
         it('correctly validates a column vector', () => {
             const vector = new Vector([[1], [2], [3]]);
             expect(vector.isColumn).toBe(true);
             expect(vector.size).toBe(3);
-            expect(vector.shape).toBe('(1,3)');
+            expect(vector.shape).toBe('(3,1)');
         });
     });
 
@@ -24,14 +23,14 @@ describe('Vector', () => {
             const vector = new Vector([1, 2, 3]);
             vector.addElement(4);
             expect(vector.size).toBe(4);
-            expect(vector.shape).toBe('(4,1)');
+            expect(vector.shape).toBe('(1,4)');
         });
 
         it('correctly adds element to a column vector', () => {
             const vector = new Vector([[1], [2], [3]]);
             vector.addElement([4]);
             expect(vector.size).toBe(4);
-            expect(vector.shape).toBe('(1,4)');
+            expect(vector.shape).toBe('(4,1)');
         });
     });
 
@@ -40,14 +39,46 @@ describe('Vector', () => {
             const vector = new Vector([1, 2, 3]);
             vector.addElements([4, 5]);
             expect(vector.size).toBe(5);
-            expect(vector.shape).toBe('(5,1)');
+            expect(vector.shape).toBe('(1,5)');
         });
 
         it('correctly adds multiple elements to a column vector', () => {
             const vector = new Vector([[1], [2], [3]]);
             vector.addElements([[4], [5]]);
             expect(vector.size).toBe(5);
-            expect(vector.shape).toBe('(1,5)');
+            expect(vector.shape).toBe('(5,1)');
+        });
+    });
+
+    describe('Adding two vector instances together', () => {
+        it("correctly add's two row vectors together", () => {
+            const vector_one = new Vector([1, 2, 3]);
+            const vector_two = new Vector([1, 2, 3]);
+            vector_one.add(vector_two)
+            expect(vector_one.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it("correctly add's two column vectors together", () => {
+            const vector_one = new Vector([[1], [2], [3]]);
+            const vector_two = new Vector([[1], [2], [3]]);
+            vector_one.add(vector_two)
+            expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
+        });
+    });
+
+    describe('Adding a vector instance with a non vector instance', () => {
+        it("correctly add's two row vectors together", () => {
+            const vector_one = new Vector([1, 2, 3]);
+            const vector_two = [1, 2, 3];
+            vector_one.add(vector_two)
+            expect(vector_one.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it("correctly add's two column vectors together", () => {
+            const vector_one = new Vector([[1], [2], [3]]);
+            const vector_two = [[1], [2], [3]];
+            vector_one.add(vector_two)
+            expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
         });
     });
 });

@@ -77,11 +77,11 @@ export class Vector implements VectorTypes {
     private updateDimensions(): void {
 
         if (this.isRow) {
-            this.rows = this.size;
-            this.columns = 1;
-        } else if (this.isColumn) {
             this.columns = this.size;
             this.rows = 1;
+        } else if (this.isColumn) {
+            this.rows = this.size;
+            this.columns = 1;
         } else {
             throw new VectorError("Vector must be either a row vector or a column vector.", 602);
         }
@@ -178,7 +178,7 @@ export class Vector implements VectorTypes {
             }
         }
 
-
+        this.validateVector()
     }
 
 
