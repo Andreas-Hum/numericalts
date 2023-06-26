@@ -395,6 +395,29 @@ describe('Vector', () => {
         });
     });
 
+    describe('Testing isOrthogonal', () => {
+        const vectorA = new Vector([1, 0]);
+        const vectorB = new Vector([[0], [1]]);
+        const vectorC = new Vector([1, 2]);
+
+        it('Testing orthogonal vectors', () => {
+            expect(vectorA.isOrthogonal(vectorB)).toBe(true);
+        });
+
+        it('Testing non-orthogonal vectors', () => {
+            expect(vectorA.isOrthogonal(vectorC)).toBe(false);
+        });
+
+        it('Throws an error for non-array inputs', () => {
+            expect(() => vectorA.isOrthogonal("Test")).toThrow();
+        });
+
+        it('Testing array inputs', () => {
+            expect(vectorA.isOrthogonal([0, 1])).toBe(true);
+            expect(vectorC.isOrthogonal([[1], [2]])).toBe(false);
+        });
+    });
+
 
 
 });

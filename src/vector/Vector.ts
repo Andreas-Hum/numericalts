@@ -395,11 +395,18 @@ export class Vector implements VectorTypes {
 
         let vector_one_copy: number[] = this.elements.flat()
         let vector_two_copy: number[] = vector.elements.flat()
-        let distance: number = vector_one_copy.reduce((acc: number, cur: number, index: number) => acc + Math.pow(vector_two_copy[index] - cur, 2),0);
-
-
+        let distance: number = vector_one_copy.reduce((acc: number, cur: number, index: number) => acc + Math.pow(vector_two_copy[index] - cur, 2), 0);
 
         return Math.sqrt(distance);
+    }
+
+    /**
+     * Checks if the given vector is orthogonal to the vector instance
+     * @param {Vector | number[] | number[][]} vector - The vector object, one-dimensional number array or two-dimensional number array to compare.
+     * @returns {boolean} True if the dot product of this vector and the given vector is zero, otherwise false.
+     */
+    public isOrthogonal(vector: Vector | number[] | number[][]): boolean {
+        return this.dot(vector) === 0;
     }
 
 
