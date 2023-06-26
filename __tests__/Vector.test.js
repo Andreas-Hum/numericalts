@@ -67,7 +67,7 @@ describe('Vector', () => {
 
     });
 
-    describe('Adding two vector instances together', () => {
+    describe('Addition', () => {
         it("correctly add's two row vectors together", () => {
             const vector_one = new Vector([1, 2, 3]);
             const vector_two = new Vector([1, 2, 3]);
@@ -132,6 +132,50 @@ describe('Vector', () => {
             expect(vector_one.elements).toStrictEqual([12, 15, 18]);
         });
     });
+
+    describe('Vector subtraction', () => {
+        it('Subtracts row vectors correctly', () => {
+            const vector1 = new Vector([4, 5, 6]);
+            const vector2 = new Vector([1, 2, 3]);
+            vector1.subtract(vector2);
+            // The result of [4,5,6] - [1,2,3] should be [3,3,3]
+            expect(vector1.elements).toStrictEqual([3, 3, 3]);
+        });
+
+        it('Subtracts column vectors correctly', () => {
+            const vector1 = new Vector([[4], [5], [6]]);
+            const vector2 = new Vector([[1], [2], [3]]);
+            vector1.subtract(vector2);
+            // The result of [[4],[5],[6]] - [[1],[2],[3]] should be [[3],[3],[3]]
+            expect(vector1.elements).toStrictEqual([[3], [3], [3]]);
+        });
+
+        it('Throws an error for vectors of mismatched size', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([1, 2]);
+            expect(() => vector1.subtract(vector2)).toThrow();
+        });
+
+        it('Subtracts multiple vectors correctly', () => {
+            const vector1 = new Vector([10, 10, 10]);
+            const vector2 = new Vector([1, 2, 3]);
+            const vector3 = new Vector([5, 5, 5]);
+            vector1.subtract(vector2, vector3);
+            // The result of [10,10,10] - [1,2,3] - [5,5,5] should be [4,3,2]
+            expect(vector1.elements).toStrictEqual([4, 3, 2]);
+        });
+
+        it('Subtracts vectors correctly when passed as arrays', () => {
+            const vector = new Vector([10, 10, 10]);
+            const array1 = [1, 2, 3];
+            const array2 = [5, 5, 5];
+            vector.subtract(array1, array2);
+            // The result of [10,10,10] - [1,2,3] - [5,5,5] should be [4,3,2]
+            expect(vector.elements).toStrictEqual([4, 3, 2]);
+        });
+    });
+
+
 
     describe('Vector norm', () => {
         it('Returns the correct norm for a row vector', () => {
