@@ -203,5 +203,37 @@ describe('Vector', () => {
     });
 
 
+    describe('Vector dot product', () => {
+        it('Calculates dot product correctly for row vectors', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([4, 5, 6]);
+            const result = vector1.dot(vector2);
+            // The dot product of [1,2,3] and [4,5,6] is 1*4 + 2*5 + 3*6 = 32
+            expect(result).toBe(32);
+        });
+
+        it('Calculates dot product correctly for column vectors', () => {
+            const vector1 = new Vector([[1], [2], [3]]);
+            const vector2 = new Vector([[4], [5], [6]]);
+            const result = vector1.dot(vector2);
+            // The dot product of [[1],[2],[3]] and [[4],[5],[6]] is 1*4 + 2*5 + 3*6 = 32
+            expect(result).toBe(32);
+        });
+
+        it('Throws an error for vectors of mismatched size', () => {
+            const vector1 = new Vector([1, 2, 3]);
+            const vector2 = new Vector([1, 2]);
+            expect(() => vector1.dot(vector2)).toThrow();
+        });
+
+        it('Calculates dot product correctly for vectors passed as arrays', () => {
+            const vector = new Vector([1, 2, 3]);
+            const array = [4, 5, 6];
+            const result = vector.dot(array);
+            // The dot product of [1,2,3] and [4,5,6] is 1*4 + 2*5 + 3*6 = 32
+            expect(result).toBe(32);
+        });
+    });
+
 
 });
