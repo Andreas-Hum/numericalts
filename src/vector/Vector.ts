@@ -203,16 +203,26 @@ export class Vector implements VectorTypes {
         }
 
         if (this.isColumn) {
-            this.elements = (this.elements as number[][]).map((entry: number[]) => entry[0] * scalar)
+            this.elements = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
         } else {
             this.elements = (this.elements as number[]).map((entry: number) => entry * scalar)
         }
     }
 
 
+    /**
+     * Normalizes the vector (i.e. scale the vector to unit length).
+     * This modifies the original vector.
+     * @throws {VectorError} If the vector magnitude or norm is zero.
+     */
     public normalize(): void {
-        this.scale(this.norm())
+        const norm = this.norm();
+        if (norm === 0) {
+            throw new VectorError("Cannot normalize a zero vector.", 704)
+        }
+        this.scale(1 / norm);
     }
+
 
 
 

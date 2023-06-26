@@ -179,4 +179,29 @@ describe('Vector', () => {
     });
 
 
+    describe('Vector normalization', () => {
+        it('Normalizes a row vector correctly', () => {
+            const vector = new Vector([1, 2, 2]);
+            vector.normalize();
+            // The result of normalizing [1,2,2] should be [1/3, 2/3, 2/3]
+            const expected = [1 / 3, 2 / 3, 2 / 3];
+            expected.forEach((val, i) => expect(vector.elements[i]).toBeCloseTo(val));
+        });
+
+        it('Normalizes a column vector correctly', () => {
+            const vector = new Vector([[3], [4]]);
+            vector.normalize();
+            // The result of normalizing [[3],[4]] should be [[3/5], [4/5]]
+            const expected = [[3 / 5], [4 / 5]];
+            expected.forEach((val, i) => expect(vector.elements[i][0]).toBeCloseTo(val[0]));
+        });
+
+        it('Throws an error for zero vector', () => {
+            const vector = new Vector([0, 0, 0]);
+            expect(() => vector.normalize()).toThrow();
+        });
+    });
+
+
+
 });
