@@ -5,6 +5,9 @@ import type VectorTypes from "./VectorTypes";
 // Importing a custom Error class dedicated for errors related to Vectors
 import VectorError from "../errors/VectorError";
 
+// Importing constants
+import { RADIENTCONSTANT } from "../util/constants";
+
 
 /**
 * A class that represents a mathemathical Vector.
