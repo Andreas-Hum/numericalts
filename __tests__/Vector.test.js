@@ -156,4 +156,28 @@ describe('Vector', () => {
         });
     });
 
+
+    describe('Vector scaling', () => {
+        it('Scales a row vector correctly', () => {
+            const vector = new Vector([1, 2, 3]);
+            vector.scale(2);
+            // The result of scaling [1,2,3] by 2 should be [2,4,6]
+            expect(vector.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it('Scales a column vector correctly', () => {
+            const vector = new Vector([[1], [2], [3]]);
+            vector.scale(2);
+            // The result of scaling [[1],[2],[3]] by 2 should be [[2],[4],[6]]
+            console.log(vector)
+            expect(vector.elements).toStrictEqual([[2], [4], [6]]);
+        });
+
+        it('Throws an error for invalid scalars', () => {
+            const vector = new Vector([1, 2, 3]);
+            expect(() => vector.scale('two')).toThrow();
+        });
+    });
+
+
 });
