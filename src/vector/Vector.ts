@@ -488,9 +488,15 @@ export class Vector implements VectorTypes {
 
 
         const scalar: number = this.dot(vector) / Math.pow(norm, 2)
-        const result: Vector = Vector.ones(this.size, columnVector);
-        result.scale(scalar)
+        let result: Vector;
+        if (columnVector) {
+            result = new Vector(vector.elements.flat().map((ele: any) => [ele]));
+        } else {
+            result = new Vector(vector.elements.flat());
 
+        }
+
+        result.scale(scalar)
         return result;
     }
 

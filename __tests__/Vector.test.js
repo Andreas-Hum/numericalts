@@ -477,8 +477,6 @@ describe('Vector', () => {
         });
     });
 
-
-
     describe('Vector of ones ', () => {
         const vector1 = Vector.ones(4);
         const vector2 = Vector.ones(4, true);
@@ -492,6 +490,43 @@ describe('Vector', () => {
         it('Vector equality of ones on column vector', () => {
             expect(vector2.equal(vector4)).toBe(true);
         });
+    });
+
+    describe('Vector projection', () => {
+        const vector1 = new Vector([3, 4]);
+        const vector2 = new Vector([5, -12]);
+        const vector3 = new Vector([[3], [4]]);
+        const vector4 = new Vector([[5], [-12]]);
+        const zeroVector = new Vector([0, 0])
+
+
+        it('Vector projection with two row vectos', () => {
+            const expected = [-(165 / 169), 396 / 169];
+            const projVector = vector1.proj(vector2)
+            expected.forEach((val, i) => expect(projVector.elements[i]).toBeCloseTo(val));
+
+        });
+
+        it('Vector projection with two column vectos', () => {
+            const expected = [[-(165 / 169)], [396 / 169]];
+            const projVector = vector3.proj(vector4, true)
+            expected.forEach((val, i) => expect(projVector.elements[i][0]).toBeCloseTo(val[0]));
+
+        });
+
+        it('Vector projection with one column and one row vector', () => {
+            const expected = [-(165 / 169), 396 / 169];
+            const projVector = vector1.proj(vector4)
+            expected.forEach((val, i) => expect(projVector.elements[i]).toBeCloseTo(val));
+
+        });
+
+        it('Vector projection on zero vector throws an error', () => {
+            expect(() => vector1.proj(zeroVector)).toThrow();
+
+        });
+
+
     });
 
 
