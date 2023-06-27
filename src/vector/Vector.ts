@@ -526,7 +526,13 @@ export class Vector implements VectorTypes {
         }
     }
 
-    
+
+    /**
+     * CReturns a new vector of a given size, filled with zeros.
+     * @param {number} size - The size of the required vector.
+     * @param {boolean} [columnVector=false] - A boolean indicating if the returned vector is a column vector. When true, a 2D array structure is returned.
+     * @returns {Vector} The newly created vector filled with zeros.
+     */
     public static zeros(size: number, columnVector: boolean = false): Vector {
         if (columnVector) {
             return new Vector((new Array(size)).fill(0, 0).map((ele: number) => [ele]))
@@ -534,6 +540,7 @@ export class Vector implements VectorTypes {
             return new Vector((new Array(size)).fill(0, 0))
         }
     }
+
 
 
 
