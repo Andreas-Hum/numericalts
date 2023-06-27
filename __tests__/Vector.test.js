@@ -261,7 +261,7 @@ describe('Vector', () => {
             const vector2 = new Vector([[4], [5], [6]]);
 
             // The cross product of [[1],[2],[3]] and [[4],[5],[6]] is [[-3], [6], [-3]]
-            expect(vector1.cross(vector2,true).elements).toEqual([[-3], [6], [-3]]);
+            expect(vector1.cross(vector2, true).elements).toEqual([[-3], [6], [-3]]);
         });
 
         it('Throws an error for vectors of mismatched size', () => {
@@ -476,6 +476,24 @@ describe('Vector', () => {
             expect(() => vector1.equal(vector3)).toThrow();
         });
     });
+
+
+
+    describe('Vector of ones ', () => {
+        const vector1 = Vector.ones(4);
+        const vector2 = Vector.ones(4, true);
+        const vector3 = new Vector([1, 1, 1, 1])
+        const vector4 = new Vector([[1], [1], [1], [1]])
+
+        it('Vector equality of ones on row vector', () => {
+            expect(vector1.equal(vector3)).toBe(true);
+        });
+
+        it('Vector equality of ones on column vector', () => {
+            expect(vector2.equal(vector4)).toBe(true);
+        });
+    });
+
 
 
 

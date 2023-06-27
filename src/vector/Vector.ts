@@ -431,13 +431,13 @@ export class Vector implements VectorTypes {
     }
 
     /**
- * Checks if two vectors are equal within a defined tolerance. 
-    * 
+    * Checks if two vectors are equal within a defined tolerance.
+    *
     * @param {Vector | number[] | number[][]} vector - The vector to be compared with.
     * @param {boolean} [strict=false] - Setting this to `true` will also check if their shapes are equal. Default is `false`.
-    * 
+    *
     * @throws {VectorError} If the vectors' sizes or, when strict is set to true, their shapes do not match.
-    * 
+    *
     * @returns {boolean} Returns `true` if the elements of the two vectors are equal within the tolerance, `false` otherwise.
     */
     public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
