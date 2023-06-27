@@ -46,30 +46,35 @@ export class Vector implements VectorTypes {
     * @returns {void}
     */
     private validateVector(): void {
+        let invalidEntry: any;
 
-        if ((this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
+        const validationVector: any[] = this.elements.flat()
+
+        invalidEntry = validationVector.find((e: any) => typeof e !== "number")
+        if (invalidEntry !== undefined) {
+            throw new VectorError(`Invalid element for vector. Expected number, got: ${typeof invalidEntry}.`, 603, { invalidEntry: invalidEntry });
+        } else if ((this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
             this.isColumn = true;
             this.isRow = false;
 
             const invalidDimensionIndex = this.elements.findIndex((element: any) => Array.isArray(element) && element.length > 1);
-            const levelDimentionFailure = this.elements.flat().findIndex((element: any) => Array.isArray(element))
+            const levelDimensionFailure = this.elements.flat().findIndex((element: any) => Array.isArray(element))
             if (invalidDimensionIndex !== -1) {
                 throw new VectorError(`Dimensions of entries cannot be greater than 1. Invalid entry found at ${invalidDimensionIndex}.`, 601, { invalidEntry: this.elements[invalidDimensionIndex] });
-            } else if (levelDimentionFailure !== -1) {
-                throw new VectorError(`The depth of entries cannot be greater than 1. Invalid entry found at ${levelDimentionFailure}.`, 601, { invalidEntry: this.elements[levelDimentionFailure] })
+            } else if (levelDimensionFailure !== -1) {
+                throw new VectorError(`The depth of entries cannot be greater than 1. Invalid entry found at ${levelDimensionFailure}.`, 601, { invalidEntry: this.elements[levelDimensionFailure] })
             }
         } else if ((this.elements as number[]).every((e: number) => !Array.isArray(e))) {
             this.isColumn = false;
             this.isRow = true;
-
         } else {
-            throw new VectorError("Entry missmatch, got columns and row entries", 601, this.elements)
+            throw new VectorError("Entry mismatch, got columns and row entries", 601, this.elements)
         }
 
         this.updateDimensions();
         this.updateShape();
-
     }
+
 
     /**
     * Updates the dimensions of the Vector.
@@ -128,22 +133,43 @@ export class Vector implements VectorTypes {
     * @param {number | number[] | (number | number[])[]} elements - The elements to be added.
     * @returns {void}
     */
-    public addElements(elements: (number | number[])[]): void {
-
-        elements = elements.flat(1000)
-        const validation: number | undefined = (elements as number[]).find((e: number) => typeof e !== "number")
-        if (validation !== undefined) {
-            throw new VectorError('Invalid elements for the vector', 603);
+    public addElements(elementsToAdd: Vector | number[] | number[][], strict: boolean = false): void {
+        if (!(elementsToAdd instanceof Vector)) {
+            elementsToAdd = new Vector(elementsToAdd)
         }
+
+        console.log(elementsToAdd)
 
         if (this.isColumn) {
-            this.elements = (this.elements as number[][]).concat(elements.map((e: number) => [e]))
-        } else {
-            //@ts-ignore
-            this.elemetns = this.elements.concat(elements)
-        }
+            if (elementsToAdd.isColumn) {
+                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements)
+            } else {
+                if (strict) {
+                    throw new VectorError(`Dimension mismatch: shapes does not match`,
+                        703,
+                        { vectorOne_shape: this.shape, vectorTwo_shape: elementsToAdd.shape });
+                }
+                //@ts-ignore
+                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements.map((e: number) => [e]))
+            }
 
-        this.size += elements.length
+        } else {
+            if (strict && elementsToAdd.isColumn) {
+                throw new VectorError(`Dimension mismatch: shapes does not match`,
+                    703,
+                    { vectorOne_shape: this.shape, vectorTwo_shape: elementsToAdd.shape });
+            } else if (elementsToAdd.isColumn) {
+                //@ts-ignore
+                this.elements = this.elements.concat(elementsToAdd.elements.flat())
+            } else {
+                //@ts-ignore
+                this.elements = this.elements.concat(elementsToAdd.elements)
+            }
+
+
+        }
+        this.size += elementsToAdd.size
+
         this.validateVector();
 
 
@@ -162,7 +188,6 @@ export class Vector implements VectorTypes {
     /**
   * Add vectors (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
   * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
-   * @param {boolean} [strict=false] - Setting this to `true` will  check if their shapes are equal before adding. Default is `false`.
   * @throws {VectorError} If the dimensions of the vectors don't match.
   * @returns {void}
   */

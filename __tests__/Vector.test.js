@@ -36,7 +36,7 @@ describe('Vector', () => {
 
 
     // Adding elements
-    
+
     describe('Vector adding multiple elements', () => {
         it('Add\'s multiple elements to a row vector', () => {
             rowVector123.addElements([4, 5]);
@@ -50,8 +50,22 @@ describe('Vector', () => {
             expect(columnVector123.shape).toBe('(5,1)');
         });
 
-        it('Throws an error if non valid elements are added', () => {
-            expect(() => rowVector123.addElements("4", "2")).toThrow();
+        it('Add\'s the elements of two vectors', () => {
+            columnVector123.addElements(rowVector123);
+            expect(columnVector123.size).toBe(6);
+            expect(columnVector123.shape).toBe('(6,1)');
+        });
+
+        it('Error: Non valid type is added', () => {
+            expect(() => rowVector123.addElements(["4"])).toThrow();
+        })
+
+        it('Error: Non array is added', () => {
+            expect(() => rowVector123.addElements(4)).toThrow();
+        })
+
+        it('Error: Array depth is greater than 1', () => {
+            expect(() => rowVector123.addElements([[[1]]])).toThrow();
         })
 
     });
