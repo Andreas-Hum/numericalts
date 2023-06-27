@@ -198,8 +198,14 @@ export class Vector implements VectorTypes {
                 vector = new Vector(vector)
             }
 
+            if (vector.size !== this.size) {
+                throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: this.size, errorVector: vector.size })
+            }
+
             let vector_one_copy: number[] = this.elements.flat()
             let vector_two_copy: number[] = vector.elements.flat()
+
+
 
             if (this.isColumn) {
                 for (let i = 0; i < this.size; i++) {
@@ -228,10 +234,8 @@ export class Vector implements VectorTypes {
                 vector = new Vector(vector)
             }
 
-            if (this.shape !== vector.shape) {
-                throw new VectorError(`Dimension mismatch: can't subtract a ${this.shape} vector to a ${vector.shape} vector`,
-                    701,
-                    { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape })
+            if (vector.size !== this.size) {
+                throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: this.size, errorVector: vector.size })
             }
 
             let vector_one_copy: number[] = this.elements.flat()
@@ -272,30 +276,64 @@ export class Vector implements VectorTypes {
 
     }
 
+    /**
+     * Calculate the Euclidean norm of the vector.
+     * @return {number} The Euclidean norm.
+     */
+    public euclNorm(): number {
+        const array = this.elements.flat();
+        return Math.sqrt(array.map(x => x ** 2).reduce((acc, x) => acc + x));
+    }
 
     /**
-     * Normalizes the vector (i.e. scale the vector to unit length).
+    * Calculate the infinity norm of the vector. 
+    * @return {number} The infinity norm (maximum absolute value).
+    */
+    public infNorm(): number {
+        const array = this.elements.flat();
+        return Math.max(...array.map(x => Math.abs(x)));
+    }
+
+    /**
+    * Calculate the Manhattan norm of the vector.
+    * @return {number} The Manhattan norm (sum of absolute values).
+    */
+    public manhNorm(): number {
+        const array = this.elements.flat();
+        return array.map(x => Math.abs(x)).reduce((acc, x) => acc + x);
+    }
+
+
+    /**
+     * Normalizes the vector (i.e., scale the vector to unit length) using the specified norm type.
      * This modifies the original vector.
-     * @throws {VectorError} If the vector magnitude or norm is zero.
+     * @param {string} type The type of norm to use for normalization. Defaults to "euclidean".
+     * @throws {VectorError} If the vector norm is zero.
      */
-    public normalize(): void {
-        const norm = this.norm();
+    public normalize(type: "euclidean" | "infinity" | "manhattan" = "euclidean"): void {
+        let norm;
+        switch (type) {
+            case "euclidean":
+                norm = this.euclNorm();
+                break;
+            case "infinity":
+                norm = this.infNorm();
+                break;
+            case "manhattan":
+                norm = this.manhNorm();
+                break;
+            default:
+                throw new VectorError(`Unknown norm type: ${type}`, 708, { type });
+        }
+
         if (Math.abs(norm) < DELTA) {
-            throw new VectorError("Cannot normalize a zero vector.", 704)
+            throw new VectorError("Cannot normalize a zero vector.", 704);
         }
         this.scale(1 / norm);
     }
 
 
 
-
-    /**
-     * Returns the norm (magnitude) of the vector.
-     * @returns {number} the norm (magnitude) or length of the vector.
-     */
-    public norm(): number {
-        return Math.hypot(...this.elements.flat())
-    }
 
 
     /**
@@ -383,7 +421,7 @@ export class Vector implements VectorTypes {
                 { vectorOne_size: this.size, vectorTwo_size: vector.size });
         }
 
-        const denominator: number = this.norm() * vector.norm();
+        const denominator: number = this.euclNorm() * vector.euclNorm();
 
         if (Math.abs(denominator) < DELTA) {
             throw new VectorError("Cannot take the angle of a zero vector.", 704);
@@ -449,7 +487,7 @@ export class Vector implements VectorTypes {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector);
         }
-        return Math.abs(this.dot(vector)) < DELTA && Math.abs(this.norm()) - 1 < DELTA && Math.abs(vector.norm()) - 1 < DELTA;
+        return Math.abs(this.dot(vector)) < DELTA && Math.abs(this.euclNorm()) - 1 < DELTA && Math.abs(vector.euclNorm()) - 1 < DELTA;
 
     }
 
@@ -504,7 +542,7 @@ export class Vector implements VectorTypes {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector);
         }
-        const norm: number = vector.norm();
+        const norm: number = vector.euclNorm();
         if (Math.abs(norm) < DELTA) {
             throw new VectorError("Cannot project onto a zero vector", 704);
         }
@@ -599,6 +637,18 @@ export class Vector implements VectorTypes {
     }
 
 
+    /**
+     * Creates a unit vector of the specified size with a 1 at the specified index.
+     * This could be a row vector or a column vector.
+     *
+     * @param {number} size - The size or dimension of the unit vector to be created.
+     * @param {number} index - The index at which the value of 1 should be placed.
+     * @param {boolean} columnVector - Optional. A boolean to indicate if the unit vector should be a column vector. Defaults to false, indicating a row vector.
+     * 
+     * @throws {VectorError} If the supplied index is less than 0 or greater than the size.
+     * 
+     * @return {Vector} The created unit vector.
+     */
     public static createUnitVector(size: number, index: number, columnVector: boolean = false): Vector {
         if (index > size || index < 0) {
             throw new VectorError("Dimention missmatch: index is less than or equal to zero or the index is greater than the size", 602, { size, index })

@@ -22,6 +22,7 @@ export default class VectorError extends Error {
         // 705: Vector Equality Check Error - Occurs when an equality check is made between vectors of different dimensions
         // 706: Vector Orthogonality Check Error - Occurs when an orthogonality check is made between vectors of different dimensions
         // 707: Vector cross product error
+        // 708: Vector norm error - Unknown error
 
 
         this.statusCode = statusCode;
