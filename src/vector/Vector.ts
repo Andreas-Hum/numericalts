@@ -99,28 +99,28 @@ export class Vector implements VectorTypes {
         this.shape = `(${this.rows},${this.columns})`;
     }
 
-    /**
-    * Adds an element to the Vector.
-    * @public
-    * @param {number | number[]} element - The element to be added.
-    * @returns {void}
-    */
-    public addElement(element: number | number[]): void {
+    // /** DEPRICATED 
+    // * Adds an element to the Vector.
+    // * @public
+    // * @param {number | number[]} element - The element to be added.
+    // * @returns {void}
+    // */
+    // public addElement(element: number | number[]): void {
 
-        if (this.isRow && typeof element === 'number') {
-            (this.elements as number[]).push(element);
-        } else if (this.isColumn && typeof element === 'number') {
-            (this.elements as number[][]).push([element]);
-        } else if (this.isColumn && Array.isArray(element) && element.length === 1) {
-            (this.elements as number[][]).push(element);
-        } else {
-            throw new VectorError('Invalid element for the vector', 603, { invalidElement: element });
-        }
+    //     if (this.isRow && typeof element === 'number') {
+    //         (this.elements as number[]).push(element);
+    //     } else if (this.isColumn && typeof element === 'number') {
+    //         (this.elements as number[][]).push([element]);
+    //     } else if (this.isColumn && Array.isArray(element) && element.length === 1) {
+    //         (this.elements as number[][]).push(element);
+    //     } else {
+    //         throw new VectorError('Invalid element for the vector', 603, { invalidElement: element });
+    //     }
 
-        this.size++;
-        this.validateVector();
+    //     this.size++;
+    //     this.validateVector();
 
-    }
+    // }
 
     /**
     * Adds multiple elements to the Vector.
@@ -128,20 +128,22 @@ export class Vector implements VectorTypes {
     * @param {number | number[] | (number | number[])[]} elements - The elements to be added.
     * @returns {void}
     */
-    public addElements(elements: number | number[] | (number | number[])[]): void {
+    public addElements(elements: (number | number[])[]): void {
 
-        if (typeof elements === 'number' || (Array.isArray(elements) && elements.length === 1 && elements.every((e: number) => typeof e === "number"))) {
-            elements = [elements as number];
+        elements = elements.flat(1000)
+        const validation: number | undefined = (elements as number[]).find((e: number) => typeof e !== "number")
+        if (validation !== undefined) {
+            throw new VectorError('Invalid elements for the vector', 603);
         }
 
-        if (Array.isArray(elements) && (this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
-            elements = (elements as any[]).flat();
+        if (this.isColumn) {
+            this.elements = (this.elements as number[][]).concat(elements.map((e: number) => [e]))
+        } else {
+            //@ts-ignore
+            this.elemetns = this.elements.concat(elements)
         }
 
-        (elements as any[]).forEach(element => {
-            this.addElement(element);
-        });
-
+        this.size += elements.length
         this.validateVector();
 
 
@@ -160,19 +162,15 @@ export class Vector implements VectorTypes {
     /**
   * Add vectors (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
   * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
+   * @param {boolean} [strict=false] - Setting this to `true` will  check if their shapes are equal before adding. Default is `false`.
   * @throws {VectorError} If the dimensions of the vectors don't match.
   * @returns {void}
   */
+
     public add(...vectors: (Vector | number[] | number[][])[]): void {
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
-            }
-
-            if (this.shape !== vector.shape) {
-                throw new VectorError(`Dimension mismatch: can't add a ${this.shape} vector to a ${vector.shape} vector`,
-                    701,
-                    { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape })
             }
 
             let vector_one_copy: number[] = this.elements.flat()
@@ -535,6 +533,8 @@ export class Vector implements VectorTypes {
 
 
 
+
+
     /**
      * 
      * 
@@ -571,6 +571,25 @@ export class Vector implements VectorTypes {
         } else {
             return new Vector((new Array(size)).fill(0, 0))
         }
+    }
+
+
+    public static createUnitVector(size: number, index: number, columnVector: boolean = false): Vector {
+        if (index > size || index < 0) {
+            throw new VectorError("Dimention missmatch: index is less than or equal to zero or the index is greater than the size", 602, { size, index })
+        }
+
+        let unitVector: Vector;
+        if (columnVector) {
+            unitVector = Vector.zeros(size, true);
+            (unitVector.elements as number[][])[index][0] = 1;
+        } else {
+            unitVector = Vector.zeros(size)
+            unitVector.elements[index] = 1;
+        }
+
+        return unitVector;
+
     }
 
 
