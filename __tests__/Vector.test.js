@@ -577,6 +577,20 @@ describe('Vector', () => {
         });
     });
 
+    describe('Vector sum', () => {
+        const vector1 = new Vector([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        const vector2 = new Vector([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]);
+
+        it('Vector sum of a row vector', () => {
+            expect(vector1.sum()).toEqual(55);
+
+        });
+        it('Vector sum of a column vector', () => {
+            expect(vector2.sum()).toEqual(55);
+
+        });
+    });
+
 
 
 
