@@ -500,7 +500,30 @@ export class Vector implements VectorTypes {
         return result;
     }
 
+    /**
+     * Calculates and returns the mean of the the values in the vector.
+     * @returns {number} The mean (average) of the values in the vector.
+     */
+    public mean(): number {
+        const meanVector: Vector = Vector.ones(this.size);
+        meanVector.scale(1 / this.size)
 
+        return this.dot(meanVector)
+    }
+
+
+    /**
+    * Calculates and returns the sum the vector
+    * @returns {number} The sum of the values in the vector.
+    */
+    public sum(): number {
+        return this.dot(Vector.ones(this.size))
+    }
+
+    /**
+     * Transposes the vector. Changes a row vector into a column vector and vice versa.
+     * @returns  {void}
+     */
     public transpose(): void {
         if (this.isColumn) {
             this.elements = this.elements.flat()

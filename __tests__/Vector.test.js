@@ -561,10 +561,21 @@ describe('Vector', () => {
             expect(vector2.equal(vector1)).toBe(true);
 
         });
-
-
     });
 
+    describe('Vector mean', () => {
+        const vector1 = new Vector([1, 2, 3, 4, 5, 6, 7, 8]);
+        const vector2 = new Vector([[1], [2], [3], [4], [5], [6], [7], [8]]);
+
+        it('Vector mean of a row vector', () => {
+            expect(vector1.mean()).toBeCloseTo(4.5);
+
+        });
+        it('Vector mean of a column vector', () => {
+            expect(vector2.mean()).toBeCloseTo(4.5);
+
+        });
+    });
 
 
 
