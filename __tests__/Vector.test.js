@@ -547,6 +547,25 @@ describe('Vector', () => {
 
     });
 
+    describe('Vector transpose', () => {
+        const vector1 = new Vector([3, 4]);
+        const vector2 = new Vector([[3], [4]]);
+
+        it('Vector transpose of a row vector', () => {
+            vector1.transpose()
+            expect(vector1.equal(vector2)).toBe(true);
+
+        });
+        it('Vector transpose of a column vector', () => {
+            vector2.transpose()
+            expect(vector2.equal(vector1)).toBe(true);
+
+        });
+
+
+    });
+
+
 
 
 

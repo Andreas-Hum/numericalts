@@ -490,7 +490,7 @@ export class Vector implements VectorTypes {
         const scalar: number = this.dot(vector) / Math.pow(norm, 2)
         let result: Vector;
         if (columnVector) {
-            result = new Vector(vector.elements.flat().map((ele: any) => [ele]));
+            result = new Vector(vector.elements.flat().map((ele: number) => [ele]));
         } else {
             result = new Vector(vector.elements.flat());
 
@@ -498,6 +498,15 @@ export class Vector implements VectorTypes {
 
         result.scale(scalar)
         return result;
+    }
+
+
+    public transpose(): void {
+        if (this.isColumn) {
+            this.elements = this.elements.flat()
+        } else {
+            this.elements = this.elements.flat().map((e: number) => [e])
+        }
     }
 
 
