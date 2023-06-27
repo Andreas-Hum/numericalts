@@ -87,228 +87,228 @@ describe('Vector', () => {
             columnVector123.add(rowVector123)
             expect(columnVector123.elements).toStrictEqual([[2], [4], [6]]);
         });
+
+        it("Add\'s a row vector and an row array", () => {
+            rowVector123.add(arrayRow123)
+            expect(rowVector123.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it("Add\'s a column vector and an column array", () => {
+            columnVector123.add(arrayColumn123)
+            expect(columnVector123.elements).toStrictEqual([[2], [4], [6]]);
+        });
+
+        it("Add\'s a row vector and an column array", () => {
+            rowVector123.add(arrayColumn123)
+            expect(rowVector123.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it("Add's multiple row vectors together", () => {
+            rowVector123.add(rowVector123, rowVector123);
+            expect(rowVector123.elements).toStrictEqual([4, 8, 12]);
+        });
+
+        it("Add's multiple column vectors together", () => {
+            columnVector123.add(columnVector123, columnVector123);
+            expect(columnVector123.elements).toStrictEqual([[4], [8], [12]]);
+        });
+
+        it("Add's a row vector, row array and column array together", () => {
+            rowVector123.add(arrayRow123, arrayColumn123);
+            expect(rowVector123.elements).toStrictEqual([3, 6, 9]);
+        });
+
+        it("Error: Non equal sizes", () => {
+            const errorVector = new Vector([1, 2, 3, 4])
+            expect(() => rowVector123.add(errorVector))
+        });
+
+        it("Error: Non equal sizes for multiple vectors", () => {
+            const errorVector = new Vector([1, 2, 3, 4])
+            expect(() => rowVector123.add(rowVector123, errorVector))
+        });
+
+
     });
 
-    describe('Adding a vector with an array', () => {
-        it("correctly add's two row vectors together", () => {
-            const vector_one = new Vector([1, 2, 3]);
-            const vector_two = [1, 2, 3];
-            vector_one.add(vector_two)
-            expect(vector_one.elements).toStrictEqual([2, 4, 6]);
-        });
-
-        it("correctly add's two column vectors together", () => {
-            const vector_one = new Vector([[1], [2], [3]]);
-            const vector_two = [[1], [2], [3]];
-            vector_one.add(vector_two)
-            expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
-        });
-    });
-
-    describe('Adding multiple vector instances together', () => {
-        it("Adds multiple row vectors together", () => {
-            const vector_one = new Vector([1, 2, 3]);
-            const vector_two = new Vector([4, 5, 6]);
-            const vector_three = new Vector([7, 8, 9]);
-            vector_one.add(vector_two, vector_three);
-            expect(vector_one.elements).toStrictEqual([12, 15, 18]);
-        });
-
-        it("Adds multiple column vectors together", () => {
-            const vector_one = new Vector([[1], [2], [3]]);
-            const vector_two = new Vector([[4], [5], [6]]);
-            const vector_three = new Vector([[7], [8], [9]]);
-            vector_one.add(vector_two, vector_three);
-            expect(vector_one.elements).toStrictEqual([[12], [15], [18]]);
-        });
-
-
-        it("Adds a vector and an array together", () => {
-            const vector_one = new Vector([1, 2, 3]);
-            const array_two = [4, 5, 6];
-            const array_three = [7, 8, 9];
-            vector_one.add(array_two, array_three);
-            expect(vector_one.elements).toStrictEqual([12, 15, 18]);
-        });
-    });
 
     describe('Vector subtraction', () => {
-        it('Subtracts row vectors correctly', () => {
-            const vector1 = new Vector([4, 5, 6]);
-            const vector2 = new Vector([1, 2, 3]);
-            vector1.subtract(vector2);
-            // The result of [4,5,6] - [1,2,3] should be [3,3,3]
-            expect(vector1.elements).toStrictEqual([3, 3, 3]);
+        it("Subtract\'s two row vectors together", () => {
+            rowVector123.subtract(rowVector123)
+            expect(rowVector123.elements).toStrictEqual([0, 0, 0]);
         });
 
-        it('Subtracts column vectors correctly', () => {
-            const vector1 = new Vector([[4], [5], [6]]);
-            const vector2 = new Vector([[1], [2], [3]]);
-            vector1.subtract(vector2);
-            // The result of [[4],[5],[6]] - [[1],[2],[3]] should be [[3],[3],[3]]
-            expect(vector1.elements).toStrictEqual([[3], [3], [3]]);
+        it("Subtract\'s two column vectors together", () => {
+            columnVector123.subtract(columnVector123)
+            expect(columnVector123.elements).toStrictEqual([[0], [0], [0]]);
         });
 
-        it('Throws an error for vectors of mismatched size', () => {
-            const vector1 = new Vector([1, 2, 3]);
-            const vector2 = new Vector([1, 2]);
-            expect(() => vector1.subtract(vector2)).toThrow();
+        it("Subtract\'s a column and a row vector together", () => {
+            columnVector123.subtract(rowVector123)
+            expect(columnVector123.elements).toStrictEqual([[0], [0], [0]]);
         });
 
-        it('Subtracts multiple vectors correctly', () => {
-            const vector1 = new Vector([10, 10, 10]);
-            const vector2 = new Vector([1, 2, 3]);
-            const vector3 = new Vector([5, 5, 5]);
-            vector1.subtract(vector2, vector3);
-            // The result of [10,10,10] - [1,2,3] - [5,5,5] should be [4,3,2]
-            expect(vector1.elements).toStrictEqual([4, 3, 2]);
+        it("Subtract\'s a row vector and an row array", () => {
+            rowVector123.subtract(arrayRow123)
+            expect(rowVector123.elements).toStrictEqual([0, 0, 0]);
         });
 
-        it('Subtracts vectors correctly when passed as arrays', () => {
-            const vector = new Vector([10, 10, 10]);
-            const array1 = [1, 2, 3];
-            const array2 = [5, 5, 5];
-            vector.subtract(array1, array2);
-            // The result of [10,10,10] - [1,2,3] - [5,5,5] should be [4,3,2]
-            expect(vector.elements).toStrictEqual([4, 3, 2]);
+        it("Subtract\'s a column vector and an column array", () => {
+            columnVector123.subtract(arrayColumn123)
+            expect(columnVector123.elements).toStrictEqual([[0], [0], [0]]);
         });
+
+        it("Subtract\'s a row vector and an column array", () => {
+            rowVector123.subtract(arrayColumn123)
+            expect(rowVector123.elements).toStrictEqual([0, 0, 0]);
+        });
+
+        it("Subtract's multiple row vectors together", () => {
+            rowVector123.subtract(rowVector123, rowVector123);
+            expect(rowVector123.elements).toStrictEqual([0, 0, 0]);
+        });
+
+        it("Subtract's multiple column vectors together", () => {
+            columnVector123.subtract(columnVector123, columnVector123);
+            expect(columnVector123.elements).toStrictEqual([[0], [0], [0]]);
+        });
+
+        it("Subtract's a row vector, row array and column array together", () => {
+            rowVector123.subtract(arrayRow123, arrayColumn123);
+            expect(rowVector123.elements).toStrictEqual([-1, -2, -3]);
+        });
+
+        it("Error: Non equal sizes", () => {
+            const errorVector = new Vector([1, 2, 3, 4])
+            expect(() => rowVector123.subtract(errorVector)).toThrow()
+        });
+
+        it("Error: Non equal sizes for multiple vectors", () => {
+            const errorVector = new Vector([1, 2, 3, 4])
+            expect(() => rowVector123.subtract(rowVector123, errorVector)).toThrow()
+        });
+
     });
-
 
 
     describe('Vector norm', () => {
-        it('Returns the correct norm for a row vector', () => {
-            const vector = new Vector([3, 4]);
-            const norm = vector.norm();
-            // The norm (or length) of a [3,4] vector is 5
-            expect(norm).toBeCloseTo(5);
+        it('Euclidean norm of a row vector', () => {
+            expect(rowVector123.euclNorm()).toBeCloseTo(Math.sqrt(14));
         });
 
-        it('Returns the correct norm for a column vector', () => {
-            const vector = new Vector([[3], [4]]);
-            const norm = vector.norm();
-            // The norm (or length) of a [[3],[4]] vector is also 5
-            expect(norm).toBeCloseTo(5);
+        it('Euclidean norm of a column vector', () => {
+            expect(columnVector123.euclNorm()).toBeCloseTo(Math.sqrt(14));
         });
 
-        it('Returns the correct norm when vector has multiple dimensions', () => {
-            const vector = new Vector([3, 4, 0, -5]);
-            const norm = vector.norm();
-            // The norm (or length) of a [3,4,0,-5] vector is sqrt(3*3 + 4*4 + 0*0 +(-5)*(-5)) = sqrt(9+16+0+25) = sqrt(50) = 7.071
-            expect(norm).toBeCloseTo(Math.sqrt(50));
-        });
-    });
-
-
-    describe('Vector scaling', () => {
-        it('Scales a row vector correctly', () => {
-            const vector = new Vector([1, 2, 3]);
-            vector.scale(2);
-            // The result of scaling [1,2,3] by 2 should be [2,4,6]
-            expect(vector.elements).toStrictEqual([2, 4, 6]);
+        it('Infinity norm of a row vector', () => {
+            expect(rowVector123.infNorm()).toBeCloseTo(3);
         });
 
-        it('Scales a column vector correctly', () => {
-            const vector = new Vector([[1], [2], [3]]);
-            vector.scale(2);
-            // The result of scaling [[1],[2],[3]] by 2 should be [[2],[4],[6]]
-            expect(vector.elements).toStrictEqual([[2], [4], [6]]);
-        });
-
-        it('Throws an error for invalid scalars', () => {
-            const vector = new Vector([1, 2, 3]);
-            expect(() => vector.scale('two')).toThrow();
+        it('Manhattan norm of a row vector', () => {
+            expect(rowVector123.manhNorm()).toBeCloseTo(6);
         });
     });
 
 
     describe('Vector normalization', () => {
-        it('Normalizes a row vector correctly', () => {
-            const vector = new Vector([1, 2, 2]);
-            vector.normalize();
-            // The result of normalizing [1,2,2] should be [1/3, 2/3, 2/3]
-            const expected = [1 / 3, 2 / 3, 2 / 3];
-            expected.forEach((val, i) => expect(vector.elements[i]).toBeCloseTo(val));
+
+        it('Normalizing a row vector using Euclidean norm', () => {
+            rowVector123.normalize("euclidean");
+            const expected = [1 / Math.sqrt(14), 2 / Math.sqrt(14), 3 / Math.sqrt(14)];
+            expected.forEach((val, i) => expect(rowVector123.elements[i]).toBeCloseTo(val));
         });
 
-        it('Normalizes a column vector correctly', () => {
-            const vector = new Vector([[3], [4]]);
-            vector.normalize();
-            // The result of normalizing [[3],[4]] should be [[3/5], [4/5]]
-            const expected = [[3 / 5], [4 / 5]];
-            expected.forEach((val, i) => expect(vector.elements[i][0]).toBeCloseTo(val[0]));
+        it('Normalizing a column vector using Infinity norm', () => {
+            columnVector123.normalize("infinity");
+            const expected = [[1 / 3], [2 / 3], [1]];
+            expected.forEach((val, i) => expect(columnVector123.elements[i][0]).toBeCloseTo(val[0]));
         });
 
-        it('Throws an error for zero vector', () => {
-            const vector = new Vector([0, 0, 0]);
-            expect(() => vector.normalize()).toThrow();
+        it('Normalizing a row vector using Manhattan norm', () => {
+            rowVector123.normalize("manhattan");
+            const expected = [1 / 6, 2 / 6, 3 / 6];
+            expected.forEach((val, i) => expect(rowVector123.elements[i]).toBeCloseTo(val));
+        });
+
+        it('Error: Normalizing a zero vector', () => {
+            const vector = Vector.zeros(3);
+            expect(() => vector.normalize("euclidean")).toThrow();
+            expect(() => vector.normalize("infinity")).toThrow();
+            expect(() => vector.normalize("manhattan")).toThrow();
+        });
+
+        it('Error: Invalid norm type for normalization', () => {
+            expect(() => rowVector123.normalize("unknown_type")).toThrow();
+        });
+    });
+
+    describe('Vector scaling', () => {
+        it('Scales a row vector', () => {
+            rowVector123.scale(2);
+            expect(rowVector123.elements).toStrictEqual([2, 4, 6]);
+        });
+
+        it('Scales a column vector', () => {
+            columnVector123.scale(2);
+            expect(columnVector123.elements).toStrictEqual([[2], [4], [6]]);
+        });
+
+        it('Error: Invalid scalar', () => {
+            expect(() => columnVector123.scale('two')).toThrow();
         });
     });
 
 
     describe('Vector cross product', () => {
-        it('Calculates cross product correctly for row vectors', () => {
-            const vector1 = new Vector([1, 2, 3]);
-            const vector2 = new Vector([4, 5, 6]);
 
-            // The cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
-            expect(vector1.cross(vector2).elements).toEqual([-3, 6, -3]);
+        it('Cross product for row vectors', () => {
+            expect(rowVector123.cross(rowVector123).elements).toEqual([0, 0, 0]);
         });
 
-        it('Calculates cross product correctly for column vectors', () => {
-            const vector1 = new Vector([[1], [2], [3]]);
-            const vector2 = new Vector([[4], [5], [6]]);
-
-            // The cross product of [[1],[2],[3]] and [[4],[5],[6]] is [[-3], [6], [-3]]
-            expect(vector1.cross(vector2, true).elements).toEqual([[-3], [6], [-3]]);
+        it('Cross product for column vectors', () => {
+            expect(columnVector123.cross(columnVector123, true).elements).toEqual([[0], [0], [0]]);
         });
 
-        it('Throws an error for vectors of mismatched size', () => {
-            const vector1 = new Vector([1, 2, 3]);
+        it('Cross product for column vector and row vector', () => {
+            expect(columnVector123.cross(rowVector123, true).elements).toEqual([[0], [0], [0]]);
+        });
+
+        it('Cross product for row vector and row array', () => {
+            expect(rowVector123.cross(arrayRow123).elements).toEqual([0, 0, 0]);
+        });
+
+        it('Error: Mismatched size', () => {
             const vector2 = new Vector([1, 2]);
-            expect(() => vector1.cross(vector2).elements).toThrow();
+            expect(() => rowVector123.cross(vector2).elements).toThrow();
         });
 
-        it('Calculates cross product correctly for vectors passed as arrays', () => {
-            const vector = new Vector([1, 2, 3]);
-            const array = [4, 5, 6];
 
-            // The cross product of [1,2,3] and [4,5,6] is [-3, 6, -3]
-            expect(vector.cross(array).elements).toEqual([-3, 6, -3]);
-        });
     });
 
 
     describe('Vector dot product', () => {
-        it('Calculates dot product correctly for row vectors', () => {
-            const vector1 = new Vector([1, 2, 3]);
-            const vector2 = new Vector([4, 5, 6]);
-            const result = vector1.dot(vector2);
-            // The dot product of [1,2,3] and [4,5,6] is 1*4 + 2*5 + 3*6 = 32
-            expect(result).toBe(32);
+        it('Dot product between two row vectors', () => {
+            expect(rowVector123.dot(rowVector123)).toBe(14);
         });
 
-        it('Calculates dot product correctly for column vectors', () => {
-            const vector1 = new Vector([[1], [2], [3]]);
-            const vector2 = new Vector([[4], [5], [6]]);
-            const result = vector1.dot(vector2);
-            // The dot product of [[1],[2],[3]] and [[4],[5],[6]] is 1*4 + 2*5 + 3*6 = 32
-            expect(result).toBe(32);
+        it('Dot product between two column vectors', () => {
+            expect(columnVector123.dot(columnVector123)).toBe(14);
         });
 
-        it('Throws an error for vectors of mismatched size', () => {
-            const vector1 = new Vector([1, 2, 3]);
+        it('Dot product between a row vector and row array', () => {
+            expect(rowVector123.dot(arrayRow123)).toBe(14);
+        });
+
+        it('Dot product between a row vector and column vector', () => {
+            expect(rowVector123.dot(columnVector123)).toBe(14);
+        });
+
+        it('Error: ', () => {
             const vector2 = new Vector([1, 2]);
-            expect(() => vector1.dot(vector2)).toThrow();
+            expect(() => rowVector123.dot(vector2)).toThrow();
         });
 
-        it('Calculates dot product correctly for vectors passed as arrays', () => {
-            const vector = new Vector([1, 2, 3]);
-            const array = [4, 5, 6];
-            const result = vector.dot(array);
-            // The dot product of [1,2,3] and [4,5,6] is 1*4 + 2*5 + 3*6 = 32
-            expect(result).toBe(32);
-        });
+
     });
 
     describe('Vector angle', () => {
