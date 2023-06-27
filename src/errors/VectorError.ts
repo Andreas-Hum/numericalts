@@ -18,7 +18,7 @@ export default class VectorError extends Error {
         // 701: Vector Addition/Subtraction Error - Occurs when vectors of different dimensions are added or subtracted
         // 702: Invalid Scalar for Vector Multiplication Error - Occurs when a non-numeric value is used for scalar multiplication
         // 703: Vector Dot Product Error - Occurs when the dot product of vectors of different dimensions is calculated
-        // 704: Zero Vector Normalization Error - Occurs when a normalization operation is attempted on a zero vector 
+        // 704: Zero Vector Error - Occurs when an illigal operation is attempted on a zero vector 
         // 705: Vector Equality Check Error - Occurs when an equality check is made between vectors of different dimensions
         // 706: Vector Orthogonality Check Error - Occurs when an orthogonality check is made between vectors of different dimensions
         // 707: Vector cross product error

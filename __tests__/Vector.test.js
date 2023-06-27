@@ -261,7 +261,7 @@ describe('Vector', () => {
             const vector2 = new Vector([[4], [5], [6]]);
 
             // The cross product of [[1],[2],[3]] and [[4],[5],[6]] is [[-3], [6], [-3]]
-            expect(vector1.cross(vector2,false).elements).toEqual([[-3], [6], [-3]]);
+            expect(vector1.cross(vector2,true).elements).toEqual([[-3], [6], [-3]]);
         });
 
         it('Throws an error for vectors of mismatched size', () => {

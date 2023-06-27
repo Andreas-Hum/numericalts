@@ -307,10 +307,11 @@ export class Vector implements VectorTypes {
      * Cross product operation between the current vector and the provided vector.
      *
      * @param {Vector | number[] | number[][]} vector - The second vector to calculate the cross product with. It can be a Vector instance or a 2D/3D array.
+     * @param {boolean} [columnVector=false] - Setting this to `true` will return the cross product as s column vector. Default is `false`.
      * @returns {void} - The function doesn't return a value, it mutates the `elements` property of the class with the result of the cross product.
      * @throws {VectorError} - Throws an error if the vectors aren't both 3D.
      */
-    public cross(vector: Vector | number[] | number[][], rowVector: boolean = true): Vector {
+    public cross(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
         if (!(vector instanceof Vector)) {
             vector = new Vector(vector)
         }
@@ -328,7 +329,7 @@ export class Vector implements VectorTypes {
 
 
 
-        if (!rowVector) {
+        if (columnVector) {
 
             return new Vector([[first], [second], [third]])
 
@@ -344,7 +345,7 @@ export class Vector implements VectorTypes {
     /**
      * Computes the angle between this vector and another vector.
      * @param vector - The other vector, which can be an instance of Vector, a number array, or a 2D number array.
-     * @param inDegrees - If true, the method returns the angle in degrees, otherwise it returns the angle in radians.
+     * @param {boolean} [inDegrees=false] - Setting this to `true` will return the angle in degrees. Default is `false`.
      * @returns {number} - The angle between this vector and the given vector.
      * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
      */
@@ -466,7 +467,47 @@ export class Vector implements VectorTypes {
 
         return true;
 
+    }
 
+    /**
+     * Returns the projection of the current vector onto another vector.
+     *
+     * @param {(Vector | number[] | number[][])} vector - The vector to project onto. This can be an instance of the Vector class, a 1D number array representing a vector, or a 2D number array representing a matrix.
+     * @param {boolean} [columnVector=false] - A boolean indicating if the vector to be returned is a column vector. When true, the method returns a 2D array structure.
+     * @returns {Vector} The returned projected vector.
+     * @throws {VectorError} Throws an error if the norm of the projection vector is zero (as projection onto a zero-vector is not defined).
+     */
+    public proj(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
+        if (!(vector instanceof Vector)) {
+            vector = new Vector(vector);
+        }
+        const norm: number = vector.norm();
+        if (Math.abs(norm) < DELTA) {
+            throw new VectorError("Cannot project onto a zero vector", 704);
+        }
+
+
+        const scalar: number = this.dot(vector) / Math.pow(norm, 2)
+        const result: Vector = Vector.ones(this.size, columnVector);
+        result.scale(scalar)
+
+        return result;
+    }
+
+
+    /**
+     * Returns a new vector of a given size, filled with ones.
+     *
+     * @param {number} size - The size of the required vector.
+     * @param {boolean} [columnVector=false] - A boolean indicating if the returned vector is a column vector. When true, a 2D array structure is returned.
+     * @returns {Vector} The newly created vector filled with ones.
+     */
+    public static ones(size: number, columnVector: boolean = false): Vector {
+        if (columnVector) {
+            return new Vector((new Array(size)).fill(1, 0).map((ele: number) => [ele]))
+        } else {
+            return new Vector((new Array(size)).fill(1, 0))
+        }
     }
 
 
