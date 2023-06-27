@@ -492,6 +492,24 @@ describe('Vector', () => {
         });
     });
 
+
+    describe('Vector of zeros ', () => {
+        const vector1 = Vector.zeros(4);
+        const vector2 = Vector.zeros(4, true);
+        const vector3 = new Vector([0, 0, 0, 0])
+        const vector4 = new Vector([[0], [0], [0], [0]])
+
+        it('Vector equality of zeros on row vector', () => {
+            expect(vector1.equal(vector3)).toBe(true);
+        });
+
+        it('Vector equality of zeros on column vector', () => {
+            expect(vector2.equal(vector4)).toBe(true);
+        });
+    });
+
+
+
     describe('Vector projection', () => {
         const vector1 = new Vector([3, 4]);
         const vector2 = new Vector([5, -12]);
@@ -528,6 +546,7 @@ describe('Vector', () => {
 
 
     });
+
 
 
 

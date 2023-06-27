@@ -501,6 +501,16 @@ export class Vector implements VectorTypes {
     }
 
 
+
+
+    /**
+     * 
+     * 
+     * STATIC METHODS
+     * 
+     * 
+     */
+
     /**
      * Returns a new vector of a given size, filled with ones.
      *
@@ -513,6 +523,15 @@ export class Vector implements VectorTypes {
             return new Vector((new Array(size)).fill(1, 0).map((ele: number) => [ele]))
         } else {
             return new Vector((new Array(size)).fill(1, 0))
+        }
+    }
+
+    
+    public static zeros(size: number, columnVector: boolean = false): Vector {
+        if (columnVector) {
+            return new Vector((new Array(size)).fill(0, 0).map((ele: number) => [ele]))
+        } else {
+            return new Vector((new Array(size)).fill(0, 0))
         }
     }
 
