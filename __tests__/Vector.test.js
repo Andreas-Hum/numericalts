@@ -1,93 +1,78 @@
 const vector_module = require("../dist/vector/Vector")
 const Vector = vector_module.Vector
 
+let rowVector123, columnVector123, arrayRow123, arrayColumn123
+
 describe('Vector', () => {
-    describe('When initialized with valid input', () => {
-        it('correctly validates a row vector', () => {
-            const vector = new Vector([1, 2, 3]);
-            expect(vector.isRow).toBe(true);
-            expect(vector.size).toBe(3);
-            expect(vector.shape).toBe('(1,3)');
+
+
+    beforeEach(() => {
+        rowVector123 = new Vector([1, 2, 3]);
+        columnVector123 = new Vector([[1], [2], [3]]);
+        arrayRow123 = [1, 2, 3];
+        arrayColumn123 = [[1], [2], [3]]
+
+    });
+
+    describe('Vector initialization', () => {
+
+        it('Validation of a row vector', () => {
+            expect(rowVector123.isRow).toBe(true);
+            expect(rowVector123.size).toBe(3);
+            expect(rowVector123.shape).toBe('(1,3)');
         });
 
-        it('correctly validates a column vector', () => {
-            const vector = new Vector([[1], [2], [3]]);
-            expect(vector.isColumn).toBe(true);
-            expect(vector.size).toBe(3);
-            expect(vector.shape).toBe('(3,1)');
+        it('Validation of a column vector', () => {
+
+            expect(columnVector123.isColumn).toBe(true);
+            expect(columnVector123.size).toBe(3);
+            expect(columnVector123.shape).toBe('(3,1)');
         });
 
-        it('Throws an error if there are different types of entries', () => {
+        it('Error: Different types of entries', () => {
             expect(() => new Vector([1, [1], 3])).toThrow();
         })
     });
 
-    describe('addElement', () => {
-        it('correctly adds element to a row vector', () => {
-            const vector = new Vector([1, 2, 3]);
-            vector.addElement(4);
-            expect(vector.size).toBe(4);
-            expect(vector.shape).toBe('(1,4)');
+
+    // Adding elements
+    
+    describe('Vector adding multiple elements', () => {
+        it('Add\'s multiple elements to a row vector', () => {
+            rowVector123.addElements([4, 5]);
+            expect(rowVector123.size).toBe(5);
+            expect(rowVector123.shape).toBe('(1,5)');
         });
 
-        it('correctly adds element to a column vector', () => {
-            const vector = new Vector([[1], [2], [3]]);
-            vector.addElement([4]);
-            expect(vector.size).toBe(4);
-            expect(vector.shape).toBe('(4,1)');
-        });
-
-        it('Throws an error if a non valid element is added', () => {
-            const vector = new Vector([1, 2, 3]);
-            expect(() => vector.addElements("4")).toThrow();
-        })
-
-
-    });
-
-    describe('addElements', () => {
-        it('correctly adds multiple elements to a row vector', () => {
-            const vector = new Vector([1, 2, 3]);
-            vector.addElements([4, 5]);
-            expect(vector.size).toBe(5);
-            expect(vector.shape).toBe('(1,5)');
-        });
-
-        it('correctly adds multiple elements to a column vector', () => {
-            const vector = new Vector([[1], [2], [3]]);
-            vector.addElements([[4], [5]]);
-            expect(vector.size).toBe(5);
-            expect(vector.shape).toBe('(5,1)');
+        it('Add\'s multiple elements to a culumn vector', () => {
+            columnVector123.addElements([[4], [5]]);
+            expect(columnVector123.size).toBe(5);
+            expect(columnVector123.shape).toBe('(5,1)');
         });
 
         it('Throws an error if non valid elements are added', () => {
-            const vector = new Vector([1, 2, 3]);
-            expect(() => vector.addElements("4", "2")).toThrow();
+            expect(() => rowVector123.addElements("4", "2")).toThrow();
         })
 
     });
 
-    describe('Addition', () => {
-        it("correctly add's two row vectors together", () => {
-            const vector_one = new Vector([1, 2, 3]);
-            const vector_two = new Vector([1, 2, 3]);
-            vector_one.add(vector_two)
-            expect(vector_one.elements).toStrictEqual([2, 4, 6]);
+    // Standard vector operations
+
+    describe('Vector addition', () => {
+        it("Add\'s two row vectors together", () => {
+            rowVector123.add(rowVector123)
+            expect(rowVector123.elements).toStrictEqual([2, 4, 6]);
         });
 
-        it("correctly add's two column vectors together", () => {
-            const vector_one = new Vector([[1], [2], [3]]);
-            const vector_two = new Vector([[1], [2], [3]]);
-            vector_one.add(vector_two)
-            expect(vector_one.elements).toStrictEqual([[2], [4], [6]]);
+        it("Add\'s two column vectors together", () => {
+            columnVector123.add(columnVector123)
+            expect(columnVector123.elements).toStrictEqual([[2], [4], [6]]);
         });
 
-        it("Throws an error when vectors have different shapes", () => {
-            const vector_one = new Vector([1, 2, 3]);
-            const vector_two = new Vector([[1], [2], [3]]);
-            expect(() => vector_one.add(vector_two)).toThrow();
+        it("Add\'s a column and a row vector together", () => {
+            columnVector123.add(rowVector123)
+            expect(columnVector123.elements).toStrictEqual([[2], [4], [6]]);
         });
-
     });
 
     describe('Adding a vector with an array', () => {
@@ -590,6 +575,36 @@ describe('Vector', () => {
 
         });
     });
+
+
+    describe('Create unit vector ', () => {
+        const vector1 = Vector.createUnitVector(3, 0);
+        const vector2 = Vector.createUnitVector(3, 0, true);
+
+        it('Create a row unit vector', () => {
+            expect(vector1.equal([1, 0, 0])).toEqual(true);
+
+        });
+
+        it('Create a column unit vector', () => {
+            expect(vector2.equal([[1], [0], [0]])).toEqual(true);
+
+        });
+
+        it('Throws an error for index > size', () => {
+            expect(() => Vector.createUnitVector(3, 4)).toThrow();
+
+        });
+
+        it('Throws an error for index < 0', () => {
+            expect(() => Vector.createUnitVector(3, -1)).toThrow();
+
+        });
+
+
+
+    });
+
 
 
 
