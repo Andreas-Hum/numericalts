@@ -1,7 +1,7 @@
 const vector_module = require("../dist/vector/Vector")
 const Vector = vector_module.Vector
 
-let rowVector123, columnVector123, arrayRow123, arrayColumn123
+let rowVector123, columnVector123, arrayRow123, arrayColumn123, unitVector10, unitVector01, rowVector1234, columnVector1234
 
 describe('Vector', () => {
 
@@ -9,8 +9,14 @@ describe('Vector', () => {
     beforeEach(() => {
         rowVector123 = new Vector([1, 2, 3]);
         columnVector123 = new Vector([[1], [2], [3]]);
+        rowVector1234 = new Vector([1, 2, 3, 4])
+        columnVector1234 = new Vector([[1], [2], [3], [4]])
+
         arrayRow123 = [1, 2, 3];
-        arrayColumn123 = [[1], [2], [3]]
+        arrayColumn123 = [[1], [2], [3]];
+        unitVector01 = Vector.createUnitVector(2, 1);
+        unitVector10 = Vector.createUnitVector(2, 0);
+
 
     });
 
@@ -278,8 +284,7 @@ describe('Vector', () => {
         });
 
         it('Error: Mismatched size', () => {
-            const vector2 = new Vector([1, 2]);
-            expect(() => rowVector123.cross(vector2).elements).toThrow();
+            expect(() => rowVector123.cross(rowVector1234).elements).toThrow();
         });
 
 
@@ -303,149 +308,121 @@ describe('Vector', () => {
             expect(rowVector123.dot(columnVector123)).toBe(14);
         });
 
-        it('Error: ', () => {
-            const vector2 = new Vector([1, 2]);
-            expect(() => rowVector123.dot(vector2)).toThrow();
+        it('Error: Missmatches size', () => {
+            expect(() => rowVector123.dot(rowVector1234)).toThrow();
         });
 
 
     });
 
+
     describe('Vector angle', () => {
-        it('Calculates angle between two vectors correctly in degrees', () => {
-            const vector1 = new Vector([1, 0]);
-            const vector2 = new Vector([0, 1]);
-            const resultInDegrees = vector1.angle(vector2, true);
-            // The angle between [1,0] and [0,1] given in degrees should be 90
-            expect(resultInDegrees).toBeCloseTo(90);
+        it('Angle between two row vectors in degrees', () => {
+            expect(unitVector10.angle(unitVector01, true)).toBeCloseTo(90);
         });
 
-        it('Calculates angle between two vectors correctly in radians', () => {
-            const vector1 = new Vector([1, 0]);
-            const vector2 = new Vector([0, 1]);
-            const resultInRadians = vector1.angle(vector2, false);
-            // The angle between [1,0] and [0,1] given in radians should be Math.PI / 2
-            expect(resultInRadians).toBeCloseTo(Math.PI / 2);
+        it('Angle between two row vectors in radians', () => {
+            expect(unitVector10.angle(unitVector01, false)).toBeCloseTo(Math.PI / 2);
         });
 
-        it('Calculates angle correctly when the inDegrees parameter is not provided', () => {
-            const vector1 = new Vector([1, 0]);
-            const vector2 = new Vector([0, 1]);
-            const result = vector1.angle(vector2);
-            // Given no inDegrees parameter, function should default to radians
-            // So, the angle between [1,0] and [0,1] should be Math.PI / 2
-            expect(result).toBeCloseTo(Math.PI / 2);
-        });
-        it('Throws an error for vectors of mismatched size', () => {
-            const vector1 = new Vector([1, 0, 0]);
-            const vector2 = new Vector([0, 1]);
-            expect(() => vector1.angle(vector2)).toThrow();
+        it('Angle between a row vector and column vector in radians', () => {
+            unitVector01.transpose()
+            expect(unitVector10.angle(unitVector01)).toBeCloseTo(Math.PI / 2);
         });
 
-        it('Throws an error for a zero vector', () => {
-            const vector1 = new Vector([1, 0]);
-            const vector2 = new Vector([0, 0]);
-            expect(() => vector1.angle(vector2)).toThrow();
+
+        it('Angle between a row vector and row array', () => {
+            expect(unitVector10.angle([0, 1])).toBeCloseTo(Math.PI / 2);
         });
 
-        it('Throws an error for vectors of mismatched size even when inDegrees option is set', () => {
-            const vector1 = new Vector([1, 0, 0]);
-            const vector2 = new Vector([0, 1]);
-            expect(() => vector1.angle(vector2, true)).toThrow();
+
+        it('Error: Mismatched size', () => {
+            expect(() => rowVector123.angle(unitVector01)).toThrow();
         });
 
-        it('Throws an error for a zero vector even when inDegrees option is set', () => {
-            const vector1 = new Vector([1, 0]);
-            const vector2 = new Vector([0, 0]);
-            expect(() => vector1.angle(vector2, true)).toThrow();
+        it('Error: Zero vector', () => {
+            const errorVector = Vector.zeros(2)
+            expect(() => unitVector10.angle(errorVector)).toThrow();
         });
     });
 
     describe('Vector distance', () => {
-        it('Calculates distance correctly for row vectors', () => {
-            const vector1 = new Vector([1, 2, 3]);
+        it('Distance between two row vectors', () => {
             const vector2 = new Vector([4, 5, 6]);
-            let distance = vector1.distance(vector2);
-            // Calculation of distance needs to be replaced with the correct implementation
-            expect(distance).toBeCloseTo(5.2);
+            expect(rowVector123.distance(vector2)).toBeCloseTo(5.2);
         });
 
-        it('Calculates distance correctly for column vectors', () => {
-            const vector1 = new Vector([[1], [2], [3]]);
+        it('Distance between two column vectors', () => {
             const vector2 = new Vector([[4], [5], [6]]);
-            let distance = vector1.distance(vector2);
-            // Calculation of distance needs to be replaced with the correct implementation
-            expect(distance).toBeCloseTo(5.2);
+            expect(columnVector123.distance(vector2)).toBeCloseTo(5.2);
         });
 
-        it('Throws an error for vectors of mismatched size', () => {
-            const vector1 = new Vector([1, 2, 3]);
-            const vector2 = new Vector([1, 2]);
-            expect(() => vector1.distance(vector2)).toThrow();
+        it('Distance between row vector and column vector', () => {
+            const vector2 = new Vector([[4], [5], [6]]);
+            expect(rowVector123.distance(vector2)).toBeCloseTo(5.2);
         });
 
-        it('Calculates distance correctly for vectors passed as arrays', () => {
-            const vector = new Vector([1, 2, 3]);
+
+        it('Distance between row vector and row array ', () => {
             const array = [4, 5, 6];
-            let distance = vector.distance(array);
-            // Calculation of distance needs to be replaced with the correct implementation
-            expect(distance).toBeCloseTo(5.2);
+            expect(rowVector123.distance(array)).toBeCloseTo(5.2);
         });
+
+        it('Error: mismatched size', () => {
+            expect(() => rowVector123.distance(rowVector1234)).toThrow();
+        });
+
+
     });
 
     describe('isOrthogonal', () => {
-        const vectorA = new Vector([1, 0]);
-        const vectorB = new Vector([[0], [1]]);
-        const vectorC = new Vector([1, 2]);
 
-        it('Testing orthogonal vectors', () => {
-            expect(vectorA.isOrthogonal(vectorB)).toBe(true);
+        it('Orthogonal row vectors', () => {
+            expect(unitVector10.isOrthogonal(unitVector01)).toBe(true);
         });
 
-        it('Testing non-orthogonal vectors', () => {
-            expect(vectorA.isOrthogonal(vectorC)).toBe(false);
+        it('Non-orthogonal row vectors', () => {
+            expect(unitVector10.isOrthogonal(unitVector10)).toBe(false);
         });
 
-        it('Throws an error for non-array inputs', () => {
-            expect(() => vectorA.isOrthogonal("Test")).toThrow();
+        it('Orthogonal row vector and row array', () => {
+            expect(unitVector10.isOrthogonal([0, 1])).toBe(true);
         });
 
-        it('Testing array inputs', () => {
-            expect(vectorA.isOrthogonal([0, 1])).toBe(true);
-            expect(vectorC.isOrthogonal([[1], [2]])).toBe(false);
+        it('Error: Invalid element', () => {
+            expect(() => unitVector01.isOrthogonal("Test")).toThrow();
         });
+        it('Error: Mismatched size', () => {
+            expect(() => unitVector01.isOrthogonal(rowVector123)).toThrow();
+        });
+
+
+
     });
 
     describe('isOrthonormal', () => {
-        const vectorA = new Vector([1, 0]);
-        const vectorB = new Vector([[0], [1]]);
         const unitVector = new Vector([1 / Math.sqrt(2), 1 / Math.sqrt(2)]);
 
-        it('Testing orthonormal vectors', () => {
-            expect(vectorA.isOrthonormal(vectorB)).toBe(true);
+        it('Orthonormal row vectors', () => {
+            expect(unitVector10.isOrthonormal(unitVector01)).toBe(true);
         });
 
-        it('Testing non-orthogonal vectors', () => {
-            expect(vectorA.isOrthonormal(vectorA)).toBe(false);  // Not orthogonal to itself
+        it('Non-orthogonal row vectors', () => {
+            expect(unitVector10.isOrthonormal(unitVector10)).toBe(false);  // Not orthogonal to itself
         });
 
-        it('Testing non-unit vectors', () => {
-            const vectorC = new Vector([1, 2]);
-            expect(vectorA.isOrthonormal(vectorC)).toBe(false);  // Not a unit vector
+        it('Orthonormal row vector and row array', () => {
+            expect(unitVector10.isOrthonormal([0, 1])).toBe(true);
         });
 
-        it('Testing unit vectors', () => {
-            expect(vectorA.isOrthonormal(unitVector)).toBe(false);  // Unit but not orthogonal
+        it('Error: Invalid element', () => {
+            expect(() => unitVector01.isOrthonormal("Test")).toThrow();
+        });
+        it('Error: Mismatched size', () => {
+            expect(() => unitVector01.isOrthonormal(rowVector123)).toThrow();
         });
 
-        it('Testing orthonormal array vectors', () => {
-            expect(vectorA.isOrthonormal([0, 1])).toBe(true);
-            expect(vectorA.isOrthonormal([[1], [2]])).toBe(false);
-        });
 
-        it('Throws an error for non-array inputs', () => {
-            expect(() => vectorA.isOrthonormal("Test")).toThrow();
-        });
     });
 
 
@@ -517,7 +494,7 @@ describe('Vector', () => {
         const zeroVector = new Vector([0, 0])
 
 
-        it('Vector projection with two row vectos', () => {
+        it('Projection with two row vectos', () => {
             const expected = [-(165 / 169), 396 / 169];
             const projVector = vector1.proj(vector2)
             expected.forEach((val, i) => expect(projVector.elements[i]).toBeCloseTo(val));
@@ -547,17 +524,14 @@ describe('Vector', () => {
     });
 
     describe('Vector transpose', () => {
-        const vector1 = new Vector([3, 4]);
-        const vector2 = new Vector([[3], [4]]);
-
-        it('Vector transpose of a row vector', () => {
-            vector1.transpose()
-            expect(vector1.equal(vector2)).toBe(true);
+        it('Transpose of a row vector', () => {
+            rowVector123.transpose()
+            expect(rowVector123.equal(columnVector123)).toBe(true);
 
         });
-        it('Vector transpose of a column vector', () => {
-            vector2.transpose()
-            expect(vector2.equal(vector1)).toBe(true);
+        it('Transpose of a column vector', () => {
+            columnVector123.transpose()
+            expect(columnVector123.equal(rowVector123)).toBe(true);
 
         });
     });
