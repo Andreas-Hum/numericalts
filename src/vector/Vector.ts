@@ -707,7 +707,6 @@ export class Vector implements VectorTypes {
 
     }
 
-    //TODO TEST
     /**
      * Checks if the vector is a probability vector.
      *
@@ -722,7 +721,6 @@ export class Vector implements VectorTypes {
         }
     }
 
-    //TODO TEST
     /**
      * Checks if all elements of the vector are non-negative.
      *

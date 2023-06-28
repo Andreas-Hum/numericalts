@@ -448,9 +448,6 @@ describe('Vector', () => {
         });
     });
 
-
-
-
     describe('Vector equality ', () => {
         const vector1 = new Vector([[1], [2], [3], [4]]);
         const vector2 = new Vector([1, 2, 3, 4 + 1e-11]);  // a tiny difference on last element
@@ -616,6 +613,32 @@ describe('Vector', () => {
 
 
 
+    });
+
+    describe('Linear combination of unit vectors', () => {
+        it('Linear combination of unit vectors and scalars', () => {
+
+            const result = rowVector123.linUnitComb();
+            console.log(result)
+
+            // Form the expected result
+            const expectedResult = [
+                { scalar: 1, unitVector: Vector.createUnitVector(rowVector123.size, 0) },
+                { scalar: 2, unitVector: Vector.createUnitVector(rowVector123.size, 1) },
+                { scalar: 3, unitVector: Vector.createUnitVector(rowVector123.size, 2) },
+            ];
+
+            expect(result).toEqual(
+                expect.arrayContaining(expectedResult)
+            );
+        });
+
+        it('Return empty array if vector is empty', () => {
+            const rowVector123 = new Vector([]);
+            const result = rowVector123.linUnitComb();
+
+            expect(result).toEqual([]);
+        });
     });
 
 
