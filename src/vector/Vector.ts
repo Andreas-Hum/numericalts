@@ -593,6 +593,15 @@ export class Vector implements VectorTypes {
         }
     }
 
+    public isPropablity(): boolean {
+
+        if (this.sum() <= (DELTA + 1) && (1 - DELTA) <= this.sum()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
 
