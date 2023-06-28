@@ -1,3 +1,4 @@
+import { Vector } from "../vector/Vector"
 
 export default interface Matrix {
     //Shape type
@@ -11,5 +12,5 @@ export default interface Matrix {
     size: number
 
     //element Data
-    elements: number[][]
+    elements: Vector[]
 }
