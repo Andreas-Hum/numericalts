@@ -423,6 +423,31 @@ export class Vector implements VectorTypes {
         return result;
     }
 
+
+    /**
+     * Prints the vector to the console. 
+     * If the vector is a row, the function prints it as an array in a single line.
+     * If the vector is a column, the function prints it as a column, each element in a new line.
+     *
+     * @public
+     * @returns {void} This method does not have a return value
+     */
+    public print(): void {
+        if (this.isRow) {
+            console.log(`[ ${this.elements.join(", ")} ]`);
+        } else if (this.isColumn) {
+            let output: string = ""
+            for (let i = 0; i < this.size; i++) {
+                output += `[ ${(this.elements as number[][])[i][0]} ]`;
+                if (i < this.size - 1) {
+                    output += "\n"
+                }
+            }
+            console.log(output)
+        }
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Q
@@ -499,6 +524,24 @@ export class Vector implements VectorTypes {
     * T
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Returns the vector as a column in LaTeX format.
+     * Regardless of the original format of the vector (row or column),
+     * this function will always output the string representation of the vector in a column format.
+     *
+     * @public
+     * @returns {string} The LaTeX string representation of the vector
+     *
+     */
+    public toLatex(): string {
+        let flattenedArray: number[] = this.elements.flat();
+        let output: string = "\\begin{bmatrix} ";
+        output += flattenedArray.join(" \\\\ ");
+        output += "\\end{bmatrix}";
+        return output;
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

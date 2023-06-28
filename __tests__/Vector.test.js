@@ -619,7 +619,6 @@ describe('Vector', () => {
         it('Linear combination of unit vectors and scalars', () => {
 
             const result = rowVector123.linUnitComb();
-            console.log(result)
 
             // Form the expected result
             const expectedResult = [
@@ -641,7 +640,12 @@ describe('Vector', () => {
         });
     });
 
+    describe('ptinr', () => {
+        it('Linear combination of unit vectors and scalars', () => {
+            console.log(columnVector123.toLatex())
+        });
 
+    });
 
 
 
