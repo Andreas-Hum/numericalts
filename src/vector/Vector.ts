@@ -28,14 +28,14 @@ export class Vector implements VectorTypes {
     * Creates an instance of a Vector.
     * @param {number[] | number[][]} elements - The elements of the Vector.
     */
-    constructor(elements: number[] | number[][]) {
+    constructor(entries: number[] | number[][]) {
 
-        if (!Array.isArray(elements)) {
+        if (!Array.isArray(entries)) {
             throw new VectorError('Elements input must be an array.', 601);
         }
 
-        this.elements = elements;
-        this.size = elements.length;
+        this.elements = entries;
+        this.size = entries.length;
         this.validateVector();
 
     }
@@ -617,13 +617,6 @@ export class Vector implements VectorTypes {
         this.updateDimensions();
         this.updateShape();
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * D
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
