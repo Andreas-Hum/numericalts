@@ -1,9 +1,15 @@
 import { Vector } from "../vector/Vector"
 
-export default interface Matrix {
+
+export enum MTypes {
+    square,
+    tall,
+    wide
+}
+export interface MatrixTypes {
     //Shape type
     shape: string
-    type: string
+    Mtype: MTypes
 
     //Dimensions
     rows: number

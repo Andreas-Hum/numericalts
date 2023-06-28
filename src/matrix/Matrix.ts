@@ -1,5 +1,5 @@
 //Type imports
-import type MatrixTypes from "./MatrixTypes";
+import type { MatrixTypes, MTypes } from "./MatrixTypes";
 
 //Error import
 import MatrixError from "../errors/MatrixError";
@@ -8,10 +8,11 @@ import MatrixError from "../errors/MatrixError";
 import { Vector } from "../vector/Vector";
 
 
+
 export class Matrix implements MatrixTypes {
 
     public shape: string = "0";
-    public type: string = "none"
+    public Mtype: MTypes;
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
@@ -43,8 +44,7 @@ export class Matrix implements MatrixTypes {
                 }
             }
 
-            
-
+            //TODO MATRIX INIT METHOD THAT CHOOSES WIDE TALL OR SQUARE AND UPDATES THE SHAPE
 
         }
     }
@@ -173,8 +173,6 @@ export class Matrix implements MatrixTypes {
     * T
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
