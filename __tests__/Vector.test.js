@@ -640,15 +640,4 @@ describe('Vector', () => {
         });
     });
 
-    describe('ptinr', () => {
-        it('Linear combination of unit vectors and scalars', () => {
-            console.log(columnVector123.toLatex())
-        });
-
-    });
-
-
-
-
-
 });
