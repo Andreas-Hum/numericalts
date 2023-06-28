@@ -603,6 +603,25 @@ export class Vector implements VectorTypes {
     }
 
 
+    public linUnitComb(): { scalar: number, unitVector: Vector }[] {
+        const result: { scalar: number, unitVector: Vector }[] = []
+        const size: number = this.size;
+
+        if (this.isColumn) {
+            for (let i = 0; i < size; i++) {
+                result.push({ scalar: (this.elements as number[][])[i][0], unitVector: Vector.createUnitVector(size, i, true) })
+            }
+        } else {
+            for (let i = 0; i < size; i++) {
+                result.push({ scalar: (this.elements as number[])[i], unitVector: Vector.createUnitVector(size, i,) })
+            }
+        }
+
+        return result;
+
+    }
+
+
 
 
 
