@@ -730,7 +730,7 @@ export class Vector implements VectorTypes {
      */
     public isPositive(): boolean {
         const testArray: number[] = this.elements.flat()
-        return testArray.some((e: number) => e < 0)
+        return !testArray.some((e: number) => e < 0)
     }
 
     /**

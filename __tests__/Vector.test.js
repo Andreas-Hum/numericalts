@@ -23,14 +23,14 @@ describe('Vector', () => {
     describe('Vector initialization', () => {
 
         it('Validation of a row vector', () => {
-            expect(rowVector123.isRow).toBe(true);
+            expect(rowVector123.isRow).toBeTruthy();
             expect(rowVector123.size).toBe(3);
             expect(rowVector123.shape).toBe('(1,3)');
         });
 
         it('Validation of a column vector', () => {
 
-            expect(columnVector123.isColumn).toBe(true);
+            expect(columnVector123.isColumn).toBeTruthy();
             expect(columnVector123.size).toBe(3);
             expect(columnVector123.shape).toBe('(3,1)');
         });
@@ -378,15 +378,15 @@ describe('Vector', () => {
     describe('isOrthogonal', () => {
 
         it('Orthogonal row vectors', () => {
-            expect(unitVector10.isOrthogonal(unitVector01)).toBe(true);
+            expect(unitVector10.isOrthogonal(unitVector01)).toBeTruthy();
         });
 
         it('Non-orthogonal row vectors', () => {
-            expect(unitVector10.isOrthogonal(unitVector10)).toBe(false);
+            expect(unitVector10.isOrthogonal(unitVector10)).toBeFalsy();
         });
 
         it('Orthogonal row vector and row array', () => {
-            expect(unitVector10.isOrthogonal([0, 1])).toBe(true);
+            expect(unitVector10.isOrthogonal([0, 1])).toBeTruthy();
         });
 
         it('Error: Invalid element', () => {
@@ -404,15 +404,15 @@ describe('Vector', () => {
         const unitVector = new Vector([1 / Math.sqrt(2), 1 / Math.sqrt(2)]);
 
         it('Orthonormal row vectors', () => {
-            expect(unitVector10.isOrthonormal(unitVector01)).toBe(true);
+            expect(unitVector10.isOrthonormal(unitVector01)).toBeTruthy();
         });
 
         it('Non-orthogonal row vectors', () => {
-            expect(unitVector10.isOrthonormal(unitVector10)).toBe(false);  // Not orthogonal to itself
+            expect(unitVector10.isOrthonormal(unitVector10)).toBeFalsy();  // Not orthogonal to itself
         });
 
         it('Orthonormal row vector and row array', () => {
-            expect(unitVector10.isOrthonormal([0, 1])).toBe(true);
+            expect(unitVector10.isOrthonormal([0, 1])).toBeTruthy();
         });
 
         it('Error: Invalid element', () => {
@@ -426,6 +426,31 @@ describe('Vector', () => {
     });
 
 
+    describe('isPositive', () => {
+        it('No negative numbers in the array', () => {
+            expect(rowVector123.isPositive()).toBeTruthy();
+        });
+
+        it('Is a negative number in the array', () => {
+            rowVector123.scale(-1)
+            expect(rowVector123.isPositive()).toBeFalsy();
+        });
+    });
+
+    describe('isProbability', () => {
+        it('Sum of elements equals to 1 in the range of DELTA', () => {
+            const propVector = new Vector([0.4, 0.2, 0.4]);
+            expect(propVector.isProbability()).toBeTruthy();
+        });
+
+        it('Sum of elements is not equal to 1 in the range of DELTA', () => {
+            expect(rowVector123.isProbability()).toBeFalsy();
+        });
+    });
+
+
+
+
     describe('Vector equality ', () => {
         const vector1 = new Vector([[1], [2], [3], [4]]);
         const vector2 = new Vector([1, 2, 3, 4 + 1e-11]);  // a tiny difference on last element
@@ -433,15 +458,15 @@ describe('Vector', () => {
         const vector4 = [1, 2, 3, 4]
 
         it('Vectors are equal in non-strict mode', () => {
-            expect(vector1.equal(vector2)).toBe(true);
+            expect(vector1.equal(vector2)).toBeTruthy();
         });
 
         it('Vectors are equal in strict mode', () => {
-            expect(vector2.equal(vector4, true)).toBe(true);
+            expect(vector2.equal(vector4, true)).toBeTruthy();
         });
 
         it('Vectors are equal to array', () => {
-            expect(vector2.equal(vector4)).toBe(true);
+            expect(vector2.equal(vector4)).toBeTruthy();
         });
 
         it('Vectors are not equal in strict mode', () => {
@@ -460,11 +485,11 @@ describe('Vector', () => {
         const vector4 = new Vector([[1], [1], [1], [1]])
 
         it('Vector equality of ones on row vector', () => {
-            expect(vector1.equal(vector3)).toBe(true);
+            expect(vector1.equal(vector3)).toBeTruthy();
         });
 
         it('Vector equality of ones on column vector', () => {
-            expect(vector2.equal(vector4)).toBe(true);
+            expect(vector2.equal(vector4)).toBeTruthy();
         });
     });
 
@@ -476,11 +501,11 @@ describe('Vector', () => {
         const vector4 = new Vector([[0], [0], [0], [0]])
 
         it('Vector equality of zeros on row vector', () => {
-            expect(vector1.equal(vector3)).toBe(true);
+            expect(vector1.equal(vector3)).toBeTruthy();
         });
 
         it('Vector equality of zeros on column vector', () => {
-            expect(vector2.equal(vector4)).toBe(true);
+            expect(vector2.equal(vector4)).toBeTruthy();
         });
     });
 
@@ -526,12 +551,12 @@ describe('Vector', () => {
     describe('Vector transpose', () => {
         it('Transpose of a row vector', () => {
             rowVector123.transpose()
-            expect(rowVector123.equal(columnVector123)).toBe(true);
+            expect(rowVector123.equal(columnVector123)).toBeTruthy();
 
         });
         it('Transpose of a column vector', () => {
             columnVector123.transpose()
-            expect(columnVector123.equal(rowVector123)).toBe(true);
+            expect(columnVector123.equal(rowVector123)).toBeTruthy();
 
         });
     });
