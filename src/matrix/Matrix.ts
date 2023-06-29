@@ -153,6 +153,31 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Prints matrix to the console.
+     * @public
+     * @returns {void}
+     */
+    public printMatrix(): void {
+        if (this.isRowMatrix) {
+            this.elements.forEach(rowVector => {
+                console.log(rowVector.elements);
+            });
+        }
+        else if (this.isColumnMatrix) {
+            
+            // Transpose operation for printing column vector in a more readable way.
+            for (let i = 0; i < this.elements[0].elements.length; i++) {
+                let row = [];
+                for (let j = 0; j < this.columns; j++) {
+                    row.push(this.elements[j].elements[i]);
+                }
+                console.log(row.flat());
+            }
+        }
+        console.log('---------------');
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -184,6 +209,11 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Updates matrix-related dimensions and states.
+     * @private
+     * @returns {void}
+     */
     private updateDimension(): void {
         if (this.elements.every((e: Vector) => e.isRow)) {
             this.isRowMatrix = true
@@ -210,6 +240,11 @@ export class Matrix implements MatrixTypes {
         this.size = this.rows * this.columns
     }
 
+    /**
+     * Updates all aspects of Matrix.
+     * @private
+     * @returns {void}
+     */
     private updateMatrix(): void {
         this.updateDimension()
         this.updateShape()
@@ -232,6 +267,11 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Validates matrix properties and updates all aspects.
+     * @private
+     * @returns {void}
+     */
     private validateMatrix(): void {
         const sizeGuide: number = this.elements.flat()[0].size;
         if (this.elements.some((e: Vector) => e.size !== sizeGuide)) {
@@ -279,9 +319,30 @@ export class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    // public createIdentityMatrix(rows: number, columns: number): Matrix {
+    /**
+     * Creates identity matrix using the 'Vector.createUnitVector' method.
+     * @public
+     * @param {number} rows - Number of rows in the matrix.
+     * @param {number} columns - Number of columns in the matrix.
+     * @param {boolean} columnMatrix - Indicates if column matrices should be generated.
+     * @returns {Matrix} - The resulting identity Matrix.
+     * @throws {MatrixError} - If rows or columns are not a positive number or columnMatrix is not a boolean.
+     */
+    public static createIdentityMatrix(dimension: number, columnMatrix: boolean = false): Matrix {
+        if (dimension <= 0) {
+            throw new MatrixError("Dimension mismatch: rows or columns can't be negative or zero", 802, { dimension });
+        } else if (typeof columnMatrix !== "boolean") {
+            throw new MatrixError("Invalid boolean", 805, { columnMatrix });
+        }
 
-    // }
+        const unitVectorContainor: Vector[] = [];
+
+        for (let i = 0; i < dimension; i++) {
+            unitVectorContainor.push(Vector.createUnitVector(dimension, i, columnMatrix));
+        }
+
+        return new Matrix(unitVectorContainor);
+    }
 
 }
 
