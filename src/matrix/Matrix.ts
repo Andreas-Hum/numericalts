@@ -1,5 +1,5 @@
 //Type imports
-import type { MatrixTypes, MTypes } from "./MatrixTypes";
+import { MatrixTypes, MTypes } from "./MatrixTypes";
 
 //Error import
 import MatrixError from "../errors/MatrixError";
@@ -13,6 +13,8 @@ export class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public Mtype: MTypes;
+    public isColumnMatrix: boolean = false;
+    public isRowMatrix: boolean = false;
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
@@ -28,6 +30,7 @@ export class Matrix implements MatrixTypes {
         if (!Array.isArray(entries)) {
             throw new MatrixError('Input must be an array.', 801);
         } else {
+            //TODO maybe remove column matrix
             try {
                 for (let i = 0; i < entries.length; i++) {
                     if (!(entries[i] instanceof Vector)) {
@@ -40,7 +43,6 @@ export class Matrix implements MatrixTypes {
                     throw new MatrixError(`Invalid element for matrix. Expected number, got: ${typeof err.details.invalidEntry}.`, 803, { invalidEntry: err.details.invalidEntry });
                 } else if (err.statusCode === 601) {
                     throw new MatrixError(`Element missmatch got column and row elements`, 801);
-
                 }
             }
 
@@ -180,12 +182,59 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private updateDimension(): void {
+        this.size = this.elements.reduce((acc: number, cur: Vector) => acc + cur.size, 0)
+        if (this.elements.every((e: Vector) => e.isRow)) {
+            this.isRowMatrix
+            this.rows = this.elements.length
+            this.columns = this.elements[0].size
+        } else if (this.elements.every((e: Vector) => e.isColumn)) {
+            this.isColumnMatrix
+            this.columns = this.elements.length
+            this.rows = this.elements[0].size
+        } else {
+            throw new MatrixError("Dimension mismatch: The matrix cant contain both column and row vectors", 801)
+        }
+
+        if (this.rows === this.columns) {
+            this.Mtype = MTypes.square
+        } else if (this.rows > this.columns) {
+            this.Mtype = MTypes.tall
+        } else {
+            this.Mtype = MTypes.wide
+        }
+    }
+
+    private updateMatrix(): void {
+        this.updateDimension()
+        this.updateShape()
+    }
+
+    /**
+     * Updates the shape of the Matrix.
+     * @private
+     * @returns {void}
+     */
+    private updateShape(): void {
+        this.shape = `(${this.rows},${this.columns})`;
+    }
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * V
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private validateMatrix(): void {
+        const sizeGuide: number = this.elements.flat()[0].size;
+        if (this.elements.some((e: Vector) => e.size !== sizeGuide)) {
+            throw new MatrixError("Dimension missmatch: Not all vectors are the same size", 801)
+        }
+
+        this.updateMatrix()
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     *
@@ -224,14 +273,5 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /**
-     * Sets the shape of the matrix.
-     * @private
-     * @returns {void}
-     */
-    private updateShape(): void {
-        this.shape = `(${this.rows},${this.columns})`
-    }
 }
 

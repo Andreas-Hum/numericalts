@@ -10,6 +10,9 @@ export interface MatrixTypes {
     //Shape type
     shape: string
     Mtype: MTypes
+    isColumnMatrix: boolean
+    isRowMatrix: boolean
+
 
     //Dimensions
     rows: number
