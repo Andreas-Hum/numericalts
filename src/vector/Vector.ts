@@ -760,7 +760,7 @@ export class Vector implements VectorTypes {
     /**
      * Checks if all elements of the vector are non-negative.
      *
-     * @returns {boolean} true if any component of the vector is negative, false otherwise.
+     * @returns {boolean} 'true' if any component of the vector is negative, 'false' otherwise.
      */
     public isPositive(): boolean {
         const testArray: number[] = this.elements.flat()
@@ -770,17 +770,47 @@ export class Vector implements VectorTypes {
     /**
      * Checks if the given vector is orthogonal to the vector instance
      * @param {Vector | number[] | number[][]} vector - The vector object, one-dimensional number array or two-dimensional number array to compare.
-     * @returns {boolean} True if the dot product of this vector and the given vector is zero, otherwise false.
+     * @returns {boolean} 'true' if the dot product of this vector and the given vector is zero, otherwise 'false'.
      */
     public isOrthogonal(vector: Vector | number[] | number[][]): boolean {
         return Math.abs(this.dot(vector)) < DELTA;
     }
 
     /**
+     * Checks if the vector is a unit vector.
+     *
+     * @returns {boolean} 'true' if there is one 1 and rest are 0, 'false' otherwise.
+     */
+    public isUnitVector(): boolean {
+        let ones: number = 0;
+        let zeros: number = 0;
+
+        const testArray: number[] = this.elements.flat()
+
+        for (let i = 0; i < this.size; i++) {
+            if (testArray[i] === 1) {
+                ones++;
+            } else if (testArray[i] === 0) {
+                zeros++;
+            } else if (ones > 1) {
+                return false;
+            } else {
+                return false;
+            }
+        }
+
+        if (ones === 1 && zeros === this.size - 1) {
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Checks if the given vector is orthonormal to the vector instance
      * @param {Vector | number[] | number[][]} vector - The vector object, one-dimensional number array or two-dimensional number array to compare.
-     * @returns {boolean} True if the dot product of this vector and the given vector is zero
-     * and both the vectors have unit length, otherwise returns False.
+     * @returns {boolean} ''true if the dot product of this vector and the given vector is zero
+     * and both the vectors have unit length, otherwise returns 'false'.
      */
     public isOrthonormal(vector: Vector | number[] | number[][]): boolean {
         if (!(vector instanceof Vector)) {
@@ -815,6 +845,10 @@ export class Vector implements VectorTypes {
     public static createUnitVector(size: number, index: number, columnVector: boolean = false): Vector {
         if (index > size || index < 0) {
             throw new VectorError("Dimention missmatch: index is less than or equal to zero or the index is greater than the size", 602, { size, index })
+        } else if (size < 0) {
+            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
+        } else if (typeof columnVector !== "boolean") {
+            throw new VectorError("Invalid boolean", 605, { columnVector })
         }
 
         let unitVector: Vector;
@@ -838,6 +872,11 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The newly created vector filled with ones.
      */
     public static ones(size: number, columnVector: boolean = false): Vector {
+        if (size < 0) {
+            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
+        } else if (typeof columnVector !== "boolean") {
+            throw new VectorError("Invalid boolean", 605, { columnVector })
+        }
         if (columnVector) {
             return new Vector((new Array(size)).fill(1, 0).map((ele: number) => [ele]))
         } else {
@@ -852,6 +891,11 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The newly created vector filled with zeros.
      */
     public static zeros(size: number, columnVector: boolean = false): Vector {
+        if (size < 0) {
+            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
+        } else if (typeof columnVector !== "boolean") {
+            throw new VectorError("Invalid boolean", 605, { columnVector })
+        }
         if (columnVector) {
             return new Vector((new Array(size)).fill(0, 0).map((ele: number) => [ele]))
         } else {
