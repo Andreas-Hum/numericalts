@@ -487,6 +487,13 @@ export class Vector implements VectorTypes {
     }
 
     /**
+     * Returns the vector as an array
+     * @returns {number[] | number[][]}
+     */
+    public toArray(): number[] | number[][] {
+        return this.elements
+    }
+    /**
      * Vectors subtraction (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
      * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to subract.
      * @throws {VectorError} If the dimensions of the vectors don't match.
