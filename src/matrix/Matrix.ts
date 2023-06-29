@@ -113,6 +113,10 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Abomination
+    //public gs(): Matrix { let p = this.isRowMatrix ? this.toColumnMatrix() : this, a=[], n=[], i=0,j, o; for(; i<p.columns; i++) { o = p.elements[i]; for(j=0; j<i; j++) o = o.subtract(a[j].scale(a[j].dot(p.elements[i]) / a[j].dot(a[j]))); if (o.euclNorm() < DELTA) throw new VectorError("Vectors not linearly independent.", 704); a.push(o); n.push(o.normalize()); } return new Matrix(n); }
+
+
     public gramSmith(): Matrix {
         let psudoMatrix: Matrix = this;
         if (this.isRowMatrix) {
