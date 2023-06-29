@@ -107,6 +107,12 @@ export class Matrix implements MatrixTypes {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
+    * G
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     * I
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,11 +141,56 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * N
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Performs matrix multiplication using the current matrix and another provided matrix. 
+     * If the provided matrix is not an instance of Matrix, it converts it to an instance of Matrix.
+     * Ensures compatibility of matrices (i.e. columns of the first must match the rows of the second). 
+     * If the second matrix is a Row Matrix, it converts it to a Column Matrix,
+     * likewise if the first matrix is a Column Matrix, it converts it to a Row Matrix before performing multiplication.
+     * The operation relies on the dot product of vectors.
+     * @param {number[][] | Matrix} matrixToMultiply - The matrix to multiply with the current matrix. 
+     * @throws {MatrixError} If the number of columns of the current matrix does not equal the number of rows of the matrix to multiply.
+     * @return {Matrix} The resulting matrix after the multiplication operation
+     * @method
+     * @public
+     */
+    public naiveMultiply(matrixToMultiply: number[][] | Matrix): Matrix {
+        if (!(matrixToMultiply instanceof Matrix)) {
+            matrixToMultiply = new Matrix(matrixToMultiply as number[][])
+        }
+
+        if (this.columns !== matrixToMultiply.rows) {
+            throw new MatrixError("Dimention missmatch: Columns of first matrix does not equal the rows of the second", 810)
+        }
+        let psudoMatrix: Matrix = this
+
+        if (matrixToMultiply.isRowMatrix) {
+            matrixToMultiply = matrixToMultiply.toColumnMatrix()
+        }
+        if (this.isColumnMatrix) {
+            psudoMatrix = this.toRowMatrix()
+        }
+
+        let result: number[][] = [];
+
+        for (let i = 0; i < this.rows; i++) {
+            result.push([])
+            for (let j = 0; j < matrixToMultiply.columns; j++) {
+                result[i][j] = this.elements[i].dot(matrixToMultiply.elements[j])
+            }
+        }
+
+        return new Matrix(result)
+
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -165,7 +216,6 @@ export class Matrix implements MatrixTypes {
             });
         }
         else if (this.isColumnMatrix) {
-            
             // Transpose operation for printing column vector in a more readable way.
             for (let i = 0; i < this.elements[0].elements.length; i++) {
                 let row = [];
@@ -202,6 +252,42 @@ export class Matrix implements MatrixTypes {
     * T
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Converts a row matrix to a column matrix
+     */
+    public toColumnMatrix(): Matrix {
+        if (this.isColumnMatrix) {
+            throw new MatrixError("Method can only convert row matrices.", 802);
+        }
+
+        const columnMatrix = this.elements[0].elements.map((_, i) => {
+            // Each new row Vector becomes a column Vector in the transposed matrix
+            // Mapping over this.elements extracts the i-th element from each row vector
+            //@ts-ignore
+            return new Vector(this.elements.map(rowVector => [rowVector.elements[i]])); // vector entries should be array of arrays
+        });
+
+        return new Matrix(columnMatrix);  // Returns a new matrix and leaves the current one unaffected
+    }
+
+    /**
+     * Converts a column matrix to a row matrix
+     */
+    public toRowMatrix(): Matrix {
+
+        if (this.isRowMatrix) {
+            throw new MatrixError("Method can only convert column matrices.", 802);
+        }
+
+        const rowMatrix = this.elements[0].elements.map((_, i) => {
+
+            // @ts-ignore
+            return new Vector(this.elements.map(columnVector => columnVector.elements[i][0])); // vector entries should be flat array
+        });
+
+        return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

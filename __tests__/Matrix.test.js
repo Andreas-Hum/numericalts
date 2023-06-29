@@ -58,7 +58,7 @@ describe('Matrix', () => {
         })
     });
 
-    describe('Matrix.createIdentityMatrix', () => {
+    describe('Matrix identity', () => {
         it('A 3x3 identity row matrix', () => {
             const matrix = Matrix.createIdentityMatrix(3);  // Create a 3x3 identity row matrix.
 
@@ -99,6 +99,30 @@ describe('Matrix', () => {
             expect(() => Matrix.createIdentityMatrix(3, 3, null)).toThrow();
             expect(() => Matrix.createIdentityMatrix(3, 3, {})).toThrow();
         });
+
+
+    });
+
+    describe('Matrix naive multiplication', () => {
+        it('A 3x3 identity row matrix', () => {
+            let matrixOne = new Matrix(
+                [[1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+                [10, 11, 12]]
+            );
+
+            let matrixTwo = new Matrix(
+                [[[13], [14], [15]],
+                [[16], [17], [18]],
+                [[19], [20], [21]],
+                [[22], [23], [24]]]
+            );
+
+            matrixOne.naiveMultiply(matrixTwo);
+
+        });
+
 
 
     });
