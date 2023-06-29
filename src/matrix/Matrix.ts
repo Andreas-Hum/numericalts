@@ -186,11 +186,13 @@ export class Matrix implements MatrixTypes {
 
     private updateDimension(): void {
         if (this.elements.every((e: Vector) => e.isRow)) {
-            this.isRowMatrix
+            this.isRowMatrix = true
+            this.isColumnMatrix = false
             this.rows = this.elements.length
             this.columns = this.elements[0].size
         } else if (this.elements.every((e: Vector) => e.isColumn)) {
-            this.isColumnMatrix
+            this.isColumnMatrix = true
+            this.isRowMatrix = false
             this.columns = this.elements.length
             this.rows = this.elements[0].size
         } else {
