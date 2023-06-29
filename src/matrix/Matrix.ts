@@ -10,6 +10,7 @@ import { DELTA } from "../utils/constants";
 import VectorError from "../errors/VectorError";
 
 
+//TODO TEST TEST OG JSDOC
 
 export class Matrix implements MatrixTypes {
 
