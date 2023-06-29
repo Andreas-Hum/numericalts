@@ -61,7 +61,7 @@ export class Vector implements VectorTypes {
      * @throws {VectorError} If the dimensions of the vectors don't match.
      * @returns {void}
      */
-    public add(...vectors: (Vector | number[] | number[][])[]): void {
+    public add(...vectors: (Vector | number[] | number[][])[]): Vector {
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
@@ -73,20 +73,19 @@ export class Vector implements VectorTypes {
 
             let vector_one_copy: number[] = this.elements.flat()
             let vector_two_copy: number[] = vector.elements.flat()
-
-
+            let addedVector: number[] | number[][] = [];
 
             if (this.isColumn) {
                 for (let i = 0; i < this.size; i++) {
-                    this.elements[i] = [vector_one_copy[i] + vector_two_copy[i]]
+                    (addedVector as number[][]).push([vector_one_copy[i] + vector_two_copy[i]])
                 }
             } else {
                 for (let i = 0; i < this.size; i++) {
-                    this.elements[i] = vector_one_copy[i] + vector_two_copy[i]
+                    (addedVector as number[]).push(vector_one_copy[i] + vector_two_copy[i])
                 }
             }
 
-            this.validateVector()
+            return new Vector(addedVector)
         }
     }
 
