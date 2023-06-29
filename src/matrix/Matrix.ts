@@ -24,13 +24,12 @@ export class Matrix implements MatrixTypes {
      * Constructs a matrix object.
      * @class
      * @constructor
-     * @param {number[][] | Vector[]} elements - The elements of the matrix.
+     * @param {number[][] | Vector[]} entries - The entries of the matrix.
      */
     constructor(entries: number[][] | Vector[]) {
         if (!Array.isArray(entries)) {
             throw new MatrixError('Input must be an array.', 801);
         } else {
-            //TODO maybe remove column matrix
             try {
                 for (let i = 0; i < entries.length; i++) {
                     if (!(entries[i] instanceof Vector)) {

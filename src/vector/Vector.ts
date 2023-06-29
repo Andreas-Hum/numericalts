@@ -26,7 +26,7 @@ export class Vector implements VectorTypes {
 
     /**
     * Creates an instance of a Vector.
-    * @param {number[] | number[][]} elements - The elements of the Vector.
+    * @param {number[] | number[][]} entries - The elements of the Vector.
     */
     constructor(entries: number[] | number[][]) {
 
