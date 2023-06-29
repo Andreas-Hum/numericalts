@@ -6,6 +6,8 @@ import MatrixError from "../errors/MatrixError";
 
 //Vector import
 import { Vector } from "../vector/Vector";
+import { DELTA } from "../utils/constants";
+import VectorError from "../errors/VectorError";
 
 
 
@@ -110,6 +112,43 @@ export class Matrix implements MatrixTypes {
     * G
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public gramSmith(): Matrix {
+        let psudoMatrix: Matrix = this;
+        if (this.isRowMatrix) {
+            psudoMatrix = this.toColumnMatrix()
+        }
+
+        let orthogonalVectors: Vector[] = [];
+        orthogonalVectors.push(psudoMatrix.elements[0]);
+
+        for (let i = 1; i < psudoMatrix.columns; i++) {
+            let orthogonalProjection: Vector = psudoMatrix.elements[i];
+
+            for (let j = 0; j < i; j++) {
+                let u = orthogonalVectors[j];
+                let v = psudoMatrix.elements[i];
+                let uv = u.dot(v);
+                let uu = u.dot(u);
+
+                // Create a projection of vector_i onto vector_j manually
+                let projectionOf_I_onto_J: Vector = u.scale(uv / uu); // Changed multiply to scale
+
+                orthogonalProjection = orthogonalProjection.subtract(projectionOf_I_onto_J);
+            }
+
+            if (orthogonalProjection.euclNorm() < DELTA) {
+                throw new VectorError("Cannot normalize a nearly-zero vector. The given vectors are not linearly independent.", 704);
+            }
+
+            orthogonalVectors.push(orthogonalProjection);
+        }
+
+        const normalizedVectors: Vector[] = orthogonalVectors.map(vec => vec.normalize());
+        return new Matrix(normalizedVectors);
+    }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

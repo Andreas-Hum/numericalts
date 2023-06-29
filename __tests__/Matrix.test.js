@@ -1,5 +1,7 @@
 const matrix_module = require("../dist/matrix/Matrix")
 const Matrix = matrix_module.Matrix
+const vector_module = require("../dist/vector/Vector")
+const Vector = vector_module.Vector
 
 let rowMatrix, columnMatrix, arrayRowMatrix, arrayColumnMatrix, squareRowMatrix, squareRowArray, squareColumnMatrix, squareColumnArray
 
@@ -103,23 +105,43 @@ describe('Matrix', () => {
 
     });
 
+    // Testing toColumnMatrix
+    describe('toColumnMatrix', () => {
+        it('should convert a row matrix to a column matrix', () => {
+            const rowMatrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+            const columnMatrix = rowMatrix.toColumnMatrix();
+
+            expect(columnMatrix.elements).toEqual([
+                new Vector([[1], [4]]),
+                new Vector([[2], [5]]),
+                new Vector([[3], [6]])
+            ]);
+        });
+    });
+
+    // Testing toRowMatrix
+    describe('toRowMatrix', () => {
+        it('should convert a column matrix to a row matrix', () => {
+            const columnMatrix = new Matrix([new Vector([[1], [4]]), new Vector([[2], [5]]), new Vector([[3], [6]])]);
+            const rowMatrix = columnMatrix.toRowMatrix();
+
+            expect(rowMatrix.elements).toEqual([
+                new Vector([1, 2, 3]),
+                new Vector([4, 5, 6])
+            ]);
+        });
+
+    });
+
     describe('Matrix naive multiplication', () => {
         it('A 3x3 identity row matrix', () => {
-            let matrixOne = new Matrix(
-                [[1, 2, 3],
-                [4, 5, 6],
-                [7, 8, 9],
-                [10, 11, 12]]
-            );
+        
+            let matrix = new Matrix([[1.0, 1.0, -3.0],
+            [3.0, 2.0, 1.0],
+            [-2.0, 0.5, 2.5]]);
 
-            let matrixTwo = new Matrix(
-                [[[13], [14], [15]],
-                [[16], [17], [18]],
-                [[19], [20], [21]],
-                [[22], [23], [24]]]
-            );
+            matrix.gramSmith().printMatrix()
 
-            matrixOne.naiveMultiply(matrixTwo);
 
         });
 
