@@ -62,7 +62,7 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The result of the addition
      */
     public add(...vectors: (Vector | number[] | number[][])[]): Vector {
-        let addedVector: Vector = Vector.zeros(this.size,this.isColumn);
+        let addedVector: Vector = Vector.zeros(this.size, this.isColumn);
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
@@ -498,7 +498,7 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The result of the subraction
      */
     public subtract(...vectors: (Vector | number[] | number[][])[]): Vector {
-        let subractResult: Vector = Vector.zeros(this.size,this.isColumn)
+        let subractResult: Vector = Vector.zeros(this.size, this.isColumn)
 
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
@@ -712,6 +712,8 @@ export class Vector implements VectorTypes {
         } else {
             this.elements = this.elements.flat().map((e: number) => [e])
         }
+        this.updateDimensions();
+        this.updateShape();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -116,7 +116,22 @@ export class Matrix implements MatrixTypes {
     // Abomination
     //public gs(): Matrix { let p = this.isRowMatrix ? this.toColumnMatrix() : this, a=[], n=[], i=0,j, o; for(; i<p.columns; i++) { o = p.elements[i]; for(j=0; j<i; j++) o = o.subtract(a[j].scale(a[j].dot(p.elements[i]) / a[j].dot(a[j]))); if (o.euclNorm() < DELTA) throw new VectorError("Vectors not linearly independent.", 704); a.push(o); n.push(o.normalize()); } return new Matrix(n); }
 
-
+    /**
+     * Performs the Gram-Schmidt process for the vectors of the current instance matrix. The process is an algorithm 
+     * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
+     *
+     * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
+     * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
+     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal 
+     * vectors from the column vector itself.
+     *
+     * @returns {Matrix} A new Matrix instance constructed using the orthonormal vectors as columns.
+     *
+     * @throws {VectorError} If any vector obtained during the process is nearly zero (having euclidean norm lesser than a small
+     * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
+     *
+     * @public
+     */
     public gramSmith(): Matrix {
         let psudoMatrix: Matrix = this;
         if (this.isRowMatrix) {
@@ -135,8 +150,7 @@ export class Matrix implements MatrixTypes {
                 let uv = u.dot(v);
                 let uu = u.dot(u);
 
-                // Create a projection of vector_i onto vector_j manually
-                let projectionOf_I_onto_J: Vector = u.scale(uv / uu); // Changed multiply to scale
+                let projectionOf_I_onto_J: Vector = u.scale(uv / uu);
 
                 orthogonalProjection = orthogonalProjection.subtract(projectionOf_I_onto_J);
             }
@@ -330,6 +344,21 @@ export class Matrix implements MatrixTypes {
         });
 
         return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
+    }
+
+    public transpose(): void {
+        if (this.isColumnMatrix) {
+            for (let i = 0; i < this.columns; i++) {
+                this.elements[i].transpose()
+            }
+        } else {
+            for (let i = 0; i < this.rows; i++) {
+                this.elements[i].transpose()
+            }
+        }
+
+        this.updateDimension()
+     
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
