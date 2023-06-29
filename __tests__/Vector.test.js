@@ -448,6 +448,18 @@ describe('Vector', () => {
         });
     });
 
+    describe('isUnitVector', () => {
+        it('Is a unit vector', () => {
+            const propVector = Vector.createUnitVector(3, 0);
+            expect(propVector.isUnitVector()).toBeTruthy();
+        });
+
+        it('Non-unit vector', () => {
+            expect(rowVector123.isUnitVector()).toBeFalsy();
+        });
+    });
+
+
     describe('Vector equality ', () => {
         const vector1 = new Vector([[1], [2], [3], [4]]);
         const vector2 = new Vector([1, 2, 3, 4 + 1e-11]);  // a tiny difference on last element
