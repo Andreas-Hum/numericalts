@@ -137,9 +137,9 @@ describe('Matrix', () => {
         it('A 3x3 identity row matrix', () => {
         
             let matrix = new Matrix([[1.0, 1.0, -3.0],
-            [3.0, 2.0, 1.0],
-            [-2.0, 0.5, 2.5]]);
+            [3.0, 2.0, 1.0]]);
 
+            console.log(matrix)
             matrix.transpose()
             console.log(matrix)
 

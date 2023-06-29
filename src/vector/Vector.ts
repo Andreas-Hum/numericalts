@@ -709,7 +709,11 @@ export class Vector implements VectorTypes {
     public transpose(): void {
         if (this.isColumn) {
             this.elements = this.elements.flat()
+            this.isColumn = false;
+            this.isRow = true;
         } else {
+            this.isColumn = true;
+            this.isRow = false;
             this.elements = this.elements.flat().map((e: number) => [e])
         }
         this.updateDimensions();

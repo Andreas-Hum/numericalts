@@ -348,17 +348,38 @@ export class Matrix implements MatrixTypes {
 
     public transpose(): void {
         if (this.isColumnMatrix) {
+
+            this.isColumnMatrix = false;
+            this.isRowMatrix = true;
+
             for (let i = 0; i < this.columns; i++) {
                 this.elements[i].transpose()
             }
         } else {
+            this.isColumnMatrix = true;
+            this.isRowMatrix = false;
+
             for (let i = 0; i < this.rows; i++) {
                 this.elements[i].transpose()
             }
         }
 
-        this.updateDimension()
-     
+        if (this.isWide) {
+            this.isWide = false;
+            this.isTall = true;
+
+        } else if (this.isTall) {
+            this.isWide = true;
+            this.isTall = false;
+
+        }
+
+        let temp: number = this.columns;
+        this.columns = this.rows;
+        this.rows = temp;
+
+        this.updateShape()
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
