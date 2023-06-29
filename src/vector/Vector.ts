@@ -59,9 +59,10 @@ export class Vector implements VectorTypes {
      * Vector addition (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
      * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
      * @throws {VectorError} If the dimensions of the vectors don't match.
-     * @returns {void}
+     * @returns {Vector} The result of the addition
      */
     public add(...vectors: (Vector | number[] | number[][])[]): Vector {
+        let addedVector: Vector = Vector.zeros(this.size);
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
@@ -73,20 +74,19 @@ export class Vector implements VectorTypes {
 
             let vector_one_copy: number[] = this.elements.flat()
             let vector_two_copy: number[] = vector.elements.flat()
-            let addedVector: number[] | number[][] = [];
 
             if (this.isColumn) {
                 for (let i = 0; i < this.size; i++) {
-                    (addedVector as number[][]).push([vector_one_copy[i] + vector_two_copy[i]])
+                    addedVector.elements[i] = [vector_one_copy[i] + vector_two_copy[i]]
                 }
             } else {
                 for (let i = 0; i < this.size; i++) {
-                    (addedVector as number[]).push(vector_one_copy[i] + vector_two_copy[i])
+                    addedVector.elements[i] = vector_one_copy[i] + vector_two_copy[i]
                 }
             }
 
-            return new Vector(addedVector)
         }
+        return addedVector;
     }
 
     /**
@@ -356,8 +356,9 @@ export class Vector implements VectorTypes {
      * This modifies the original vector.
      * @param {string} type The type of norm to use for normalization. Defaults to "euclidean".
      * @throws {VectorError} If the vector norm is zero.
+     * @returns {Vector} The normalized version of this vector
      */
-    public normalize(type: "euclidean" | "infinity" | "manhattan" = "euclidean"): void {
+    public normalize(type: "euclidean" | "infinity" | "manhattan" = "euclidean"): Vector {
         let norm;
         switch (type) {
             case "euclidean":
@@ -376,7 +377,7 @@ export class Vector implements VectorTypes {
         if (Math.abs(norm) < DELTA) {
             throw new VectorError("Cannot normalize a zero vector.", 704);
         }
-        this.scale(1 / norm);
+        return this.scale(1 / norm);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,8 +419,8 @@ export class Vector implements VectorTypes {
 
         }
 
-        result.scale(scalar)
-        return result;
+
+        return result.scale(scalar);
     }
 
 
@@ -470,40 +471,39 @@ export class Vector implements VectorTypes {
      * This modifies the original vector.
      * @param {number} scalar - The scalar to multiply the vector by.
      * @throws {VectorError} If the scalar is not a number.
+     * @returns {Vector} The result of the scaleing
      */
-    public scale(scalar: number): void {
+    public scale(scalar: number): Vector {
         if (typeof scalar !== "number") {
             throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
         }
 
+        let result: number[] | number[][] = []
+
         if (this.isColumn) {
-            this.elements = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
+            (result as number[][]) = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
         } else {
-            this.elements = (this.elements as number[]).map((entry: number) => entry * scalar)
+            (result as number[]) = (this.elements as number[]).map((entry: number) => entry * scalar)
         }
 
+        return new Vector(result);
 
     }
 
-    /**
-     * Returns the vector as an array
-     * @returns {number[] | number[][]}
-     */
-    public toArray(): number[] | number[][] {
-        return this.elements
-    }
+
     /**
      * Vectors subtraction (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
      * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to subract.
      * @throws {VectorError} If the dimensions of the vectors don't match.
-     * @returns {void}
+     * @returns {Vector} The result of the subraction
      */
-    public subtract(...vectors: (Vector | number[] | number[][])[]): void {
+    public subtract(...vectors: (Vector | number[] | number[][])[]): Vector {
+        let subractResult: Vector = Vector.zeros(this.size)
+
         for (let vector of vectors) {
             if (!(vector instanceof Vector)) {
                 vector = new Vector(vector)
             }
-
             if (vector.size !== this.size) {
                 throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: this.size, errorVector: vector.size })
             }
@@ -513,16 +513,17 @@ export class Vector implements VectorTypes {
 
             if (this.isColumn) {
                 for (let i = 0; i < this.size; i++) {
-                    this.elements[i] = [vector_one_copy[i] - vector_two_copy[i]]
+                    subractResult.elements[i] = [vector_one_copy[i] - vector_two_copy[i]]
                 }
             } else {
                 for (let i = 0; i < this.size; i++) {
-                    this.elements[i] = vector_one_copy[i] - vector_two_copy[i]
+                    subractResult.elements[i] = vector_one_copy[i] - vector_two_copy[i]
                 }
             }
 
-            this.validateVector()
         }
+        return subractResult
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -530,6 +531,14 @@ export class Vector implements VectorTypes {
     * T
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Returns the vector as an array
+     * @returns {number[] | number[][]}
+     */
+    public toArray(): number[] | number[][] {
+        return this.elements
+    }
 
     /**
      * Returns the vector as a column in LaTeX format.
@@ -547,6 +556,7 @@ export class Vector implements VectorTypes {
         output += "\\end{bmatrix}";
         return output;
     }
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -678,8 +688,8 @@ export class Vector implements VectorTypes {
      * @returns {number} The mean (average) of the values in the vector.
      */
     public mean(): number {
-        const meanVector: Vector = Vector.ones(this.size);
-        meanVector.scale(1 / this.size)
+        let meanVector: Vector = Vector.ones(this.size);
+        meanVector = meanVector.scale(1 / this.size)
 
         return this.dot(meanVector)
     }
