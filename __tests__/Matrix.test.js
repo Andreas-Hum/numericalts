@@ -136,13 +136,11 @@ describe('Matrix', () => {
     describe('Matrix naive multiplication', () => {
         it('A 3x3 identity row matrix', () => {
         
-            let matrix = new Matrix([[1.0, 1.0, -3.0],
-            [3.0, 2.0, 1.0]]);
+            let matrix = new Matrix([[5,-4],[1,2]]);
 
-            console.log(matrix)
-            matrix.transpose()
-            console.log(matrix)
-
+            const pog = matrix.QRDecomposition()
+            pog.Q.printMatrix()
+            pog.R.printMatrix()
             // matrix.gs().printMatrix()
 
 

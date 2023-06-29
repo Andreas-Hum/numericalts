@@ -83,6 +83,10 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public clone() {
+        return new Matrix(this.elements)
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * D
@@ -241,7 +245,14 @@ export class Matrix implements MatrixTypes {
         for (let i = 0; i < this.rows; i++) {
             result.push([])
             for (let j = 0; j < matrixToMultiply.columns; j++) {
-                result[i][j] = this.elements[i].dot(matrixToMultiply.elements[j])
+                let tempRes: number = this.elements[i].dot(matrixToMultiply.elements[j]);
+
+                if (tempRes <= 0 + DELTA && 0 - DELTA <= tempRes) {
+                    result[i][j] = 0
+                } else {
+                    result[i][j] = tempRes
+                }
+
             }
         }
 
@@ -264,12 +275,14 @@ export class Matrix implements MatrixTypes {
     /**
      * Prints matrix to the console.
      * @public
-     * @returns {void}
+     * @returns {string} The print string
      */
-    public printMatrix(): void {
+    public printMatrix(): string {
+        let ps: string = ""
         if (this.isRowMatrix) {
             this.elements.forEach(rowVector => {
-                console.log(rowVector.elements);
+                ps += rowVector.elements;
+                ps += "\n"
             });
         }
         else if (this.isColumnMatrix) {
@@ -279,10 +292,11 @@ export class Matrix implements MatrixTypes {
                 for (let j = 0; j < this.columns; j++) {
                     row.push(this.elements[j].elements[i]);
                 }
-                console.log(row.flat());
+                ps += row.flat()
+                ps += "\n"
             }
         }
-        console.log('---------------');
+        return ps;
     }
 
 
@@ -346,41 +360,46 @@ export class Matrix implements MatrixTypes {
         return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
 
-    public transpose(): void {
-        if (this.isColumnMatrix) {
+    public transpose(): Matrix {
+        let newMatrix = this.clone(); // Assuming you have a method to clone the matrix.
+        // If not, you will need to implement it.
 
-            this.isColumnMatrix = false;
-            this.isRowMatrix = true;
+        if (newMatrix.isColumnMatrix) {
 
-            for (let i = 0; i < this.columns; i++) {
-                this.elements[i].transpose()
+            newMatrix.isColumnMatrix = false;
+            newMatrix.isRowMatrix = true;
+
+            for (let i = 0; i < newMatrix.columns; i++) {
+                newMatrix.elements[i].transpose();
             }
         } else {
-            this.isColumnMatrix = true;
-            this.isRowMatrix = false;
+            newMatrix.isColumnMatrix = true;
+            newMatrix.isRowMatrix = false;
 
-            for (let i = 0; i < this.rows; i++) {
-                this.elements[i].transpose()
+            for (let i = 0; i < newMatrix.rows; i++) {
+                newMatrix.elements[i].transpose();
             }
         }
 
-        if (this.isWide) {
-            this.isWide = false;
-            this.isTall = true;
+        if (newMatrix.isWide) {
+            newMatrix.isWide = false;
+            newMatrix.isTall = true;
 
-        } else if (this.isTall) {
-            this.isWide = true;
-            this.isTall = false;
+        } else if (newMatrix.isTall) {
+            newMatrix.isWide = true;
+            newMatrix.isTall = false;
 
         }
 
-        let temp: number = this.columns;
-        this.columns = this.rows;
-        this.rows = temp;
+        let temp = newMatrix.columns;
+        newMatrix.columns = newMatrix.rows;
+        newMatrix.rows = temp;
 
-        this.updateShape()
+        newMatrix.updateShape();
 
+        return newMatrix;
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -459,6 +478,21 @@ export class Matrix implements MatrixTypes {
 
         this.updateMatrix()
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Q
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public QRDecomposition(): { Q: Matrix, R: Matrix } {
+        let Q: Matrix = this.gramSmith();
+        let QT: Matrix = Q.transpose();
+        let R: Matrix = QT.naiveMultiply(this);
+
+        return { Q: Q, R: R };
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     *
@@ -524,4 +558,3 @@ export class Matrix implements MatrixTypes {
     }
 
 }
-
