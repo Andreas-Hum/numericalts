@@ -9,9 +9,11 @@ export enum MTypes {
 export interface MatrixTypes {
     //Shape type
     shape: string
-    Mtype: MTypes
     isColumnMatrix: boolean
     isRowMatrix: boolean
+    isSquare: boolean
+    isTall: boolean
+    isWide: boolean
 
 
     //Dimensions
