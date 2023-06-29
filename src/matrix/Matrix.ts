@@ -12,9 +12,12 @@ import { Vector } from "../vector/Vector";
 export class Matrix implements MatrixTypes {
 
     public shape: string = "0";
-    public Mtype: MTypes;
     public isColumnMatrix: boolean = false;
     public isRowMatrix: boolean = false;
+    public isSquare: boolean = false;
+    public isTall: boolean = false;
+    public isWide: boolean = false;
+
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
@@ -182,7 +185,6 @@ export class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private updateDimension(): void {
-        this.size = this.elements.reduce((acc: number, cur: Vector) => acc + cur.size, 0)
         if (this.elements.every((e: Vector) => e.isRow)) {
             this.isRowMatrix
             this.rows = this.elements.length
@@ -196,12 +198,14 @@ export class Matrix implements MatrixTypes {
         }
 
         if (this.rows === this.columns) {
-            this.Mtype = MTypes.square
+            this.isSquare = true
         } else if (this.rows > this.columns) {
-            this.Mtype = MTypes.tall
+            this.isTall = true
         } else {
-            this.Mtype = MTypes.wide
+            this.isWide = true
         }
+
+        this.size = this.rows * this.columns
     }
 
     private updateMatrix(): void {
@@ -271,6 +275,11 @@ export class Matrix implements MatrixTypes {
     *
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // public createIdentityMatrix(rows: number, columns: number): Matrix {
+
+    // }
 
 }
 
