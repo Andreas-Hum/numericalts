@@ -46,7 +46,7 @@ export class Matrix implements MatrixTypes {
                 }
             }
 
-            //TODO MATRIX INIT METHOD THAT CHOOSES WIDE TALL OR SQUARE AND UPDATES THE SHAPE
+            this.validateMatrix()
 
         }
     }
