@@ -82,21 +82,21 @@ export class Matrix implements MatrixTypes {
      *
      * @throws {MatrixError} If the matrix contains a zero on the diagonal (unsolvable system)
      */
-    public backPropagation(): number[] {
-        let solverMatrix: Matrix = this.isRowMatrix ? this : this.toColumnMatrix();
-        const sol: number[] = [];
+    public backSubstitution(B: Vector): Vector {
+        let sol: number[] = [];
 
-        for (let i = solverMatrix.rows - 1; i >= 0; i--) {
-            if (solverMatrix.elements[i].elements[i] == 0) throw new MatrixError("Unsolvable system: zero on diagonal", 814);
+        for (let i = this.rows - 1; i >= 0; i--) {
+            if (this.elements[i].elements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
             let sum: number = 0;
-            for (let j = solverMatrix.columns - 2; j > i; --j) {
-                sum += sol[j] * (solverMatrix.elements[i].elements[j] as number)
+            for (let j = this.columns - 1; j > i; --j) {
+                sum += sol[j] * (this.elements[i].elements[j] as number)
             }
-            sol[i] = ((solverMatrix.elements[i].elements[solverMatrix.columns - 1] as number) - sum) / (solverMatrix.elements[i].elements[i] as number)
+            sol[i] = ((B.elements[i] as number) - sum) / (this.elements[i].elements[i] as number)
         }
 
-        return sol
+        return new Vector(sol)
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -141,6 +141,9 @@ export class Matrix implements MatrixTypes {
     * G
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     // Abomination
     //public gs(): Matrix { let p = this.isRowMatrix ? this.toColumnMatrix() : this, a=[], n=[], i=0,j, o; for(; i<p.columns; i++) { o = p.elements[i]; for(j=0; j<i; j++) o = o.subtract(a[j].scale(a[j].dot(p.elements[i]) / a[j].dot(a[j]))); if (o.euclNorm() < DELTA) throw new VectorError("Vectors not linearly independent.", 704); a.push(o); n.push(o.normalize()); } return new Matrix(n); }
@@ -203,6 +206,24 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //TODODODODODODODODODODODDO FIXSXXXXXXXXXX
+    public invertUpperTriangular(): Matrix {
+        if (this.rows !== this.columns) throw new Error("Uninvertable matrix: not a square matrix");
+    
+        const identityMatrix: Matrix = Matrix.createIdentityMatrix(this.rows, this.isColumnMatrix);
+        const invertedMatrixElements: Vector[] = [];
+        const transposedThis: Matrix = this.transpose();
+    
+        for (let i = 0; i < this.rows; i++) {
+            invertedMatrixElements[i] = transposedThis.backSubstitution(identityMatrix.elements[this.rows - 1 - i]);
+        }
+    
+        // here the invertedMatrixElements Vector array is reversed to match the expected order
+        invertedMatrixElements.reverse();
+    
+        return new Matrix(invertedMatrixElements);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * J
@@ -248,25 +269,37 @@ export class Matrix implements MatrixTypes {
      * @method
      * @public
      */
-    public naiveMultiply(matrixToMultiply: number[][] | Matrix, columnMatrix: boolean = false): Matrix {
-        matrixToMultiply = matrixToMultiply instanceof Matrix ? matrixToMultiply : new Matrix(matrixToMultiply);
-        if (this.columns !== matrixToMultiply.rows)
-            throw new MatrixError("Dimension mismatch: columns of first matrix do not equal rows of second", 810);
+    public naiveMultiply(matrixToMultiply: number[][] | Matrix): Matrix {
+        if (!(matrixToMultiply instanceof Matrix)) {
+            matrixToMultiply = new Matrix(matrixToMultiply as number[][])
+        }
+        if (this.columns !== matrixToMultiply.rows) {
+            throw new MatrixError("Dimention missmatch: Columns of first matrix does not equal the rows of the second", 810)
+        }
+        let psudoMatrix: Matrix = this
+        if (matrixToMultiply.isRowMatrix) {
+            matrixToMultiply = matrixToMultiply.toColumnMatrix()
+        }
+        if (this.isColumnMatrix) {
+            psudoMatrix = this.toRowMatrix()
+        }
+        let result: number[][] = [];
+        for (let i = 0; i < this.rows; i++) {
+            result.push([])
+            for (let j = 0; j < matrixToMultiply.columns; j++) {
+                let tempRes: number = this.elements[i].dot(matrixToMultiply.elements[j]);
 
-        const pseudoMatrix = this.isColumnMatrix ? this.toRowMatrix() : this;
-        if (matrixToMultiply.isRowMatrix) matrixToMultiply = matrixToMultiply.toColumnMatrix();
+                if (tempRes <= 0 + DELTA && 0 - DELTA <= tempRes) {
+                    result[i][j] = 0
+                } else {
+                    result[i][j] = tempRes
+                }
 
-        const result = pseudoMatrix.elements.map(row =>
-            (matrixToMultiply as Matrix).elements.map((_, j) => {
-                let dotProduct = row.dot((matrixToMultiply as Matrix).elements[j]);
-                return Math.abs(dotProduct) <= DELTA ? 0 : dotProduct;
-            })
-        );
+            }
+        }
 
-        return columnMatrix ? (new Matrix(result)).toColumnMatrix() : new Matrix(result);
+        return new Matrix(result)
     }
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * O
@@ -345,13 +378,13 @@ export class Matrix implements MatrixTypes {
         if (this.isColumnMatrix) {
             throw new MatrixError("Method can only convert row matrices.", 802);
         }
-
-        const columnMatrix = this.elements.map((vec: Vector) => {
-            vec.transpose()
-            return new Vector(vec.elements)
+        const columnMatrix = this.elements[0].elements.map((_, i) => {
+            // Each new row Vector becomes a column Vector in the transposed matrix
+            // Mapping over this.elements extracts the i-th element from each row vector
+            //@ts-ignore
+            return new Vector(this.elements.map(rowVector => [rowVector.elements[i]])); // vector entries should be array of arrays
         });
-
-        return new Matrix(columnMatrix);
+        return new Matrix(columnMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
 
     /**
@@ -362,20 +395,15 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} The converted row matrix.
      */
     public toRowMatrix(): Matrix {
-
         if (this.isRowMatrix) {
             throw new MatrixError("Method can only convert column matrices.", 802);
         }
-
-
-        const rowMatrix = this.elements.map((vec: Vector) => {
-            vec.transpose()
-            return new Vector(vec.elements)
+        const rowMatrix = this.elements[0].elements.map((_, i) => {
+            // @ts-ignore
+            return new Vector(this.elements.map(columnVector => columnVector.elements[i][0])); // vector entries should be flat array
         });
-
-        return new Matrix(rowMatrix);
+        return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
-
 
     /**
      * Transposes the current matrix. Rows will become columns and columns will become rows.
@@ -385,27 +413,38 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} The transposed matrix; a new instance of the matrix.
      */
     public transpose(): Matrix {
-        let newMatrix = this.clone();
+        let newMatrix = this.clone(); // Assuming you have a method to clone the matrix.
+        // If not, you will need to implement it.
 
-        if (newMatrix.isRowMatrix) {
-            newMatrix = newMatrix.toColumnMatrix();
+        if (newMatrix.isColumnMatrix) {
+            newMatrix.isColumnMatrix = false;
+            newMatrix.isRowMatrix = true;
+            for (let i = 0; i < newMatrix.columns; i++) {
+                newMatrix.elements[i].transpose();
+            }
+        } else {
+            newMatrix.isColumnMatrix = true;
+            newMatrix.isRowMatrix = false;
+            for (let i = 0; i < newMatrix.rows; i++) {
+                newMatrix.elements[i].transpose();
+            }
         }
-        else if (newMatrix.isColumnMatrix) {
-            newMatrix = newMatrix.toRowMatrix();
+        if (newMatrix.isWide) {
+            newMatrix.isWide = false;
+            newMatrix.isTall = true;
+        } else if (newMatrix.isTall) {
+            newMatrix.isWide = true;
+            newMatrix.isTall = false;
+
         }
-
-        newMatrix.isWide = !this.isWide;
-        newMatrix.isTall = !this.isTall;
-        newMatrix.isRowMatrix = !this.isColumnMatrix;
-        newMatrix.isColumnMatrix = !this.isRowMatrix;
-
-        [newMatrix.columns, newMatrix.rows] = [this.rows, this.columns];
+        let temp = newMatrix.columns;
+        newMatrix.columns = newMatrix.rows;
+        newMatrix.rows = temp;
 
         newMatrix.updateShape();
 
         return newMatrix;
     }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * U
@@ -540,8 +579,6 @@ export class Matrix implements MatrixTypes {
     /**
      * Creates identity matrix using the 'Vector.createUnitVector' method.
      * @public
-     * @param {number} rows - Number of rows in the matrix.
-     * @param {number} columns - Number of columns in the matrix.
      * @param {boolean} columnMatrix - Indicates if column matrices should be generated.
      * @returns {Matrix} - The resulting identity Matrix.
      * @throws {MatrixError} - If rows or columns are not a positive number or columnMatrix is not a boolean.

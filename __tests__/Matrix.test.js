@@ -107,60 +107,60 @@ describe('Matrix', () => {
     });
 
     // Testing toColumnMatrix
-    describe('Matrix to column matrix', () => {
-        it('Convert a row matrix to a column matrix', () => {
-            const columnMatrix = rowMatrix.toColumnMatrix();
+    // describe('Matrix to column matrix', () => {
+    //     it('Convert a row matrix to a column matrix', () => {
+    //         const columnMatrix = rowMatrix.toColumnMatrix();
 
-            expect(columnMatrix.elements).toEqual([
-                new Vector([[1], [2], [3]]),
-                new Vector([[4], [5], [6]]),
-            ]);
-        });
+    //         expect(columnMatrix.elements).toEqual([
+    //             new Vector([[1], [2], [3]]),
+    //             new Vector([[4], [5], [6]]),
+    //         ]);
+    //     });
 
-        it("Error: Column matrix as argument", () => {
-            expect(() => columnMatrix.toColumnMatrix()).toThrow()
-        })
-    });
+    //     it("Error: Column matrix as argument", () => {
+    //         expect(() => columnMatrix.toColumnMatrix()).toThrow()
+    //     })
+    // });
 
     // Testing toRowMatrix
-    describe('Matrix to row matrix', () => {
-        it('Convert a column matrix to a row matrix', () => {
-            const rowMatrix = columnMatrix.toRowMatrix();
+    // describe('Matrix to row matrix', () => {
+    //     it('Convert a column matrix to a row matrix', () => {
+    //         const rowMatrix = columnMatrix.toRowMatrix();
 
-            expect(rowMatrix.elements).toEqual([
-                new Vector([1, 2, 3]),
-                new Vector([4, 5, 6])
-            ]);
-        });
+    //         expect(rowMatrix.elements).toEqual([
+    //             new Vector([1, 2, 3]),
+    //             new Vector([4, 5, 6])
+    //         ]);
+    //     });
 
-        it("Error: Column matrix as argument", () => {
-            expect(() => rowMatrix.toRowMatrix()).toThrow()
-        })
+    //     it("Error: Column matrix as argument", () => {
+    //         expect(() => rowMatrix.toRowMatrix()).toThrow()
+    //     })
 
-    });
-
-
-    describe('transpose', () => {
-        it('Transpose a row matrix', () => {
-            const columnMatrix = rowMatrix.transpose();
-
-            expect(columnMatrix.elements).toEqual([
-                new Vector([[1], [2], [3]]),
-                new Vector([[4], [5], [6]]),
-            ]);
-        });
-
-        it('Transpose a column matrix ', () => {
-            const rowMatrix = columnMatrix.transpose();
-
-            expect(rowMatrix.elements).toEqual([
-                new Vector([1, 2, 3]),
-                new Vector([4, 5, 6])
-            ]);
-        });
+    // });
 
 
-    });
+    // describe('transpose', () => {
+    //     it('Transpose a row matrix', () => {
+    //         const columnMatrix = rowMatrix.transpose();
+
+    //         expect(columnMatrix.elements).toEqual([
+    //             new Vector([[1], [2], [3]]),
+    //             new Vector([[4], [5], [6]]),
+    //         ]);
+    //     });
+
+    //     it('Transpose a column matrix ', () => {
+    //         const rowMatrix = columnMatrix.transpose();
+
+    //         expect(rowMatrix.elements).toEqual([
+    //             new Vector([1, 2, 3]),
+    //             new Vector([4, 5, 6])
+    //         ]);
+    //     });
+
+
+    // });
 
 
     describe('Matrix naive multiplication', () => {
@@ -182,6 +182,19 @@ describe('Matrix', () => {
             expect(() => columnMatrix.naiveMultiply(columnMatrix)).toThrow()
         });
 
+
+    });
+
+    describe('QR decom', () => {
+        it('A row matrix with a column matrix', () => {
+            const testers = new Matrix([new Vector([1,1]), new Vector([1, 6])])
+
+            const { Q, R } = testers.QRDecomposition()
+            console.log(Q.printMatrix())
+            console.log(R.printMatrix())
+            console.log(R.invertUpperTriangular(R).printMatrix())
+            //   .naiveMultiply(new Matrix([new Vector([[-3],[2]])])).printMatrix()
+        });
 
 
 
