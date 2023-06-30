@@ -12,8 +12,6 @@ import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck,
 import { DELTA } from "../utils/constants";
 
 
-
-
 /**
 * A class that represents a mathemathical Vector.
 * @exports Vector
