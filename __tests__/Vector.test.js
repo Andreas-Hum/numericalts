@@ -24,6 +24,9 @@ describe('Vector', () => {
 
         it('Validation of a row vector', () => {
             expect(rowVector123.isRow).toBeTruthy();
+            expect(rowVector123.isColumn).toBeFalsy();
+
+
             expect(rowVector123.size).toBe(3);
             expect(rowVector123.shape).toBe('(1,3)');
         });
@@ -31,6 +34,8 @@ describe('Vector', () => {
         it('Validation of a column vector', () => {
 
             expect(columnVector123.isColumn).toBeTruthy();
+            expect(columnVector123.isRow).toBeFalsy();
+
             expect(columnVector123.size).toBe(3);
             expect(columnVector123.shape).toBe('(3,1)');
         });

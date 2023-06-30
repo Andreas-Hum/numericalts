@@ -6,15 +6,13 @@ import type VectorTypes from "./VectorTypes";
 import VectorError from "../errors/VectorError";
 
 // Importing vector checks
-import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck } from "../utils/vectorChecks";
+import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck,vectorZeroError } from "../utils/vectorChecks";
 
 // Importing constants;
 import { DELTA } from "../utils/constants";
 
 
-function vectorZeroError() {
 
-}
 
 /**
 * A class that represents a mathemathical Vector.
@@ -128,8 +126,7 @@ export class Vector implements VectorTypes {
 
         const [denominator, numerator]: number[] = [this.euclNorm() * vector.euclNorm(), this.dot(vector)];
 
-        if (Math.abs(denominator) < DELTA)
-            throw new VectorError('Cannot take the angle of a zero vector.', 704);
+        vectorZeroError(denominator, 'Cannot take the angle of a zero vector.')
 
         let angleInRadians: number = Math.acos(numerator / denominator);
 
@@ -160,7 +157,6 @@ export class Vector implements VectorTypes {
     public cross(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
         vector = vector instanceof Vector ? vector : new Vector(vector);
 
-
         if (this.size !== 3 || vector.size !== 3) {
             throw new VectorError("Vectors should be 3-dimensional for the cross product", 707, { vectorOne_size: this.size, vectorTwo_size: vector.size })
         }
@@ -171,18 +167,7 @@ export class Vector implements VectorTypes {
             vector_one_copy[2] * vector_two_copy[0] - vector_one_copy[0] * vector_two_copy[2],
             vector_one_copy[0] * vector_two_copy[1] - vector_one_copy[1] * vector_two_copy[0]]
 
-
-
-        if (columnVector) {
-
-            return new Vector([[first], [second], [third]])
-
-        } else {
-
-            return new Vector([first, second, third])
-
-        }
-
+        return columnVector ? new Vector([[first], [second], [third]]) : new Vector([first, second, third])
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,21 +263,19 @@ export class Vector implements VectorTypes {
      * @returns {Array<{ scalar: number, unitVector: Vector }>} An array of objects, each with a scalar and corresponding unit vector.
      */
     public linUnitComb(): { scalar: number, unitVector: Vector }[] {
-        const result: { scalar: number, unitVector: Vector }[] = []
         const size: number = this.size;
 
-        if (this.isColumn) {
-            for (let i = 0; i < size; i++) {
-                result.push({ scalar: (this.elements as number[][])[i][0], unitVector: Vector.createUnitVector(size, i, true) })
-            }
-        } else {
-            for (let i = 0; i < size; i++) {
-                result.push({ scalar: (this.elements as number[])[i], unitVector: Vector.createUnitVector(size, i,) })
-            }
-        }
+        //@ts-ignore
+        const result = this.elements.reduce((accumulated: {
+            scalar: any; unitVector: Vector;
+        }[], element: any[], i: number) => {
+            const scalar = this.isColumn ? element[0] : element;
+            const unitVector = Vector.createUnitVector(size, i, this.isColumn);
+            accumulated.push({ scalar, unitVector });
+            return accumulated;
+        }, []);
 
         return result;
-
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,9 +313,8 @@ export class Vector implements VectorTypes {
                 throw new VectorError(`Unknown norm type: ${type}`, 708, { type });
         }
 
-        if (Math.abs(norm) < DELTA) {
-            throw new VectorError("Cannot normalize a zero vector.", 704);
-        }
+        vectorZeroError(norm, "Cannot normalize a zero vector.")
+
         return this.scale(1 / norm);
     }
 
@@ -360,9 +342,8 @@ export class Vector implements VectorTypes {
         vector = vector instanceof Vector ? vector : new Vector(vector);
 
         const norm: number = vector.euclNorm();
-        if (Math.abs(norm) < DELTA) {
-            throw new VectorError("Cannot project onto a zero vector", 704);
-        }
+        vectorZeroError(norm, "Cannot project onto a zero vector")
+
 
         const scalar: number = this.dot(vector) / Math.pow(norm, 2)
         let result: Vector = columnVector ? new Vector(vector.elements.flat().map((ele: number) => [ele])) : new Vector(vector.elements.flat());
@@ -438,29 +419,26 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The result of the subraction
      */
     public subtract(...vectors: (Vector | number[] | number[][])[]): Vector {
-        let subractResult: Vector = Vector.zeros(this.size, this.isColumn)
+        let subtractResult: Vector = Vector.zeros(this.size, this.isColumn);
 
         for (let vector of vectors) {
             vector = vector instanceof Vector ? vector : new Vector(vector);
 
-            vectorSizeCheck(this, vector)
+            vectorSizeCheck(this, vector);
 
-            let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+            const [vectorOneCopy, vectorTwoCopy]: number[][] = [this.elements.flat(), vector.elements.flat()];
 
-            if (this.isColumn) {
-                for (let i = 0; i < this.size; i++) {
-                    subractResult.elements[i] = [vector_one_copy[i] - vector_two_copy[i]]
-                }
-            } else {
-                for (let i = 0; i < this.size; i++) {
-                    subractResult.elements[i] = vector_one_copy[i] - vector_two_copy[i]
-                }
-            }
+            const updatedElements = vectorOneCopy.reduce((result, element, i) => {
+                result[i] = this.isColumn ? [element - vectorTwoCopy[i]] : element - vectorTwoCopy[i]
+                return result;
+            }, []);
 
+            subtractResult.elements = updatedElements;
         }
-        return subractResult
 
+        return subtractResult;
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -507,18 +485,14 @@ export class Vector implements VectorTypes {
      * @returns {void}
      */
     private updateDimensions(): void {
+        this.columns = this.isRow ? this.size : 1;
+        this.rows = this.isColumn ? this.size : 1;
 
-        if (this.isRow) {
-            this.columns = this.size;
-            this.rows = 1;
-        } else if (this.isColumn) {
-            this.rows = this.size;
-            this.columns = 1;
-        } else {
+        if (!this.isRow && !this.isColumn) {
             throw new VectorError("Vector must be either a row vector or a column vector.", 602);
         }
-
     }
+
 
     /**
     * Updates the shape of the Vector.
@@ -643,15 +617,13 @@ export class Vector implements VectorTypes {
      * @returns  {void}
      */
     public transpose(): void {
-        if (this.isColumn) {
-            this.elements = this.elements.flat()
-            this.isColumn = false;
-            this.isRow = true;
-        } else {
-            this.isColumn = true;
-            this.isRow = false;
-            this.elements = this.elements.flat().map((e: number) => [e])
-        }
+        this.elements = this.isColumn ?
+            this.elements.flat() :
+            //@ts-ignore
+            this.elements.map((e: number) => [e]);
+
+        [this.isRow, this.isColumn] = [this.isColumn, this.isRow];
+
         this.updateDimensions();
         this.updateShape();
     }
@@ -674,22 +646,11 @@ export class Vector implements VectorTypes {
     */
     public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
         vector = vector instanceof Vector ? vector : new Vector(vector);
+        vectorSizeCheck(this, vector);
+        strict && vectorShapeCheck(this, vector);
 
-        vectorSizeCheck(this, vector)
-        if (strict) {
-            vectorShapeCheck(this, vector)
-        }
-        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
-
-
-        for (let i = 0; i < this.size; i++) {
-            if (vector_one_copy[i] - vector_two_copy[i] > DELTA) {
-                return false
-            }
-        }
-
-        return true;
-
+        const [v1, v2] = [this.elements.flat(), vector.elements.flat()];
+        return !v1.some((val, i) => Math.abs(val - v2[i]) > DELTA);
     }
 
     /**
@@ -725,22 +686,9 @@ export class Vector implements VectorTypes {
      * @returns {boolean} 'true' if there is one 1 and rest are 0, 'false' otherwise.
      */
     public isUnitVector(): boolean {
-        let ones: number = 0;
-        let zeros: number = 0;
-
-        const testArray: number[] = this.elements.flat()
-
-        for (let i = 0; i < this.size; i++) {
-            if (testArray[i] === 1) {
-                ones++;
-            } else if (testArray[i] === 0) {
-                zeros++;
-            } else if (ones > 1) {
-                return false;
-            } else {
-                return false;
-            }
-        }
+        const testArray = this.elements.flat();
+        const ones = testArray.filter(e => e === 1).length;
+        const zeros = testArray.filter(e => e === 0).length;
 
         return ones === 1 && zeros === this.size - 1;
     }
@@ -781,25 +729,13 @@ export class Vector implements VectorTypes {
      * @return {Vector} The created unit vector.
      */
     public static createUnitVector(size: number, index: number, columnVector: boolean = false): Vector {
-        if (index > size || index < 0) {
-            throw new VectorError("Dimention missmatch: index is less than or equal to zero or the index is greater than the size", 602, { size, index })
-        } else if (size < 0) {
-            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
-        } else if (typeof columnVector !== "boolean") {
-            throw new VectorError("Invalid boolean", 605, { columnVector })
-        }
+        if (index >= size || index < 0 || size < 0 || typeof columnVector !== "boolean")
+            throw new VectorError("Invalid arguments", 606, { size, index, columnVector });
 
-        let unitVector: Vector;
-        if (columnVector) {
-            unitVector = Vector.zeros(size, true);
-            (unitVector.elements as number[][])[index][0] = 1;
-        } else {
-            unitVector = Vector.zeros(size)
-            unitVector.elements[index] = 1;
-        }
+        const unitVector = Vector.zeros(size, columnVector);
+        columnVector ? (unitVector.elements as number[][])[index][0] = 1 : unitVector.elements[index] = 1;
 
         return unitVector;
-
     }
 
     /**
@@ -810,17 +746,12 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The newly created vector filled with ones.
      */
     public static ones(size: number, columnVector: boolean = false): Vector {
-        if (size < 0) {
-            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
-        } else if (typeof columnVector !== "boolean") {
-            throw new VectorError("Invalid boolean", 605, { columnVector })
-        }
-        if (columnVector) {
-            return new Vector((new Array(size)).fill(1, 0).map((ele: number) => [ele]))
-        } else {
-            return new Vector((new Array(size)).fill(1, 0))
-        }
+        if (size < 0 || typeof columnVector !== "boolean")
+            throw new VectorError("Invalid arguments", 606, { size, columnVector });
+
+        return new Vector(Array(size).fill(columnVector ? [1] : 1));
     }
+
 
     /**
      * CReturns a new vector of a given size, filled with zeros.
@@ -829,16 +760,10 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The newly created vector filled with zeros.
      */
     public static zeros(size: number, columnVector: boolean = false): Vector {
-        if (size < 0) {
-            throw new VectorError("Dimension mismatch: Size can't be negative", 602, { size })
-        } else if (typeof columnVector !== "boolean") {
-            throw new VectorError("Invalid boolean", 605, { columnVector })
-        }
-        if (columnVector) {
-            return new Vector((new Array(size)).fill(0, 0).map((ele: number) => [ele]))
-        } else {
-            return new Vector((new Array(size)).fill(0, 0))
-        }
+        if (size < 0 || typeof columnVector !== "boolean")
+            throw new VectorError("Invalid arguments", 606, { size, columnVector });
+
+        return new Vector(Array(size).fill(columnVector ? [0] : 0));
     }
 
 

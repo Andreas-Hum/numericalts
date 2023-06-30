@@ -1,11 +1,13 @@
 import VectorError from "../errors/VectorError";
 import { Vector } from "../vector/Vector";
+import { DELTA } from "./constants";
 
 export {
     vectorArrayCheck,
     vectorShapeCheck,
     vectorSizeCheck,
-    vectorScalarCheck
+    vectorScalarCheck,
+    vectorZeroError
 }
 
 
@@ -34,4 +36,12 @@ function vectorScalarCheck(scalar: number) {
     if (typeof scalar !== "number") {
         throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
     }
+}
+
+function vectorZeroError(property: number, message: string) {
+    if (Math.abs(property) < DELTA) {
+        throw new VectorError(message, 704);
+
+    }
+
 }
