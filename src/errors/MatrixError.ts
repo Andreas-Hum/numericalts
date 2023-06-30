@@ -24,6 +24,7 @@ export default class MatrixError extends Error {
         // 811: Determinant of Non-Square Matrix Error - Occurs when trying to calculate the determinant of a non-square matrix.
         // 812: Inverse of Non-Square Matrix Error - Occurs when trying to calculate the inverse of a non-square matrix.
         // 813: Matrix Norm Error - Unknown error.
+        // 814: Unsolvabe system
 
 
         this.statusCode = statusCode;

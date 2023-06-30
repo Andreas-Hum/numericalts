@@ -107,7 +107,7 @@ describe('Matrix', () => {
 
     // Testing toColumnMatrix
     describe('toColumnMatrix', () => {
-        it('should convert a row matrix to a column matrix', () => {
+        it('Convert a row matrix to a column matrix', () => {
             const rowMatrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
             const columnMatrix = rowMatrix.toColumnMatrix();
 
@@ -121,7 +121,7 @@ describe('Matrix', () => {
 
     // Testing toRowMatrix
     describe('toRowMatrix', () => {
-        it('should convert a column matrix to a row matrix', () => {
+        it('Convert a column matrix to a row matrix', () => {
             const columnMatrix = new Matrix([new Vector([[1], [4]]), new Vector([[2], [5]]), new Vector([[3], [6]])]);
             const rowMatrix = columnMatrix.toRowMatrix();
 
@@ -135,13 +135,13 @@ describe('Matrix', () => {
 
     describe('Matrix naive multiplication', () => {
         it('A 3x3 identity row matrix', () => {
-        
-            let matrix = new Matrix([[5,-4],[1,2]]);
 
-            const pog = matrix.QRDecomposition()
-            pog.Q.printMatrix()
-            pog.R.printMatrix()
-            // matrix.gs().printMatrix()
+            let rowmatrix = new Matrix([new Vector([1, 1]), new Vector([-3, 1])]);
+
+            let pls = new Matrix([new Vector([2, 300, 4, -6]), new Vector([0, -1, 2, 2]), new Vector([0, 0, 11, 18])])
+            console.log(pls.printMatrix());
+            // console.log(`${rowmatrix.printMatrix()}*${rowmatrix.printMatrix()}=${rowmatrix.naiveMultiply(rowmatrix).printMatrix()}`);
+
 
 
         });
