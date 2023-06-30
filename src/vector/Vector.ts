@@ -6,7 +6,7 @@ import type VectorTypes from "./VectorTypes";
 import VectorError from "../errors/VectorError";
 
 // Importing vector checks
-import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck,vectorZeroError } from "../utils/vectorChecks";
+import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck, vectorZeroError } from "../utils/vectorChecks";
 
 // Importing constants;
 import { DELTA } from "../utils/constants";
@@ -732,7 +732,8 @@ export class Vector implements VectorTypes {
         if (index >= size || index < 0 || size < 0 || typeof columnVector !== "boolean")
             throw new VectorError("Invalid arguments", 606, { size, index, columnVector });
 
-        const unitVector = Vector.zeros(size, columnVector);
+        const unitVector: Vector = Vector.zeros(size, columnVector);
+
         columnVector ? (unitVector.elements as number[][])[index][0] = 1 : unitVector.elements[index] = 1;
 
         return unitVector;
@@ -749,7 +750,11 @@ export class Vector implements VectorTypes {
         if (size < 0 || typeof columnVector !== "boolean")
             throw new VectorError("Invalid arguments", 606, { size, columnVector });
 
-        return new Vector(Array(size).fill(columnVector ? [1] : 1));
+        if (columnVector) {
+            return new Vector((new Array(size)).fill(1, 0).map((ele: number) => [ele]))
+        } else {
+            return new Vector((new Array(size)).fill(1, 0))
+        }
     }
 
 
@@ -763,9 +768,17 @@ export class Vector implements VectorTypes {
         if (size < 0 || typeof columnVector !== "boolean")
             throw new VectorError("Invalid arguments", 606, { size, columnVector });
 
-        return new Vector(Array(size).fill(columnVector ? [0] : 0));
+        if (columnVector) {
+            return new Vector((new Array(size)).fill(0, 0).map((ele: number) => [ele]))
+        } else {
+            return new Vector((new Array(size)).fill(0, 0))
+        }
     }
 
 
-
 }
+
+
+
+
+
