@@ -248,7 +248,7 @@ export class Matrix implements MatrixTypes {
      * @method
      * @public
      */
-    public naiveMultiply(matrixToMultiply: number[][] | Matrix): Matrix {
+    public naiveMultiply(matrixToMultiply: number[][] | Matrix, columnMatrix: boolean = false): Matrix {
         matrixToMultiply = matrixToMultiply instanceof Matrix ? matrixToMultiply : new Matrix(matrixToMultiply);
         if (this.columns !== matrixToMultiply.rows)
             throw new MatrixError("Dimension mismatch: columns of first matrix do not equal rows of second", 810);
@@ -263,7 +263,7 @@ export class Matrix implements MatrixTypes {
             })
         );
 
-        return new Matrix(result);
+        return columnMatrix ? (new Matrix(result)).toColumnMatrix() : new Matrix(result);
     }
 
 
@@ -303,7 +303,7 @@ export class Matrix implements MatrixTypes {
         });
 
         // Use 'join' to merge the array of strings into a single string with '\n' as the separator
-        return matrixAsRows.join('\n');
+        return matrixAsRows.join('\n').trim();
     }
 
 
@@ -346,10 +346,9 @@ export class Matrix implements MatrixTypes {
             throw new MatrixError("Method can only convert row matrices.", 802);
         }
 
-        const columnMatrix = this.elements[0].elements.map((_, i) => {
-
-            //@ts-ignore
-            return new Vector(this.elements.map(rowVector => [rowVector.elements[i]]));
+        const columnMatrix = this.elements.map((vec: Vector) => {
+            vec.transpose()
+            return new Vector(vec.elements)
         });
 
         return new Matrix(columnMatrix);
@@ -368,11 +367,13 @@ export class Matrix implements MatrixTypes {
             throw new MatrixError("Method can only convert column matrices.", 802);
         }
 
-        const rowMatrix = this.elements[0].elements.map((_, i) => {
 
-            // @ts-ignore
-            return new Vector(this.elements.map(columnVector => columnVector.elements[i][0]));
+        const rowMatrix = this.elements.map((vec: Vector) => {
+            vec.transpose()
+            return new Vector(vec.elements)
         });
+
+        console.log(rowMatrix);
 
         return new Matrix(rowMatrix);
     }
@@ -388,42 +389,24 @@ export class Matrix implements MatrixTypes {
     public transpose(): Matrix {
         let newMatrix = this.clone();
 
-        if (newMatrix.isColumnMatrix) {
-
-            newMatrix.isColumnMatrix = false;
-            newMatrix.isRowMatrix = true;
-
-            for (let i = 0; i < newMatrix.columns; i++) {
-                newMatrix.elements[i].transpose();
-            }
-        } else {
-            newMatrix.isColumnMatrix = true;
-            newMatrix.isRowMatrix = false;
-
-            for (let i = 0; i < newMatrix.rows; i++) {
-                newMatrix.elements[i].transpose();
-            }
+        if (newMatrix.isRowMatrix) {
+            newMatrix = newMatrix.toColumnMatrix();
+        }
+        else if (newMatrix.isColumnMatrix) {
+            newMatrix = newMatrix.toRowMatrix();
         }
 
-        if (newMatrix.isWide) {
-            newMatrix.isWide = false;
-            newMatrix.isTall = true;
+        newMatrix.isWide = !this.isWide;
+        newMatrix.isTall = !this.isTall;
+        newMatrix.isRowMatrix = !this.isColumnMatrix;
+        newMatrix.isColumnMatrix = !this.isRowMatrix;
 
-        } else if (newMatrix.isTall) {
-            newMatrix.isWide = true;
-            newMatrix.isTall = false;
-
-        }
-
-        let temp = newMatrix.columns;
-        newMatrix.columns = newMatrix.rows;
-        newMatrix.rows = temp;
+        [newMatrix.columns, newMatrix.rows] = [this.rows, this.columns];
 
         newMatrix.updateShape();
 
         return newMatrix;
     }
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

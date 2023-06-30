@@ -1,3 +1,4 @@
+const { default: expect } = require("expect")
 const matrix_module = require("../dist/matrix/Matrix")
 const Matrix = matrix_module.Matrix
 const vector_module = require("../dist/vector/Vector")
@@ -108,21 +109,22 @@ describe('Matrix', () => {
     // Testing toColumnMatrix
     describe('toColumnMatrix', () => {
         it('Convert a row matrix to a column matrix', () => {
-            const rowMatrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
             const columnMatrix = rowMatrix.toColumnMatrix();
 
             expect(columnMatrix.elements).toEqual([
-                new Vector([[1], [4]]),
-                new Vector([[2], [5]]),
-                new Vector([[3], [6]])
+                new Vector([[1], [2], [3]]),
+                new Vector([[4], [5], [6]]),
             ]);
         });
+
+        it("Error: Column matrix as argument", () => {
+            expect(() => columnMatrix.toColumnMatrix()).toThrow()
+        })
     });
 
     // Testing toRowMatrix
     describe('toRowMatrix', () => {
         it('Convert a column matrix to a row matrix', () => {
-            const columnMatrix = new Matrix([new Vector([[1], [4]]), new Vector([[2], [5]]), new Vector([[3], [6]])]);
             const rowMatrix = columnMatrix.toRowMatrix();
 
             expect(rowMatrix.elements).toEqual([
@@ -131,20 +133,32 @@ describe('Matrix', () => {
             ]);
         });
 
+        it("Error: Column matrix as argument", () => {
+            expect(() => rowMatrix.toRowMatrix()).toThrow()
+        })
+
     });
 
     describe('Matrix naive multiplication', () => {
-        it('A 3x3 identity row matrix', () => {
-
-            let rowmatrix = new Matrix([new Vector([1, 1]), new Vector([-3, 1])]);
-
-            let pls = new Matrix([new Vector([2, 300, 4, -6]), new Vector([0, -1, 2, 2]), new Vector([0, 0, 11, 18])])
-            console.log(pls.printMatrix());
-            // console.log(`${rowmatrix.printMatrix()}*${rowmatrix.printMatrix()}=${rowmatrix.naiveMultiply(rowmatrix).printMatrix()}`);
-
-
-
+        it('A row matrix with a column matrix', () => {
+            expect(rowMatrix.naiveMultiply(columnMatrix).elements).toEqual([
+                new Vector([14, 32]),
+                new Vector([32, 77])
+            ])
         });
+
+        it('A column matrix with a row matrix', () => {
+            expect(rowMatrix.naiveMultiply(columnMatrix).elements).toEqual([
+                new Vector([14, 32]),
+                new Vector([32, 77])
+            ])
+        });
+
+        it('Error: Amount of columns does not match the amount of rows on the second', () => {
+            expect(() => columnMatrix.naiveMultiply(columnMatrix)).toThrow()
+        });
+
+
 
 
 
