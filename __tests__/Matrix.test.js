@@ -107,7 +107,7 @@ describe('Matrix', () => {
     });
 
     // Testing toColumnMatrix
-    describe('toColumnMatrix', () => {
+    describe('Matrix to column matrix', () => {
         it('Convert a row matrix to a column matrix', () => {
             const columnMatrix = rowMatrix.toColumnMatrix();
 
@@ -123,7 +123,7 @@ describe('Matrix', () => {
     });
 
     // Testing toRowMatrix
-    describe('toRowMatrix', () => {
+    describe('Matrix to row matrix', () => {
         it('Convert a column matrix to a row matrix', () => {
             const rowMatrix = columnMatrix.toRowMatrix();
 
@@ -138,6 +138,30 @@ describe('Matrix', () => {
         })
 
     });
+
+
+    describe('transpose', () => {
+        it('Transpose a row matrix', () => {
+            const columnMatrix = rowMatrix.transpose();
+
+            expect(columnMatrix.elements).toEqual([
+                new Vector([[1], [2], [3]]),
+                new Vector([[4], [5], [6]]),
+            ]);
+        });
+
+        it('Transpose a column matrix ', () => {
+            const rowMatrix = columnMatrix.transpose();
+
+            expect(rowMatrix.elements).toEqual([
+                new Vector([1, 2, 3]),
+                new Vector([4, 5, 6])
+            ]);
+        });
+
+
+    });
+
 
     describe('Matrix naive multiplication', () => {
         it('A row matrix with a column matrix', () => {

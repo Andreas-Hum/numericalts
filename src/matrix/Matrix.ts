@@ -373,8 +373,6 @@ export class Matrix implements MatrixTypes {
             return new Vector(vec.elements)
         });
 
-        console.log(rowMatrix);
-
         return new Matrix(rowMatrix);
     }
 
