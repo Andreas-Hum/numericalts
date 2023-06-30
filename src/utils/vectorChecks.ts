@@ -5,7 +5,7 @@ export {
     vectorArrayCheck,
     vectorShapeCheck,
     vectorSizeCheck,
-    
+    vectorScalarCheck
 }
 
 
