@@ -8,6 +8,37 @@ import VectorError from "../errors/VectorError";
 // Importing constants;
 import { DELTA } from "../utils/constants";
 
+
+function vectorSizeCheck(vector1: Vector, vector2: Vector): void {
+    if (vector1.size !== vector2.size) {
+        throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: vector1.size, errorVector: vector2.size })
+    }
+}
+
+function vectorShapeCheck(vector1: Vector, vector2: Vector): void {
+    if (vector1.shape !== vector2.shape) {
+        throw new VectorError(`Dimension mismatch: shapes does not match`,
+            703,
+            { vectorOne_shape: vector1.shape, vectorTwo_shape: vector2.shape });
+    }
+}
+
+function vectorArrayCheck(elementToCheck: any): void {
+    if (!Array.isArray(elementToCheck)) {
+        throw new VectorError('Elements input must be an array.', 601);
+    }
+}
+
+function vectorScalarCheck(scalar: number) {
+    if (typeof scalar !== "number") {
+        throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
+    }
+}
+
+function vectorZeroError() {
+
+}
+
 /**
 * A class that represents a mathemathical Vector.
 * @exports Vector
@@ -30,9 +61,7 @@ export class Vector implements VectorTypes {
     */
     constructor(entries: number[] | number[][]) {
 
-        if (!Array.isArray(entries)) {
-            throw new VectorError('Elements input must be an array.', 601);
-        }
+        vectorArrayCheck(entries)
 
         this.elements = entries;
         this.size = entries.length;
@@ -56,38 +85,28 @@ export class Vector implements VectorTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Vector addition (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
-     * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to add.
-     * @throws {VectorError} If the dimensions of the vectors don't match.
-     * @returns {Vector} The result of the addition
+     * Vector addition. Supports multiple vectors, row and column vectors.
+     * @param {...(Vector | number[][])} vectors to add.
+     * @throws {VectorError} If vector dimensions don't match.
+     * @returns {Vector} Sum of the vectors.
      */
     public add(...vectors: (Vector | number[] | number[][])[]): Vector {
         let addedVector: Vector = Vector.zeros(this.size, this.isColumn);
+
         for (let vector of vectors) {
-            if (!(vector instanceof Vector)) {
-                vector = new Vector(vector)
+            vector = vector instanceof Vector ? vector : new Vector(vector);
+
+            vectorSizeCheck(this, vector)
+
+            let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+
+            for (let i = 0; i < this.size; i++) {
+                addedVector.elements[i] = this.isColumn ? [vector_one_copy[i] + vector_two_copy[i]] : vector_one_copy[i] + vector_two_copy[i];
             }
-
-            if (vector.size !== this.size) {
-                throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: this.size, errorVector: vector.size })
-            }
-
-            let vector_one_copy: number[] = this.elements.flat()
-            let vector_two_copy: number[] = vector.elements.flat()
-
-            if (this.isColumn) {
-                for (let i = 0; i < this.size; i++) {
-                    addedVector.elements[i] = [vector_one_copy[i] + vector_two_copy[i]]
-                }
-            } else {
-                for (let i = 0; i < this.size; i++) {
-                    addedVector.elements[i] = vector_one_copy[i] + vector_two_copy[i]
-                }
-            }
-
         }
         return addedVector;
     }
+
 
     /**
      * Adds multiple elements to the Vector.
@@ -95,45 +114,28 @@ export class Vector implements VectorTypes {
      * @param {number | number[] | (number | number[])[]} elements - The elements to be added.
      * @returns {void}
      */
-    public addElements(elementsToAdd: Vector | number[] | number[][], strict: boolean = false): void {
-        if (!(elementsToAdd instanceof Vector)) {
-            elementsToAdd = new Vector(elementsToAdd)
-        }
+    public addElements(elementsToAdd: Vector | number[][] | number[][], strict: boolean = false): void {
+        elementsToAdd = elementsToAdd instanceof Vector ? elementsToAdd : new Vector(elementsToAdd);
 
         if (this.isColumn) {
-            if (elementsToAdd.isColumn) {
-                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements)
-            } else {
-                if (strict) {
-                    throw new VectorError(`Dimension mismatch: shapes does not match`,
-                        703,
-                        { vectorOne_shape: this.shape, vectorTwo_shape: elementsToAdd.shape });
-                }
-                //@ts-ignore
-                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements.map((e: number) => [e]))
-            }
-
+            elementsToAdd.isColumn ?
+                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements) :
+                strict ? vectorShapeCheck(this, elementsToAdd) :
+                    //@ts-ignore
+                    this.elements = (this.elements as number[][]).concat(elementsToAdd.elements.map((e: number) => [e]));
         } else {
-            if (strict && elementsToAdd.isColumn) {
-                throw new VectorError(`Dimension mismatch: shapes does not match`,
-                    703,
-                    { vectorOne_shape: this.shape, vectorTwo_shape: elementsToAdd.shape });
-            } else if (elementsToAdd.isColumn) {
-                //@ts-ignore
-                this.elements = this.elements.concat(elementsToAdd.elements.flat())
-            } else {
-                //@ts-ignore
-                this.elements = this.elements.concat(elementsToAdd.elements)
-            }
-
-
+            strict && elementsToAdd.isColumn ? vectorShapeCheck(this, elementsToAdd) :
+                elementsToAdd.isColumn ?
+                    //@ts-ignore
+                    this.elements = this.elements.concat(elementsToAdd.elements.flat()) :
+                    //@ts-ignore
+                    this.elements = this.elements.concat(elementsToAdd.elements);
         }
+
         this.size += elementsToAdd.size
-
         this.validateVector();
-
-
     }
+
 
     /**
      * Computes the angle between this vector and another vector.
@@ -142,28 +144,21 @@ export class Vector implements VectorTypes {
      * @returns {number} - The angle between this vector and the given vector.
      * @throws {VectorError} If the sizes of the vectors do not match, or if either vector is a zero vector.
      */
-    public angle(vector: Vector | number[] | number[][], inDegrees: boolean = false): number {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector);
-        }
+    public angle(vector: Vector | number[][] | number[][], inDegrees: boolean = false): number {
+        vector = vector instanceof Vector ? vector : new Vector(vector);
 
-        if (this.size !== vector.size) {
-            throw new VectorError(`Dimension mismatch: Sizes does not match`,
-                703,
-                { vectorOne_size: this.size, vectorTwo_size: vector.size });
-        }
+        vectorSizeCheck(this, vector)
 
-        const denominator: number = this.euclNorm() * vector.euclNorm();
+        const [denominator, numerator]: number[] = [this.euclNorm() * vector.euclNorm(), this.dot(vector)];
 
-        if (Math.abs(denominator) < DELTA) {
-            throw new VectorError("Cannot take the angle of a zero vector.", 704);
-        }
+        if (Math.abs(denominator) < DELTA)
+            throw new VectorError('Cannot take the angle of a zero vector.', 704);
 
-        const numerator: number = this.dot(vector);
-        const angleInRadians: number = Math.acos(numerator / denominator);
+        let angleInRadians: number = Math.acos(numerator / denominator);
 
         return inDegrees ? angleInRadians * (180 / Math.PI) : angleInRadians;
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -186,20 +181,18 @@ export class Vector implements VectorTypes {
      * @throws {VectorError} - Throws an error if the vectors aren't both 3D.
      */
     public cross(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector)
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
+
 
         if (this.size !== 3 || vector.size !== 3) {
             throw new VectorError("Vectors should be 3-dimensional for the cross product", 707, { vectorOne_size: this.size, vectorTwo_size: vector.size })
         }
 
-        let vector_one_copy: number[] = this.elements.flat()
-        let vector_two_copy: number[] = vector.elements.flat()
-
-        const first: number = vector_one_copy[1] * vector_two_copy[2] - vector_one_copy[2] * vector_two_copy[1];
-        const second: number = vector_one_copy[2] * vector_two_copy[0] - vector_one_copy[0] * vector_two_copy[2];
-        const third: number = vector_one_copy[0] * vector_two_copy[1] - vector_one_copy[1] * vector_two_copy[0];
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+        const [first, second, third]: number[] = [
+            vector_one_copy[1] * vector_two_copy[2] - vector_one_copy[2] * vector_two_copy[1],
+            vector_one_copy[2] * vector_two_copy[0] - vector_one_copy[0] * vector_two_copy[2],
+            vector_one_copy[0] * vector_two_copy[1] - vector_one_copy[1] * vector_two_copy[0]]
 
 
 
@@ -228,18 +221,11 @@ export class Vector implements VectorTypes {
      * @throws {VectorError} If the given vector is not of the same size as this vector.
      */
     public dot(vector: Vector | number[] | number[][]): number {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector)
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
 
-        if (this.size !== vector.size) {
-            throw new VectorError(`Dimension mismatch: Sizes does not match`,
-                703,
-                { vectorOne_size: this.size, vectorTwo_size: vector.size })
-        }
+        vectorSizeCheck(this, vector)
 
-        let vector_one_copy: number[] = this.elements.flat()
-        let vector_two_copy: number[] = vector.elements.flat()
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
         let result: number = 0;
 
         for (let i = 0; i < vector.size; i++) {
@@ -257,18 +243,11 @@ export class Vector implements VectorTypes {
      * @throws {VectorError} - Throws an error if the dimensions of the vectors do not match.
      */
     public distance(vector: Vector | number[] | number[][]): number {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector);
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
 
-        if (this.size !== vector.size) {
-            throw new VectorError(`Dimension mismatch: Sizes does not match`,
-                703,
-                { vectorOne_size: this.size, vectorTwo_size: vector.size });
-        }
+        vectorSizeCheck(this, vector)
 
-        let vector_one_copy: number[] = this.elements.flat()
-        let vector_two_copy: number[] = vector.elements.flat()
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
         let distance: number = vector_one_copy.reduce((acc: number, cur: number, index: number) => acc + Math.pow(vector_two_copy[index] - cur, 2), 0);
 
         return Math.sqrt(distance);
@@ -401,24 +380,15 @@ export class Vector implements VectorTypes {
      * @throws {VectorError} Throws an error if the norm of the projection vector is zero (as projection onto a zero-vector is not defined).
      */
     public proj(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector);
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
+
         const norm: number = vector.euclNorm();
         if (Math.abs(norm) < DELTA) {
             throw new VectorError("Cannot project onto a zero vector", 704);
         }
 
-
         const scalar: number = this.dot(vector) / Math.pow(norm, 2)
-        let result: Vector;
-        if (columnVector) {
-            result = new Vector(vector.elements.flat().map((ele: number) => [ele]));
-        } else {
-            result = new Vector(vector.elements.flat());
-
-        }
-
+        let result: Vector = columnVector ? new Vector(vector.elements.flat().map((ele: number) => [ele])) : new Vector(vector.elements.flat());
 
         return result.scale(scalar);
     }
@@ -474,17 +444,10 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The result of the scaleing
      */
     public scale(scalar: number): Vector {
-        if (typeof scalar !== "number") {
-            throw new VectorError("Invalid Scalar for Vector Multiplication Error", 702, { invalidScalar: scalar })
-        }
+        vectorScalarCheck(scalar)
 
-        let result: number[] | number[][] = []
-
-        if (this.isColumn) {
-            (result as number[][]) = (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
-        } else {
-            (result as number[]) = (this.elements as number[]).map((entry: number) => entry * scalar)
-        }
+        let result: number[] | number[][] = this.isColumn ? (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
+            : (this.elements as number[]).map((entry: number) => entry * scalar);
 
         return new Vector(result);
 
@@ -501,15 +464,11 @@ export class Vector implements VectorTypes {
         let subractResult: Vector = Vector.zeros(this.size, this.isColumn)
 
         for (let vector of vectors) {
-            if (!(vector instanceof Vector)) {
-                vector = new Vector(vector)
-            }
-            if (vector.size !== this.size) {
-                throw new VectorError("Dimension mismatch: Sizes does not match", 602, { originalVector: this.size, errorVector: vector.size })
-            }
+            vector = vector instanceof Vector ? vector : new Vector(vector);
 
-            let vector_one_copy: number[] = this.elements.flat()
-            let vector_two_copy: number[] = vector.elements.flat()
+            vectorSizeCheck(this, vector)
+
+            let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
 
             if (this.isColumn) {
                 for (let i = 0; i < this.size; i++) {
@@ -737,23 +696,14 @@ export class Vector implements VectorTypes {
     * @returns {boolean} Returns `true` if the elements of the two vectors are equal within the tolerance, `false` otherwise.
     */
     public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector);
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
 
-        if (this.size !== vector.size) {
-            throw new VectorError(`Dimension mismatch: Sizes does not match`,
-                703,
-                { vectorOne_size: this.size, vectorTwo_size: vector.size });
+        vectorSizeCheck(this, vector)
+        if (strict) {
+            vectorShapeCheck(this, vector)
         }
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
 
-        if (strict && this.shape !== vector.shape) {
-            throw new VectorError(`Dimension mismatch: shapes does not match`,
-                703,
-                { vectorOne_shape: this.shape, vectorTwo_shape: vector.shape });
-        }
-        let vector_one_copy: number[] = this.elements.flat()
-        let vector_two_copy: number[] = vector.elements.flat()
 
         for (let i = 0; i < this.size; i++) {
             if (vector_one_copy[i] - vector_two_copy[i] > DELTA) {
@@ -771,12 +721,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} true if every component of the vector is positive and the total sum of the components is within the range [1-DELTA, 1+DELTA], false otherwise.
      */
     public isProbability(): boolean {
-
-        if (this.isPositive() && this.sum() <= (DELTA + 1) && (1 - DELTA) <= this.sum()) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.isPositive() && this.sum() <= (DELTA + 1) && (1 - DELTA) <= this.sum()
     }
 
     /**
@@ -785,8 +730,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} 'true' if any component of the vector is negative, 'false' otherwise.
      */
     public isPositive(): boolean {
-        const testArray: number[] = this.elements.flat()
-        return !testArray.some((e: number) => e < 0)
+        return !this.elements.flat().some((e: number) => e < 0)
     }
 
     /**
@@ -821,11 +765,7 @@ export class Vector implements VectorTypes {
             }
         }
 
-        if (ones === 1 && zeros === this.size - 1) {
-            return true
-        } else {
-            return false;
-        }
+        return ones === 1 && zeros === this.size - 1;
     }
 
     /**
@@ -835,9 +775,8 @@ export class Vector implements VectorTypes {
      * and both the vectors have unit length, otherwise returns 'false'.
      */
     public isOrthonormal(vector: Vector | number[] | number[][]): boolean {
-        if (!(vector instanceof Vector)) {
-            vector = new Vector(vector);
-        }
+        vector = vector instanceof Vector ? vector : new Vector(vector);
+
         return Math.abs(this.dot(vector)) < DELTA && Math.abs(this.euclNorm()) - 1 < DELTA && Math.abs(vector.euclNorm()) - 1 < DELTA;
 
     }
