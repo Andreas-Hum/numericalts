@@ -204,9 +204,23 @@ export class Matrix implements MatrixTypes {
     * I
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //TODODODODODODODODODODODDO FIXSXXXXXXXXXX
+    /**
+     * Inverts an upper triangular matrix.
+     *
+     * This function computes the inverse of an upper triangular matrix. If the matrix
+     * is not square (meaning, the number of rows doesn't match the number of columns),
+     * an error is thrown. To perform this inversion, an identity matrix is created 
+     * first. Then the function applies back substitution on each element in the 
+     * identity matrix, storing the results in a separate array. These results are 
+     * transposed, reversed, and finally converted into a row matrix to achieve the 
+     * inverse of the original matrix.
+     * 
+     * @returns {Matrix} The inverted upper triangular matrix.
+     *
+     * @throws {Error} If the original matrix is not square, an error is thrown.
+     */
     public invertUpperTriangular(): Matrix {
+        //TODO: Psudo inverse
         if (this.rows !== this.columns) throw new Error("Uninvertable matrix: not a square matrix");
 
         const identityMatrix: Matrix = Matrix.createIdentityMatrix(this.rows);
