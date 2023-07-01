@@ -319,24 +319,19 @@ export class Matrix implements MatrixTypes {
      * @returns {string} The print string
      */
     public printMatrix(): string {
-        // Helper function to get column values
-        const col = (mat: Matrix, i: number) => mat.elements.map(row => row.elements[i]);
+        const printerMatrix = this.isColumnMatrix ? this.toRowMatrix() : this
+        const col: (mat: Matrix, i: number) => (number | number[])[] = (mat: Matrix, i: number) => mat.elements.map(row => row.elements[i]);
 
-        // Calculate max length of numbers in each column when they are converted to strings
-        const colMaxes = Array.from({
-            length: this.columns
-        }, (_, i) => Math.max(...col(this, i).map(n => n.toString().length)));
+        const colMaxes: number[] = Array.from({
+            length: printerMatrix.columns
+        }, (_, i) => Math.max(...col(printerMatrix, i).map(n => n.toString().length)));
 
-        // Use 'map' instead of 'forEach' to create an array of strings
-        const matrixAsRows = this.elements.map(vector => {
-            // Create string of values for each row
+        const matrixAsRows: string[] = printerMatrix.elements.map(vector => {
             return vector.elements.map((val, j) => {
-                // Space padding for right alignment
                 return new Array(colMaxes[j] - val.toString().length + 1).join(" ") + val.toString() + "  ";
             }).join("");
         });
 
-        // Use 'join' to merge the array of strings into a single string with '\n' as the separator
         return matrixAsRows.join('\n').trim();
     }
 
