@@ -5,8 +5,8 @@ export default interface VectorTypes {
     shape: string
 
     //Column or row
-    isRow: boolean
-    isColumn: boolean
+    isRowVector: boolean
+    isColumnVector: boolean
     rows: number
     columns: number
 
@@ -14,5 +14,5 @@ export default interface VectorTypes {
     size: number
 
     //element Data
-    elements: number[] | number[][]
+    vElements: number[] | number[][]
 }

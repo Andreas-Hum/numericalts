@@ -24,7 +24,7 @@ export class Matrix implements MatrixTypes {
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
-    public elements: Vector[]
+    public mElements: Vector[]
 
     /**
      * Constructs a matrix object.
@@ -37,13 +37,13 @@ export class Matrix implements MatrixTypes {
             throw new MatrixError('Input must be an array.', 801);
 
         try {
-            this.elements = entries.map(entry => entry instanceof Vector ? entry : new Vector(entry));
+            this.mElements = entries.map(entry => entry instanceof Vector ? entry : new Vector(entry));
         } catch (err) {
             switch (err.statusCode) {
                 case 603:
                     throw new MatrixError(`Invalid element for matrix. Expected number, got: ${typeof err.details.invalidEntry}.`, 803, { invalidEntry: err.details.invalidEntry });
                 case 601:
-                    throw new MatrixError(`Element mismatch got column and row elements`, 801);
+                    throw new MatrixError(`Element mismatch got column and row mElements`, 801);
             }
         }
 
@@ -86,12 +86,12 @@ export class Matrix implements MatrixTypes {
         let sol: number[] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
-            if (this.elements[i].elements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
+            if (this.mElements[i].vElements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
             let sum: number = 0;
             for (let j = this.columns - 1; j > i; --j) {
-                sum += sol[j] * (this.elements[i].elements[j] as number)
+                sum += sol[j] * (this.mElements[i].vElements[j] as number)
             }
-            sol[i] = ((B.elements[i] as number) - sum) / (this.elements[i].elements[i] as number)
+            sol[i] = ((B.vElements[i] as number) - sum) / (this.mElements[i].vElements[i] as number)
         }
 
 
@@ -110,7 +110,7 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} the same matrix
      */
     public clone(): Matrix {
-        const clonedElements = this.elements.map(vector => vector.clone());
+        const clonedElements = this.mElements.map(vector => vector.clone());
         return new Matrix(clonedElements);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ export class Matrix implements MatrixTypes {
 
 
     // Abomination
-    //public gs(): Matrix { let p = this.isRowMatrix ? this.toColumnMatrix() : this, a=[], n=[], i=0,j, o; for(; i<p.columns; i++) { o = p.elements[i]; for(j=0; j<i; j++) o = o.subtract(a[j].scale(a[j].dot(p.elements[i]) / a[j].dot(a[j]))); if (o.euclNorm() < DELTA) throw new VectorError("Vectors not linearly independent.", 704); a.push(o); n.push(o.normalize()); } return new Matrix(n); }
+    //public gs(): Matrix { let p = this.isRowMatrix ? this.toColumnMatrix() : this, a=[], n=[], i=0,j, o; for(; i<p.columns; i++) { o = p.mElements[i]; for(j=0; j<i; j++) o = o.subtract(a[j].scale(a[j].dot(p.mElements[i]) / a[j].dot(a[j]))); if (o.euclNorm() < DELTA) throw new VectorError("Vectors not linearly independent.", 704); a.push(o); n.push(o.normalize()); } return new Matrix(n); }
 
     /**
      * Performs the Gram-Schmidt process for the vectors of the current instance matrix. The process is an algorithm 
@@ -169,14 +169,14 @@ export class Matrix implements MatrixTypes {
         let psudoMatrix: Matrix = this.isRowMatrix ? this.toColumnMatrix() : this.clone();
 
         let orthogonalVectors: Vector[] = [];
-        orthogonalVectors.push(psudoMatrix.elements[0]);
+        orthogonalVectors.push(psudoMatrix.mElements[0]);
 
         for (let i = 1; i < psudoMatrix.columns; i++) {
-            let orthogonalProjection: Vector = psudoMatrix.elements[i];
+            let orthogonalProjection: Vector = psudoMatrix.mElements[i];
 
             for (let j = 0; j < i; j++) {
                 let u = orthogonalVectors[j];
-                let v = psudoMatrix.elements[i];
+                let v = psudoMatrix.mElements[i];
                 let uv = u.dot(v);
                 let uu = u.dot(u);
 
@@ -227,13 +227,24 @@ export class Matrix implements MatrixTypes {
         const invertedMatrixElements: Vector[] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
-            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.elements[this.rows - i - 1]);
+            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.mElements[this.rows - i - 1]);
         }
 
         invertedMatrixElements.map(ele => ele.transpose())
         invertedMatrixElements.reverse()
 
         return (new Matrix(invertedMatrixElements).toRowMatrix());
+    }
+
+    public isUpperTriangular(): boolean {
+        for (let i = 1; i < this.columns; i++) {
+            for (let j = 0; j < i; j++) {
+                if (this.mElements[i].vElements[j] !== 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,7 +314,7 @@ export class Matrix implements MatrixTypes {
         for (let i = 0; i < psudoMatrix.rows; i++) {
             result.push([])
             for (let j = 0; j < matrixToMultiply.columns; j++) {
-                let tempRes: number = psudoMatrix.elements[i].dot(matrixToMultiply.elements[j]);
+                let tempRes: number = psudoMatrix.mElements[i].dot(matrixToMultiply.mElements[j]);
                 if (tempRes <= 0 + DELTA && 0 - DELTA <= tempRes) {
                     result[i][j] = 0
                 } else {
@@ -334,14 +345,14 @@ export class Matrix implements MatrixTypes {
      */
     public printMatrix(): string {
         const printerMatrix = this.isColumnMatrix ? this.toRowMatrix() : this
-        const col: (mat: Matrix, i: number) => (number | number[])[] = (mat: Matrix, i: number) => mat.elements.map(row => row.elements[i]);
+        const col: (mat: Matrix, i: number) => (number | number[])[] = (mat: Matrix, i: number) => mat.mElements.map(row => row.vElements[i]);
 
         const colMaxes: number[] = Array.from({
             length: printerMatrix.columns
         }, (_, i) => Math.max(...col(printerMatrix, i).map(n => n.toString().length)));
 
-        const matrixAsRows: string[] = printerMatrix.elements.map(vector => {
-            return vector.elements.map((val, j) => {
+        const matrixAsRows: string[] = printerMatrix.mElements.map(vector => {
+            return vector.vElements.map((val, j) => {
                 return new Array(colMaxes[j] - val.toString().length + 1).join(" ") + val.toString() + "  ";
             }).join("");
         });
@@ -389,13 +400,13 @@ export class Matrix implements MatrixTypes {
             throw new MatrixError("Method can only convert row matrices.", 802);
         }
 
-        const columnMatrix = this.elements[0].elements.map((_, i) => {
+        const columnMatrix = this.mElements[0].vElements.map((_, i) => {
             // Each new row Vector becomes a column Vector in the transposed matrix
-            // Mapping over this.elements extracts the i-th element from each row vector
-            // console.log(this.elements.map(rowVector => console.log(rowVector.elements[i])))
+            // Mapping over this.mElements extracts the i-th element from each row vector
+            // console.log(this.mElements.map(rowVector => console.log(rowVector.mElements[i])))
 
             //@ts-ignore
-            return new Vector(this.elements.map(rowVector => [rowVector.elements[i]])); // vector entries should be array of arrays
+            return new Vector(this.mElements.map(rowVector => [rowVector.vElements[i]])); // vector entries should be array of arrays
         });
         return new Matrix(columnMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
@@ -411,9 +422,9 @@ export class Matrix implements MatrixTypes {
         if (this.isRowMatrix) {
             throw new MatrixError("Method can only convert column matrices.", 802);
         }
-        const rowMatrix = this.elements[0].elements.map((_, i) => {
+        const rowMatrix = this.mElements[0].vElements.map((_, i) => {
             // @ts-ignore
-            return new Vector(this.elements.map(columnVector => columnVector.elements[i][0])); // vector entries should be flat array
+            return new Vector(this.mElements.map(columnVector => columnVector.vElements[i][0])); // vector entries should be flat array
         });
         return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
@@ -433,7 +444,7 @@ export class Matrix implements MatrixTypes {
 
             newMatrix = newMatrix.toRowMatrix()
             newMatrix = newMatrix.toColumnMatrix()
-            newMatrix.elements.map(ele => ele.transpose())
+            newMatrix.mElements.map(ele => ele.transpose())
 
             newMatrix.isColumnMatrix = false;
             newMatrix.isRowMatrix = true;
@@ -441,7 +452,7 @@ export class Matrix implements MatrixTypes {
 
             newMatrix = newMatrix.toColumnMatrix()
             newMatrix = newMatrix.toRowMatrix()
-            newMatrix.elements.map(ele => ele.transpose())
+            newMatrix.mElements.map(ele => ele.transpose())
 
             newMatrix.isColumnMatrix = true;
             newMatrix.isRowMatrix = false;
@@ -475,16 +486,16 @@ export class Matrix implements MatrixTypes {
      * @returns {void}
      */
     private updateDimension(): void {
-        if (this.elements.every((e: Vector) => e.isRow)) {
+        if (this.mElements.every((e: Vector) => e.isRowVector)) {
             this.isRowMatrix = true
             this.isColumnMatrix = false
-            this.rows = this.elements.length
-            this.columns = this.elements[0].size
-        } else if (this.elements.every((e: Vector) => e.isColumn)) {
+            this.rows = this.mElements.length
+            this.columns = this.mElements[0].size
+        } else if (this.mElements.every((e: Vector) => e.isColumnVector)) {
             this.isColumnMatrix = true
             this.isRowMatrix = false
-            this.columns = this.elements.length
-            this.rows = this.elements[0].size
+            this.columns = this.mElements.length
+            this.rows = this.mElements[0].size
         } else {
             throw new MatrixError("Dimension mismatch: The matrix cant contain both column and row vectors", 801)
         }
@@ -533,8 +544,8 @@ export class Matrix implements MatrixTypes {
      * @returns {void}
      */
     private validateMatrix(): void {
-        const sizeGuide: number = this.elements.flat()[0].size;
-        if (this.elements.some((e: Vector) => e.size !== sizeGuide)) {
+        const sizeGuide: number = this.mElements.flat()[0].size;
+        if (this.mElements.some((e: Vector) => e.size !== sizeGuide)) {
             throw new MatrixError("Dimension missmatch: Not all vectors are the same size", 801)
         }
 

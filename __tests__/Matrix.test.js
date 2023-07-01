@@ -68,11 +68,11 @@ describe('Matrix', () => {
             expect(matrix.rows).toBe(3);  // We have 3 rows.
             expect(matrix.columns).toBe(3);  // We have 3 columns.
 
-            matrix.elements.forEach((unitVector, index) => {
+            matrix.mElements.forEach((unitVector, index) => {
                 expect(unitVector.isUnitVector()).toBe(true);  // The vector should be a unit vector.
 
                 // Find the index of '1' (where the unit vector's magnitude is) in the elements of the unit vector.
-                const indexOfOne = unitVector.elements.findIndex(element => element === 1);
+                const indexOfOne = unitVector.vElements.findIndex(element => element === 1);
                 expect(indexOfOne).toBe(index);  // This index should match the current index of the unit vector in the matrix.
             });
         });
@@ -82,9 +82,9 @@ describe('Matrix', () => {
 
             expect(matrix.rows).toBe(3);  // It should be a 3x3 matrix.
             expect(matrix.columns).toBe(3);
-            matrix.elements.forEach((unitVector, index) => {
+            matrix.mElements.forEach((unitVector, index) => {
                 expect(unitVector.isUnitVector()).toBe(true);  // The vector should be a unit vector.
-                const indices = unitVector.elements.map((subarray) => subarray.findIndex((element) => element === 1));
+                const indices = unitVector.vElements.map((subarray) => subarray.findIndex((element) => element === 1));
                 expect(indices.findIndex((e) => e === 0)).toBe(index);
             });
         });
@@ -110,7 +110,7 @@ describe('Matrix', () => {
         it('Convert a row matrix to a column matrix', () => {
             const columnMatrix = rowMatrix.toColumnMatrix();
 
-            expect(columnMatrix.elements).toEqual([
+            expect(columnMatrix.mElements).toEqual([
                 new Vector([[1], [4]]),
                 new Vector([[2], [5]]),
                 new Vector([[3], [6]])
@@ -126,7 +126,7 @@ describe('Matrix', () => {
         it('Convert a column matrix to a row matrix', () => {
             const rowMatrix = columnMatrix.toRowMatrix();
 
-            expect(rowMatrix.elements).toEqual([
+            expect(rowMatrix.mElements).toEqual([
                 new Vector([1, 4]),
                 new Vector([2, 5]),
                 new Vector([3, 6])
@@ -144,7 +144,7 @@ describe('Matrix', () => {
         it('Transpose a row matrix', () => {
             const columnMatrix = rowMatrix.transpose();
 
-            expect(columnMatrix.elements).toEqual([
+            expect(columnMatrix.mElements).toEqual([
                 new Vector([[1], [2], [3]]),
                 new Vector([[4], [5], [6]]),
             ]);
@@ -153,7 +153,7 @@ describe('Matrix', () => {
         it('Transpose a column matrix ', () => {
             const rowMatrix = columnMatrix.transpose();
 
-            expect(rowMatrix.elements).toEqual([
+            expect(rowMatrix.mElements).toEqual([
                 new Vector([1, 2, 3]),
                 new Vector([4, 5, 6])
             ]);
@@ -164,14 +164,14 @@ describe('Matrix', () => {
 
     describe('Matrix naive multiplication', () => {
         it('A row matrix with a column matrix', () => {
-            expect(rowMatrix.naiveMultiply(columnMatrix).elements).toEqual([
+            expect(rowMatrix.naiveMultiply(columnMatrix).mElements).toEqual([
                 new Vector([14, 32]),
                 new Vector([32, 77])
             ])
         });
 
         it('A column matrix with a row matrix', () => {
-            expect(rowMatrix.naiveMultiply(columnMatrix).elements).toEqual([
+            expect(rowMatrix.naiveMultiply(columnMatrix).mElements).toEqual([
                 new Vector([14, 32]),
                 new Vector([32, 77])
             ])
@@ -188,7 +188,7 @@ describe('Matrix', () => {
         it('A row matrix with a column matrix', () => {
             const testers = new Matrix([new Vector([1.414213562, -4.949747467]), new Vector([0.0, 3.535533905])])
             testers.toColumnMatrix()
-            console.log(testers.toColumnMatrix().elements)
+            console.log(testers.toColumnMatrix().mElements)
             // console.log(testers.backSubstitution(new Vector([[-3], [2]])))
             // const { Q, R } = testers.QRDecomposition()
             // console.log(Q.printMatrix())

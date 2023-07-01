@@ -24,5 +24,5 @@ export interface MatrixTypes {
     size: number
 
     //element Data
-    elements: Vector[]
+    mElements: Vector[]
 }

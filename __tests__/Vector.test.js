@@ -23,8 +23,8 @@ describe('Vector', () => {
     describe('Vector initialization', () => {
 
         it('Validation of a row vector', () => {
-            expect(rowVector123.isRow).toBeTruthy();
-            expect(rowVector123.isColumn).toBeFalsy();
+            expect(rowVector123.isRowVector).toBeTruthy();
+            expect(rowVector123.isColumnVector).toBeFalsy();
 
 
             expect(rowVector123.size).toBe(3);
@@ -33,8 +33,8 @@ describe('Vector', () => {
 
         it('Validation of a column vector', () => {
 
-            expect(columnVector123.isColumn).toBeTruthy();
-            expect(columnVector123.isRow).toBeFalsy();
+            expect(columnVector123.isColumnVector).toBeTruthy();
+            expect(columnVector123.isRowVector).toBeFalsy();
 
             expect(columnVector123.size).toBe(3);
             expect(columnVector123.shape).toBe('(3,1)');
@@ -46,22 +46,22 @@ describe('Vector', () => {
     });
 
 
-    // Adding elements
+    // Adding vElements
 
-    describe('Vector adding multiple elements', () => {
-        it('Add\'s multiple elements to a row vector', () => {
+    describe('Vector adding multiple vElements', () => {
+        it('Add\'s multiple vElements to a row vector', () => {
             rowVector123.addElements([4, 5]);
             expect(rowVector123.size).toBe(5);
             expect(rowVector123.shape).toBe('(1,5)');
         });
 
-        it('Add\'s multiple elements to a culumn vector', () => {
+        it('Add\'s multiple vElements to a culumn vector', () => {
             columnVector123.addElements([[4], [5]]);
             expect(columnVector123.size).toBe(5);
             expect(columnVector123.shape).toBe('(5,1)');
         });
 
-        it('Add\'s the elements of two vectors', () => {
+        it('Add\'s the vElements of two vectors', () => {
             columnVector123.addElements(rowVector123);
             expect(columnVector123.size).toBe(6);
             expect(columnVector123.shape).toBe('(6,1)');
@@ -86,47 +86,47 @@ describe('Vector', () => {
     describe('Vector addition', () => {
         it("Add\'s two row vectors together", () => {
             const res = rowVector123.add(rowVector123)
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it("Add\'s two column vectors together", () => {
             const res = columnVector123.add(columnVector123)
-            expect(res.elements).toStrictEqual([[2], [4], [6]]);
+            expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
         it("Add\'s a column and a row vector together", () => {
             const res = columnVector123.add(rowVector123)
-            expect(res.elements).toStrictEqual([[2], [4], [6]]);
+            expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
         it("Add\'s a row vector and an row array", () => {
             const res = rowVector123.add(arrayRow123)
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it("Add\'s a column vector and an column array", () => {
             const res = columnVector123.add(arrayColumn123)
-            expect(res.elements).toStrictEqual([[2], [4], [6]]);
+            expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
         it("Add\'s a row vector and an column array", () => {
             const res = rowVector123.add(arrayColumn123)
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it("Add's multiple row vectors together", () => {
             const res = rowVector123.add(rowVector123, rowVector123);
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it("Add's multiple column vectors together", () => {
             const res = columnVector123.add(columnVector123, columnVector123);
-            expect(res.elements).toStrictEqual([[2], [4], [6]]);
+            expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
         it("Add's a row vector, row array and column array together", () => {
             const res = rowVector123.add(arrayRow123, arrayColumn123);
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it("Error: Non equal sizes", () => {
@@ -146,47 +146,47 @@ describe('Vector', () => {
     describe('Vector subtraction', () => {
         it("Subtract\'s two row vectors together", () => {
             const res = rowVector123.subtract(rowVector123)
-            expect(res.elements).toStrictEqual([0, 0, 0]);
+            expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
         it("Subtract\'s two column vectors together", () => {
             const res = columnVector123.subtract(columnVector123)
-            expect(res.elements).toStrictEqual([[0], [0], [0]]);
+            expect(res.vElements).toStrictEqual([[0], [0], [0]]);
         });
 
         it("Subtract\'s a column and a row vector together", () => {
             const res = columnVector123.subtract(rowVector123)
-            expect(res.elements).toStrictEqual([[0], [0], [0]]);
+            expect(res.vElements).toStrictEqual([[0], [0], [0]]);
         });
 
         it("Subtract\'s a row vector and an row array", () => {
             const res = rowVector123.subtract(arrayRow123)
-            expect(res.elements).toStrictEqual([0, 0, 0]);
+            expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
         it("Subtract\'s a column vector and an column array", () => {
             const res = columnVector123.subtract(arrayColumn123)
-            expect(res.elements).toStrictEqual([[0], [0], [0]]);
+            expect(res.vElements).toStrictEqual([[0], [0], [0]]);
         });
 
         it("Subtract\'s a row vector and an column array", () => {
             const res =  rowVector123.subtract(arrayColumn123)
-            expect(res.elements).toStrictEqual([0, 0, 0]);
+            expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
         it("Subtract's multiple row vectors together", () => {
             const res = rowVector123.subtract(rowVector123, rowVector123);
-            expect(res.elements).toStrictEqual([0, 0, 0]);
+            expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
         it("Subtract's multiple column vectors together", () => {
             const res = columnVector123.subtract(columnVector123, columnVector123);
-            expect(res.elements).toStrictEqual([[0], [0], [0]]);
+            expect(res.vElements).toStrictEqual([[0], [0], [0]]);
         });
 
         it("Subtract's a row vector, row array and column array together", () => {
             const res = rowVector123.subtract(arrayRow123, arrayColumn123);
-            expect(res.elements).toStrictEqual([0, 0, 0]);
+            expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
         it("Error: Non equal sizes", () => {
@@ -227,19 +227,19 @@ describe('Vector', () => {
         it('Normalizing a row vector using Euclidean norm', () => {
             const res =  rowVector123.normalize("euclidean");
             const expected = [1 / Math.sqrt(14), 2 / Math.sqrt(14), 3 / Math.sqrt(14)];
-            expected.forEach((val, i) => expect(res.elements[i]).toBeCloseTo(val));
+            expected.forEach((val, i) => expect(res.vElements[i]).toBeCloseTo(val));
         });
 
         it('Normalizing a column vector using Infinity norm', () => {
             const res =  columnVector123.normalize("infinity");
             const expected = [[1 / 3], [2 / 3], [1]];
-            expected.forEach((val, i) => expect(res.elements[i][0]).toBeCloseTo(val[0]));
+            expected.forEach((val, i) => expect(res.vElements[i][0]).toBeCloseTo(val[0]));
         });
 
         it('Normalizing a row vector using Manhattan norm', () => {
             const res =  rowVector123.normalize("manhattan");
             const expected = [1 / 6, 2 / 6, 3 / 6];
-            expected.forEach((val, i) => expect(res.elements[i]).toBeCloseTo(val));
+            expected.forEach((val, i) => expect(res.vElements[i]).toBeCloseTo(val));
         });
 
         it('Error: Normalizing a zero vector', () => {
@@ -257,12 +257,12 @@ describe('Vector', () => {
     describe('Vector scaling', () => {
         it('Scales a row vector', () => {
             const res =  rowVector123.scale(2);
-            expect(res.elements).toStrictEqual([2, 4, 6]);
+            expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it('Scales a column vector', () => {
             const res =  columnVector123.scale(2);
-            expect(res.elements).toStrictEqual([[2], [4], [6]]);
+            expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
         it('Error: Invalid scalar', () => {
@@ -274,23 +274,23 @@ describe('Vector', () => {
     describe('Vector cross product', () => {
 
         it('Cross product for row vectors', () => {
-            expect(rowVector123.cross(rowVector123).elements).toEqual([0, 0, 0]);
+            expect(rowVector123.cross(rowVector123).vElements).toEqual([0, 0, 0]);
         });
 
         it('Cross product for column vectors', () => {
-            expect(columnVector123.cross(columnVector123, true).elements).toEqual([[0], [0], [0]]);
+            expect(columnVector123.cross(columnVector123, true).vElements).toEqual([[0], [0], [0]]);
         });
 
         it('Cross product for column vector and row vector', () => {
-            expect(columnVector123.cross(rowVector123, true).elements).toEqual([[0], [0], [0]]);
+            expect(columnVector123.cross(rowVector123, true).vElements).toEqual([[0], [0], [0]]);
         });
 
         it('Cross product for row vector and row array', () => {
-            expect(rowVector123.cross(arrayRow123).elements).toEqual([0, 0, 0]);
+            expect(rowVector123.cross(arrayRow123).vElements).toEqual([0, 0, 0]);
         });
 
         it('Error: Mismatched size', () => {
-            expect(() => rowVector123.cross(rowVector1234).elements).toThrow();
+            expect(() => rowVector123.cross(rowVector1234).vElements).toThrow();
         });
 
 
@@ -443,12 +443,12 @@ describe('Vector', () => {
     });
 
     describe('isProbability', () => {
-        it('Sum of elements equals to 1 in the range of DELTA', () => {
+        it('Sum of vElements equals to 1 in the range of DELTA', () => {
             const propVector = new Vector([0.4, 0.2, 0.4]);
             expect(propVector.isProbability()).toBeTruthy();
         });
 
-        it('Sum of elements is not equal to 1 in the range of DELTA', () => {
+        it('Sum of vElements is not equal to 1 in the range of DELTA', () => {
             expect(rowVector123.isProbability()).toBeFalsy();
         });
     });
@@ -536,21 +536,21 @@ describe('Vector', () => {
         it('Projection with two row vectos', () => {
             const expected = [-(165 / 169), 396 / 169];
             const projVector = vector1.proj(vector2)
-            expected.forEach((val, i) => expect(projVector.elements[i]).toBeCloseTo(val));
+            expected.forEach((val, i) => expect(projVector.vElements[i]).toBeCloseTo(val));
 
         });
 
         it('Vector projection with two column vectos', () => {
             const expected = [[-(165 / 169)], [396 / 169]];
             const projVector = vector3.proj(vector4, true)
-            expected.forEach((val, i) => expect(projVector.elements[i][0]).toBeCloseTo(val[0]));
+            expected.forEach((val, i) => expect(projVector.vElements[i][0]).toBeCloseTo(val[0]));
 
         });
 
         it('Vector projection with one column and one row vector', () => {
             const expected = [-(165 / 169), 396 / 169];
             const projVector = vector1.proj(vector4)
-            expected.forEach((val, i) => expect(projVector.elements[i]).toBeCloseTo(val));
+            expected.forEach((val, i) => expect(projVector.vElements[i]).toBeCloseTo(val));
 
         });
 

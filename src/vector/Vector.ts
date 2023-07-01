@@ -21,22 +21,22 @@ import { DELTA } from "../utils/constants";
 export class Vector implements VectorTypes {
     //Setting up default information
     public shape: string = "0";
-    public isRow: boolean = false;
-    public isColumn: boolean = false;
+    public isRowVector: boolean = false;
+    public isColumnVector: boolean = false;
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
-    public elements!: number[] | number[][];
+    public vElements!: number[] | number[][];
 
     /**
     * Creates an instance of a Vector.
-    * @param {number[] | number[][]} entries - The elements of the Vector.
+    * @param {number[] | number[][]} entries - The vElements of the Vector.
     */
     constructor(entries: number[] | number[][]) {
 
         vectorArrayCheck(entries)
 
-        this.elements = entries;
+        this.vElements = entries;
         this.size = entries.length;
         this.validateVector();
 
@@ -64,17 +64,17 @@ export class Vector implements VectorTypes {
      * @returns {Vector} Sum of the vectors.
      */
     public add(...vectors: (Vector | number[] | number[][])[]): Vector {
-        let addedVector: Vector = Vector.zeros(this.size, this.isColumn);
+        let addedVector: Vector = Vector.zeros(this.size, this.isColumnVector);
 
         for (let vector of vectors) {
             vector = vector instanceof Vector ? vector : new Vector(vector);
 
             vectorSizeCheck(this, vector)
 
-            let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+            let [vector_one_copy, vector_two_copy]: number[][] = [this.vElements.flat(), vector.vElements.flat()];
 
             for (let i = 0; i < this.size; i++) {
-                addedVector.elements[i] = this.isColumn ? [vector_one_copy[i] + vector_two_copy[i]] : vector_one_copy[i] + vector_two_copy[i];
+                addedVector.vElements[i] = this.isColumnVector ? [vector_one_copy[i] + vector_two_copy[i]] : vector_one_copy[i] + vector_two_copy[i];
             }
         }
         return addedVector;
@@ -82,27 +82,27 @@ export class Vector implements VectorTypes {
 
 
     /**
-     * Adds multiple elements to the Vector.
+     * Adds multiple vElements to the Vector.
      * @public
-     * @param {number | number[] | (number | number[])[]} elements - The elements to be added.
+     * @param {number | number[] | (number | number[])[]} vElements - The vElements to be added.
      * @returns {void}
      */
     public addElements(elementsToAdd: Vector | number[][] | number[][], strict: boolean = false): void {
         elementsToAdd = elementsToAdd instanceof Vector ? elementsToAdd : new Vector(elementsToAdd);
 
-        if (this.isColumn) {
-            elementsToAdd.isColumn ?
-                this.elements = (this.elements as number[][]).concat(elementsToAdd.elements) :
+        if (this.isColumnVector) {
+            elementsToAdd.isColumnVector ?
+                this.vElements = (this.vElements as number[][]).concat(elementsToAdd.vElements) :
                 strict ? vectorShapeCheck(this, elementsToAdd) :
                     //@ts-ignore
-                    this.elements = (this.elements as number[][]).concat(elementsToAdd.elements.map((e: number) => [e]));
+                    this.vElements = (this.vElements as number[][]).concat(elementsToAdd.vElements.map((e: number) => [e]));
         } else {
-            strict && elementsToAdd.isColumn ? vectorShapeCheck(this, elementsToAdd) :
-                elementsToAdd.isColumn ?
+            strict && elementsToAdd.isColumnVector ? vectorShapeCheck(this, elementsToAdd) :
+                elementsToAdd.isColumnVector ?
                     //@ts-ignore
-                    this.elements = this.elements.concat(elementsToAdd.elements.flat()) :
+                    this.vElements = this.vElements.concat(elementsToAdd.vElements.flat()) :
                     //@ts-ignore
-                    this.elements = this.elements.concat(elementsToAdd.elements);
+                    this.vElements = this.vElements.concat(elementsToAdd.vElements);
         }
 
         this.size += elementsToAdd.size
@@ -145,14 +145,14 @@ export class Vector implements VectorTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public clone(): Vector {
         //@ts-ignore
-        return new Vector([...this.elements]);
+        return new Vector([...this.vElements]);
     }
     /**
      * Cross product operation between the current vector and the provided vector.
      *
      * @param {Vector | number[] | number[][]} vector - The second vector to calculate the cross product with. It can be a Vector instance or a 2D/3D array.
      * @param {boolean} [columnVector=false] - Setting this to `true` will return the cross product as s column vector. Default is `false`.
-     * @returns {void} - The function doesn't return a value, it mutates the `elements` property of the class with the result of the cross product.
+     * @returns {void} - The function doesn't return a value, it mutates the `vElements` property of the class with the result of the cross product.
      * @throws {VectorError} - Throws an error if the vectors aren't both 3D.
      */
     public cross(vector: Vector | number[] | number[][], columnVector: boolean = false): Vector {
@@ -162,7 +162,7 @@ export class Vector implements VectorTypes {
             throw new VectorError("Vectors should be 3-dimensional for the cross product", 707, { vectorOne_size: this.size, vectorTwo_size: vector.size })
         }
 
-        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.vElements.flat(), vector.vElements.flat()];
         const [first, second, third]: number[] = [
             vector_one_copy[1] * vector_two_copy[2] - vector_one_copy[2] * vector_two_copy[1],
             vector_one_copy[2] * vector_two_copy[0] - vector_one_copy[0] * vector_two_copy[2],
@@ -188,7 +188,7 @@ export class Vector implements VectorTypes {
 
         vectorSizeCheck(this, vector)
 
-        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.vElements.flat(), vector.vElements.flat()];
         let result: number = 0;
 
         for (let i = 0; i < vector.size; i++) {
@@ -210,7 +210,7 @@ export class Vector implements VectorTypes {
 
         vectorSizeCheck(this, vector)
 
-        let [vector_one_copy, vector_two_copy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+        let [vector_one_copy, vector_two_copy]: number[][] = [this.vElements.flat(), vector.vElements.flat()];
         let distance: number = vector_one_copy.reduce((acc: number, cur: number, index: number) => acc + Math.pow(vector_two_copy[index] - cur, 2), 0);
 
         return Math.sqrt(distance);
@@ -267,11 +267,11 @@ export class Vector implements VectorTypes {
         const size: number = this.size;
 
         //@ts-ignore
-        const result = this.elements.reduce((accumulated: {
+        const result = this.vElements.reduce((accumulated: {
             scalar: any; unitVector: Vector;
         }[], element: any[], i: number) => {
-            const scalar = this.isColumn ? element[0] : element;
-            const unitVector = Vector.createUnitVector(size, i, this.isColumn);
+            const scalar = this.isColumnVector ? element[0] : element;
+            const unitVector = Vector.createUnitVector(size, i, this.isColumnVector);
             accumulated.push({ scalar, unitVector });
             return accumulated;
         }, []);
@@ -347,7 +347,7 @@ export class Vector implements VectorTypes {
 
 
         const scalar: number = this.dot(vector) / Math.pow(norm, 2)
-        let result: Vector = columnVector ? new Vector(vector.elements.flat().map((ele: number) => [ele])) : new Vector(vector.elements.flat());
+        let result: Vector = columnVector ? new Vector(vector.vElements.flat().map((ele: number) => [ele])) : new Vector(vector.vElements.flat());
 
         return result.scale(scalar);
     }
@@ -362,12 +362,12 @@ export class Vector implements VectorTypes {
      * @returns {void} This method does not have a return value
      */
     public print(): void {
-        if (this.isRow) {
-            console.log(`[ ${this.elements.join(", ")} ]`);
-        } else if (this.isColumn) {
+        if (this.isRowVector) {
+            console.log(`[ ${this.vElements.join(", ")} ]`);
+        } else if (this.isColumnVector) {
             let output: string = ""
             for (let i = 0; i < this.size; i++) {
-                output += `[ ${(this.elements as number[][])[i][0]} ]`;
+                output += `[ ${(this.vElements as number[][])[i][0]} ]`;
                 if (i < this.size - 1) {
                     output += "\n"
                 }
@@ -405,8 +405,8 @@ export class Vector implements VectorTypes {
     public scale(scalar: number): Vector {
         vectorScalarCheck(scalar)
 
-        let result: number[] | number[][] = this.isColumn ? (this.elements as number[][]).map((entry: number[]) => [entry[0] * scalar])
-            : (this.elements as number[]).map((entry: number) => entry * scalar);
+        let result: number[] | number[][] = this.isColumnVector ? (this.vElements as number[][]).map((entry: number[]) => [entry[0] * scalar])
+            : (this.vElements as number[]).map((entry: number) => entry * scalar);
 
         return new Vector(result);
 
@@ -420,21 +420,21 @@ export class Vector implements VectorTypes {
      * @returns {Vector} The result of the subraction
      */
     public subtract(...vectors: (Vector | number[] | number[][])[]): Vector {
-        let subtractResult: Vector = Vector.zeros(this.size, this.isColumn);
+        let subtractResult: Vector = Vector.zeros(this.size, this.isColumnVector);
 
         for (let vector of vectors) {
             vector = vector instanceof Vector ? vector : new Vector(vector);
 
             vectorSizeCheck(this, vector);
 
-            const [vectorOneCopy, vectorTwoCopy]: number[][] = [this.elements.flat(), vector.elements.flat()];
+            const [vectorOneCopy, vectorTwoCopy]: number[][] = [this.vElements.flat(), vector.vElements.flat()];
 
             const updatedElements = vectorOneCopy.reduce((result, element, i) => {
-                result[i] = this.isColumn ? [element - vectorTwoCopy[i]] : element - vectorTwoCopy[i]
+                result[i] = this.isColumnVector ? [element - vectorTwoCopy[i]] : element - vectorTwoCopy[i]
                 return result;
             }, []);
 
-            subtractResult.elements = updatedElements;
+            subtractResult.vElements = updatedElements;
         }
 
         return subtractResult;
@@ -452,7 +452,7 @@ export class Vector implements VectorTypes {
      * @returns {number[] | number[][]}
      */
     public toArray(): number[] | number[][] {
-        return this.elements
+        return this.vElements
     }
 
     /**
@@ -465,7 +465,7 @@ export class Vector implements VectorTypes {
      *
      */
     public toLatex(): string {
-        let flattenedArray: number[] = this.elements.flat();
+        let flattenedArray: number[] = this.vElements.flat();
         let output: string = "\\begin{bmatrix} ";
         output += flattenedArray.join(" \\\\ ");
         output += "\\end{bmatrix}";
@@ -486,10 +486,10 @@ export class Vector implements VectorTypes {
      * @returns {void}
      */
     private updateDimensions(): void {
-        this.columns = this.isRow ? this.size : 1;
-        this.rows = this.isColumn ? this.size : 1;
+        this.columns = this.isRowVector ? this.size : 1;
+        this.rows = this.isColumnVector ? this.size : 1;
 
-        if (!this.isRow && !this.isColumn) {
+        if (!this.isRowVector && !this.isColumnVector) {
             throw new VectorError("Vector must be either a row vector or a column vector.", 602);
         }
     }
@@ -518,27 +518,27 @@ export class Vector implements VectorTypes {
     private validateVector(): void {
         let invalidEntry: any;
 
-        const validationVector: any[] = this.elements.flat()
+        const validationVector: any[] = this.vElements.flat()
 
         invalidEntry = validationVector.find((e: any) => typeof e !== "number")
         if (invalidEntry !== undefined) {
             throw new VectorError(`Invalid element for vector. Expected number, got: ${typeof invalidEntry}.`, 603, { invalidEntry: invalidEntry });
-        } else if ((this.elements as number[][]).every((e: number[]) => Array.isArray(e))) {
-            this.isColumn = true;
-            this.isRow = false;
+        } else if ((this.vElements as number[][]).every((e: number[]) => Array.isArray(e))) {
+            this.isColumnVector = true;
+            this.isRowVector = false;
 
-            const invalidDimensionIndex = this.elements.findIndex((element: any) => Array.isArray(element) && element.length > 1);
-            const levelDimensionFailure = this.elements.flat().findIndex((element: any) => Array.isArray(element))
+            const invalidDimensionIndex = this.vElements.findIndex((element: any) => Array.isArray(element) && element.length > 1);
+            const levelDimensionFailure = this.vElements.flat().findIndex((element: any) => Array.isArray(element))
             if (invalidDimensionIndex !== -1) {
-                throw new VectorError(`Dimensions of entries cannot be greater than 1. Invalid entry found at ${invalidDimensionIndex}.`, 601, { invalidEntry: this.elements[invalidDimensionIndex] });
+                throw new VectorError(`Dimensions of entries cannot be greater than 1. Invalid entry found at ${invalidDimensionIndex}.`, 601, { invalidEntry: this.vElements[invalidDimensionIndex] });
             } else if (levelDimensionFailure !== -1) {
-                throw new VectorError(`The depth of entries cannot be greater than 1. Invalid entry found at ${levelDimensionFailure}.`, 601, { invalidEntry: this.elements[levelDimensionFailure] })
+                throw new VectorError(`The depth of entries cannot be greater than 1. Invalid entry found at ${levelDimensionFailure}.`, 601, { invalidEntry: this.vElements[levelDimensionFailure] })
             }
-        } else if ((this.elements as number[]).every((e: number) => !Array.isArray(e))) {
-            this.isColumn = false;
-            this.isRow = true;
+        } else if ((this.vElements as number[]).every((e: number) => !Array.isArray(e))) {
+            this.isColumnVector = false;
+            this.isRowVector = true;
         } else {
-            throw new VectorError("Entry mismatch, got columns and row entries", 601, this.elements)
+            throw new VectorError("Entry mismatch, got columns and row entries", 601, this.vElements)
         }
 
         this.updateDimensions();
@@ -566,7 +566,7 @@ export class Vector implements VectorTypes {
      * @return {number} The Euclidean norm.
      */
     public euclNorm(): number {
-        const array = this.elements.flat();
+        const array = this.vElements.flat();
         return Math.sqrt(array.map(x => x ** 2).reduce((acc, x) => acc + x));
     }
 
@@ -575,7 +575,7 @@ export class Vector implements VectorTypes {
      * @return {number} The infinity norm (maximum absolute value).
      */
     public infNorm(): number {
-        const array = this.elements.flat();
+        const array = this.vElements.flat();
         return Math.max(...array.map(x => Math.abs(x)));
     }
 
@@ -584,7 +584,7 @@ export class Vector implements VectorTypes {
      * @return {number} The Manhattan norm (sum of absolute values).
      */
     public manhNorm(): number {
-        const array = this.elements.flat();
+        const array = this.vElements.flat();
         return array.map(x => Math.abs(x)).reduce((acc, x) => acc + x);
     }
 
@@ -618,12 +618,12 @@ export class Vector implements VectorTypes {
      * @returns  {void}
      */
     public transpose(): void {
-        this.elements = this.isColumn ?
-            this.elements.flat() :
+        this.vElements = this.isColumnVector ?
+            this.vElements.flat() :
             //@ts-ignore
-            this.elements.map((e: number) => [e]);
+            this.vElements.map((e: number) => [e]);
 
-        [this.isRow, this.isColumn] = [this.isColumn, this.isRow];
+        [this.isRowVector, this.isColumnVector] = [this.isColumnVector, this.isRowVector];
 
         this.updateDimensions();
         this.updateShape();
@@ -643,14 +643,14 @@ export class Vector implements VectorTypes {
     *
     * @throws {VectorError} If the vectors' sizes or, when strict is set to true, their shapes do not match.
     *
-    * @returns {boolean} Returns `true` if the elements of the two vectors are equal within the tolerance, `false` otherwise.
+    * @returns {boolean} Returns `true` if the vElements of the two vectors are equal within the tolerance, `false` otherwise.
     */
     public equal(vector: Vector | number[] | number[][], strict: boolean = false): boolean {
         vector = vector instanceof Vector ? vector : new Vector(vector);
         vectorSizeCheck(this, vector);
         strict && vectorShapeCheck(this, vector);
 
-        const [v1, v2] = [this.elements.flat(), vector.elements.flat()];
+        const [v1, v2] = [this.vElements.flat(), vector.vElements.flat()];
         return !v1.some((val, i) => Math.abs(val - v2[i]) > DELTA);
     }
 
@@ -664,12 +664,12 @@ export class Vector implements VectorTypes {
     }
 
     /**
-     * Checks if all elements of the vector are non-negative.
+     * Checks if all vElements of the vector are non-negative.
      *
      * @returns {boolean} 'true' if any component of the vector is negative, 'false' otherwise.
      */
     public isPositive(): boolean {
-        return !this.elements.flat().some((e: number) => e < 0)
+        return !this.vElements.flat().some((e: number) => e < 0)
     }
 
     /**
@@ -687,7 +687,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} 'true' if there is one 1 and rest are 0, 'false' otherwise.
      */
     public isUnitVector(): boolean {
-        const testArray = this.elements.flat();
+        const testArray = this.vElements.flat();
         const ones = testArray.filter(e => e === 1).length;
         const zeros = testArray.filter(e => e === 0).length;
 
@@ -735,7 +735,7 @@ export class Vector implements VectorTypes {
 
         const unitVector: Vector = Vector.zeros(size, columnVector);
 
-        columnVector ? (unitVector.elements as number[][])[index][0] = 1 : unitVector.elements[index] = 1;
+        columnVector ? (unitVector.vElements as number[][])[index][0] = 1 : unitVector.vElements[index] = 1;
 
         return unitVector;
     }
