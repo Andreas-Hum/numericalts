@@ -186,9 +186,7 @@ describe('Matrix', () => {
 
     describe('QR decom', () => {
         it('A row matrix with a column matrix', () => {
-            const testers = new Matrix([new Vector([1.414213562, -4.949747467]), new Vector([0.0, 3.535533905])])
-            testers.toColumnMatrix()
-            console.log(testers.toColumnMatrix().mElements)
+            const testers = new Matrix([new Vector([0, 3]), new Vector([2, 1])])
             // console.log(testers.backSubstitution(new Vector([[-3], [2]])))
             // const { Q, R } = testers.QRDecomposition()
             // console.log(Q.printMatrix())
