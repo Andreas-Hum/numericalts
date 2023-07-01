@@ -187,13 +187,13 @@ describe('Matrix', () => {
 
     describe('QR decom', () => {
         it('A row matrix with a column matrix', () => {
-            const testers = new Matrix([new Vector([1,1]), new Vector([1, 6])])
-
+            const testers = new Matrix([new Vector([1, Math.sqrt(5)]), new Vector([2, 0]), new Vector([0, Math.sqrt(5)])])
             const { Q, R } = testers.QRDecomposition()
             console.log(Q.printMatrix())
             console.log(R.printMatrix())
-            console.log(R.invertUpperTriangular(R).printMatrix())
-            //   .naiveMultiply(new Matrix([new Vector([[-3],[2]])])).printMatrix()
+
+            console.log(Q.naiveMultiply(R).printMatrix())
+
         });
 
 

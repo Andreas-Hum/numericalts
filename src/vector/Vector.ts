@@ -143,7 +143,10 @@ export class Vector implements VectorTypes {
     * C
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
+    public clone(): Vector {
+        //@ts-ignore
+        return new Vector([...this.elements]);
+    }
     /**
      * Cross product operation between the current vector and the provided vector.
      *
