@@ -507,6 +507,59 @@ export class Matrix implements MatrixTypes {
     }
 
 
+    /**
+ * Method for multiplying matrices using the Strassen algorithm.
+ * @param {Matrix} A - A matrix to multiply.
+ * @param {Matrix} B - B matrix to multiply with A.
+ * @returns {Matrix} The result of Strassen multiplication of A and B.
+ */
+    public static strassenMultiply(A: Matrix, B: Matrix): Matrix {
+        // Base case when size of matrices is 1x1
+        if (A.rows === 1 && A.columns === 1) {
+            let result = Matrix.createZeroMatrix(1, 1);
+            // @ts-ignore
+            result.mElements[0].vElements[0] = A.mElements[0].vElements[0] * B.mElements[0].vElements[0];
+            return result;
+        }
+
+        // Pad matrix to next power of two if necessary
+        if (A.rows !== A.columns || A.rows !== B.rows || A.columns !== B.columns ||
+            (A.rows & (A.rows - 1)) !== 0) {
+            A = A.padMatrixToPowerOfTwo();
+            B = B.padMatrixToPowerOfTwo();
+        }
+
+        // Divide matrices into quarters
+        const mid = A.rows / 2;
+        let a11 = A.getSubMatrix(0, mid, 0, mid);
+        let a12 = A.getSubMatrix(0, mid, mid, 2 * mid);
+        let a21 = A.getSubMatrix(mid, 2 * mid, 0, mid);
+        let a22 = A.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
+        let b11 = B.getSubMatrix(0, mid, 0, mid);
+        let b12 = B.getSubMatrix(0, mid, mid, 2 * mid);
+        let b21 = B.getSubMatrix(mid, 2 * mid, 0, mid);
+        let b22 = B.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
+
+        let m1 = Matrix.strassenMultiply(a11.add(a22), b11.add(b22));
+        let m2 = Matrix.strassenMultiply(a21.add(a22), b11);
+        let m3 = Matrix.strassenMultiply(a11, b12.subtract(b22));
+        let m4 = Matrix.strassenMultiply(a22, b21.subtract(b11));
+        let m5 = Matrix.strassenMultiply(a11.add(a12), b22);
+        let m6 = Matrix.strassenMultiply(a21.subtract(a11), b11.add(b12));
+        let m7 = Matrix.strassenMultiply(a12.subtract(a22), b21.add(b22));
+
+        let c11 = m1.add(m4).subtract(m5).add(m7);
+        let c12 = m3.add(m5);
+        let c21 = m2.add(m4);
+        let c22 = m1.subtract(m2).add(m3).add(m6);
+
+        let result = Matrix.createZeroMatrix(2 * mid, 2 * mid);
+        result.setSubMatrix(0, mid, 0, mid, c11);
+        result.setSubMatrix(0, mid, mid, 2 * mid, c12);
+        result.setSubMatrix(mid, 2 * mid, 0, mid, c21);
+        result.setSubMatrix(mid, 2 * mid, mid, 2 * mid, c22);
+        return result;
+    }
 
 
     /**
