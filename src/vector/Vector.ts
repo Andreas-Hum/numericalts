@@ -231,6 +231,29 @@ export class Vector implements VectorTypes {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
+    * G
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Returns a copy of a section of an vector. For both start and end, a negative index can be used to indicate an offset from the end of the vector. For example, -2 refers to the second to last element of the vector.
+     *
+     * @public
+     * @param {Vector} vec - The Vector object from which the sub vector will be created.
+     * @param {number} start - The beginning index of the specified portion of the vector. If start is undefined, then the slice begins at index 0.
+     * @param {number} end - he end index of the specified portion of the vector. This is exclusive of the element at the index 'end'. If end is undefined, then the slice extends to the end of the vector.
+     * @returns {Vector} - A new Vector object which represents the sub vector.
+     */
+    public static getSubVector(vec: Vector, start: number, end: number): Vector {
+        vec = vec instanceof Vector ? vec : new Vector(vec);
+        //@ts-ignore
+        let subVecElements: number[] = vec.vElements.slice(start, end);
+        return new Vector(subVecElements);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     * H
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -415,6 +438,31 @@ export class Vector implements VectorTypes {
 
 
     /**
+     * Replaces a portion of the original vector with the provided sub vector.
+     *
+     * @public
+     * @static
+     * @param {Vector} vec - The original Vector object to be modified.
+     * @param {Vector} subVec - The sub Vector object that will replace a portion of the original Vector.
+     * @param {number} start - The starting index in the vElements array from where the replacement begins.
+     */
+    public static setSubVector(vec: Vector, subVec: Vector, start: number): void {
+        vec = vec instanceof Vector ? vec : new Vector(vec);
+        subVec = subVec instanceof Vector ? subVec : new Vector(subVec);
+
+        if ((vec.isColumnVector && subVec.isColumnVector) || vec.isRowVector && vec.isRowVector) {
+            //@ts-ignore
+            vec.vElements.splice(start, subVec.vElements.length, ...subVec.vElements);
+            vec.updateDimensions()
+            vec.updateShape()
+        } else {
+            throw new VectorError("Both vectors has to be the same types", 602)
+        }
+
+    }
+
+
+    /**
      * Vectors subtraction (or arrays of numbers) together. This function can be used with multiple inputs and supports both row and column vectors.
      * @param {...(Vector | number[] | number[][])} vectors - The vectors (or arrays) to subract.
      * @throws {VectorError} If the dimensions of the vectors don't match.
@@ -439,13 +487,6 @@ export class Vector implements VectorTypes {
         }
 
         return subtractResult;
-    }
-
-    public static subVector(vec: Vector, start: number, end: number): Vector {
-        // Fetch the elements from `start` to `end` index and form the Vector
-        //@ts-ignore
-        let subVecElements: number[] = vec.vElements.slice(start, end);
-        return new Vector(subVecElements);
     }
 
 

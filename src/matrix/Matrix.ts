@@ -177,7 +177,7 @@ export class Matrix implements MatrixTypes {
         let subMatrix: Vector[] = []
         for (let i = startRow; i < endRow; i++) {
             let row: Vector = this.mElements[i];
-            let subRow: Vector = Vector.subVector(row, startCol, endCol);
+            let subRow: Vector = Vector.getSubVector(row, startCol, endCol);
             subMatrix.push(subRow);
         }
         return new Matrix(subMatrix);

@@ -657,4 +657,23 @@ describe('Vector', () => {
         });
     });
 
+    describe('Get sub vector', () => {
+        it('Get 0 to 2 row subvector', () => {
+            expect(Vector.getSubVector(rowVector123, 0, 2).equal(new Vector([1, 2]))).toBeTruthy()
+        });
+
+        it('Get 0 to 2 column subvector', () => {
+            expect(Vector.getSubVector(columnVector123, 0, 2).equal(new Vector([[1], [2]]))).toBeTruthy()
+        });
+
+    });
+
+    describe('Set sub vector', () => {
+        it('Get 0 to 2 row subvector', () => {
+            Vector.setSubVector(rowVector123, [4,5], 3)
+        });
+
+
+    });
+
 });
