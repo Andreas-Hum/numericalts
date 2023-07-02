@@ -93,6 +93,37 @@ describe('Matrix', () => {
         });
     });
 
+    describe('Matrix subtraction', () => {
+        it('Matrix subtraction with two 3x3 row matrixes ', () => {
+            expect(rowMatrix.subtract(rowMatrix).mElements).toEqual([
+                new Vector([0, 0, 0]),
+                new Vector([0, 0, 0])
+            ])
+        });
+
+        it('Matrix addition with two 3x3 column matrixes ', () => {
+            expect(columnMatrix.subtract(columnMatrix).mElements).toEqual([
+                new Vector([[0], [0], [0]]),
+                new Vector([[0], [0], [0]])
+            ])
+        });
+
+        it('Matrix addition with two 3x3 column matrixes ', () => {
+            const testings = new Matrix([new Vector([[1], [4]]),
+            new Vector([[2], [5]]),
+            new Vector([[3], [6]])])
+
+            expect(rowMatrix.subtract(testings).mElements).toEqual([
+                new Vector([0, 0, 0]),
+                new Vector([0, 0, 0])
+            ])
+        });
+
+        it('Error: Different dimentions', () => {
+            expect(() => rowMatrix.subtract(columnMatrix)).toThrow()
+        });
+    });
+
 
     describe('Matrix identity', () => {
         it('A 3x3 identity row matrix', () => {
