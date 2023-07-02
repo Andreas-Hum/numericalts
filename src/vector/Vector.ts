@@ -235,23 +235,6 @@ export class Vector implements VectorTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns a copy of a section of an vector. For both start and end, a negative index can be used to indicate an offset from the end of the vector. For example, -2 refers to the second to last element of the vector.
-     *
-     * @public
-     * @param {Vector} vec - The Vector object from which the sub vector will be created.
-     * @param {number} start - The beginning index of the specified portion of the vector. If start is undefined, then the slice begins at index 0.
-     * @param {number} end - he end index of the specified portion of the vector. This is exclusive of the element at the index 'end'. If end is undefined, then the slice extends to the end of the vector.
-     * @returns {Vector} - A new Vector object which represents the sub vector.
-     */
-    public static getSubVector(vec: Vector, start: number, end: number): Vector {
-        vec = vec instanceof Vector ? vec : new Vector(vec);
-        //@ts-ignore
-        let subVecElements: number[] = vec.vElements.slice(start, end);
-        return new Vector(subVecElements);
-    }
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * H
@@ -437,29 +420,6 @@ export class Vector implements VectorTypes {
     }
 
 
-    /**
-     * Replaces a portion of the original vector with the provided sub vector.
-     *
-     * @public
-     * @static
-     * @param {Vector} vec - The original Vector object to be modified.
-     * @param {Vector} subVec - The sub Vector object that will replace a portion of the original Vector.
-     * @param {number} start - The starting index in the vElements array from where the replacement begins.
-     */
-    public static setSubVector(vec: Vector, subVec: Vector, start: number): void {
-        vec = vec instanceof Vector ? vec : new Vector(vec);
-        subVec = subVec instanceof Vector ? subVec : new Vector(subVec);
-
-        if ((vec.isColumnVector && subVec.isColumnVector) || vec.isRowVector && vec.isRowVector) {
-            //@ts-ignore
-            vec.vElements.splice(start, subVec.vElements.length, ...subVec.vElements);
-            vec.updateDimensions()
-            vec.updateShape()
-        } else {
-            throw new VectorError("Both vectors has to be the same types", 602)
-        }
-
-    }
 
 
     /**
@@ -793,6 +753,22 @@ export class Vector implements VectorTypes {
     }
 
     /**
+     * Returns a copy of a section of an vector. For both start and end, a negative index can be used to indicate an offset from the end of the vector. For example, -2 refers to the second to last element of the vector.
+     *
+     * @public
+     * @param {Vector} vec - The Vector object from which the sub vector will be created.
+     * @param {number} start - The beginning index of the specified portion of the vector. If start is undefined, then the slice begins at index 0.
+     * @param {number} end - he end index of the specified portion of the vector. This is exclusive of the element at the index 'end'. If end is undefined, then the slice extends to the end of the vector.
+     * @returns {Vector} - A new Vector object which represents the sub vector.
+     */
+    public static getSubVector(vec: Vector, start: number, end: number): Vector {
+        vec = vec instanceof Vector ? vec : new Vector(vec);
+        let subVecElements: any = vec.vElements.slice(start, end);
+        return new Vector(subVecElements);
+    }
+
+
+    /**
      * Returns a new vector of a given size, filled with ones.
      *
      * @param {number} size - The size of the required vector.
@@ -808,6 +784,37 @@ export class Vector implements VectorTypes {
         } else {
             return new Vector((new Array(size)).fill(1, 0))
         }
+    }
+
+
+    /**
+     * Replaces a portion of the original vector with the provided sub vector.
+     *
+     * @public
+     * @static
+     * @param {Vector} vec - The original Vector object to be modified.
+     * @param {Vector} subVec - The sub Vector object that will replace a portion of the original Vector.
+     * @param {number} start - The starting index in the vElements array from where the replacement begins.
+     */
+    public static setSubVector(vec: Vector, subVec: Vector, start: number): void {
+        vec = vec instanceof Vector ? vec : new Vector(vec);
+        subVec = subVec instanceof Vector ? subVec : new Vector(subVec);
+
+        if ((vec.isColumnVector && subVec.isColumnVector) || vec.isRowVector && vec.isRowVector) {
+            //@ts-ignore
+            vec.vElements.splice(start, subVec.vElements.length, ...subVec.vElements);
+            vec.size += subVec.size;
+            if (vec.isRowVector) {
+                vec.columns = vec.size
+            } else {
+                vec.rows = vec.size
+            }
+
+            vec.updateShape()
+        } else {
+            throw new VectorError("Both vectors has to be the same types", 602)
+        }
+
     }
 
 

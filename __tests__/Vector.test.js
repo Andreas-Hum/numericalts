@@ -669,8 +669,18 @@ describe('Vector', () => {
     });
 
     describe('Set sub vector', () => {
-        it('Get 0 to 2 row subvector', () => {
-            Vector.setSubVector(rowVector123, [4,5], 3)
+        it('Extent element 3 as 4,5 in row vector', () => {
+            Vector.setSubVector(rowVector123, [4, 5], 3)
+            expect(rowVector123.equal(new Vector([1, 2, 3, 4, 5]))).toBeTruthy()
+        });
+
+        it('Extent element 3 as 4,5 in column vector', () => {
+            Vector.setSubVector(columnVector123, [[4], [5]], 3)
+            expect(columnVector123.equal(new Vector([[1], [2], [3], [4], [5]]))).toBeTruthy()
+        });
+
+        it('Error:Different types of vectors', () => {
+            expect(() => Vector.setSubVector(columnVector123, [4, 5], 3)).toThrow()
         });
 
 
