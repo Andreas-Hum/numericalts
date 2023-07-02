@@ -168,17 +168,17 @@ export class Matrix implements MatrixTypes {
      * @public
      */
     public gramSmith(): Matrix {
-        let psudoMatrix: Matrix = this.isRowMatrix ? this.toColumnMatrix() : this.clone();
+        let A: Matrix = this.isRowMatrix ? this.toColumnMatrix() : this.clone();
 
         let orthogonalVectors: Vector[] = [];
-        orthogonalVectors.push(psudoMatrix.mElements[0]);
+        orthogonalVectors.push(A.mElements[0]);
 
-        for (let i = 1; i < psudoMatrix.columns; i++) {
-            let orthogonalProjection: Vector = psudoMatrix.mElements[i];
+        for (let i = 1; i < A.columns; i++) {
+            let orthogonalProjection: Vector = A.mElements[i];
 
             for (let j = 0; j < i; j++) {
                 let u = orthogonalVectors[j];
-                let v = psudoMatrix.mElements[i];
+                let v = A.mElements[i];
                 let uv = u.dot(v);
                 let uu = u.dot(u);
 
@@ -246,9 +246,10 @@ export class Matrix implements MatrixTypes {
      * @return {Boolean} - Returns true if the matrix is lower triangular, false otherwise.
      */
     public isLowerTriangular(): Boolean {
-        for (let i = 1; i < this.columns; i++) {
+        let testMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this;
+        for (let i = 1; i < testMatrix.columns; i++) {
             for (let j = 0; j < i; j++) {
-                if (this.mElements[j].vElements[i] !== 0) {
+                if (testMatrix.mElements[j].vElements[i] !== 0) {
                     return false;
                 }
             }
@@ -263,9 +264,11 @@ export class Matrix implements MatrixTypes {
      * @return {Boolean} - Returns true if the matrix is upper triangular, false otherwise.
      */
     public isUpperTriangular(): boolean {
-        for (let i = 1; i < this.columns; i++) {
+        let testMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this;
+
+        for (let i = 1; i < testMatrix.columns; i++) {
             for (let j = 0; j < i; j++) {
-                if (this.mElements[i].vElements[j] !== 0) {
+                if (testMatrix.mElements[i].vElements[j] !== 0) {
                     return false;
                 }
             }
@@ -321,29 +324,28 @@ export class Matrix implements MatrixTypes {
      * @method
      * @public
      */
-    public naiveMultiply(matrixToMultiply: number[][] | Matrix): Matrix {
-        if (!(matrixToMultiply instanceof Matrix)) {
-            matrixToMultiply = new Matrix(matrixToMultiply as number[][])
-        }
-        if (this.columns !== matrixToMultiply.rows) {
+    public naiveMultiply(B: number[][] | Matrix): Matrix {
+        B = !(B instanceof Matrix) ? new Matrix(B as number[][]) : B
+
+        if (this.columns !== B.rows) {
             throw new MatrixError("Dimention missmatch: Columns of first matrix does not equal the rows of the second", 810)
         }
 
-        let psudoMatrix = this.clone()
-        if (matrixToMultiply.isRowMatrix) {
-            matrixToMultiply = matrixToMultiply.toColumnMatrix()
+        let A  = this.clone()
+        if (B.isRowMatrix) {
+            B = B.toColumnMatrix()
         }
 
-        if (psudoMatrix.isColumnMatrix) {
-            psudoMatrix = psudoMatrix.toRowMatrix()
+        if (A.isColumnMatrix) {
+            A = A.toRowMatrix()
         }
 
 
         let result: number[][] = [];
-        for (let i = 0; i < psudoMatrix.rows; i++) {
+        for (let i = 0; i < A.rows; i++) {
             result.push([])
-            for (let j = 0; j < matrixToMultiply.columns; j++) {
-                let tempRes: number = psudoMatrix.mElements[i].dot(matrixToMultiply.mElements[j]);
+            for (let j = 0; j < B.columns; j++) {
+                let tempRes: number = A.mElements[i].dot(B.mElements[j]);
                 if (tempRes <= 0 + DELTA && 0 - DELTA <= tempRes) {
                     result[i][j] = 0
                 } else {
