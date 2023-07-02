@@ -441,6 +441,13 @@ export class Vector implements VectorTypes {
         return subtractResult;
     }
 
+    public static subVector(vec: Vector, start: number, end: number): Vector {
+        // Fetch the elements from `start` to `end` index and form the Vector
+        //@ts-ignore
+        let subVecElements: number[] = vec.vElements.slice(start, end);
+        return new Vector(subVecElements);
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

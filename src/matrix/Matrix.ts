@@ -67,6 +67,25 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Generic matrix addition method.
+     * @param {Matrix} B - The Matrix to add.
+     * @returns {Matrix} The result of the addition of the two matrices.
+     * @throws {MatrixError} If the dimensions of the matrices do not match.
+     */
+    public add(B: Matrix): Matrix {
+        if (this.rows !== B.rows || this.columns !== B.columns) {
+            throw new MatrixError('Dimension mismatch: Dimensions of the matrices must be the same for subtraction.', 802);
+        }
+
+        let resultMatrix: Vector[] = [];
+        for (let i = 0; i < this.rows; i++) {
+            resultMatrix.push(this.mElements[i].add(B.mElements[i]));
+        }
+        return new Matrix(resultMatrix);
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * B
@@ -146,6 +165,23 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Returns a sub matrix from the given matrix within the provided row and column bounds.
+     * @param {number} startRow - Starting row index of the sub matrix.
+     * @param {number} startCol - Starting column index of the sub matrix.
+     * @param {number} endRow - Ending row index of the sub matrix.
+     * @param {number} endCol - Ending column index of the sub matrix.
+     * @returns {Matrix} The subMatrix within the given bounds.
+     */
+    public getSubMatrix(startRow: number, startCol: number, endRow: number, endCol: number): Matrix {
+        let subMatrix: Vector[] = []
+        for (let i = startRow; i < endRow; i++) {
+            let row: Vector = this.mElements[i];
+            let subRow: Vector = Vector.subVector(row, startCol, endCol);
+            subMatrix.push(subRow);
+        }
+        return new Matrix(subMatrix);
+    }
 
 
 
@@ -311,6 +347,26 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Method used to find the next power of two for a given number.
+     * @param {number} n - The number for which to find the next power of two.
+     * @returns {number} The next power of two for the given number.
+     */
+    private static nextPowerOfTwo(n: number): number {
+        let count = 0;
+
+        // First check if n is already a power of two.
+        if (n > 0 && (n & (n - 1)) === 0)
+            return n;
+
+        while (n !== 0) {
+            n >>= 1;
+            count += 1;
+        }
+
+        // Return next power of 2
+        return 1 << count;
+    }
 
     /**
      * Performs matrix multiplication using the current matrix and another provided matrix. 
@@ -371,6 +427,27 @@ export class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+     * Method used to pad the matrix dimensions to the nearest power of two.
+     * @returns {Matrix} The padded matrix with dimensions as a power of two.
+     */
+    public padMatrixToPowerOfTwo(): Matrix {
+        const maxDimension = Math.max(this.rows, this.columns);
+        const nextPower = Matrix.nextPowerOfTwo(maxDimension);
+
+        if (nextPower === this.rows && nextPower === this.columns)
+            return this;
+
+        const paddedMatrix = Matrix.createZeroMatrix(nextPower, nextPower);
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                paddedMatrix.mElements[i].vElements[j] = this.mElements[i].vElements[j];
+            }
+        }
+        return paddedMatrix;
+    }
+
+    /**
      * Prints matrix to the console.
      * @public
      * @returns {string} The print string
@@ -412,6 +489,44 @@ export class Matrix implements MatrixTypes {
     * S
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Replaces a submatrix in current matrix with provided submatrix.
+     * @param {number} rowStart - starting row index for the submatrix.
+     * @param {number} rowEnd - ending row index for the submatrix.
+     * @param {number} colStart - starting column index for the submatrix.
+     * @param {number} colEnd - ending column index for the submatrix.
+     * @param {Matrix} subMatrix - the submatrix to be set in the current matrix.
+     */
+    public setSubMatrix(rowStart: number, rowEnd: number, colStart: number, colEnd: number, subMatrix: Matrix): void {
+        for (let i = rowStart, i_sub = 0; i < rowEnd; i++, i_sub++) {
+            for (let j = colStart, j_sub = 0; j < colEnd; j++, j_sub++) {
+                this.mElements[i].vElements[j] = subMatrix.mElements[i_sub].vElements[j_sub];
+            }
+        }
+    }
+
+
+
+
+    /**
+     * Matrix subtraction method.
+     * @param {Matrix} B - The Matrix to subtract.
+     * @returns {Matrix} The result of the subtraction of the matrix B from the given matrix.
+     * @throws {MatrixError} If the dimensions of the matrices do not match.
+     */
+    public subtract(B: Matrix): Matrix {
+        if (this.rows !== B.rows || this.columns !== B.columns) {
+            throw new MatrixError('Dimension mismatch: Dimensions of the matrices must be the same for subtraction.', 802);
+        }
+
+        let resultMatrix: Vector[] = [];
+        for (let i = 0; i < this.rows; i++) {
+            resultMatrix.push(this.mElements[i].subtract(B.mElements[i]));
+        }
+        return new Matrix(resultMatrix);
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -654,5 +769,21 @@ export class Matrix implements MatrixTypes {
 
         return new Matrix(unitVectorContainor);
     }
+
+
+    /**
+     * Static factory method to create a matrix with all elements set to zero.
+     * @param {number} rows - Number of rows in the matrix.
+     * @param {number} columns - Number of columns in input matrix.
+     * @returns {Matrix} Matrix with all elements set to zero.
+     */
+    static createZeroMatrix(rows: number, columns: number): Matrix {
+        let zeroMatrix: Vector[] = [];
+        for (let i = 0; i < rows; i++) {
+            zeroMatrix.push(Vector.zeros(columns));
+        }
+        return new Matrix(zeroMatrix);
+    }
+
 
 }
