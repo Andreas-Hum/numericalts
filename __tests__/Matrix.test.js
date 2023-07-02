@@ -184,19 +184,72 @@ describe('Matrix', () => {
 
     });
 
-    describe('QR decom', () => {
-        it('A row matrix with a column matrix', () => {
-            const testers = new Matrix([new Vector([0, 3]), new Vector([2, 1])])
-            // console.log(testers.backSubstitution(new Vector([[-3], [2]])))
-            // const { Q, R } = testers.QRDecomposition()
-            // console.log(Q.printMatrix())
-            // console.log(R.printMatrix())
+    describe('QR decomposition', () => {
+        it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
+            const testMatrix = new Matrix([new Vector([1, 1]), new Vector([0, 1])])
+            const { Q, R } = testMatrix.QRDecomposition()
 
-            // console.log(Q.naiveMultiply(R).pr)
 
+            expect(Q.mElements).toEqual([
+                new Vector([1, 0]),
+                new Vector([0, 1])
+            ])
+            expect(R.mElements).toEqual([
+                new Vector([1, 1]),
+                new Vector([0, 1])
+            ])
+        });
+
+        it('QR decomposition with a 4x4 row matrix [[0,0,1,0],[1,0,0,0],[0,1,1,0],[0,0,0,1]]', () => {
+            const testMatrix = new Matrix([new Vector([0, 0, 1, 0]), new Vector([1, 0, 0, 0]), new Vector([0, 1, 1, 0]), new Vector([0, 0, 0, 1])])
+            const { Q, R } = testMatrix.QRDecomposition()
+
+
+            expect(Q.mElements).toEqual([
+                new Vector([0, 0, 1, 0]),
+                new Vector([1, 0, 0, 0]),
+                new Vector([0, 1, 0, 0]),
+                new Vector([0, 0, 0, 1])])
+            expect(R.mElements).toEqual([
+                new Vector([1, 0, 0, 0]),
+                new Vector([0, 1, 1, 0]),
+                new Vector([0, 0, 1, 0]),
+                new Vector([0, 0, 0, 1])])
+        });
+
+        it('QR decomposition with a 4x3 row matrix [[0,0,1],[1,0,0],[0,1,1],[0,0,0]]', () => {
+            const testMatrix = new Matrix([new Vector([0, 0, 1]), new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 0])])
+            const { Q, R } = testMatrix.QRDecomposition()
+
+            expect(Q.mElements).toEqual([
+                new Vector([0, 0, 1]),
+                new Vector([1, 0, 0]),
+                new Vector([0, 1, 0]),
+                new Vector([0, 0, 0])])
+
+            expect(R.mElements).toEqual([
+                new Vector([1, 0, 0]),
+                new Vector([0, 1, 1]),
+                new Vector([0, 0, 1])])
         });
 
 
+        it('QR decomposition 4x3 column matrix [[[0], [1], [0], [0]], [[0], [0], [1], [0]],[[1], [0], [1], [0]]]', () => {
+            const testMatrix = new Matrix([new Vector([[0], [1], [0], [0]]), new Vector([[0], [0], [1], [0]]), new Vector([[1], [0], [1], [0]])])
+            const { Q, R } = testMatrix.QRDecomposition()
+
+
+            expect(Q.mElements).toEqual([
+                new Vector([0, 0, 1]),
+                new Vector([1, 0, 0]),
+                new Vector([0, 1, 0]),
+                new Vector([0, 0, 0])])
+
+            expect(R.mElements).toEqual([
+                new Vector([1, 0, 0]),
+                new Vector([0, 1, 1]),
+                new Vector([0, 0, 1])])
+        });
 
 
     });
