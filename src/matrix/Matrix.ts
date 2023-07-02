@@ -358,27 +358,6 @@ export class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Method used to find the next power of two for a given number.
-     * @param {number} n - The number for which to find the next power of two.
-     * @returns {number} The next power of two for the given number.
-     */
-    private static nextPowerOfTwo(n: number): number {
-        let count = 0;
-
-        // First check if n is already a power of two.
-        if (n > 0 && (n & (n - 1)) === 0)
-            return n;
-
-        while (n !== 0) {
-            n >>= 1;
-            count += 1;
-        }
-
-        // Return next power of 2
-        return 1 << count;
-    }
-
-    /**
      * Performs matrix multiplication using the current matrix and another provided matrix. 
      * If the provided matrix is not an instance of Matrix, it converts it to an instance of Matrix.
      * Ensures compatibility of matrices (i.e. columns of the first must match the rows of the second). 
@@ -447,7 +426,7 @@ export class Matrix implements MatrixTypes {
         if (nextPower === this.rows && nextPower === this.columns)
             return this;
 
-        const paddedMatrix = Matrix.createZeroMatrix(nextPower, nextPower);
+        const paddedMatrix = Matrix.zeros(nextPower, nextPower);
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
@@ -522,11 +501,11 @@ export class Matrix implements MatrixTypes {
  * @param {Matrix} A - A matrix to multiply.
  * @param {Matrix} B - B matrix to multiply with A.
  * @returns {Matrix} The result of Strassen multiplication of A and B.
- */
-    public static strassenMultiply(A: Matrix, B: Matrix): Matrix {
+ */ //TODO: FIX TO USE THIS maybe
+    public  static strassenMultiply(A: Matrix, B: Matrix): Matrix {
         // Base case when size of matrices is 1x1
         if (A.rows === 1 && A.columns === 1) {
-            let result = Matrix.createZeroMatrix(1, 1);
+            let result:Matrix = Matrix.zeros(1, 1);
             // @ts-ignore
             result.mElements[0].vElements[0] = A.mElements[0].vElements[0] * B.mElements[0].vElements[0];
             return result;
@@ -563,7 +542,7 @@ export class Matrix implements MatrixTypes {
         let c21 = m2.add(m4);
         let c22 = m1.subtract(m2).add(m3).add(m6);
 
-        let result = Matrix.createZeroMatrix(2 * mid, 2 * mid);
+        let result = Matrix.zeros(2 * mid, 2 * mid);
         result.setSubMatrix(0, mid, 0, mid, c11);
         result.setSubMatrix(0, mid, mid, 2 * mid, c12);
         result.setSubMatrix(mid, 2 * mid, 0, mid, c21);
@@ -841,6 +820,22 @@ export class Matrix implements MatrixTypes {
         return new Matrix(unitVectorContainor);
     }
 
+    //TODO: Add column matrix to both factory and add type checking
+    /**
+     * Static factory method to create a matrix with all elements set to one.
+     * @param {number} rows - Number of rows in the matrix.
+     * @param {number} columns - Number of columns in input matrix.
+     * @returns {Matrix} Matrix with all elements set to one.
+     */
+    static ones(rows: number, columns: number): Matrix {
+  
+        let zeroMatrix: Vector[] = [];
+        for (let i = 0; i < rows; i++) {
+            zeroMatrix.push(Vector.ones(columns));
+        }
+        return new Matrix(zeroMatrix);
+    }
+
 
     /**
      * Static factory method to create a matrix with all elements set to zero.
@@ -848,13 +843,35 @@ export class Matrix implements MatrixTypes {
      * @param {number} columns - Number of columns in input matrix.
      * @returns {Matrix} Matrix with all elements set to zero.
      */
-    static createZeroMatrix(rows: number, columns: number): Matrix {
+    static zeros(rows: number, columns: number): Matrix {
         let zeroMatrix: Vector[] = [];
         for (let i = 0; i < rows; i++) {
             zeroMatrix.push(Vector.zeros(columns));
         }
         return new Matrix(zeroMatrix);
     }
+
+    /**
+     * Method used to find the next power of two for a given number.
+     * @param {number} n - The number for which to find the next power of two.
+     * @returns {number} The next power of two for the given number.
+     */
+    private static nextPowerOfTwo(n: number): number {
+        let count = 0;
+
+        // First check if n is already a power of two.
+        if (n > 0 && (n & (n - 1)) === 0)
+            return n;
+
+        while (n !== 0) {
+            n >>= 1;
+            count += 1;
+        }
+
+        // Return next power of 2
+        return 1 << count;
+    }
+
 
 
 }
