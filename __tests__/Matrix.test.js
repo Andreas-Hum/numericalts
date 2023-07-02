@@ -185,16 +185,55 @@ describe('Matrix', () => {
     });
 
 
+    describe('Is upper triangular', () => {
+        it('Upper triangular check with row matrix', () => {
+            const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 1])])
+            expect(solTest.isUpperTriangular()).toBeTruthy()
+        });
+        it('Upper triangular check with column matrix', () => {
+            const solTest = new Matrix([new Vector([[1], [0], [0]]), new Vector([[1], [1], [0]]), new Vector([[0], [0], [1]])])
+            expect(solTest.isUpperTriangular()).toBeTruthy()
+        });
+        it('Upper triangular check with column matrix', () => {
+            const solTest = new Matrix([new Vector([[1], [1], [0]]), new Vector([[1], [1], [1]]), new Vector([[0], [0], [1]])])
+            expect(solTest.isUpperTriangular()).toBeFalsy()
+        });
+    });
+
+    describe('Is lower triangular', () => {
+        it('Lower triangular check with row matrix', () => {
+            const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([1, 1, 0]), new Vector([1, 1, 1])])
+            expect(solTest.isLowerTriangular()).toBeTruthy()
+        });
+        it('Lower triangular check with column matrix', () => {
+            const solTest = new Matrix([new Vector([[1], [1], [1]]), new Vector([[0], [1], [1]]), new Vector([[0], [0], [1]])])
+            expect(solTest.isLowerTriangular()).toBeTruthy()
+        });
+        it('Lower triangular check with non-triangular column matrix', () => {
+            const solTest = new Matrix([new Vector([[1], [1], [0]]), new Vector([[1], [1], [1]]), new Vector([[0], [0], [1]])])
+            expect(solTest.isLowerTriangular()).toBeFalsy()
+        });
+    });
+
+
     describe('Back substitution', () => {
-        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+        it('An upper triangular row matrix with the solution [4,-11,13]  ', () => {
             const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 1])])
             expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
                 new Vector([4, -11, 13]),
             )
         });
 
-        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+        it('An upper triangular row matrix with the solution [52, -37, 13]  ', () => {
             const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 1, 3]), new Vector([0, 0, 1])])
+            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
+                new Vector([52, -37, 13]),
+            )
+        });
+
+        it('An upper triangular column matrix with the solution [4,-11,13]  ', () => {
+            const solTest = new Matrix([new Vector([[1], [0], [0]]), new Vector([[2], [1], [0]]), new Vector([[2], [3], [1]])])
+
             expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
                 new Vector([52, -37, 13]),
             )

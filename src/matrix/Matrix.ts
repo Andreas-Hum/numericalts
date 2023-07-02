@@ -84,16 +84,17 @@ export class Matrix implements MatrixTypes {
      */
     public backSubstitution(B: Vector): Vector {
         let b: Vector = B.isColumnVector ? B.transpose() : B.clone()
+        let solverMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
 
         let sol: number[] = [];
 
-        for (let i = this.rows - 1; i >= 0; i--) {
-            if (this.mElements[i].vElements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
+        for (let i = solverMatrix.rows - 1; i >= 0; i--) {
+            if (solverMatrix.mElements[i].vElements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
             let sum: number = 0;
-            for (let j = this.columns - 1; j > i; --j) {
-                sum += sol[j] * (this.mElements[i].vElements[j] as number)
+            for (let j = solverMatrix.columns - 1; j > i; --j) {
+                sum += sol[j] * (solverMatrix.mElements[i].vElements[j] as number)
             }
-            sol[i] = ((b.vElements[i] as number) - sum) / (this.mElements[i].vElements[i] as number)
+            sol[i] = ((b.vElements[i] as number) - sum) / (solverMatrix.mElements[i].vElements[i] as number)
         }
 
 
