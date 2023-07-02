@@ -331,7 +331,7 @@ export class Matrix implements MatrixTypes {
             throw new MatrixError("Dimention missmatch: Columns of first matrix does not equal the rows of the second", 810)
         }
 
-        let A  = this.clone()
+        let A = this.clone()
         if (B.isRowMatrix) {
             B = B.toColumnMatrix()
         }
@@ -645,17 +645,11 @@ export class Matrix implements MatrixTypes {
      * @throws {MatrixError} - If rows or columns are not a positive number or columnMatrix is not a boolean.
      */
     public static createIdentityMatrix(dimension: number, columnMatrix: boolean = false): Matrix {
-        if (dimension <= 0) {
-            throw new MatrixError("Dimension mismatch: rows or columns can't be negative or zero", 802, { dimension });
-        } else if (typeof columnMatrix !== "boolean") {
-            throw new MatrixError("Invalid boolean", 805, { columnMatrix });
+        if (dimension <= 0 || typeof columnMatrix !== "boolean") {
+            throw new MatrixError("Invalid arguments", 806, { dimension, columnMatrix });
         }
 
-        const unitVectorContainor: Vector[] = [];
-
-        for (let i = 0; i < dimension; i++) {
-            unitVectorContainor.push(Vector.createUnitVector(dimension, i, columnMatrix));
-        }
+        const unitVectorContainor: Vector[] = Array.from({ length: dimension }, (_, i) => Vector.createUnitVector(dimension, i, columnMatrix));
 
         return new Matrix(unitVectorContainor);
     }
