@@ -61,29 +61,62 @@ describe('Matrix', () => {
         })
     });
 
+
+    describe('Matrix addition', () => {
+        it('Matrix addition with two 3x3 row matrixes ', () => {
+            expect(rowMatrix.add(rowMatrix).mElements).toEqual([
+                new Vector([2, 4, 6]),
+                new Vector([8, 10, 12])
+            ])
+        });
+
+        it('Matrix addition with two 3x3 column matrixes ', () => {
+            expect(columnMatrix.add(columnMatrix).mElements).toEqual([
+                new Vector([[2], [4], [6]]),
+                new Vector([[8], [10], [12]])
+            ])
+        });
+
+        it('Matrix addition with two 3x3 column matrixes ', () => {
+            const testings = new Matrix([new Vector([[1], [4]]),
+            new Vector([[2], [5]]),
+            new Vector([[3], [6]])])
+
+            expect(rowMatrix.add(testings).mElements).toEqual([
+                new Vector([2, 4, 6]),
+                new Vector([8, 10, 12])
+            ])
+        });
+
+        it('Error: Different dimentions', () => {
+            expect(() => rowMatrix.add(columnMatrix)).toThrow()
+        });
+    });
+
+
     describe('Matrix identity', () => {
         it('A 3x3 identity row matrix', () => {
-            const matrix = Matrix.createIdentityMatrix(3);  // Create a 3x3 identity row matrix.
+            const matrix = Matrix.createIdentityMatrix(3);
 
-            expect(matrix.rows).toBe(3);  // We have 3 rows.
-            expect(matrix.columns).toBe(3);  // We have 3 columns.
+            expect(matrix.rows).toBe(3);
+            expect(matrix.columns).toBe(3);
 
             matrix.mElements.forEach((unitVector, index) => {
-                expect(unitVector.isUnitVector()).toBe(true);  // The vector should be a unit vector.
+                expect(unitVector.isUnitVector()).toBe(true);
 
-                // Find the index of '1' (where the unit vector's magnitude is) in the elements of the unit vector.
+
                 const indexOfOne = unitVector.vElements.findIndex(element => element === 1);
-                expect(indexOfOne).toBe(index);  // This index should match the current index of the unit vector in the matrix.
+                expect(indexOfOne).toBe(index);
             });
         });
 
         it('A 3x3 identity column matrix', () => {
-            const matrix = Matrix.createIdentityMatrix(3, true);  // Create a 3x3 identity column matrix.
+            const matrix = Matrix.createIdentityMatrix(3, true);
 
-            expect(matrix.rows).toBe(3);  // It should be a 3x3 matrix.
+            expect(matrix.rows).toBe(3);
             expect(matrix.columns).toBe(3);
             matrix.mElements.forEach((unitVector, index) => {
-                expect(unitVector.isUnitVector()).toBe(true);  // The vector should be a unit vector.
+                expect(unitVector.isUnitVector()).toBe(true);
                 const indices = unitVector.vElements.map((subarray) => subarray.findIndex((element) => element === 1));
                 expect(indices.findIndex((e) => e === 0)).toBe(index);
             });

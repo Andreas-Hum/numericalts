@@ -74,12 +74,20 @@ export class Matrix implements MatrixTypes {
      * @throws {MatrixError} If the dimensions of the matrices do not match.
      */
     public add(B: Matrix): Matrix {
-        if (this.rows !== B.rows || this.columns !== B.columns) {
+        if (this.shape !== B.shape) {
             throw new MatrixError('Dimension mismatch: Dimensions of the matrices must be the same for subtraction.', 802);
         }
 
+        if (this.isColumnMatrix && B.isRowMatrix) {
+            B = B.toColumnMatrix()
+        } else if (this.isRowMatrix && B.isColumnMatrix) {
+            B = B.toRowMatrix()
+        } else {
+            //Fast add here
+        }
+
         let resultMatrix: Vector[] = [];
-        for (let i = 0; i < this.rows; i++) {
+        for (let i = 0; i < (this.isRowMatrix ? this.rows : this.columns); i++) {
             resultMatrix.push(this.mElements[i].add(B.mElements[i]));
         }
         return new Matrix(resultMatrix);
@@ -102,6 +110,8 @@ export class Matrix implements MatrixTypes {
      * @throws {MatrixError} If the matrix contains a zero on the diagonal (unsolvable system)
      */
     public backSubstitution(B: Vector): Vector {
+        B = B instanceof Vector ? B : new Vector(B);
+
         let b: Vector = B.isColumnVector ? B.transpose() : B.clone()
         let solverMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
 
