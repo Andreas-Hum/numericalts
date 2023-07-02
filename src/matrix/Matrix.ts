@@ -93,7 +93,7 @@ export class Matrix implements MatrixTypes {
             for (let j = this.columns - 1; j > i; --j) {
                 sum += sol[j] * (this.mElements[i].vElements[j] as number)
             }
-            sol[i] = ((B.vElements[i] as number) - sum) / (this.mElements[i].vElements[i] as number)
+            sol[i] = ((b.vElements[i] as number) - sum) / (this.mElements[i].vElements[i] as number)
         }
 
 

@@ -184,9 +184,43 @@ describe('Matrix', () => {
 
     });
 
-    describe('Matrix naive multiplication', () => {
-        
 
+    describe('Back substitution', () => {
+        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+            const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 1])])
+            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
+                new Vector([4, -11, 13]),
+            )
+        });
+
+        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+            const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 1, 3]), new Vector([0, 0, 1])])
+            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
+                new Vector([52, -37, 13]),
+            )
+        });
+
+        it('Error: 0 in main diagonal', () => {
+            const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 0, 3]), new Vector([0, 0, 1])])
+            expect(() => solTest.backSubstitution(new Vector([4, 2, 13]))).toThrow()
+        });
+    });
+
+
+    describe('Back substitution', () => {
+        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+            const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 1])])
+            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
+                new Vector([4, -11, 13]),
+            )
+        });
+
+        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+            const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 1, 3]), new Vector([0, 0, 1])])
+            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
+                new Vector([52, -37, 13]),
+            )
+        });
     });
 
     describe('QR decomposition', () => {
