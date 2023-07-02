@@ -184,6 +184,11 @@ describe('Matrix', () => {
 
     });
 
+    describe('Matrix naive multiplication', () => {
+        
+
+    });
+
     describe('QR decomposition', () => {
         it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
             const testMatrix = new Matrix([new Vector([1, 1]), new Vector([0, 1])])

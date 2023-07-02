@@ -145,7 +145,8 @@ export class Vector implements VectorTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public clone(): Vector {
         //@ts-ignore
-        return new Vector([...this.vElements]);
+        const clonedElements: number[] | number[][] = this.vElements.map(vector => vector);
+        return new Vector(clonedElements);
     }
     /**
      * Cross product operation between the current vector and the provided vector.
@@ -617,16 +618,19 @@ export class Vector implements VectorTypes {
      * Transposes the vector. Changes a row vector into a column vector and vice versa.
      * @returns  {void}
      */
-    public transpose(): void {
-        this.vElements = this.isColumnVector ?
-            this.vElements.flat() :
+    public transpose(): Vector {
+        let clone: Vector = this.clone()
+
+        clone.vElements = clone.isColumnVector ?
+            clone.vElements.flat() :
             //@ts-ignore
-            this.vElements.map((e: number) => [e]);
+            clone.vElements.map((e: number) => [e]);
 
-        [this.isRowVector, this.isColumnVector] = [this.isColumnVector, this.isRowVector];
+        [clone.isRowVector, clone.isColumnVector] = [clone.isColumnVector, clone.isRowVector];
 
-        this.updateDimensions();
-        this.updateShape();
+        clone.updateDimensions();
+        clone.updateShape();
+        return clone;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

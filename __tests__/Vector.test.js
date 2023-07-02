@@ -170,7 +170,7 @@ describe('Vector', () => {
         });
 
         it("Subtract\'s a row vector and an column array", () => {
-            const res =  rowVector123.subtract(arrayColumn123)
+            const res = rowVector123.subtract(arrayColumn123)
             expect(res.vElements).toStrictEqual([0, 0, 0]);
         });
 
@@ -198,7 +198,7 @@ describe('Vector', () => {
             const errorVector = new Vector([1, 2, 3, 4])
             expect(() => rowVector123.subtract(rowVector123, errorVector)).toThrow()
         });
-        
+
 
     });
 
@@ -225,19 +225,19 @@ describe('Vector', () => {
     describe('Vector normalization', () => {
 
         it('Normalizing a row vector using Euclidean norm', () => {
-            const res =  rowVector123.normalize("euclidean");
+            const res = rowVector123.normalize("euclidean");
             const expected = [1 / Math.sqrt(14), 2 / Math.sqrt(14), 3 / Math.sqrt(14)];
             expected.forEach((val, i) => expect(res.vElements[i]).toBeCloseTo(val));
         });
 
         it('Normalizing a column vector using Infinity norm', () => {
-            const res =  columnVector123.normalize("infinity");
+            const res = columnVector123.normalize("infinity");
             const expected = [[1 / 3], [2 / 3], [1]];
             expected.forEach((val, i) => expect(res.vElements[i][0]).toBeCloseTo(val[0]));
         });
 
         it('Normalizing a row vector using Manhattan norm', () => {
-            const res =  rowVector123.normalize("manhattan");
+            const res = rowVector123.normalize("manhattan");
             const expected = [1 / 6, 2 / 6, 3 / 6];
             expected.forEach((val, i) => expect(res.vElements[i]).toBeCloseTo(val));
         });
@@ -256,12 +256,12 @@ describe('Vector', () => {
 
     describe('Vector scaling', () => {
         it('Scales a row vector', () => {
-            const res =  rowVector123.scale(2);
+            const res = rowVector123.scale(2);
             expect(res.vElements).toStrictEqual([2, 4, 6]);
         });
 
         it('Scales a column vector', () => {
-            const res =  columnVector123.scale(2);
+            const res = columnVector123.scale(2);
             expect(res.vElements).toStrictEqual([[2], [4], [6]]);
         });
 
@@ -332,8 +332,8 @@ describe('Vector', () => {
         });
 
         it('Angle between a row vector and column vector in radians', () => {
-            unitVector01.transpose()
-            expect(unitVector10.angle(unitVector01)).toBeCloseTo(Math.PI / 2);
+
+            expect(unitVector10.angle(unitVector01.transpose())).toBeCloseTo(Math.PI / 2);
         });
 
 
@@ -564,13 +564,13 @@ describe('Vector', () => {
 
     describe('Vector transpose', () => {
         it('Transpose of a row vector', () => {
-            rowVector123.transpose()
-            expect(rowVector123.equal(columnVector123)).toBeTruthy();
+
+            expect(rowVector123.transpose().equal(columnVector123)).toBeTruthy();
 
         });
         it('Transpose of a column vector', () => {
-            columnVector123.transpose()
-            expect(columnVector123.equal(rowVector123)).toBeTruthy();
+
+            expect(columnVector123.transpose().equal(rowVector123)).toBeTruthy();
 
         });
     });

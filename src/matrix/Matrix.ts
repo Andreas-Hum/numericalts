@@ -83,6 +83,8 @@ export class Matrix implements MatrixTypes {
      * @throws {MatrixError} If the matrix contains a zero on the diagonal (unsolvable system)
      */
     public backSubstitution(B: Vector): Vector {
+        let b: Vector = B.isColumnVector ? B.transpose() : B.clone()
+
         let sol: number[] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
@@ -110,7 +112,7 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} the same matrix
      */
     public clone(): Matrix {
-        const clonedElements = this.mElements.map(vector => vector.clone());
+        const clonedElements: Vector[] = this.mElements.map(vector => vector.clone());
         return new Matrix(clonedElements);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,13 +226,13 @@ export class Matrix implements MatrixTypes {
         if (this.rows !== this.columns) throw new Error("Uninvertable matrix: not a square matrix");
 
         const identityMatrix: Matrix = Matrix.createIdentityMatrix(this.rows);
-        const invertedMatrixElements: Vector[] = [];
+        let invertedMatrixElements: Vector[] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
             invertedMatrixElements[i] = this.backSubstitution(identityMatrix.mElements[this.rows - i - 1]);
         }
 
-        invertedMatrixElements.map(ele => ele.transpose())
+        invertedMatrixElements = invertedMatrixElements.map(ele => ele.transpose())
         invertedMatrixElements.reverse()
 
         return (new Matrix(invertedMatrixElements).toRowMatrix());
@@ -429,51 +431,7 @@ export class Matrix implements MatrixTypes {
         return new Matrix(rowMatrix);  // Returns a new matrix and leaves the current one unaffected
     }
 
-    /**
-     * Transposes the current matrix. Rows will become columns and columns will become rows.
-     * It modifies the 'isColumnMatrix', 'isRowMatrix', 'isWide' and 'isTall' properties to
-     * reflect the change. Also, 'columns' and 'rows' properties are swapped.
-     *
-     * @returns {Matrix} The transposed matrix; a new instance of the matrix.
-     */
-    public transpose(): Matrix {
-        let newMatrix = this.clone(); // Assuming you have a method to clone the matrix.
-        // If not, you will need to implement it.
 
-        if (newMatrix.isColumnMatrix) {
-
-            newMatrix = newMatrix.toRowMatrix()
-            newMatrix = newMatrix.toColumnMatrix()
-            newMatrix.mElements.map(ele => ele.transpose())
-
-            newMatrix.isColumnMatrix = false;
-            newMatrix.isRowMatrix = true;
-        } else {
-
-            newMatrix = newMatrix.toColumnMatrix()
-            newMatrix = newMatrix.toRowMatrix()
-            newMatrix.mElements.map(ele => ele.transpose())
-
-            newMatrix.isColumnMatrix = true;
-            newMatrix.isRowMatrix = false;
-        }
-
-        if (newMatrix.isWide) {
-            newMatrix.isWide = false;
-            newMatrix.isTall = true;
-        } else if (newMatrix.isTall) {
-            newMatrix.isWide = true;
-            newMatrix.isTall = false;
-
-        }
-        let temp = newMatrix.columns;
-        newMatrix.columns = newMatrix.rows;
-        newMatrix.rows = temp;
-
-        newMatrix.updateShape();
-
-        return newMatrix;
-    }
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * U
@@ -586,6 +544,52 @@ export class Matrix implements MatrixTypes {
     * sum, mean and transpose
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+ * Transposes the current matrix. Rows will become columns and columns will become rows.
+ * It modifies the 'isColumnMatrix', 'isRowMatrix', 'isWide' and 'isTall' properties to
+ * reflect the change. Also, 'columns' and 'rows' properties are swapped.
+ *
+ * @returns {Matrix} The transposed matrix; a new instance of the matrix.
+ */
+    public transpose(): Matrix {
+        let newMatrix = this.clone(); // Assuming you have a method to clone the matrix.
+        // If not, you will need to implement it.
+
+        if (newMatrix.isColumnMatrix) {
+
+            newMatrix = newMatrix.toRowMatrix()
+            newMatrix = newMatrix.toColumnMatrix()
+            newMatrix.mElements = newMatrix.mElements.map(ele => ele.transpose())
+
+            newMatrix.isColumnMatrix = false;
+            newMatrix.isRowMatrix = true;
+        } else {
+
+            newMatrix = newMatrix.toColumnMatrix()
+            newMatrix = newMatrix.toRowMatrix()
+            newMatrix.mElements = newMatrix.mElements.map(ele => ele.transpose())
+
+            newMatrix.isColumnMatrix = true;
+            newMatrix.isRowMatrix = false;
+        }
+
+        if (newMatrix.isWide) {
+            newMatrix.isWide = false;
+            newMatrix.isTall = true;
+        } else if (newMatrix.isTall) {
+            newMatrix.isWide = true;
+            newMatrix.isTall = false;
+
+        }
+        let temp = newMatrix.columns;
+        newMatrix.columns = newMatrix.rows;
+        newMatrix.rows = temp;
+
+        newMatrix.updateShape();
+
+        return newMatrix;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
