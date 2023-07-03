@@ -101,16 +101,18 @@ export class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Performs back-propagation on an upper triangular matrix to solve
+     * Performs back-substitution on an upper triangular matrix to solve
      * a system of linear equations.
      *
      * @returns {number[]} Solution to the system of linear equations
      * represented by the current matrix.
      *
-     * @throws {MatrixError} If the matrix contains a zero on the diagonal (unsolvable system)
+     * @throws {MatrixError} if the matrix is not upper diagonal, or if the matrix contains a zero on the diagonal (unsolvable system)
      */
     public backSubstitution(B: Vector): Vector {
         B = B instanceof Vector ? B : new Vector(B);
+
+        if (!this.isLowerTriangular()) throw new MatrixError("Matrix is not upper triangular", 815);
 
         let b: Vector = B.isColumnVector ? B.transpose() : B.clone()
         let solverMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
@@ -118,7 +120,7 @@ export class Matrix implements MatrixTypes {
         let sol: number[] = [];
 
         for (let i = solverMatrix.rows - 1; i >= 0; i--) {
-            if (solverMatrix.mElements[i].vElements[i] === 0) throw new Error("Unsolvable system: zero on diagonal");
+            if (solverMatrix.mElements[i].vElements[i] === 0) throw new MatrixError("Unsolvable system: zero on diagonal", 814);
             let sum: number = 0;
             for (let j = solverMatrix.columns - 1; j > i; --j) {
                 sum += sol[j] * (solverMatrix.mElements[i].vElements[j] as number)
@@ -175,6 +177,7 @@ export class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //TODO: make static
     /**
      * Returns a sub matrix from the given matrix within the provided row and column bounds.
      * @param {number} startRow - Starting row index of the sub matrix.
@@ -502,10 +505,10 @@ export class Matrix implements MatrixTypes {
  * @param {Matrix} B - B matrix to multiply with A.
  * @returns {Matrix} The result of Strassen multiplication of A and B.
  */ //TODO: FIX TO USE THIS maybe
-    public  static strassenMultiply(A: Matrix, B: Matrix): Matrix {
+    public static strassenMultiply(A: Matrix, B: Matrix): Matrix {
         // Base case when size of matrices is 1x1
         if (A.rows === 1 && A.columns === 1) {
-            let result:Matrix = Matrix.zeros(1, 1);
+            let result: Matrix = Matrix.zeros(1, 1);
             // @ts-ignore
             result.mElements[0].vElements[0] = A.mElements[0].vElements[0] * B.mElements[0].vElements[0];
             return result;
@@ -828,7 +831,7 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} Matrix with all elements set to one.
      */
     static ones(rows: number, columns: number): Matrix {
-  
+
         let zeroMatrix: Vector[] = [];
         for (let i = 0; i < rows; i++) {
             zeroMatrix.push(Vector.ones(columns));

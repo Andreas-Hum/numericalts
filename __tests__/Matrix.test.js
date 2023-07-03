@@ -204,7 +204,7 @@ describe('Matrix', () => {
     });
 
 
-    describe('transpose', () => {
+    describe('Matrix transpose', () => {
         it('Transpose a row matrix', () => {
             const columnMatrix = rowMatrix.transpose();
 

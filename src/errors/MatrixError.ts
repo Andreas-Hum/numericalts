@@ -25,6 +25,7 @@ export default class MatrixError extends Error {
         // 812: Inverse of Non-Square Matrix Error - Occurs when trying to calculate the inverse of a non-square matrix.
         // 813: Matrix Norm Error - Unknown error.
         // 814: Unsolvabe system
+        // 815: Back substitution error - matrix is not upper triangular
 
 
         this.statusCode = statusCode;
