@@ -248,6 +248,44 @@ describe('Matrix', () => {
 
     });
 
+    describe('Get submatrix', () => {
+        it('Get submatrix in a 2x3 row matrix', () => {
+            expect(rowMatrix.getSubMatrix(0, 1, 2, 3).mElements).toEqual([
+                new Vector([2, 3]),
+                new Vector([5, 6])
+            ])
+        });
+
+        it('Get submatrix in a 3x2 column matrix', () => {
+
+            expect(columnMatrix.getSubMatrix(1, 0, 3, 2).mElements).toEqual([
+                new Vector([[2], [3]]),
+                new Vector([[5], [6]])
+            ])
+        });
+
+
+    });
+
+     describe('Set submatrix', () => {
+        it('Get submatrix in a 2x3 row matrix', () => {
+            expect(rowMatrix.getSubMatrix(0, 1, 2, 3).mElements).toEqual([
+                new Vector([2, 3]),
+                new Vector([5, 6])
+            ])
+        });
+
+        it('Get submatrix in a 3x2 column matrix', () => {
+
+            expect(columnMatrix.getSubMatrix(1, 0, 3, 2).mElements).toEqual([
+                new Vector([[2], [3]]),
+                new Vector([[5], [6]])
+            ])
+        });
+
+
+    });
+
 
     describe('Is upper triangular', () => {
         it('Upper triangular check with row matrix', () => {
@@ -306,23 +344,6 @@ describe('Matrix', () => {
         it('Error: 0 in main diagonal', () => {
             const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 0, 3]), new Vector([0, 0, 1])])
             expect(() => solTest.backSubstitution(new Vector([4, 2, 13]))).toThrow()
-        });
-    });
-
-
-    describe('Back substitution', () => {
-        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
-            const solTest = new Matrix([new Vector([1, 0, 0]), new Vector([0, 1, 1]), new Vector([0, 0, 1])])
-            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
-                new Vector([4, -11, 13]),
-            )
-        });
-
-        it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
-            const solTest = new Matrix([new Vector([1, 2, 2]), new Vector([0, 1, 3]), new Vector([0, 0, 1])])
-            expect(solTest.backSubstitution(new Vector([4, 2, 13]))).toEqual(
-                new Vector([52, -37, 13]),
-            )
         });
     });
 

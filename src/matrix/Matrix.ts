@@ -112,7 +112,7 @@ export class Matrix implements MatrixTypes {
     public backSubstitution(B: Vector): Vector {
         B = B instanceof Vector ? B : new Vector(B);
 
-        if (!this.isLowerTriangular()) throw new MatrixError("Matrix is not upper triangular", 815);
+        if (!this.isUpperTriangular()) throw new MatrixError("Matrix is not upper triangular", 815);
 
         let b: Vector = B.isColumnVector ? B.transpose() : B.clone()
         let solverMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
@@ -187,13 +187,14 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} The subMatrix within the given bounds.
      */
     public getSubMatrix(startRow: number, startCol: number, endRow: number, endCol: number): Matrix {
+        const getMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
         let subMatrix: Vector[] = []
         for (let i = startRow; i < endRow; i++) {
-            let row: Vector = this.mElements[i];
+            let row: Vector = getMatrix.mElements[i];
             let subRow: Vector = Vector.getSubVector(row, startCol, endCol);
             subMatrix.push(subRow);
         }
-        return new Matrix(subMatrix);
+        return this.isColumnMatrix ? (new Matrix(subMatrix)).toColumnMatrix() : new Matrix(subMatrix);
     }
 
 
@@ -490,7 +491,7 @@ export class Matrix implements MatrixTypes {
      * @param {number} colEnd - ending column index for the submatrix.
      * @param {Matrix} subMatrix - the submatrix to be set in the current matrix.
      */
-    public setSubMatrix(rowStart: number, rowEnd: number, colStart: number, colEnd: number, subMatrix: Matrix): void {
+    public setSubMatrix(subMatrix: Matrix, rowStart: number, rowEnd: number, colStart: number, colEnd: number): void {
         for (let i = rowStart, i_sub = 0; i < rowEnd; i++, i_sub++) {
             for (let j = colStart, j_sub = 0; j < colEnd; j++, j_sub++) {
                 this.mElements[i].vElements[j] = subMatrix.mElements[i_sub].vElements[j_sub];
@@ -546,10 +547,10 @@ export class Matrix implements MatrixTypes {
         let c22 = m1.subtract(m2).add(m3).add(m6);
 
         let result = Matrix.zeros(2 * mid, 2 * mid);
-        result.setSubMatrix(0, mid, 0, mid, c11);
-        result.setSubMatrix(0, mid, mid, 2 * mid, c12);
-        result.setSubMatrix(mid, 2 * mid, 0, mid, c21);
-        result.setSubMatrix(mid, 2 * mid, mid, 2 * mid, c22);
+        result.setSubMatrix(c11, 0, mid, 0, mid);
+        result.setSubMatrix(c12, 0, mid, mid, 2 * mid);
+        result.setSubMatrix(c21, mid, 2 * mid, 0, mid);
+        result.setSubMatrix(c22, mid, 2 * mid, mid, 2 * mid);
         return result;
     }
 
