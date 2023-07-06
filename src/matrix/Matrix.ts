@@ -424,17 +424,18 @@ export class Matrix implements MatrixTypes {
      * @returns {Matrix} The padded matrix with dimensions as a power of two.
      */
     public padMatrixToPowerOfTwo(): Matrix {
-        const maxDimension = Math.max(this.rows, this.columns);
+        let padMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
+        const maxDimension = Math.max(padMatrix.rows, padMatrix.columns);
         const nextPower = Matrix.nextPowerOfTwo(maxDimension);
 
-        if (nextPower === this.rows && nextPower === this.columns)
-            return this;
+        if (nextPower === padMatrix.rows && nextPower === padMatrix.columns)
+            return padMatrix;
 
         const paddedMatrix = Matrix.zeros(nextPower, nextPower);
 
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                paddedMatrix.mElements[i].vElements[j] = this.mElements[i].vElements[j];
+        for (let i = 0; i < padMatrix.rows; i++) {
+            for (let j = 0; j < padMatrix.columns; j++) {
+                paddedMatrix.mElements[i].vElements[j] = padMatrix.mElements[i].vElements[j];
             }
         }
         return paddedMatrix;
@@ -847,10 +848,10 @@ export class Matrix implements MatrixTypes {
      * @param {number} columns - Number of columns in input matrix.
      * @returns {Matrix} Matrix with all elements set to zero.
      */
-    static zeros(rows: number, columns: number): Matrix {
+    static zeros(rows: number, columns: number, isColumnMatrix: boolean = false): Matrix {
         let zeroMatrix: Vector[] = [];
         for (let i = 0; i < rows; i++) {
-            zeroMatrix.push(Vector.zeros(columns));
+            zeroMatrix.push(Vector.zeros(columns, isColumnMatrix));
         }
         return new Matrix(zeroMatrix);
     }

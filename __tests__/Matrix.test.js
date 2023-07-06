@@ -289,6 +289,34 @@ describe('Matrix', () => {
 
     });
 
+    describe('Pad matrix to power of two', () => {
+
+        it('Pading of a 2x3 row matrix', () => {
+            expect(rowMatrix.padMatrixToPowerOfTwo().mElements).toEqual([
+                new Vector([1, 2, 3, 0]),
+                new Vector([4, 5, 6, 0]),
+                new Vector([0, 0, 0, 0]),
+                new Vector([0, 0, 0, 0])
+            ])
+        });
+
+        it('Pading of a 3x2 row matrix', () => {
+            expect(columnMatrix.padMatrixToPowerOfTwo().mElements).toEqual([
+                new Vector([1, 4, 0, 0]),
+                new Vector([2, 5, 0, 0]),
+                new Vector([3, 6, 0, 0]),
+                new Vector([0, 0, 0, 0])
+            ])
+        });
+
+        it('Pading of a square matrix', () => {
+            const unit = Matrix.createIdentityMatrix(2)
+            expect(unit.padMatrixToPowerOfTwo()).toEqual(unit)
+        });
+
+
+    });
+
 
     describe('Is upper triangular', () => {
         it('Upper triangular check with row matrix', () => {
