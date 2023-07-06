@@ -879,6 +879,28 @@ export class Matrix implements MatrixTypes {
         return 1 << count;
     }
 
+    /**
+     * Generates a random matrix of the specified size with values within a given range.
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
+     * @param {number} minValue - The minimum value for the random numbers (inclusive).
+     * @param {number} maxValue - The maximum value for the random numbers (exclusive).
+     * @returns {Matrix} The randomly generated matrix.
+     */
+    public static random(rows: number, columns: number, minValue: number, maxValue: number): Matrix {
+        const entries: number[][] = [];
+        for (let i = 0; i < rows; i++) {
+            const row: number[] = [];
+            for (let j = 0; j < columns; j++) {
+                const randomValue = Math.random() * (maxValue - minValue) + minValue;
+                row.push(randomValue);
+            }
+            entries.push(row);
+        }
+        return new Matrix(entries);
+    }
+
 
 
 }
