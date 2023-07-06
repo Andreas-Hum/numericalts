@@ -267,22 +267,25 @@ describe('Matrix', () => {
 
     });
 
-     describe('Set submatrix', () => {
-        it('Get submatrix in a 2x3 row matrix', () => {
-            expect(rowMatrix.getSubMatrix(0, 1, 2, 3).mElements).toEqual([
-                new Vector([2, 3]),
-                new Vector([5, 6])
+    describe('Set submatrix', () => {
+        const rowSubmatrix = new Matrix([[1, 1], [1, 1]])
+        const columnSubmatrix = new Matrix([[[1], [1]], [[1], [1]]])
+
+        it('Set submatrix in a 2x3 row matrix', () => {
+            rowMatrix.setSubMatrix(rowSubmatrix, 0, 2, 1, 3)
+            expect(rowMatrix.mElements).toEqual([
+                new Vector([1, 1, 1]),
+                new Vector([4, 1, 1])
             ])
         });
 
-        it('Get submatrix in a 3x2 column matrix', () => {
-
-            expect(columnMatrix.getSubMatrix(1, 0, 3, 2).mElements).toEqual([
-                new Vector([[2], [3]]),
-                new Vector([[5], [6]])
+        it('Set submatrix in a 3x2 column matrix', () => {
+            columnMatrix.setSubMatrix(columnSubmatrix, 0, 2, 0, 2)
+            expect(columnMatrix.mElements).toEqual([
+                new Vector([[1], [1], [3]]),
+                new Vector([[1], [1], [6]])
             ])
         });
-
 
     });
 
