@@ -186,7 +186,7 @@ export class Matrix implements MatrixTypes {
      * @param {number} endCol - Ending column index of the sub matrix.
      * @returns {Matrix} The subMatrix within the given bounds.
      */
-    public getSubMatrix(startRow: number, startCol: number, endRow: number, endCol: number): Matrix {
+    public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix {
         const getMatrix: Matrix = this.isColumnMatrix ? this.toRowMatrix() : this
         let subMatrix: Vector[] = []
         for (let i = startRow; i < endRow; i++) {
@@ -507,51 +507,53 @@ export class Matrix implements MatrixTypes {
  * @param {Matrix} B - B matrix to multiply with A.
  * @returns {Matrix} The result of Strassen multiplication of A and B.
  */ //TODO: FIX TO USE THIS maybe
-    public static strassenMultiply(A: Matrix, B: Matrix): Matrix {
+    public strassenMultiply(B: Matrix): Matrix {
         // Base case when size of matrices is 1x1
-        if (A.rows === 1 && A.columns === 1) {
+        if (this.rows === 1 && this.columns === 1) {
             let result: Matrix = Matrix.zeros(1, 1);
-            // @ts-ignore
-            result.mElements[0].vElements[0] = A.mElements[0].vElements[0] * B.mElements[0].vElements[0];
+            //@ts-ignore
+            result.mElements[0].vElements[0] = this.mElements[0].vElements[0] * B.mElements[0].vElements[0];
             return result;
         }
 
         // Pad matrix to next power of two if necessary
-        if (A.rows !== A.columns || A.rows !== B.rows || A.columns !== B.columns ||
-            (A.rows & (A.rows - 1)) !== 0) {
-            A = A.padMatrixToPowerOfTwo();
-            B = B.padMatrixToPowerOfTwo();
-        }
+        let AClone: Matrix = this.padMatrixToPowerOfTwo();
+        let BClone: Matrix = B.padMatrixToPowerOfTwo();
 
         // Divide matrices into quarters
-        const mid = A.rows / 2;
-        let a11 = A.getSubMatrix(0, mid, 0, mid);
-        let a12 = A.getSubMatrix(0, mid, mid, 2 * mid);
-        let a21 = A.getSubMatrix(mid, 2 * mid, 0, mid);
-        let a22 = A.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
-        let b11 = B.getSubMatrix(0, mid, 0, mid);
-        let b12 = B.getSubMatrix(0, mid, mid, 2 * mid);
-        let b21 = B.getSubMatrix(mid, 2 * mid, 0, mid);
-        let b22 = B.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
+        const mid = AClone.rows / 2;
+        let a11: Matrix = AClone.getSubMatrix(0, mid, 0, mid);
+        let a12: Matrix = AClone.getSubMatrix(0, mid, mid, 2 * mid);
+        let a21: Matrix = AClone.getSubMatrix(mid, 2 * mid, 0, mid);
+        let a22: Matrix = AClone.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
+        let b11: Matrix = BClone.getSubMatrix(0, mid, 0, mid);
+        let b12: Matrix = BClone.getSubMatrix(0, mid, mid, 2 * mid);
+        let b21: Matrix = BClone.getSubMatrix(mid, 2 * mid, 0, mid);
+        let b22: Matrix = BClone.getSubMatrix(mid, 2 * mid, mid, 2 * mid);
 
-        let m1 = Matrix.strassenMultiply(a11.add(a22), b11.add(b22));
-        let m2 = Matrix.strassenMultiply(a21.add(a22), b11);
-        let m3 = Matrix.strassenMultiply(a11, b12.subtract(b22));
-        let m4 = Matrix.strassenMultiply(a22, b21.subtract(b11));
-        let m5 = Matrix.strassenMultiply(a11.add(a12), b22);
-        let m6 = Matrix.strassenMultiply(a21.subtract(a11), b11.add(b12));
-        let m7 = Matrix.strassenMultiply(a12.subtract(a22), b21.add(b22));
+        let m1: Matrix = a11.add(a22).strassenMultiply(b11.add(b22));
+        let m2: Matrix = a21.add(a22).strassenMultiply(b11);
+        let m3: Matrix = a11.strassenMultiply(b12.subtract(b22));
+        let m4: Matrix = a22.strassenMultiply(b21.subtract(b11));
+        let m5: Matrix = a11.add(a12).strassenMultiply(b22);
+        let m6: Matrix = a21.subtract(a11).strassenMultiply(b11.add(b12));
+        let m7: Matrix = a12.subtract(a22).strassenMultiply(b21.add(b22));
 
-        let c11 = m1.add(m4).subtract(m5).add(m7);
-        let c12 = m3.add(m5);
-        let c21 = m2.add(m4);
-        let c22 = m1.subtract(m2).add(m3).add(m6);
+        let c11: Matrix = m1.add(m4).subtract(m5).add(m7);
+        let c12: Matrix = m3.add(m5);
+        let c21: Matrix = m2.add(m4);
+        let c22: Matrix = m1.subtract(m2).add(m3).add(m6);
 
         let result = Matrix.zeros(2 * mid, 2 * mid);
         result.setSubMatrix(c11, 0, mid, 0, mid);
         result.setSubMatrix(c12, 0, mid, mid, 2 * mid);
         result.setSubMatrix(c21, mid, 2 * mid, 0, mid);
         result.setSubMatrix(c22, mid, 2 * mid, mid, 2 * mid);
+
+        if (!this.isSquare || !B.isSquare) {
+            result = result.getSubMatrix(0, this.rows, 0, B.columns);
+        }
+
         return result;
     }
 
