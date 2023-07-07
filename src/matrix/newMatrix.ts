@@ -123,6 +123,22 @@ export class Matrix {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+    * Gets the value of an element in the matrix.
+    * @public
+   * @param {number} row - The row index of the element starts from zero.
+    * @param {number} column - The row index of the element starts from zero.
+    * @returns {number} The value of the element.
+    * @throws {MatrixError} - If index is out of bounds
+    */
+    public getElement(row: number, column: number): number {
+        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
+        const index: number = row * this.columns + column;
+        if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
+        return this.mElements[index];
+    }
+
+
+    /**
      * Sets the value of an element in the matrix.
      * @public
      * @param {number} row - The row index of the element starts from zero.
@@ -138,20 +154,6 @@ export class Matrix {
         this.mElements[index] = value;
     }
 
-    /**
-     * Gets the value of an element in the matrix.
-     * @public
-    * @param {number} row - The row index of the element starts from zero.
-     * @param {number} column - The row index of the element starts from zero.
-     * @returns {number} The value of the element.
-     * @throws {MatrixError} - If index is out of bounds
-     */
-    public getElement(row: number, column: number): number {
-        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
-        const index: number = row * this.columns + column;
-        if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
-        return this.mElements[index];
-    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -373,7 +375,7 @@ export class Matrix {
      */
     public static reshape(array: number[], newRows: number, newColumns: number): Matrix {
         if (array.length !== newRows * newColumns) throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
-        if (!Array.isArray(array) || typeof newRows !== "number" || typeof newColumns !== "number") throw new MatrixError("Invalid reshape dimensions", 806, { array, newRows, newColumns });
+        if (!Array.isArray(array) || typeof newRows !== "number" || typeof newColumns !== "number") throw new MatrixError("Invalid argument", 606, { array, newRows, newColumns });
 
 
         const newEntries: number[][] = [];

@@ -76,8 +76,12 @@ describe('Matrix', () => {
             expect(threeByTwo.getElement(2, 1)).toEqual(6)
         })
 
-        it('Error: out of bounds', () => {
+        it('Error: Out of bounds', () => {
             expect(() => twoByThree.getElement(10, 10)).toThrow()
+        })
+
+        it('Error: Invalid arguments', () => {
+            expect(() => twoByThree.getElement("10", 10)).toThrow()
         })
     })
 
@@ -104,8 +108,12 @@ describe('Matrix', () => {
             expect(() => twoByThree.setElement(10, 10, 10)).toThrow()
         })
 
-        it('Error: Invalid element', () => {
+        it('Error: Invalid value', () => {
             expect(() => twoByThree.setElement(0, 0, "error")).toThrow()
+        })
+
+        it('Error: Invalid argument', () => {
+            expect(() => twoByThree.setElement(0, "0", 10)).toThrow()
         })
     })
 
@@ -128,6 +136,10 @@ describe('Matrix', () => {
 
         it('Error: Incompatible dimensions', () => {
             expect(() => twoByThree.add(threeByTwo)).toThrow()
+        })
+
+        it('Error: B not an instance of Matrix', () => {
+            expect(() => twoByThree.add("threeByTwo")).toThrow()
         })
 
     })
@@ -166,6 +178,10 @@ describe('Matrix', () => {
             expect(() => twoByThree.subtract(threeByTwo)).toThrow()
         })
 
+        it('Error: B not an instance of Matrix', () => {
+            expect(() => twoByThree.subtract("threeByTwo")).toThrow()
+        })
+
     })
 
     describe('Naive multiplication', () => {
@@ -181,6 +197,10 @@ describe('Matrix', () => {
 
         it('Error: Incompatible dimensions', () => {
             expect(() => twoByThree.naiveMultiply(twoByThree)).toThrow()
+        })
+
+        it('Error: B not an instance of Matrix', () => {
+            expect(() => twoByThree.naiveMultiply("threeByTwo")).toThrow()
         })
 
     })
@@ -230,6 +250,10 @@ describe('Matrix', () => {
             expect(() => Matrix.reshape([1, 2, 3, 4], 10, 10)).toThrow()
         })
 
+        it('Error: Incompatible dimensions', () => {
+            expect(() => Matrix.reshape([1, 2, 3, 4], "2", "10")).toThrow()
+        })
+
     })
 
 
@@ -250,6 +274,10 @@ describe('Matrix', () => {
             expect(Matrix.isLowerTriangular(upperTriangular)).toBeFalsy()
         })
 
+        it('Error: B not an instance of Matrix', () => {
+            expect(() => Matrix.isLowerTriangular("upperTriangular")).toThrow()
+        })
+
     })
 
     describe('Is upper triangular', () => {
@@ -263,15 +291,11 @@ describe('Matrix', () => {
             expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
         })
 
+        it('Error: B not an instance of Matrix', () => {
+            expect(() => Matrix.isUpperTriangular("upperTriangular")).toThrow()
+        })
+
     })
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * Static factory methods
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 })
