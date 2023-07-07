@@ -97,7 +97,7 @@ export class Matrix {
         if (this.rows > this.columns) {
             this.isTall = !this.isTall
         } else if (this.columns > this.rows) {
-            this.isTall = !this.isWide
+            this.isWide = !this.isWide
         } else {
             this.isSquare = !this.isSquare
         }
@@ -366,3 +366,7 @@ export class Matrix {
 
 
 }
+
+
+
+console.log(Matrix.zeros(2, 3))
