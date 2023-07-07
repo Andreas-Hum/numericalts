@@ -116,12 +116,12 @@ describe('Matrix', () => {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     describe('Addition', () => {
-        it('Adding a 2x3 with itself', () => {
+        it('Adding a 2x3 matrix with itself', () => {
             const compareMatrix = new Matrix([[2, 4, 6], [8, 10, 12]])
             expect(twoByThree.add(twoByThree)).toEqual(compareMatrix)
         })
 
-        it('Adding a 2x2 with itself', () => {
+        it('Adding a 2x2 matrix with itself', () => {
             const compareMatrix = new Matrix([[2, 4], [6, 8]])
             expect(twoByTwo.add(twoByTwo)).toEqual(compareMatrix)
         })
@@ -131,6 +131,25 @@ describe('Matrix', () => {
         })
 
     })
+
+
+    describe('Scaling', () => {
+        it('Scaling a 2x3 matrixwith 2', () => {
+            const compareMatrix = new Matrix([[2, 4, 6], [8, 10, 12]])
+            expect(twoByThree.scale(2)).toEqual(compareMatrix)
+        })
+s
+        it('Adding a 2x2 matrix with 3', () => {
+            const compareMatrix = new Matrix([[3, 6], [9, 12]])
+            expect(twoByTwo.scale(3)).toEqual(compareMatrix)
+        })
+
+        it('Error: Invalid scalar', () => {
+            expect(() => twoByThree.scale("invalid")).toThrow()
+        })
+
+    })
+
 
     describe('Subtraction', () => {
         it('Subtracting a 2x3 with itself', () => {

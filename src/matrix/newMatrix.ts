@@ -221,7 +221,7 @@ export class Matrix {
      * @returns {matrix} The scaled matrix
      */
     public scale(scalar: number): Matrix {
-        if (typeof scalar !== "number") throw new MatrixError("Invalid argument", 606, { scalar });
+        if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
         const scaledMatrix: Matrix = this.clone();
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
