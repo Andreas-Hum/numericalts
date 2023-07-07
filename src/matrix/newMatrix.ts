@@ -327,12 +327,24 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static identity(dimension: number) {
+    public static identity(dimension: number):Matrix {
         if (dimension <= 0) throw new MatrixError("Invalid argument", 606, { dimension });
 
-        const entries: Float32Array = new Float32Array(dimension ** 2)
+        const entries: number[][] = [];
 
+        for (let i = 0; i < dimension; i++) {
+            const row: number[] = [];
+            for (let j = 0; j < dimension; j++) {
+                if (i === j) {
+                    row.push(1);
+                } else {
+                    row.push(0);
+                }
+            }
+            entries.push(row);
+        }
 
+        return new Matrix(entries)
     }
 
 
@@ -369,4 +381,3 @@ export class Matrix {
 
 
 
-console.log(Matrix.zeros(2, 3))
