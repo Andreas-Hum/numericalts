@@ -1,6 +1,6 @@
 import MatrixError from "../errors/MatrixError";
 
-
+//TODO: Add impliment and continue adding methods
 export class Matrix {
 
     public shape: string = "0";
@@ -180,11 +180,11 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for subtraction", 801);
         }
 
-        const result = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
+        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
-                const difference = this.getElement(i, j) - matrix.getElement(i, j);
+                const difference: number = this.getElement(i, j) - matrix.getElement(i, j);
                 result.setElement(i, j, difference);
             }
         }
@@ -202,7 +202,7 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 803);
         }
 
-        const result = new Matrix(new Array(this.rows).fill(0).map(() => new Array(matrix.columns).fill(0)));
+        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(matrix.columns).fill(0)));
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < matrix.columns; j++) {
@@ -216,6 +216,34 @@ export class Matrix {
 
         return result;
     }
+
+
+
+    public matprint(): void {
+        const shape = [this.rows, this.columns];
+
+        function col(mat: number[][], i: number): number[] {
+            return mat.map(row => row[i]);
+        }
+
+        const colMaxes: number[] = [];
+        for (let i = 0; i < shape[1]; i++) {
+            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
+        }
+
+        this.toArray().forEach(row => {
+            console.log(
+                ...row.map((val, j) => {
+                    return (
+                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        val.toString() +
+                        "  "
+                    );
+                })
+            );
+        });
+    }
+
 
 
     /**
@@ -255,7 +283,7 @@ export class Matrix {
             const row: number[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue = Math.random() * 100; // Generate a random value between 0 and 1
+                const randomValue: number = Math.random() * 100;
                 row.push(randomValue);
             }
             entries.push(row);

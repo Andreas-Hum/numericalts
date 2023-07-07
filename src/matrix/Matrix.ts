@@ -407,6 +407,8 @@ export class Matrix implements MatrixTypes {
 
         return new Matrix(result)
     }
+
+    
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * O
@@ -503,7 +505,6 @@ export class Matrix implements MatrixTypes {
 
     /**
  * Method for multiplying matrices using the Strassen algorithm.
- * @param {Matrix} A - A matrix to multiply.
  * @param {Matrix} B - B matrix to multiply with A.
  * @returns {Matrix} The result of Strassen multiplication of A and B.
  */ //TODO: FIX TO USE THIS maybe
