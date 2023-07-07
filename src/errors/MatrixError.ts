@@ -16,6 +16,9 @@ export default class MatrixError extends Error {
         // 804: Not an instance of Matrix.
 
         // 805: Matrix Addition/Subtraction Error - Occurs when matrices of different dimensions are added or subtracted.
+        // 806: Reshape error - Occurs when dimensions are not correct
+        // 807: Matrix Multiplication Error - Occurs when trying to multiply matrices of incompatible dimensions.
+
         // 806: Invalid Scalar for Matrix Multiplication Error - Occurs when a non-numeric value is used for scalar multiplication.
         // 807: Matrix Dot Product Error - Occurs when the dot product of matrices of different dimensions is calculated.
         // 808: Zero Matrix Error - Occurs when an illegal operation is attempted on a zero matrix.
@@ -26,6 +29,7 @@ export default class MatrixError extends Error {
         // 813: Matrix Norm Error - Unknown error.
         // 814: Unsolvabe system
         // 815: Back substitution error - matrix is not upper triangular
+        //
 
 
         this.statusCode = statusCode;

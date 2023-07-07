@@ -154,16 +154,16 @@ export class Matrix {
      * @param {Matrix} matrix - The matrix to add.
      * @returns {Matrix} The resulting matrix.
      */
-    public add(matrix: Matrix): Matrix {
-        if (this.rows !== matrix.rows || this.columns !== matrix.columns) {
-            throw new MatrixError("Invalid matrix dimensions for addition", 801);
+    public add(B: Matrix): Matrix {
+        if (this.rows !== B.rows || this.columns !== B.columns) {
+            throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         }
 
         const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
-                const sum = this.getElement(i, j) + matrix.getElement(i, j);
+                const sum = this.getElement(i, j) + B.getElement(i, j);
                 result.setElement(i, j, sum);
             }
         }
@@ -173,19 +173,19 @@ export class Matrix {
 
     /**
      * Subtracts another matrix from this matrix.
-     * @param {Matrix} matrix - The matrix to subtract.
+     * @param {Matrix} B - The matrix to subtract.
      * @returns {Matrix} The resulting matrix.
      */
-    public subtract(matrix: Matrix): Matrix {
-        if (this.rows !== matrix.rows || this.columns !== matrix.columns) {
-            throw new MatrixError("Invalid matrix dimensions for subtraction", 801);
+    public subtract(B: Matrix): Matrix {
+        if (this.rows !== B.rows || this.columns !== B.columns) {
+            throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         }
 
         const result: Matrix = Matrix.zeros(this.rows, this.columns)
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
-                const difference: number = this.getElement(i, j) - matrix.getElement(i, j);
+                const difference: number = this.getElement(i, j) - B.getElement(i, j);
                 result.setElement(i, j, difference);
             }
         }
@@ -195,26 +195,26 @@ export class Matrix {
 
     /**
       * Multiplies this matrix with another matrix.
-      * @param {Matrix} matrix - The matrix to multiply with.
+      * @param {Matrix} B - The matrix to multiply with.
       * @returns {Matrix} The resulting matrix.
       */
-    public naiveMultiply(matrix: Matrix): Matrix {
-        if (this.columns !== matrix.rows) {
-            throw new MatrixError("Invalid matrix dimensions for multiplication", 803);
+    public naiveMultiply(B: Matrix): Matrix {
+        if (this.columns !== B.rows) {
+            throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
 
-        const result: Matrix = Matrix.zeros(this.rows, matrix.columns)
+        const result: Matrix = Matrix.zeros(this.rows, B.columns)
 
         const rows = this.rows;
         const columns = this.columns;
-        const matrixColumns = matrix.columns;
+        const matrixColumns = B.columns;
 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < matrixColumns; j++) {
                 let sum = 0;
                 for (let k = 0; k < columns; k++) {
                     const elementA: number = this.getElement(i, k);
-                    const elementB: number = matrix.getElement(k, j);
+                    const elementB: number = B.getElement(k, j);
                     sum += elementA * elementB;
                 }
                 result.setElement(i, j, sum);
@@ -293,11 +293,11 @@ export class Matrix {
      * @param {number} newRows - The number of rows in the reshaped matrix.
      * @param {number} newColumns - The number of columns in the reshaped matrix.
      * @returns {Matrix} The reshaped matrix.
-     * @throws {MatrixError} If the length of the array is not equal to newRows * newColumns.
+     * @throws {MatrixError} - If the length of the array is not equal to newRows * newColumns.
      */
     public static reshape(array: number[], newRows: number, newColumns: number): Matrix {
         if (array.length !== newRows * newColumns) {
-            throw new MatrixError("Invalid reshape dimensions", 801);
+            throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
         }
 
         const newEntries: number[][] = [];
@@ -327,6 +327,14 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Creates an identity matrix with the specified dimension.
+     * @public
+     * @static
+     * @param {number} dimension - The dimension of the identity matrix.
+     * @returns {Matrix} The identity matrix.
+     * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     */
     public static identity(dimension: number): Matrix {
         if (dimension <= 0) throw new MatrixError("Invalid argument", 606, { dimension });
 
@@ -350,8 +358,12 @@ export class Matrix {
 
     /**
      * Creates a random matrix with the specified number of rows and columns.
+     * @public
+     * @static
      * @param {number} rows - The number of rows in the matrix.
      * @param {number} columns - The number of columns in the matrix
+     * @returns {Matrix} The randomized matrix
+     * @throws {MatrixError} - If the dimension is less than or equal to 0.
      */
     public static random(rows: number, columns: number): Matrix {
         if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
@@ -372,15 +384,20 @@ export class Matrix {
     }
 
 
+    /**
+     * Creates a matrix filled with zeros with the specified number of rows and columns.
+     * @public
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
+     * @returns {Matrix} - The matrix filled with zeros.
+     * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     */
     public static zeros(rows: number, columns: number): Matrix {
+        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
         return new Matrix(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
     }
 
 
 }
-
-
-const matrix1 = new Matrix([[1, 2, 3], [4, 5, 6]])
-const matrix2 = new Matrix([[1, 4], [2, 5], [3, 6]])
-console.log(matrix1.naiveMultiply(matrix2))
 
