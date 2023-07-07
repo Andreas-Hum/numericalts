@@ -128,7 +128,7 @@ export class Matrix {
      * @param {number} value - The value to set.
      */
     public setElement(row: number, column: number, value: number): void {
-        const index = row * this.columns + column;
+        const index: number = row * this.columns + column;
         this.mElements[index] = value;
     }
 
@@ -139,7 +139,7 @@ export class Matrix {
      * @returns {number} The value of the element.
      */
     public getElement(row: number, column: number): number {
-        const index = row * this.columns + column;
+        const index: number = row * this.columns + column;
         return this.mElements[index];
     }
 
@@ -203,7 +203,7 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 803);
         }
 
-        const result: Matrix = Matrix.zeros(this.rows, this.columns)
+        const result: Matrix = Matrix.zeros(this.rows, matrix.columns)
 
         const rows = this.rows;
         const columns = this.columns;
@@ -327,7 +327,7 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static identity(dimension: number):Matrix {
+    public static identity(dimension: number): Matrix {
         if (dimension <= 0) throw new MatrixError("Invalid argument", 606, { dimension });
 
         const entries: number[][] = [];
@@ -380,4 +380,7 @@ export class Matrix {
 }
 
 
+const matrix1 = new Matrix([[1, 2, 3], [4, 5, 6]])
+const matrix2 = new Matrix([[1, 4], [2, 5], [3, 6]])
+console.log(matrix1.naiveMultiply(matrix2))
 
