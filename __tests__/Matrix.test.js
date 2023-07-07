@@ -248,9 +248,28 @@ describe('Matrix', () => {
 
     });
 
+
+    describe('Strassen\'s matrix multiplication', () => {
+        it('A row matrix with a column matrix', () => {
+            expect(rowMatrix.strassenMultiply(columnMatrix).mElements).toEqual([
+                new Vector([14, 32]),
+                new Vector([32, 77])
+            ])
+        });
+
+        it('A column matrix with a row matrix', () => {
+            expect(rowMatrix.strassenMultiply(columnMatrix).mElements).toEqual([
+                new Vector([14, 32]),
+                new Vector([32, 77])
+            ])
+        });
+
+    });
+
+
     describe('Get submatrix', () => {
         it('Get submatrix in a 2x3 row matrix', () => {
-            expect(rowMatrix.getSubMatrix(0, 1, 2, 3).mElements).toEqual([
+            expect(rowMatrix.getSubMatrix(0, 2, 1, 3).mElements).toEqual([
                 new Vector([2, 3]),
                 new Vector([5, 6])
             ])
@@ -258,7 +277,7 @@ describe('Matrix', () => {
 
         it('Get submatrix in a 3x2 column matrix', () => {
 
-            expect(columnMatrix.getSubMatrix(1, 0, 3, 2).mElements).toEqual([
+            expect(columnMatrix.getSubMatrix(1, 3, 0, 2).mElements).toEqual([
                 new Vector([[2], [3]]),
                 new Vector([[5], [6]])
             ])
