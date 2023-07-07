@@ -141,8 +141,8 @@ export class Matrix {
     /**
      * Gets the value of an element in the matrix.
      * @public
-     * @param {number} row - The row index of the element.
-     * @param {number} column - The column index of the element.
+    * @param {number} row - The row index of the element starts from zero.
+     * @param {number} column - The row index of the element starts from zero.
      * @returns {number} The value of the element.
      * @throws {MatrixError} - If index is out of bounds
      */
