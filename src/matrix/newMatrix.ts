@@ -1,5 +1,6 @@
 import MatrixError from "../errors/MatrixError";
 import * as fs from 'fs';
+import { DELTA } from "../utils/constants";
 
 //TODO: Add impliment and continue adding methods
 export class Matrix {
@@ -405,17 +406,75 @@ export class Matrix {
         return output;
     }
 
+    private static dot(vector1: number[], vector2: number[]): number {
+        let dotProduct: number = 0;
+        for (let i = 0; i < vector1.length; i++) {
+            dotProduct += vector1[i] * vector2[i]
+        }
+        return dotProduct;
+    }
+
+    private static normalize(vector1: number[]): number[] {
+        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
+        return vector1.map((entry: number) => entry * scalar)
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Static methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static GramSmith(A: Matrix) {
+
+    /**
+     * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
+     * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
+     *
+     * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
+     * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
+     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal 
+     * vectors from the column vector itself.
+     *
+     * @returns {Matrix} A new Matrix instance constructed using the orthonormal vectors as columns.
+     *
+     * @throws {VectorError} If any vector obtained during the process is nearly zero (having euclidean norm lesser than a small
+     * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
+     *
+     * @public
+     */
+    public static GramSmith(A: Matrix): Matrix {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        const orthogonalColumns: number[][] = []
 
+        orthogonalColumns.push(A.getColumn(0));
 
+        for (let i = 1; i < A.columns; i++) {
+            let orthogonalProjection: number[] = [...A.getColumn(i)]; // Initialize orthogonalProjection as a copy of the current column
+
+            for (let j = 0; j < i; j++) {
+                let u: number[] = orthogonalColumns[j]
+                let v: number[] = A.getColumn(i)
+                let uv: number = Matrix.dot(u, v)
+                let uu: number = Matrix.dot(u, u)
+                let scalar: number = uv / uu;
+
+                let projectionOf_I_onto_J: number[] = u.map((entry: number) => entry * scalar);
+
+                orthogonalProjection = orthogonalProjection.map((entry: number, index: number) => entry - projectionOf_I_onto_J[index])
+
+            }
+            if ((Math.sqrt(orthogonalProjection.map(x => x ** 2).reduce((acc, x) => acc + x))) < DELTA) {
+                throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
+            }
+            orthogonalColumns.push(orthogonalProjection)
+
+        }
+
+        const normalizedColumns: number[][] = orthogonalColumns.map((column: number[]) => Matrix.normalize(column))
+        const transposedArray: number[][] = normalizedColumns[0].map((_, colIndex) => normalizedColumns.map(row => row[colIndex]));
+        return new Matrix(transposedArray);
     }
+
 
 
     /**
@@ -452,6 +511,32 @@ export class Matrix {
         }
 
         return new Matrix(newEntries);
+    }
+
+    public static transpose(matrix: Matrix): Matrix {
+        const transposedMatrix: Matrix = matrix.clone()
+        const rows: number = transposedMatrix.rows;
+        const columns: number = transposedMatrix.columns;
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                transposedMatrix.mElements[j * rows + i] = matrix.mElements[i * columns + j];
+            }
+        }
+        transposedMatrix.rows = columns;
+        transposedMatrix.columns = rows;
+
+        if (transposedMatrix.isTall) {
+            transposedMatrix.isTall = false;
+            transposedMatrix.isWide = true;
+        } else if (transposedMatrix.isWide) {
+            transposedMatrix.isTall = true;
+            transposedMatrix.isWide = false;
+        }
+
+        transposedMatrix.updateShape()
+
+        return transposedMatrix;
     }
 
 

@@ -321,6 +321,8 @@ describe('Matrix', () => {
             expect(() => Matrix.isUpperTriangular("upperTriangular")).toThrow()
         })
 
+
+
     })
 
     // describe('gramSchmidt', () => {
