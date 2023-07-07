@@ -125,12 +125,16 @@ export class Matrix {
     /**
      * Sets the value of an element in the matrix.
      * @public
-     * @param {number} row - The row index of the element.
-     * @param {number} column - The column index of the element.
+     * @param {number} row - The row index of the element starts from zero.
+     * @param {number} column - The row index of the element starts from zero.
      * @param {number} value - The value to set.
+     * @returns {void}
+     * @throws {MatrixError} - If the value is an invalid element or index is out of bounds
      */
     public setElement(row: number, column: number, value: number): void {
+        if (typeof value !== "number") throw new MatrixError("Invalid value", 803, { value })
         const index: number = row * this.columns + column;
+        if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         this.mElements[index] = value;
     }
 
@@ -140,9 +144,11 @@ export class Matrix {
      * @param {number} row - The row index of the element.
      * @param {number} column - The column index of the element.
      * @returns {number} The value of the element.
+     * @throws {MatrixError} - If index is out of bounds
      */
     public getElement(row: number, column: number): number {
         const index: number = row * this.columns + column;
+        if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         return this.mElements[index];
     }
 

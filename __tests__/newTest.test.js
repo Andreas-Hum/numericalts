@@ -14,7 +14,12 @@ describe('Matrix', () => {
 
     });
 
-    describe('Matrix initialization', () => {
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Validation
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////s
+    describe('Initialization and validation', () => {
 
         it('Validation of a 2x3 matrix', () => {
             expect(twoByThree.isWide).toBeTruthy();
@@ -46,10 +51,59 @@ describe('Matrix', () => {
 
 
         it('Error: Invalid elements', () => {
-            expect(() => new Matrix([1,3,[3]])).toThrow()
+            expect(() => new Matrix([1, 3, [3]])).toThrow()
         });
 
     });
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Set and get element
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    describe('Get element', () => {
 
+        it('Get first element', () => {
+            expect(twoByThree.getElement(0, 0)).toEqual(1)
+            expect(threeByTwo.getElement(0, 0)).toEqual(1)
+        })
+
+
+        it('Get last element', () => {
+            expect(twoByThree.getElement(1, 2)).toEqual(6)
+            expect(threeByTwo.getElement(2, 1)).toEqual(6)
+        })
+
+        it('Error: out of bounds', () => {
+            expect(() => twoByThree.getElement(10, 10)).toThrow()
+        })
+    })
+
+    describe('Set element', () => {
+        it('Set first element', () => {
+            twoByThree.setElement(0, 0, 10);
+            threeByTwo.setElement(0, 0, 10);
+
+            expect(twoByThree.getElement(0, 0)).toEqual(10)
+            expect(threeByTwo.getElement(0, 0)).toEqual(10)
+        })
+
+
+        it('Set last element', () => {
+            twoByThree.setElement(1, 2, 10);
+            threeByTwo.setElement(2, 1, 10);
+
+            expect(twoByThree.getElement(1, 2)).toEqual(10)
+            expect(threeByTwo.getElement(2, 1)).toEqual(10)
+        })
+
+
+        it('Error: out of bounds', () => {
+            expect(() => twoByThree.setElement(10, 10, 10)).toThrow()
+        })
+
+        it('Error: Invalid element', () => {
+            expect(() => twoByThree.setElement(0, 0, "error")).toThrow()
+        })
+    })
 })

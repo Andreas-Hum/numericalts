@@ -10,6 +10,8 @@ export default class MatrixError extends Error {
         this.name = 'MatrixError';
         this.timestamp = new Date().toISOString();
         // Matrix Status Codes:
+
+        // 800: Out of bounds
         // 801: Matrix validation error - Occurs when the supplied elements fail to form a proper matrix.
         // 802: Matrix dimensions error - Occurs when attempting operations involving matrices of incompatible dimensions.
         // 803: Invalid element for matrix error - Occurs when the matrix contains a non-numeric value.
@@ -18,6 +20,7 @@ export default class MatrixError extends Error {
         // 805: Matrix Addition/Subtraction Error - Occurs when matrices of different dimensions are added or subtracted.
         // 806: Reshape error - Occurs when dimensions are not correct
         // 807: Matrix Multiplication Error - Occurs when trying to multiply matrices of incompatible dimensions.
+
 
         // 806: Invalid Scalar for Matrix Multiplication Error - Occurs when a non-numeric value is used for scalar multiplication.
         // 807: Matrix Dot Product Error - Occurs when the dot product of matrices of different dimensions is calculated.
