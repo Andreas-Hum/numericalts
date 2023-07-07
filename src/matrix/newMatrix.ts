@@ -214,9 +214,18 @@ export class Matrix {
         return result;
     }
 
-    // public scale(scalar: number): Matrix {
-
-    // }
+    /**
+     * Scales the matrix and returns a new matrix with the result of the scaling
+     * @public
+     * @param {number} scalar - The scalar to scale the matrix with 
+     * @returns {matrix} The scaled matrix
+     */
+    public scale(scalar: number): Matrix {
+        if (typeof scalar !== "number") throw new MatrixError("Invalid argument", 606, { scalar });
+        const scaledMatrix: Matrix = this.clone();
+        scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
+        return scaledMatrix;
+    }
 
     /**
      * Subtracts another matrix from this matrix.
