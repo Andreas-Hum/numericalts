@@ -217,9 +217,17 @@ export class Matrix {
         return result;
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Utility methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public matprint(): void {
+    /**
+     * Prints the matrix in a formatted way.
+     */
+    public print(): void {
         const shape = [this.rows, this.columns];
 
         function col(mat: number[][], i: number): number[] {
@@ -307,8 +315,8 @@ export class Matrix {
         }
 
         const newEntries: number[][] = [];
-        let rowIndex = 0;
-        let colIndex = 0;
+        let rowIndex: number = 0;
+        let colIndex: number = 0;
 
         for (let i = 0; i < array.length; i++) {
             if (colIndex === newColumns) {
