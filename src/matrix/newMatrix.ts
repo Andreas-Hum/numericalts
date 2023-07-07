@@ -273,7 +273,7 @@ export class Matrix {
      * @returns {void}
      */
     public print(): void {
-        const shape = [this.rows, this.columns];
+        const shape: number[] = [this.rows, this.columns];
 
         function col(mat: number[][], i: number): number[] {
             return mat.map(row => row[i]);
@@ -317,6 +317,39 @@ export class Matrix {
         }
 
         return array;
+    }
+
+    /**
+     * Converts the matrix to a printable string
+     * @public
+     * @returns {string} The printable matrix in a nice format
+    */
+    public toPrintString(): string {
+        const shape: number[] = [this.rows, this.columns];
+
+        function col(mat: number[][], i: number): number[] {
+            return mat.map(row => row[i]);
+        }
+
+        const colMaxes: number[] = [];
+        for (let i = 0; i < shape[1]; i++) {
+            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
+        }
+
+        let output: string = "";
+        this.toArray().forEach(row => {
+            output += row
+                .map((val, j) => {
+                    return (
+                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        val.toString() +
+                        "  "
+                    );
+                })
+                .join("") + "\n";
+        });
+
+        return output;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

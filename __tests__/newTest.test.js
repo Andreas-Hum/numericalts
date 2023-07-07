@@ -185,6 +185,29 @@ describe('Matrix', () => {
 
     })
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Utility methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe('To array', () => {
+        it('Converting a 2x3 Matrix to a 2d array', () => {
+            const compareArray = [[1, 2, 3], [4, 5, 6]]
+            expect(twoByThree.toArray()).toEqual(compareArray)
+        })
+
+        it('Converting a 3x2 Matrix to a 2d array', () => {
+            const compareArray = [[1, 4], [2, 5], [3, 6]]
+            expect(threeByTwo.toArray()).toEqual(compareArray)
+        })
+
+        it('Converting a 2x2 Matrix to a 2d array', () => {
+            const compareArray = [[1, 2], [3, 4]]
+            expect(twoByTwo.toArray()).toEqual(compareArray)
+        })
+
+    })
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -210,12 +233,39 @@ describe('Matrix', () => {
     })
 
 
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Static boolean methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe('Is lower triangular', () => {
+        it('A lower triangular matrix', () => {
+            const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+            expect(Matrix.isLowerTriangular(lowerTriangular)).toBeTruthy()
+        })
+
+        it('A non lower triangular matrix', () => {
+            const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
+            expect(Matrix.isLowerTriangular(upperTriangular)).toBeFalsy()
+        })
+
+    })
+
+    describe('Is upper triangular', () => {
+        it('A upper triangular matrix', () => {
+            const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
+            expect(Matrix.isUpperTriangular(upperTriangular)).toBeTruthy()
+        })
+
+        it('A non upper triangular matrix', () => {
+            const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+            expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
+        })
+
+    })
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
