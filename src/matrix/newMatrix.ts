@@ -49,6 +49,7 @@ export class Matrix {
 
     /**
      * Validates the entries of a matrix to ensure they are of the correct form.
+     * @private
      * @param {number[][]} entries - The entries of the matrix.
      * @returns {boolean} True if the entries are valid, false otherwise.
      */
@@ -123,6 +124,7 @@ export class Matrix {
 
     /**
      * Sets the value of an element in the matrix.
+     * @public
      * @param {number} row - The row index of the element.
      * @param {number} column - The column index of the element.
      * @param {number} value - The value to set.
@@ -134,6 +136,7 @@ export class Matrix {
 
     /**
      * Gets the value of an element in the matrix.
+     * @public
      * @param {number} row - The row index of the element.
      * @param {number} column - The column index of the element.
      * @returns {number} The value of the element.
@@ -151,7 +154,8 @@ export class Matrix {
 
     /**
      * Adds another matrix to this matrix.
-     * @param {Matrix} matrix - The matrix to add.
+     * @public
+     * @param {Matrix} B - The matrix to add.
      * @returns {Matrix} The resulting matrix.
      */
     public add(B: Matrix): Matrix {
@@ -173,6 +177,7 @@ export class Matrix {
 
     /**
      * Subtracts another matrix from this matrix.
+     * @public
      * @param {Matrix} B - The matrix to subtract.
      * @returns {Matrix} The resulting matrix.
      */
@@ -195,6 +200,7 @@ export class Matrix {
 
     /**
       * Multiplies this matrix with another matrix.
+      * @public
       * @param {Matrix} B - The matrix to multiply with.
       * @returns {Matrix} The resulting matrix.
       */
@@ -233,6 +239,8 @@ export class Matrix {
 
     /**
      * Prints the matrix in a formatted way.
+     * @public
+     * @returns {void}
      */
     public print(): void {
         const shape = [this.rows, this.columns];
@@ -263,6 +271,7 @@ export class Matrix {
 
     /**
      * Converts the matrix to a 2D array.
+     * @public
      * @returns {number[][]} The matrix as a 2D array.
      */
     public toArray(): number[][] {
@@ -289,6 +298,8 @@ export class Matrix {
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
+     * @public
+     * @static
      * @param {number[]} array - The 1D array to reshape.
      * @param {number} newRows - The number of rows in the reshaped matrix.
      * @param {number} newColumns - The number of columns in the reshaped matrix.
