@@ -85,18 +85,29 @@ describe('Matrix', () => {
         })
     })
 
-    describe('getRow', () => {
-        it('should return the specified row of the matrix', () => {
+    describe('Get row', () => {
+        it('Return the first row of a 2x3 matrix', () => {
 
             const result = twoByThree.getRow(0);
-
             const expected = [1, 2, 3];
+            expect(result).toEqual(expected);
+        });
 
+        it('Error: Oout of bounds', () => {
+            expect(() => twoByThree.getRow(23)).toThrow();
+        });
+    });
+
+    describe('Get column', () => {
+        it('Return the first column of a 2x3 matrix', () => {
+
+            const result = twoByThree.getColumn(0);
+            const expected = [1, 4];
             expect(result).toEqual(expected);
         });
 
         it('Error: out of bounds', () => {
-            expect(() => twoByThree.getRow(23)).toThrow();
+            expect(() => twoByThree.getColumn(23)).toThrow();
         });
     });
 
@@ -312,5 +323,30 @@ describe('Matrix', () => {
 
     })
 
+    // describe('gramSchmidt', () => {
+    //     it('should orthogonalize the matrix', () => {
+    //         // Create a test matrix
+    //         const matrix = new Matrix([
+    //             [1, 2],
+    //             [3, 4],
+    //         ]);
+
+    //         // Call the gramSchmidt method
+    //         const result = Matrix.gramSchmidt(matrix);
+    //         console.log(result.toPrintString())
+
+
+
+    //         // // Define the expected orthogonalized matrix
+    //         // const expected = new Matrix([
+    //         //     [-0.214, -0.416, -0.577],
+    //         //     [-0.893, -0.312, 0.231],
+    //         //     [-0.372, 0.815, -0.446],
+    //         // ]);
+
+    //         // // Compare the result with the expected matrix
+    //         // expect(result).toEqual(expected);
+    //     });
+    // });
 
 })

@@ -160,6 +160,28 @@ export class Matrix {
         return row;
     }
 
+    /**
+     * Gets a specific column of the matrix.
+     * @public
+     * @param {number} columnIndex - The index of the column to retrieve (starting from 0).
+     * @returns {number[]} An array representing the specified column of the matrix.
+     * @throws {MatrixError} If the columnIndex is out of bounds.
+     */
+    public getColumn(columnIndex: number): number[] {
+        if (typeof columnIndex !== "number") throw new MatrixError("Invalid arugment", 606, { columnIndex })
+        if (columnIndex < 0 || columnIndex >= this.rows) throw new MatrixError("Row index out of bounds", 800, { columnIndex });
+
+        const column: number[] = [];
+        const startIndex: number = columnIndex;
+        const endIndex: number = this.rows * this.columns + columnIndex;
+
+        for (let i = startIndex; i < endIndex; i += this.columns) {
+            column.push(this.mElements[i]);
+        }
+
+        return column;
+    }
+
 
     /**
      * Sets the value of an element in the matrix.
@@ -329,8 +351,6 @@ export class Matrix {
             );
         });
     }
-
-
 
     /**
      * Converts the matrix to a 2D array.
