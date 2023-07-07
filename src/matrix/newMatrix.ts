@@ -132,7 +132,7 @@ export class Matrix {
      * @throws {MatrixError} - If the value is an invalid element or index is out of bounds
      */
     public setElement(row: number, column: number, value: number): void {
-        if (typeof value !== "number") throw new MatrixError("Invalid value", 803, { value })
+        if (typeof value !== "number" || typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { value, row, column })
         const index: number = row * this.columns + column;
         if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         this.mElements[index] = value;
@@ -147,6 +147,7 @@ export class Matrix {
      * @throws {MatrixError} - If index is out of bounds
      */
     public getElement(row: number, column: number): number {
+        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
         const index: number = row * this.columns + column;
         if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         return this.mElements[index];
@@ -165,9 +166,10 @@ export class Matrix {
      * @returns {Matrix} The resulting matrix.
      */
     public add(B: Matrix): Matrix {
-        if (this.shape !== B.shape) {
-            throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
-        }
+        if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+
+
 
         const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
 
@@ -189,9 +191,9 @@ export class Matrix {
       * @returns {Matrix} The resulting matrix.
       */
     public naiveMultiply(B: Matrix): Matrix {
-        if (this.columns !== B.rows) {
-            throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-        }
+        if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+
 
         const result: Matrix = Matrix.zeros(this.rows, B.columns)
 
@@ -234,9 +236,9 @@ export class Matrix {
      * @returns {Matrix} The resulting matrix.
      */
     public subtract(B: Matrix): Matrix {
-        if (this.shape !== B.shape) {
-            throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
-        }
+        if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+
 
         const result: Matrix = Matrix.zeros(this.rows, this.columns)
 
@@ -370,9 +372,9 @@ export class Matrix {
      * @throws {MatrixError} - If the length of the array is not equal to newRows * newColumns.
      */
     public static reshape(array: number[], newRows: number, newColumns: number): Matrix {
-        if (array.length !== newRows * newColumns) {
-            throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
-        }
+        if (array.length !== newRows * newColumns) throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
+        if (!Array.isArray(array) || typeof newRows !== "number" || typeof newColumns !== "number") throw new MatrixError("Invalid reshape dimensions", 806, { array, newRows, newColumns });
+
 
         const newEntries: number[][] = [];
         let rowIndex: number = 0;
@@ -411,6 +413,7 @@ export class Matrix {
     * @return {Boolean} - Returns true if the matrix is lower triangular, false otherwise.
     */
     public static isLowerTriangular(A: Matrix): Boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         const columns: number = A.columns;
         for (let i = 1; i < columns; i++) {
             for (let j = 0; j < i; j++) {
@@ -433,6 +436,7 @@ export class Matrix {
      * @return {Boolean}  Returns true if the matrix is upper triangular, false otherwise.
      */
     public static isUpperTriangular(A: Matrix): boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         const columns: number = A.columns;
         for (let i = 1; i < columns; i++) {
             for (let j = 0; j < i; j++) {
@@ -459,7 +463,7 @@ export class Matrix {
      * @throws {MatrixError} - If the dimension is less than or equal to 0.
      */
     public static identity(dimension: number): Matrix {
-        if (dimension <= 0) throw new MatrixError("Invalid argument", 606, { dimension });
+        if (dimension <= 0 || typeof dimension !== "number") throw new MatrixError("Invalid argument", 606, { dimension });
 
         const entries: number[][] = [];
 
@@ -488,7 +492,7 @@ export class Matrix {
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
     public static ones(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
         return new Matrix(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
     }
 
@@ -503,7 +507,7 @@ export class Matrix {
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
     public static random(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
 
         const entries: number[][] = [];
 
@@ -531,7 +535,7 @@ export class Matrix {
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
     public static zeros(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
         return new Matrix(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
     }
 
