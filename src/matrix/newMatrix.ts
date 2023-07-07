@@ -144,7 +144,7 @@ export class Matrix {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract and multiply
+    * Basic operations add, subtract and naiveMultiply
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -279,27 +279,6 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Creates a random matrix with the specified number of rows and columns.
-     * @param {number} rows - The number of rows in the matrix.
-     * @param {number} columns - The number of columns in the matrix
-     */
-    public static createRandomMatrix(rows: number, columns: number): Matrix {
-        const entries: number[][] = [];
-
-        for (let i = 0; i < rows; i++) {
-            const row: number[] = [];
-            for (let j = 0; j <
-                columns; j++) {
-                const randomValue: number = Math.random() * 100;
-                row.push(randomValue);
-            }
-            entries.push(row);
-        }
-
-        return new Matrix(entries);
-    }
-
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
@@ -335,6 +314,33 @@ export class Matrix {
         return new Matrix(newEntries);
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static factory methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Creates a random matrix with the specified number of rows and columns.
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix
+     */
+    public static random(rows: number, columns: number): Matrix {
+        const entries: number[][] = [];
+
+        for (let i = 0; i < rows; i++) {
+            const row: number[] = [];
+            for (let j = 0; j <
+                columns; j++) {
+                const randomValue: number = Math.random() * 100;
+                row.push(randomValue);
+            }
+            entries.push(row);
+        }
+
+        return new Matrix(entries);
+    }
 
 
 }
