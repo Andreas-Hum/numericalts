@@ -85,6 +85,21 @@ describe('Matrix', () => {
         })
     })
 
+    describe('getRow', () => {
+        it('should return the specified row of the matrix', () => {
+
+            const result = twoByThree.getRow(0);
+
+            const expected = [1, 2, 3];
+
+            expect(result).toEqual(expected);
+        });
+
+        it('Error: out of bounds', () => {
+            expect(() => twoByThree.getRow(23)).toThrow();
+        });
+    });
+
     describe('Set element', () => {
         it('Set first element', () => {
             twoByThree.setElement(0, 0, 10);

@@ -118,7 +118,7 @@ export class Matrix {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Set and get element
+    * Set- and getter methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,6 +135,29 @@ export class Matrix {
         const index: number = row * this.columns + column;
         if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         return this.mElements[index];
+    }
+
+
+    /**
+     * Gets a specific row of the matrix.
+     * @public
+     * @param {number} rowIndex - The index of the row to retrieve (starting from 0).
+     * @returns {number[]} An array representing the specified row of the matrix.
+     * @throws {MatrixError} If the rowIndex is out of bounds.
+     */
+    public getRow(rowIndex: number): number[] {
+        if (typeof rowIndex !== "number") throw new MatrixError("Invalid arugment", 606, { rowIndex })
+        if (rowIndex < 0 || rowIndex >= this.rows) throw new MatrixError("Row index out of bounds", 800, { rowIndex });
+
+        const row: number[] = [];
+        const startIndex: number = rowIndex * this.columns;
+        const endIndex: number = startIndex + this.columns;
+
+        for (let i = startIndex; i < endIndex; i++) {
+            row.push(this.mElements[i]);
+        }
+
+        return row;
     }
 
 
@@ -254,6 +277,12 @@ export class Matrix {
         return result;
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * 
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -361,6 +390,12 @@ export class Matrix {
     * Static methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static GramSmith(A: Matrix) {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+
+
+    }
 
 
     /**
