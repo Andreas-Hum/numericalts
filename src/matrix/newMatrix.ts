@@ -1,4 +1,5 @@
 import MatrixError from "../errors/MatrixError";
+import * as fs from 'fs';
 
 //TODO: Add impliment and continue adding methods
 export class Matrix {
@@ -11,7 +12,7 @@ export class Matrix {
     public rows: number = Infinity;
     public columns: number = Infinity;
     public size: number = Infinity;
-    public mElements: Float64Array;
+    public mElements: Float32Array;
 
     /**
      * Constructs a matrix object.
@@ -22,13 +23,13 @@ export class Matrix {
             throw new MatrixError("Invalid matrix entries", 803);
         }
 
-        const numRows = entries.length;
-        const numCols = entries[0].length;
-        this.mElements = new Float64Array(numRows * numCols);
+        const numRows: number = entries.length;
+        const numCols: number = entries[0].length;
+        this.mElements = new Float32Array(numRows * numCols);
 
         for (let i = 0; i < numRows; i++) {
             for (let j = 0; j < numCols; j++) {
-                const index = i * numCols + j;
+                const index: number = i * numCols + j;
                 this.mElements[index] = entries[i][j];
             }
         }
@@ -52,24 +53,24 @@ export class Matrix {
      * @returns {boolean} True if the entries are valid, false otherwise.
      */
     private validateMatrixEntries(entries: number[][]): boolean {
-        const numRows = entries.length;
+        const numRows: number = entries.length;
         if (numRows === 0) {
-            return false; // Matrix must have at least one row
+            return false;
         }
 
-        const numCols = entries[0].length;
+        const numCols: number = entries[0].length;
         if (numCols === 0) {
-            return false; // Matrix must have at least one column
+            return false;
         }
 
         for (let i = 0; i < numRows; i++) {
             if (!Array.isArray(entries[i]) || entries[i].length !== numCols) {
-                return false; // Each row must be an array with the same number of columns
+                return false;
             }
 
             for (let j = 0; j < numCols; j++) {
                 if (typeof entries[i][j] !== 'number' || isNaN(entries[i][j])) {
-                    return false; // Each entry must be a valid number
+                    return false;
                 }
             }
         }
@@ -158,7 +159,7 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for addition", 801);
         }
 
-        const result = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
+        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
@@ -180,7 +181,7 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for subtraction", 801);
         }
 
-        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
+        const result: Matrix = Matrix.zeros(this.rows, this.columns)
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
@@ -202,13 +203,19 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 803);
         }
 
-        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(matrix.columns).fill(0)));
+        const result: Matrix = Matrix.zeros(this.rows, this.columns)
 
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < matrix.columns; j++) {
+        const rows = this.rows;
+        const columns = this.columns;
+        const matrixColumns = matrix.columns;
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < matrixColumns; j++) {
                 let sum = 0;
-                for (let k = 0; k < this.columns; k++) {
-                    sum += this.getElement(i, k) * matrix.getElement(k, j);
+                for (let k = 0; k < columns; k++) {
+                    const elementA: number = this.getElement(i, k);
+                    const elementB: number = matrix.getElement(k, j);
+                    sum += elementA * elementB;
                 }
                 result.setElement(i, j, sum);
             }
@@ -320,6 +327,14 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static identity(dimension: number) {
+        if (dimension <= 0) throw new MatrixError("Invalid argument", 606, { dimension });
+
+        const entries: Float32Array = new Float32Array(dimension ** 2)
+
+
+    }
+
 
     /**
      * Creates a random matrix with the specified number of rows and columns.
@@ -327,6 +342,8 @@ export class Matrix {
      * @param {number} columns - The number of columns in the matrix
      */
     public static random(rows: number, columns: number): Matrix {
+        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
+
         const entries: number[][] = [];
 
         for (let i = 0; i < rows; i++) {
@@ -340,6 +357,11 @@ export class Matrix {
         }
 
         return new Matrix(entries);
+    }
+
+
+    public static zeros(rows: number, columns: number): Matrix {
+        return new Matrix(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
     }
 
 
