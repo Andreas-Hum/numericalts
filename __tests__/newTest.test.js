@@ -19,6 +19,7 @@ describe('Matrix', () => {
     * Validation
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////s
+
     describe('Initialization and validation', () => {
 
         it('Validation of a 2x3 matrix', () => {
@@ -61,6 +62,7 @@ describe('Matrix', () => {
     * Set and get element
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
     describe('Get element', () => {
 
         it('Get first element', () => {
@@ -106,4 +108,63 @@ describe('Matrix', () => {
             expect(() => twoByThree.setElement(0, 0, "error")).toThrow()
         })
     })
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Basic operations add, subtract and naiveMultiply
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe('Addition', () => {
+        it('Adding a 2x3 with itself', () => {
+            const compareMatrix = new Matrix([[2, 4, 6], [8, 10, 12]])
+            expect(twoByThree.add(twoByThree)).toEqual(compareMatrix)
+        })
+
+        it('Adding a 2x2 with itself', () => {
+            const compareMatrix = new Matrix([[2, 4], [6, 8]])
+            expect(twoByTwo.add(twoByTwo)).toEqual(compareMatrix)
+        })
+
+        it('Error: Incompatible dimensons', () => {
+            expect(() => twoByThree.add(threeByTwo)).toThrow()
+        })
+
+    })
+
+    describe('Subtraction', () => {
+        it('Subtracting a 2x3 with itself', () => {
+            const compareMatrix = new Matrix([[0, 0, 0], [0, 0, 0]])
+            expect(twoByThree.subtract(twoByThree)).toEqual(compareMatrix)
+        })
+
+        it('Adding a 2x2 with itself', () => {
+            const compareMatrix = new Matrix([[0, 0], [0, 0]])
+            expect(twoByTwo.subtract(twoByTwo)).toEqual(compareMatrix)
+        })
+
+        it('Error: Incompatible dimensons', () => {
+            expect(() => twoByThree.subtract(threeByTwo)).toThrow()
+        })
+
+    })
+
+    describe('Naive multiplication', () => {
+        it('Multiplying a 2x3 matrix with a 3x2', () => {
+            const compareMatrix = new Matrix([[14, 32], [32, 77]])
+            expect(twoByThree.naiveMultiply(threeByTwo)).toEqual(compareMatrix)
+        })
+
+        it('Multiplying a 2x2 with itself', () => {
+            const compareMatrix = new Matrix([[7, 10], [15, 22]])
+            expect(twoByTwo.naiveMultiply(twoByTwo)).toEqual(compareMatrix)
+        })
+
+        it('Error: Incompatible dimensons', () => {
+            expect(() => twoByThree.naiveMultiply(twoByThree)).toThrow()
+        })
+
+    })
+
+
 })

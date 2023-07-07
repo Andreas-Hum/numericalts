@@ -165,7 +165,7 @@ export class Matrix {
      * @returns {Matrix} The resulting matrix.
      */
     public add(B: Matrix): Matrix {
-        if (this.rows !== B.rows || this.columns !== B.columns) {
+        if (this.shape !== B.shape) {
             throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         }
 
@@ -188,7 +188,7 @@ export class Matrix {
      * @returns {Matrix} The resulting matrix.
      */
     public subtract(B: Matrix): Matrix {
-        if (this.rows !== B.rows || this.columns !== B.columns) {
+        if (this.shape !== B.shape) {
             throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         }
 
