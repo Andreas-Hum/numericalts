@@ -248,6 +248,15 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Clones the matrix instance and returns the clone
+     * @public
+     * @returns {Matrix} The cloned matrix
+     */
+    public clone(): Matrix {
+        return new Matrix(this.toArray())
+    }
+
 
     /**
      * Prints the matrix in a formatted way.
