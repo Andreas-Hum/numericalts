@@ -111,7 +111,7 @@ describe('Matrix', () => {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract and naiveMultiply
+    * Basic operations add, subtract, scalæ and naiveMultiply
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -126,7 +126,7 @@ describe('Matrix', () => {
             expect(twoByTwo.add(twoByTwo)).toEqual(compareMatrix)
         })
 
-        it('Error: Incompatible dimensons', () => {
+        it('Error: Incompatible dimensions', () => {
             expect(() => twoByThree.add(threeByTwo)).toThrow()
         })
 
@@ -138,7 +138,7 @@ describe('Matrix', () => {
             const compareMatrix = new Matrix([[2, 4, 6], [8, 10, 12]])
             expect(twoByThree.scale(2)).toEqual(compareMatrix)
         })
-s
+
         it('Adding a 2x2 matrix with 3', () => {
             const compareMatrix = new Matrix([[3, 6], [9, 12]])
             expect(twoByTwo.scale(3)).toEqual(compareMatrix)
@@ -162,7 +162,7 @@ s
             expect(twoByTwo.subtract(twoByTwo)).toEqual(compareMatrix)
         })
 
-        it('Error: Incompatible dimensons', () => {
+        it('Error: Incompatible dimensions', () => {
             expect(() => twoByThree.subtract(threeByTwo)).toThrow()
         })
 
@@ -179,11 +179,49 @@ s
             expect(twoByTwo.naiveMultiply(twoByTwo)).toEqual(compareMatrix)
         })
 
-        it('Error: Incompatible dimensons', () => {
+        it('Error: Incompatible dimensions', () => {
             expect(() => twoByThree.naiveMultiply(twoByThree)).toThrow()
         })
 
     })
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe('Reshape', () => {
+        it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
+            const compareMatrix = new Matrix([[1, 2], [3, 4]])
+            expect(Matrix.reshape([1, 2, 3, 4], 2, 2)).toEqual(compareMatrix)
+        })
+
+        it('Reshaping the array [1,2,3,4] into [[1],[2],[3],[4]]', () => {
+            const compareMatrix = new Matrix([[1], [2], [3], [4]])
+            expect(Matrix.reshape([1, 2, 3, 4], 4, 1)).toEqual(compareMatrix)
+        })
+
+        it('Error: Incompatible dimensions', () => {
+            expect(() => Matrix.reshape([1, 2, 3, 4], 10, 10)).toThrow()
+        })
+
+    })
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static boolean methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static factory methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 })

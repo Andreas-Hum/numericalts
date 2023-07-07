@@ -362,6 +362,55 @@ export class Matrix {
         return new Matrix(newEntries);
     }
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static boolean methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+    * This method checks if the matrix is lower triangular.
+    * A matrix is said to be lower triangular if all its entries above the main diagonal are zero.
+    * @public
+    * @static
+    * @param {Matrix} A - The matrix to checkF
+    * @return {Boolean} - Returns true if the matrix is lower triangular, false otherwise.
+    */
+    public static isLowerTriangular(A: Matrix): Boolean {
+        const columns: number = A.columns;
+        for (let i = 1; i < columns; i++) {
+            for (let j = 0; j < i; j++) {
+                if (A.getElement(j, i) !== 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+
+    /**
+     * This method checks if the given matrix is upper triangular.
+     * A matrix is said to be upper triangular if all its entries below the main diagonal are zero.
+     * @public
+     * @static
+     * @param {Matrix} A - The matrix to checkF
+     * @return {Boolean}  Returns true if the matrix is upper triangular, false otherwise.
+     */
+    public static isUpperTriangular(A: Matrix): boolean {
+        const columns: number = A.columns;
+        for (let i = 1; i < columns; i++) {
+            for (let j = 0; j < i; j++) {
+                if (A.getElement(i, j) !== 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Static factory methods
