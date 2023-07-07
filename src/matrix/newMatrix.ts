@@ -154,7 +154,7 @@ export class Matrix {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract and naiveMultiply
+    * Basic operations add, subtract, naiveMultiply and scale
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -181,28 +181,6 @@ export class Matrix {
         return result;
     }
 
-    /**
-     * Subtracts another matrix from this matrix.
-     * @public
-     * @param {Matrix} B - The matrix to subtract.
-     * @returns {Matrix} The resulting matrix.
-     */
-    public subtract(B: Matrix): Matrix {
-        if (this.shape !== B.shape) {
-            throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
-        }
-
-        const result: Matrix = Matrix.zeros(this.rows, this.columns)
-
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                const difference: number = this.getElement(i, j) - B.getElement(i, j);
-                result.setElement(i, j, difference);
-            }
-        }
-
-        return result;
-    }
 
     /**
       * Multiplies this matrix with another matrix.
@@ -235,6 +213,34 @@ export class Matrix {
 
         return result;
     }
+
+    // public scale(scalar: number): Matrix {
+
+    // }
+
+    /**
+     * Subtracts another matrix from this matrix.
+     * @public
+     * @param {Matrix} B - The matrix to subtract.
+     * @returns {Matrix} The resulting matrix.
+     */
+    public subtract(B: Matrix): Matrix {
+        if (this.shape !== B.shape) {
+            throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
+        }
+
+        const result: Matrix = Matrix.zeros(this.rows, this.columns)
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                const difference: number = this.getElement(i, j) - B.getElement(i, j);
+                result.setElement(i, j, difference);
+            }
+        }
+
+        return result;
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -372,6 +378,20 @@ export class Matrix {
         return new Matrix(entries)
     }
 
+    /**
+     * Creates a matrix filled with ones with the specified number of rows and columns.
+     * @public
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
+     * @returns {Matrix} - The matrix filled with ones.
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     */
+    public static ones(rows: number, columns: number): Matrix {
+        if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
+        return new Matrix(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
+    }
+
 
     /**
      * Creates a random matrix with the specified number of rows and columns.
@@ -380,7 +400,7 @@ export class Matrix {
      * @param {number} rows - The number of rows in the matrix.
      * @param {number} columns - The number of columns in the matrix
      * @returns {Matrix} The randomized matrix
-     * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
     public static random(rows: number, columns: number): Matrix {
         if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
@@ -408,7 +428,7 @@ export class Matrix {
      * @param {number} rows - The number of rows in the matrix.
      * @param {number} columns - The number of columns in the matrix.
      * @returns {Matrix} - The matrix filled with zeros.
-     * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
     public static zeros(rows: number, columns: number): Matrix {
         if (rows <= 0 || columns <= 0) throw new MatrixError("Invalid argument", 606, { rows, columns });
