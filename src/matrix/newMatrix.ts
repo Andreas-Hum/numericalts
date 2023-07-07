@@ -300,12 +300,6 @@ export class Matrix {
         return result;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * 
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -321,6 +315,36 @@ export class Matrix {
     public clone(): Matrix {
         return new Matrix(this.toArray())
     }
+
+
+    /**
+     * Calculates the dot product of two vectors.
+     * @private
+     * @static
+     * @param {number[]} vector1 - The first vector.
+     * @param {number[]} vector2 - The second vector.
+     * @returns {number} The dot product of the two vectors.
+     */
+    private static dot(vector1: number[], vector2: number[]): number {
+        let dotProduct: number = 0;
+        for (let i = 0; i < vector1.length; i++) {
+            dotProduct += vector1[i] * vector2[i]
+        }
+        return dotProduct;
+    }
+
+    /**
+     * Normalizes a vector.
+     * @private
+     * @static
+     * @param {number[]} vector1 - The vector to normalize.
+     * @returns {number[]} The normalized vector.
+     */
+    private static normalize(vector1: number[]): number[] {
+        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
+        return vector1.map((entry: number) => entry * scalar)
+    }
+
 
 
     /**
@@ -377,7 +401,7 @@ export class Matrix {
      * Converts the matrix to a printable string
      * @public
      * @returns {string} The printable matrix in a nice format
-    */
+     */
     public toPrintString(): string {
         const shape: number[] = [this.rows, this.columns];
 
@@ -406,18 +430,9 @@ export class Matrix {
         return output;
     }
 
-    private static dot(vector1: number[], vector2: number[]): number {
-        let dotProduct: number = 0;
-        for (let i = 0; i < vector1.length; i++) {
-            dotProduct += vector1[i] * vector2[i]
-        }
-        return dotProduct;
-    }
 
-    private static normalize(vector1: number[]): number[] {
-        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
-        return vector1.map((entry: number) => entry * scalar)
-    }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -476,7 +491,6 @@ export class Matrix {
     }
 
 
-
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
      * @public
@@ -513,6 +527,13 @@ export class Matrix {
         return new Matrix(newEntries);
     }
 
+    /**
+     * Transposes a matrix.
+     * @public
+     * @static
+     * @param {Matrix} matrix - The matrix to transpose.
+     * @returns {Matrix} The transposed matrix.
+     */
     public static transpose(matrix: Matrix): Matrix {
         const transposedMatrix: Matrix = matrix.clone()
         const rows: number = transposedMatrix.rows;
