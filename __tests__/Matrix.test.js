@@ -346,6 +346,68 @@ describe('Matrix', () => {
 
     });
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Inverting
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Inverting an upper triangular matrix", () => {
+        test("Inverting a 3x3 upper triangular matrix", () => {
+            const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [0, 0, 6]]);
+
+            const expected = new Matrix([[1, - 1 / 2, -1 / 12], [0, 1 / 4, -5 / 24], [0, 0, 1 / 6]]);
+
+            const result = matrix.invertUpper();
+
+            expect(result).toEqual(expected);
+        });
+
+        test("Error: Not a square matrix", () => {
+            const matrix = new Matrix([[1, 2, 3], [0, 4, 5]]);
+
+            expect(() => {
+                matrix.invertUpper();
+            }).toThrow();
+        });
+
+        test("Error: Non upper triangular matrix", () => {
+            const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+
+            expect(() => {
+                matrix.invertUpper();
+            }).toThrow();
+        });
+    });
+
+    describe("Inverting a lower triangular matrix", () => {
+        test("Inverting a 3x3 lower triangular matrix", () => {
+            const matrix = new Matrix([[1, 0, 0], [2, 3, 0], [4, 5, 6]]);
+            const expected = new Matrix([[1, 0, 0], [-2 / 3, 1 / 3, 0], [-1 / 9, -5 / 18, 1 / 6]]);
+
+            const result = matrix.invertLower();
+
+            expect(result).toEqual(expected);
+        });
+
+        test("Error: Not a square matrix", () => {
+            const matrix = new Matrix([[1, 2, 3], [0, 4, 5]]);
+
+            expect(() => {
+                matrix.invertLower();
+            }).toThrow();
+        });
+
+        test("Error: Non lower triangular matrix", () => {
+            const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [6, 7, 8]]);
+
+            expect(() => {
+                matrix.invertLower();
+            }).toThrow();
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Utility methods
@@ -438,17 +500,13 @@ describe('Matrix', () => {
 
     describe('Is upper triangular', () => {
         it('A upper triangular matrix', () => {
-            // const tester = new Matrix([[1, 1, 2], [0, 1, 4], [0, 0, 2]])
-            // const ne = tester.invertUpper()
-            // console.log(ne.toString())
+
             const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
             expect(Matrix.isUpperTriangular(upperTriangular)).toBeTruthy()
         })
 
         it('A non upper triangular matrix', () => {
-            // const tester = new Matrix([[1, 0, 0], [4, 1, 0], [1, 1, 2]])
-            // const ne = tester.invertLower()
-            // console.log(ne.toString())
+
             const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
             expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
         })

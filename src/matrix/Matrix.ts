@@ -389,7 +389,7 @@ export class Matrix {
     /*
     * Inverting
     */
-    /////////////////////////////////////////////////////////////////////////////////////////////////¨
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /**
@@ -397,15 +397,14 @@ export class Matrix {
      *
      * This function computes the inverse of an upper triangular matrix. If the matrix
      * is not square (meaning, the number of rows doesn't match the number of columns),
-     * an error is thrown. To perform this inversion, an identity matrix is created 
-     * first. Then the function applies back substitution on each element in the 
-     * identity matrix, storing the results in a separate array. These results are 
-     * transposed, reversed, and finally converted into a row matrix to achieve the 
-     * inverse of the original matrix.
+     * an error is thrown. To perform this inversion, an identity matrix is created
+     * first. Then the function applies back substitution on each element in the
+     * identity matrix, storing the results in a separate array. These results are
+     * transposed, reversed, and returned
      * 
      * @returns {Matrix} The inverted upper triangular matrix.
      *
-     * @throws {MatrixError} If the original matrix is not square, an error is thrown.
+     * @throws {MatrixError} If the original matrix is not square or an upper triangular matrix, an error is thrown.
      */
     public invertUpper(): Matrix {
         //TODO: Psudo inverse
@@ -427,19 +426,18 @@ export class Matrix {
     }
 
     /**
-     * Inverts an upper triangular matrix.
+     * Inverts a lower triangular matrix.
      *
-     * This function computes the inverse of an upper triangular matrix. If the matrix
+     * This function computes the inverse of an upper lower matrix. If the matrix
      * is not square (meaning, the number of rows doesn't match the number of columns),
-     * an error is thrown. To perform this inversion, an identity matrix is created 
-     * first. Then the function applies back substitution on each element in the 
-     * identity matrix, storing the results in a separate array. These results are 
-     * transposed, reversed, and finally converted into a row matrix to achieve the 
-     * inverse of the original matrix.
+     * an error is thrown. To perform this inversion, an identity matrix is created
+     * first. Then the function applies foward substitution on each element in the
+     * identity matrix, storing the results in a separate array. These results are
+     * transposed, reversed, and returned.
      * 
-     * @returns {Matrix} The inverted upper triangular matrix.
+     * @returns {Matrix} The inverted lower triangular matrix.
      *
-     * @throws {MatrixError} If the original matrix is not square, an error is thrown.
+     * @throws {MatrixError} If the original matrix is not square or a lower triangular matrix , an error is thrown.
      */
     public invertLower(): Matrix {
         //TODO: Psudo inverse
@@ -451,10 +449,10 @@ export class Matrix {
         let invertedMatrixElements: number[][] = [];
 
         for (let i = 0; i < this.rows; i++) {
-            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(i));
+            invertedMatrixElements[i] = this.forwardSubstitution(identityMatrix.getRow(i));
         }
 
-        invertedMatrixElements.reverse()
+        // invertedMatrixElements.reverse()
 
 
         return new Matrix(invertedMatrixElements).transpose();
