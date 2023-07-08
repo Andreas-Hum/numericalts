@@ -257,6 +257,7 @@ export class Matrix implements MatrixTypes {
     * I
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    
     /**
      * Inverts an upper triangular matrix.
      *

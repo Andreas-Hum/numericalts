@@ -32,6 +32,8 @@ export default class MatrixError extends Error {
         // 813: Matrix Norm Error - Unknown error.
         // 814: Unsolvabe system
         // 815: Back substitution error - matrix is not upper triangular
+        // 816: Forward substitution error - matrix is not lower triangular
+
         //
 
 

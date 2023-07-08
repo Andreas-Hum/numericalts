@@ -265,6 +265,34 @@ describe('Matrix', () => {
         });
     });
 
+    describe('Forward substitution', () => {
+        it('A lower triangular matrix with the solution [4, -2, 11]  ', () => {
+            const solTest = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+            expect(solTest.forwardSubstitution([4, 2, 13])).toEqual([4, -2, 11])
+        });
+
+        it('A lower triangular row matrix with the solution [4, -6, 17]  ', () => {
+            const solTest = new Matrix([[1, 0, 0], [2, 1, 0], [2, 2, 1]])
+            expect(solTest.forwardSubstitution([4, 2, 13])).toEqual([4, -6, 17])
+        });
+
+        it('Error: Unsolvable system', () => {
+            const solTest = new Matrix([[1, 0, 0], [2, 0, 0], [2, 2, 2]])
+            expect(() => solTest.forwardSubstitution([4, 2, 13])).toThrow()
+        });
+
+        it('Error: Non lower triangular matrix', () => {
+            const solTest = new Matrix([[1, 2, 2], [1, 1, 3], [1, 1, 1]])
+            expect(() => solTest.forwardSubstitution([4, 2, 13])).toThrow()
+        });
+
+        it('Error: Invalid argument', () => {
+            const solTest = new Matrix([[1, 0, 0], [2, 1, 0], [2, 2, 1]])
+            expect(() => solTest.forwardSubstitution("[4, 2, 13]")).toThrow()
+        });
+    });
+
+
     describe('QR decomposition', () => {
         it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
             const testMatrix = new Matrix([[1, 1], [0, 1]])
@@ -410,12 +438,17 @@ describe('Matrix', () => {
 
     describe('Is upper triangular', () => {
         it('A upper triangular matrix', () => {
-
+            // const tester = new Matrix([[1, 1, 2], [0, 1, 4], [0, 0, 2]])
+            // const ne = tester.invertUpper()
+            // console.log(ne.toString())
             const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
             expect(Matrix.isUpperTriangular(upperTriangular)).toBeTruthy()
         })
 
         it('A non upper triangular matrix', () => {
+            // const tester = new Matrix([[1, 0, 0], [4, 1, 0], [1, 1, 2]])
+            // const ne = tester.invertLower()
+            // console.log(ne.toString())
             const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
             expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
         })

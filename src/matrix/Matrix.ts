@@ -308,9 +308,16 @@ export class Matrix {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-    public backSubstitution(b: number[]) {
-        if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815);
+    /**
+     * Performs back-substitution on an upper triangular matrix to solve
+     * a system of linear equations.
+     * @public
+     * @returns {number[]} Solution to the system of linear equations
+     *
+     * @throws {MatrixError} if the matrix is not upper traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     */
+    public backSubstitution(b: number[]): number[] {
+        if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
         if (!Array.isArray(b)) throw new MatrixError("b is not an array", 606, { b });
 
 
@@ -333,6 +340,38 @@ export class Matrix {
 
     }
 
+
+    /**
+     * Performs back-substitution on an upper triangular matrix to solve
+     * a system of linear equations.
+     * @public
+     * @returns {number[]} Solution to the system of linear equations
+     *
+     * @throws {MatrixError} if the matrix is not upper traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     */
+    public forwardSubstitution(b: number[]): number[] {
+        if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 816, { matrix: this });
+        if (!Array.isArray(b)) throw new MatrixError("b is not an array", 606, { b });
+
+        const sol: number[] = [];
+        const rows: number = this.rows;
+        const columns: number = this.columns;
+
+
+        for (let i = 0; i < rows; i++) {
+            let currentDiag: number = this.getElement(i, i)
+            if (currentDiag === 0) throw new MatrixError("Unsolvable system: zero on diagonal", 814, { matrix: this });
+            let sum: number = 0
+            for (let j = 0; j < i; j++) {
+                sum += sol[j] * this.getElement(i, j)
+            }
+            sol[i] = (b[i] - sum) / currentDiag
+        }
+        return sol;
+
+
+    }
+
     /**
      * Performs QR decomposition on the matrix.
      * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
@@ -344,6 +383,85 @@ export class Matrix {
         R.roundToZero()
         return { Q: Q, R: R };
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Inverting
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////¨
+
+
+    /**
+     * Inverts an upper triangular matrix.
+     *
+     * This function computes the inverse of an upper triangular matrix. If the matrix
+     * is not square (meaning, the number of rows doesn't match the number of columns),
+     * an error is thrown. To perform this inversion, an identity matrix is created 
+     * first. Then the function applies back substitution on each element in the 
+     * identity matrix, storing the results in a separate array. These results are 
+     * transposed, reversed, and finally converted into a row matrix to achieve the 
+     * inverse of the original matrix.
+     * 
+     * @returns {Matrix} The inverted upper triangular matrix.
+     *
+     * @throws {MatrixError} If the original matrix is not square, an error is thrown.
+     */
+    public invertUpper(): Matrix {
+        //TODO: Psudo inverse
+        if (!this.isSquare) throw new MatrixError("Uninvertable matrix: not a square matrix", 812, { matrix: this });
+        if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
+
+
+        const identityMatrix: Matrix = Matrix.identity(this.rows);
+        let invertedMatrixElements: number[][] = [];
+
+        for (let i = this.rows - 1; i >= 0; i--) {
+            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(this.rows - i - 1));
+        }
+
+        invertedMatrixElements.reverse()
+
+
+        return new Matrix(invertedMatrixElements).transpose();
+    }
+
+    /**
+     * Inverts an upper triangular matrix.
+     *
+     * This function computes the inverse of an upper triangular matrix. If the matrix
+     * is not square (meaning, the number of rows doesn't match the number of columns),
+     * an error is thrown. To perform this inversion, an identity matrix is created 
+     * first. Then the function applies back substitution on each element in the 
+     * identity matrix, storing the results in a separate array. These results are 
+     * transposed, reversed, and finally converted into a row matrix to achieve the 
+     * inverse of the original matrix.
+     * 
+     * @returns {Matrix} The inverted upper triangular matrix.
+     *
+     * @throws {MatrixError} If the original matrix is not square, an error is thrown.
+     */
+    public invertLower(): Matrix {
+        //TODO: Psudo inverse
+        if (!this.isSquare) throw new MatrixError("Uninvertable matrix: not a square matrix", 812, { matrix: this });
+        if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
+
+
+        const identityMatrix: Matrix = Matrix.identity(this.rows);
+        let invertedMatrixElements: number[][] = [];
+
+        for (let i = 0; i < this.rows; i++) {
+            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(i));
+        }
+
+        invertedMatrixElements.reverse()
+
+
+        return new Matrix(invertedMatrixElements).transpose();
+    }
+
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
@@ -358,35 +476,6 @@ export class Matrix {
      */
     public clone(): Matrix {
         return new Matrix(this.toArray())
-    }
-
-
-    /**
-     * Calculates the dot product of two vectors.
-     * @private
-     * @static
-     * @param {number[]} vector1 - The first vector.
-     * @param {number[]} vector2 - The second vector.
-     * @returns {number} The dot product of the two vectors.
-     */
-    private static dot(vector1: number[], vector2: number[]): number {
-        let dotProduct: number = 0;
-        for (let i = 0; i < vector1.length; i++) {
-            dotProduct += vector1[i] * vector2[i]
-        }
-        return dotProduct;
-    }
-
-    /**
-     * Normalizes a vector.
-     * @private
-     * @static
-     * @param {number[]} vector1 - The vector to normalize.
-     * @returns {number[]} The normalized vector.
-     */
-    private static normalize(vector1: number[]): number[] {
-        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
-        return vector1.map((entry: number) => entry * scalar)
     }
 
 
@@ -583,6 +672,37 @@ export class Matrix {
     * Static methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Calculates the dot product of two vectors.
+     * @private
+     * @static
+     * @param {number[]} vector1 - The first vector.
+     * @param {number[]} vector2 - The second vector.
+     * @returns {number} The dot product of the two vectors.
+     */
+    private static dot(vector1: number[], vector2: number[]): number {
+        let dotProduct: number = 0;
+        for (let i = 0; i < vector1.length; i++) {
+            dotProduct += vector1[i] * vector2[i]
+        }
+        return dotProduct;
+    }
+
+    /**
+     * Normalizes a vector.
+     * @private
+     * @static
+     * @param {number[]} vector1 - The vector to normalize.
+     * @returns {number[]} The normalized vector.
+     */
+    private static normalize(vector1: number[]): number[] {
+        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
+        return vector1.map((entry: number) => entry * scalar)
+    }
+
+
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
