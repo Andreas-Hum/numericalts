@@ -303,6 +303,24 @@ export class Matrix {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
+    * Solving systems
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Performs QR decomposition on the matrix.
+     * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
+     */
+    public QRDecomposition(): { Q: Matrix, R: Matrix } {
+        const Q: Matrix = this.gramSmith();
+        const QT: Matrix = Q.transpose();
+        const R: Matrix = QT.naiveMultiply(this);
+        R.roundToZero()
+        return { Q: Q, R: R };
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     * Utility methods
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -377,6 +395,25 @@ export class Matrix {
         });
     }
 
+
+    /**
+     * Rounds values close to zero in a the matrix to zero.
+     * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
+     * @returns {void}
+     */
+    public roundToZero(threshold: number = DELTA): void {
+        const result: Float32Array = this.mElements;
+        const size: number = this.size;
+        for (let i = 0; i < size; i++) {
+            if (Math.abs(result[i]) < threshold) {
+                this.mElements[i] = 0;
+            } else {
+                this.mElements[i] = result[i];
+            }
+        }
+    }
+
+
     /**
      * Converts the matrix to a 2D array.
      * @public
@@ -430,17 +467,6 @@ export class Matrix {
         return output;
     }
 
-
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * Static methods
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     /**
      * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
      * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
@@ -452,23 +478,25 @@ export class Matrix {
      *
      * @returns {Matrix} A new Matrix instance constructed using the orthonormal vectors as columns.
      *
-     * @throws {VectorError} If any vector obtained during the process is nearly zero (having euclidean norm lesser than a small
+     * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
      * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
      *
      * @public
      */
-    public static GramSmith(A: Matrix): Matrix {
-        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+    public gramSmith(): Matrix {
         const orthogonalColumns: number[][] = []
 
-        orthogonalColumns.push(A.getColumn(0));
+        orthogonalColumns.push(this.getColumn(0));
 
-        for (let i = 1; i < A.columns; i++) {
-            let orthogonalProjection: number[] = [...A.getColumn(i)]; // Initialize orthogonalProjection as a copy of the current column
+        const columns: number = this.columns;
+
+
+        for (let i = 1; i < columns; i++) {
+            let orthogonalProjection: number[] = [...this.getColumn(i)]; // Initialize orthogonalProjection as a copy of the current column
 
             for (let j = 0; j < i; j++) {
                 let u: number[] = orthogonalColumns[j]
-                let v: number[] = A.getColumn(i)
+                let v: number[] = this.getColumn(i)
                 let uv: number = Matrix.dot(u, v)
                 let uu: number = Matrix.dot(u, u)
                 let scalar: number = uv / uu;
@@ -490,6 +518,45 @@ export class Matrix {
         return new Matrix(transposedArray);
     }
 
+    /**
+     * Transposes a matrix.
+     * @public
+     * @returns {Matrix} The transposed matrix.
+     */
+    public transpose(): Matrix {
+
+        const transposedMatrix: Matrix = this.clone()
+        const rows: number = transposedMatrix.rows;
+        const columns: number = transposedMatrix.columns;
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                transposedMatrix.mElements[j * rows + i] = this.mElements[i * columns + j];
+            }
+        }
+        transposedMatrix.rows = columns;
+        transposedMatrix.columns = rows;
+
+        if (transposedMatrix.isTall) {
+            transposedMatrix.isTall = false;
+            transposedMatrix.isWide = true;
+        } else if (transposedMatrix.isWide) {
+            transposedMatrix.isTall = true;
+            transposedMatrix.isWide = false;
+        }
+
+        transposedMatrix.updateShape()
+
+        return transposedMatrix;
+    }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
@@ -527,38 +594,9 @@ export class Matrix {
         return new Matrix(newEntries);
     }
 
-    /**
-     * Transposes a matrix.
-     * @public
-     * @static
-     * @param {Matrix} matrix - The matrix to transpose.
-     * @returns {Matrix} The transposed matrix.
-     */
-    public static transpose(matrix: Matrix): Matrix {
-        const transposedMatrix: Matrix = matrix.clone()
-        const rows: number = transposedMatrix.rows;
-        const columns: number = transposedMatrix.columns;
 
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                transposedMatrix.mElements[j * rows + i] = matrix.mElements[i * columns + j];
-            }
-        }
-        transposedMatrix.rows = columns;
-        transposedMatrix.columns = rows;
 
-        if (transposedMatrix.isTall) {
-            transposedMatrix.isTall = false;
-            transposedMatrix.isWide = true;
-        } else if (transposedMatrix.isWide) {
-            transposedMatrix.isTall = true;
-            transposedMatrix.isWide = false;
-        }
 
-        transposedMatrix.updateShape()
-
-        return transposedMatrix;
-    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

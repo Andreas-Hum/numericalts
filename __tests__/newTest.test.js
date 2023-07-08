@@ -255,6 +255,18 @@ describe('Matrix', () => {
 
     })
 
+    describe('Transpose', () => {
+        it('Transposing a 2x2 matrix', () => {
+            const compareMatrix = new Matrix([[1, 3], [2, 4]])
+            expect(twoByTwo.transpose()).toEqual(compareMatrix)
+        })
+
+        it('Transposing a 2x3 matrix', () => {
+            expect(twoByThree.transpose(twoByThree)).toEqual(threeByTwo)
+        })
+
+    })
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Static methods
@@ -276,11 +288,14 @@ describe('Matrix', () => {
             expect(() => Matrix.reshape([1, 2, 3, 4], 10, 10)).toThrow()
         })
 
-        it('Error: Incompatible dimensions', () => {
+        it('Error: Invalid argument', () => {
             expect(() => Matrix.reshape([1, 2, 3, 4], "2", "10")).toThrow()
         })
 
     })
+
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,7 +315,7 @@ describe('Matrix', () => {
             expect(Matrix.isLowerTriangular(upperTriangular)).toBeFalsy()
         })
 
-        it('Error: B not an instance of Matrix', () => {
+        it('Error: A not an instance of Matrix', () => {
             expect(() => Matrix.isLowerTriangular("upperTriangular")).toThrow()
         })
 
@@ -308,6 +323,7 @@ describe('Matrix', () => {
 
     describe('Is upper triangular', () => {
         it('A upper triangular matrix', () => {
+
             const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
             expect(Matrix.isUpperTriangular(upperTriangular)).toBeTruthy()
         })
@@ -317,7 +333,7 @@ describe('Matrix', () => {
             expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
         })
 
-        it('Error: B not an instance of Matrix', () => {
+        it('Error: A not an instance of Matrix', () => {
             expect(() => Matrix.isUpperTriangular("upperTriangular")).toThrow()
         })
 
