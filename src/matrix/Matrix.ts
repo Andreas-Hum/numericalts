@@ -232,6 +232,9 @@ export class Matrix {
     }
 
 
+
+
+
     /**
       * Multiplies this matrix with another matrix.
       * @public
@@ -243,26 +246,33 @@ export class Matrix {
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
 
+        // Transpose Matrix B first
+        const BT: Matrix = B.transpose();
         const result: Matrix = Matrix.zeros(this.rows, B.columns)
 
         const rows = this.rows;
         const columns = this.columns;
-        const matrixColumns = B.columns;
+        const matrixColumns = BT.columns;
+        const multiplyersA = this.mElements;
+        const multipliersBT = BT.mElements; // We use the multipliers of B Transpose  
+        const resultMultipliers = result.mElements;
+
 
         for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < matrixColumns; j++) {
+            for (let k = 0; k < matrixColumns; k++) { // Changed the order of the loops to ikj 
                 let sum = 0;
-                for (let k = 0; k < columns; k++) {
-                    const elementA: number = this.getElement(i, k);
-                    const elementB: number = B.getElement(k, j);
-                    sum += elementA * elementB;
+                for (let j = 0; j < columns; j++) {
+                    sum += multiplyersA[i * columns + j] * multipliersBT[k * columns + j]; // changed the second multiplier to B transposed 
                 }
-                result.setElement(i, j, sum);
+                resultMultipliers[i * matrixColumns + k] = sum // This remains same
             }
         }
 
         return result;
     }
+
+
+
 
     /**
      * Scales the matrix and returns a new matrix with the result of the scaling
@@ -475,8 +485,6 @@ export class Matrix {
     public clone(): Matrix {
         return new Matrix(this.toArray())
     }
-
-
 
     /**
      * Prints the matrix in a formatted way.
@@ -746,6 +754,21 @@ export class Matrix {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+    /**
+     * Checks if a given matrix contains only integer elements.
+     * @param A - The matrix to check.
+     * @returns True if all elements in the matrix are integers, false otherwise.
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
+     */
+    public static isIntMatrix(A: Matrix): boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+
+        return A.mElements.every((entry: number) => Number.isInteger(entry));
+    }
+
+
     /**
     * This method checks if the matrix is lower triangular.
     * A matrix is said to be lower triangular if all its entries above the main diagonal are zero.
@@ -883,4 +906,3 @@ export class Matrix {
 
 
 }
-
