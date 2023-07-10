@@ -334,12 +334,50 @@ export class Matrix {
     }
 
 
+    // /**
+    //   * Multiplies this matrix with another matrix.
+    //   * @public
+    //   * @param {Matrix} B - The matrix to multiply with.
+    //   * @returns {Matrix} The resulting matrix.
+    //   */
+    // public naiveMultiply(B: Matrix): Matrix {
+    //     if (this.columns !== B.rows) {
+    //         throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+    //     }
+
+    //     const rows: number = this.rows;
+    //     const columns: number = this.columns;
+    //     const matrixColumns: number = B.columns;
+    //     const multipliersA: Float32Array = this.mElements;
+    //     const multipliersB: Float32Array = B.transpose().mElements;
+
+    //     const result: Float32Array = new Float32Array(rows * matrixColumns);
+
+    //     for (let i = 0; i < rows; i++) {
+    //         const rowOffsetA: number = i * columns;
+
+    //         for (let j = 0; j < matrixColumns; j++) {
+    //             const colOffsetB: number = j * columns;
+    //             let sum: number = 0;
+
+    //             for (let k = 0; k < columns; k++) {
+    //                 sum += multipliersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
+    //             }
+
+    //             result[i * matrixColumns + j] = sum;
+    //         }
+    //     }
+
+    //     return new Matrix(result, rows, matrixColumns);
+    // }
+
+
     /**
-      * Multiplies this matrix with another matrix.
-      * @public
-      * @param {Matrix} B - The matrix to multiply with.
-      * @returns {Matrix} The resulting matrix.
-      */
+     * Multiplies this matrix with another matrix using dynamic loop unrolling.
+     * @public
+     * @param {Matrix} B - The matrix to multiply with.
+     * @returns {Matrix} The resulting matrix.
+     */
     public naiveMultiply(B: Matrix): Matrix {
         if (this.columns !== B.rows) {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
@@ -353,15 +391,20 @@ export class Matrix {
 
         const result: Float32Array = new Float32Array(rows * matrixColumns);
 
+        // Set the loop unrolling factor based on the number of columns of the first matrix Math.min(columns, Math.ceil(columns / 32))
+        const unrollingFactor: number = 16
+
         for (let i = 0; i < rows; i++) {
             const rowOffsetA: number = i * columns;
 
             for (let j = 0; j < matrixColumns; j++) {
-                const colOffsetB: number = j * columns;
+                const colOffsetB: number = j * unrollingFactor;
                 let sum: number = 0;
 
-                for (let k = 0; k < columns; k++) {
-                    sum += multipliersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
+                for (let k = 0; k < columns; k += unrollingFactor) {
+                    for (let u = 0; u < unrollingFactor && k + u < columns; u++) {
+                        sum += multipliersA[rowOffsetA + k + u] * multipliersB[colOffsetB + k + u];
+                    }
                 }
 
                 result[i * matrixColumns + j] = sum;
@@ -1067,6 +1110,7 @@ export class Matrix {
 
 
 }
+
 // function writeArrayToFile(array: any, filePath: any) {
 //     // Convert the array to a string
 //     const arrayString = array.join('\n');
@@ -1081,16 +1125,22 @@ export class Matrix {
 //     });
 // }
 
-
-
 // function tester() {
 //     const a = [];
-//     for (let i = 1; i < 501; i++) {
-//         let m1 = Matrix.ones(i, i)
+//     for (let i = 1; i < 1001; i++) {
+//         let m1 = Matrix.ones(i, i);
 //         let s = performance.now();
-//         m1.fastMultiply(m1); // Use await to wait for the parallel multiplication to complete
+//         m1.naiveMultiply(m1);
 //         let e = performance.now();
 //         a.push((e - s) / 1000);
 //     }
-//     writeArrayToFile(a, "karatsuba.txt");
+//     writeArrayToFile(a, "unroller.txt");
 // }
+
+// tester();
+
+let m1 = Matrix.ones(1000, 1000);
+let s = performance.now();
+m1.naiveMultiply(m1);
+let e = performance.now();
+console.log((e - s) / 1000);
