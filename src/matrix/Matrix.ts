@@ -1,8 +1,6 @@
 import MatrixError from "../errors/MatrixError";
-import * as fs from 'fs';
 import { DELTA } from "../utils/constants";
-import os = require('os');
-//TODO: Add impliment and continue adding methods
+
 export class Matrix {
 
     public shape: string = "0";
@@ -23,8 +21,8 @@ export class Matrix {
      */
     constructor(entries: number[][] | Float32Array, rows?: number, columns?: number) {
         if (entries instanceof Float32Array) {
-            if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number") {
-                throw new MatrixError("Rows and columns must be defined for Float32Array entries", 804);
+            if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
+                throw new MatrixError("Rows and columns must be defined for Float32Array entries, be of type number and not be 0 or negative", 804);
             }
 
             this.validateFloatArray(entries);
@@ -300,38 +298,6 @@ export class Matrix {
         return new Matrix(result, rows, matrixColumns);
     }
 
-
-    // public naiveMultiply(B: Matrix): Matrix {
-    //     if (this.columns !== B.rows) {
-    //         throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-    //     }
-    //     if (!(B instanceof Matrix)) {
-    //         throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-    //     }
-
-    //     const result: Matrix = Matrix.zeros(this.rows, B.columns);
-
-    //     const rows = this.rows;
-    //     const columns = this.columns;
-    //     const matrixColumns = B.columns;
-    //     const multiplyersA = this.mElements;
-    //     const multipliersB = B.transpose().mElements;
-    //     const resultMultipliers = result.mElements;
-
-    //     for (let i = 0; i < rows; i++) {
-    //         for (let j = 0; j < matrixColumns; j++) {
-    //             let sum = 0;
-    //             const startIndexA = i * columns;
-    //             const startIndexB = j * columns;
-    //             for (let k = 0; k < columns; k++) {
-    //                 sum += multiplyersA[startIndexA + k] * multipliersB[startIndexB + k];
-    //             }
-    //             resultMultipliers[i * matrixColumns + j] = sum;
-    //         }
-    //     }
-
-    //     return result;
-    // }
 
 
     /**
@@ -980,7 +946,7 @@ export class Matrix {
 //     });
 // }
 
-//  function tester() {
+// function tester() {
 //     const a = [];
 //     for (let i = 1; i < 501; i++) {
 //         let m1 = Matrix.ones(i, i);
@@ -997,8 +963,11 @@ export class Matrix {
 
 // tester()
 
-let m1 = Matrix.ones(2000, 2000);
-let s = performance.now();
-m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
-let e = performance.now();
-console.log((e - s) / 1000)
+// let m1 = Matrix.ones(3000, 3000);
+// let s = performance.now();
+// m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
+// let e = performance.now();
+// console.log((e - s) / 1000)
+
+
+
