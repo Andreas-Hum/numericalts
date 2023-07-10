@@ -17,27 +17,41 @@ export class Matrix {
 
     /**
      * Constructs a matrix object.
-     * @param {number[][]} entries - The entries of the matrix.
+     * @param {number[][] | Float32Array} entries - The entries of the matrix.
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
      */
-    constructor(entries: number[][]) {
-        if (!this.validateMatrixEntries(entries)) {
-            throw new MatrixError("Invalid matrix entries", 803);
-        }
-
-        const numRows: number = entries.length;
-        const numCols: number = entries[0].length;
-        this.mElements = new Float32Array(numRows * numCols);
-
-        for (let i = 0; i < numRows; i++) {
-            for (let j = 0; j < numCols; j++) {
-                const index: number = i * numCols + j;
-                this.mElements[index] = entries[i][j];
+    constructor(entries: number[][] | Float32Array, rows?: number, columns?: number) {
+        if (entries instanceof Float32Array) {
+            if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number") {
+                throw new MatrixError("Rows and columns must be defined for Float32Array entries", 804);
             }
-        }
 
-        this.rows = numRows;
-        this.columns = numCols;
-        this.size = numRows * numCols;
+            this.validateFloatArray(entries);
+            this.mElements = entries;
+            this.rows = rows;
+            this.columns = columns;
+            this.size = rows * columns;
+        } else {
+            if (!this.validateMatrixEntries(entries)) {
+                throw new MatrixError("Invalid matrix entries", 803);
+            }
+
+            const numRows: number = entries.length;
+            const numCols: number = entries[0].length;
+            this.mElements = new Float32Array(numRows * numCols);
+
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCols; j++) {
+                    const index: number = i * numCols + j;
+                    this.mElements[index] = entries[i][j];
+                }
+            }
+
+            this.rows = numRows;
+            this.columns = numCols;
+            this.size = numRows * numCols;
+        }
 
         this.updateMatrix()
     }
@@ -79,6 +93,22 @@ export class Matrix {
 
         return true;
     }
+
+
+    /**
+     * Validates the entries of a Float32Array to ensure they are valid.
+     * @private
+     * @param {Float32Array} entries - The entries of the matrix.
+     * @returns {void}
+     */
+    private validateFloatArray(entries: Float32Array): void {
+        for (let i = 0; i < entries.length; i++) {
+            if (typeof entries[i] !== 'number' || isNaN(entries[i])) {
+                throw new MatrixError("Invalid Float32Array entries", 805);
+            }
+        }
+    }
+
 
     /**
     * Updates all aspects of Matrix.
@@ -233,98 +263,43 @@ export class Matrix {
 
 
 
-
-    // NOT TRANSPOSED
     /**
       * Multiplies this matrix with another matrix.
       * @public
       * @param {Matrix} B - The matrix to multiply with.
       * @returns {Matrix} The resulting matrix.
       */
-    // public naiveMultiply(B: Matrix): Matrix {
-    //     if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-    //     if (this.shape === "(1,1)" && B.shape === "(1,1)") return new Matrix([[B.mElements[0] * this.mElements[0]]])
-
-    //     const result: Matrix = Matrix.zeros(this.rows, B.columns)
-
-    //     const rows = this.rows;
-    //     const columns = this.columns;
-    //     const matrixColumns = B.columns;
-    //     const multiplyersA = this.mElements;
-    //     const multipliersB = B.mElements;
-    //     const resultMultipliers = result.mElements;
-
-    //     for (let i = 0; i < rows; i++) {
-    //         for (let j = 0; j < matrixColumns; j++) {
-    //             let sum = 0;
-    //             for (let k = 0; k < columns; k++) {
-    //                 sum += multiplyersA[i * columns + k] * multipliersB[k * matrixColumns + j];
-    //             }
-    //             resultMultipliers[i * matrixColumns + j] = sum
-    //         }
-    //     }
-    //     return result;
-    // }
-
-
-    //  TRANSPOSED
-
-    // public naiveMultiply(B: Matrix): Matrix {
-    //     if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-
-    //     const result: Matrix = Matrix.zeros(this.rows, B.columns)
-
-    //     const rows = this.rows;
-    //     const columns = this.columns;
-    //     const matrixColumns = B.columns;
-    //     const multiplyersA = this.mElements;
-    //     const multipliersB = B.transpose().mElements;
-    //     const resultMultipliers = result.mElements;
-
-    //     for (let i = 0; i < rows; i++) {
-    //         for (let j = 0; j < matrixColumns; j++) {
-    //             let sum = 0;
-    //             for (let k = 0; k < columns; k++) {
-    //                 sum += multiplyersA[i * columns + k] * multipliersB[j * columns + k];
-    //             }
-    //             resultMultipliers[i * matrixColumns + j] = sum;
-    //         }
-    //     }
-
-    //     return result;
-    // }
-
     public naiveMultiply(B: Matrix): Matrix {
         if (this.columns !== B.rows) {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
-    
-        const result: number[][] = [];
+
         const rows = this.rows;
         const columns = this.columns;
         const matrixColumns = B.columns;
-        const multiplyersA = this.mElements;
+        const multipliersA = this.mElements;
         const multipliersB = B.transpose().mElements;
-    
+
+        const result: Float32Array = new Float32Array(rows * matrixColumns);
+
         for (let i = 0; i < rows; i++) {
             const rowOffsetA = i * columns;
-            const resultRow: number[] = [];
+
             for (let j = 0; j < matrixColumns; j++) {
                 const colOffsetB = j * columns;
                 let sum = 0;
+
                 for (let k = 0; k < columns; k++) {
-                    sum += multiplyersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
+                    sum += multipliersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
                 }
-                resultRow.push(sum);
+
+                result[i * matrixColumns + j] = sum;
             }
-            result.push(resultRow);
         }
-    
-        return new Matrix(result);
+
+        return new Matrix(result, rows, matrixColumns);
     }
-    
+
 
     // public naiveMultiply(B: Matrix): Matrix {
     //     if (this.columns !== B.rows) {
@@ -333,16 +308,16 @@ export class Matrix {
     //     if (!(B instanceof Matrix)) {
     //         throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
     //     }
-    
+
     //     const result: Matrix = Matrix.zeros(this.rows, B.columns);
-    
+
     //     const rows = this.rows;
     //     const columns = this.columns;
     //     const matrixColumns = B.columns;
     //     const multiplyersA = this.mElements;
     //     const multipliersB = B.transpose().mElements;
     //     const resultMultipliers = result.mElements;
-    
+
     //     for (let i = 0; i < rows; i++) {
     //         for (let j = 0; j < matrixColumns; j++) {
     //             let sum = 0;
@@ -354,7 +329,7 @@ export class Matrix {
     //             resultMultipliers[i * matrixColumns + j] = sum;
     //         }
     //     }
-    
+
     //     return result;
     // }
 
