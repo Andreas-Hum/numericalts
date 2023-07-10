@@ -213,6 +213,7 @@ describe('Matrix', () => {
     describe('Naive multiplication', () => {
         it('Multiplying a 2x3 matrix with a 3x2', () => {
             const compareMatrix = new Matrix([[14, 32], [32, 77]])
+    
             expect(twoByThree.naiveMultiply(threeByTwo)).toEqual(compareMatrix)
         })
 

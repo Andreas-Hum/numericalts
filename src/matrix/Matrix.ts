@@ -1,5 +1,7 @@
 import MatrixError from "../errors/MatrixError";
 import { DELTA } from "../utils/constants";
+import * as fs from "fs"
+import * as os from 'os';
 
 export class Matrix {
 
@@ -228,10 +230,46 @@ export class Matrix {
         this.mElements[index] = value;
     }
 
+    /**
+     * Retrieves a submatrix from the current matrix.
+     * @public
+     * @param {number} startRow - The starting row index of the submatrix.
+     * @param {number} startCol - The starting column index of the submatrix.
+     * @param {number} size - The size of the submatrix (number of rows and columns).
+     * @returns {Matrix} A new Matrix object representing the submatrix.
+     */
+    public getSubmatrix(startRow: number, startCol: number, size: number): Matrix {
+        const submatrixElements: Float32Array = new Float32Array(size * size);
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const index = i * size + j;
+                const originalIndex = (startRow + i) * this.columns + (startCol + j);
+                submatrixElements[index] = this.mElements[originalIndex];
+            }
+        }
+        return new Matrix(submatrixElements, size, size);
+    }
+
+    /**
+     * @public
+     * @param {number} startRow - The starting row index of the submatrix.
+     * @param {number} startCol - The starting column index of the submatrix.
+     * @param {number} submatrixElements - The elements of the submatrix to be set.
+     */
+    public setSubmatrix(startRow: number, startCol: number, submatrixElements: Float32Array): void {
+        const size: number = Math.sqrt(submatrixElements.length);
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const index = (startRow + i) * this.columns + (startCol + j);
+                this.mElements[index] = submatrixElements[i * size + j];
+            }
+        }
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract, naiveMultiply and scale
+    * Basic operations add, subtract, naiveMultiply,strassens and scale
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -245,20 +283,55 @@ export class Matrix {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
+        const resultElements = new Float32Array(this.mElements);
+        const size = this.size;
 
-
-        const result: Matrix = new Matrix(new Array(this.rows).fill(0).map(() => new Array(this.columns).fill(0)));
-
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                const sum = this.getElement(i, j) + B.getElement(i, j);
-                result.setElement(i, j, sum);
-            }
+        for (let i = 0; i < size; i++) {
+            resultElements[i] += B.mElements[i];
         }
 
-        return result;
+        return new Matrix(resultElements, this.rows, this.columns);
     }
 
+
+    /**
+     * Adds another matrix to this matrix. is async and faster
+     * @public
+     * @param {Matrix} B - The matrix to add.
+     * @returns {Matrix} The resulting matrix.
+     */
+    public async addasync(B: Matrix): Promise<Matrix> {
+        if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+
+        const resultElements = new Float32Array(this.mElements);
+        const size = this.size;
+
+        // Calculate the chunk size based on the number of available processors
+        const numProcessors = os.cpus().length;
+        const chunkSize = Math.ceil(size / numProcessors);
+
+        const promises = [];
+
+        for (let i = 0; i < numProcessors; i++) {
+            const start = i * chunkSize;
+            const end = Math.min(start + chunkSize, size);
+
+            promises.push(
+                new Promise<void>((resolve) => {
+                    // Perform addition in parallel for the chunk
+                    for (let j = start; j < end; j++) {
+                        resultElements[j] += B.mElements[j];
+                    }
+                    resolve();
+                })
+            );
+        }
+
+        // Wait for all promises to resolve
+        await Promise.all(promises);
+        return new Matrix(resultElements, this.rows, this.columns);
+    }
 
 
     /**
@@ -298,8 +371,6 @@ export class Matrix {
         return new Matrix(result, rows, matrixColumns);
     }
 
-
-
     /**
      * Scales the matrix and returns a new matrix with the result of the scaling
      * @public
@@ -312,6 +383,62 @@ export class Matrix {
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
     }
+
+    /**
+     * Performs matrix multiplication using Strassen's algorithm.
+     * @param {Matrix} other - The matrix to multiply with.
+     * @returns {Matrix} - The resulting matrix.
+     */
+    public strassenMatrixMultiplication(other: Matrix): Matrix {
+        // Check if matrices are square and have dimensions that are powers of 2
+        const n = this.rows;
+        if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !this.isPowerOfTwo(n)) {
+            throw new Error('Matrices must be square and have dimensions that are powers of 2');
+        }
+
+        // Base case: if dimensions are small enough, perform conventional matrix multiplication
+        if (n <= 2) {
+            return this.naiveMultiply(other);
+        }
+
+        // Divide matrices into submatrices
+        const halfSize = n / 2;
+
+        const A11 = this.getSubmatrix(0, 0, halfSize);
+        const A12 = this.getSubmatrix(0, halfSize, halfSize);
+        const A21 = this.getSubmatrix(halfSize, 0, halfSize);
+        const A22 = this.getSubmatrix(halfSize, halfSize, halfSize);
+
+        const B11 = other.getSubmatrix(0, 0, halfSize);
+        const B12 = other.getSubmatrix(0, halfSize, halfSize);
+        const B21 = other.getSubmatrix(halfSize, 0, halfSize);
+        const B22 = other.getSubmatrix(halfSize, halfSize, halfSize);
+
+        // Calculate the seven required products using the submatrices
+        const P1 = A11.strassenMatrixMultiplication(B12.subtract(B22));
+        const P2 = A11.add(A12).strassenMatrixMultiplication(B22);
+        const P3 = A21.add(A22).strassenMatrixMultiplication(B11);
+        const P4 = A22.strassenMatrixMultiplication(B21.subtract(B11));
+        const P5 = A11.add(A22).strassenMatrixMultiplication(B11.add(B22));
+        const P6 = A12.subtract(A22).strassenMatrixMultiplication(B21.add(B22));
+        const P7 = A11.subtract(A21).strassenMatrixMultiplication(B11.add(B12));
+
+        // Calculate the resulting submatrices
+        const C11 = P5.add(P4).subtract(P2).add(P6);
+        const C12 = P1.add(P2);
+        const C21 = P3.add(P4);
+        const C22 = P5.add(P1).subtract(P3).subtract(P7);
+
+        // Combine the resulting submatrices to form the final matrix C
+        const C = new Matrix(new Float32Array(n * n), n, n);
+        C.setSubmatrix(0, 0, C11.mElements);
+        C.setSubmatrix(0, halfSize, C12.mElements);
+        C.setSubmatrix(halfSize, 0, C21.mElements);
+        C.setSubmatrix(halfSize, halfSize, C22.mElements);
+
+        return C;
+    }
+
 
     /**
      * Subtracts another matrix from this matrix.
@@ -391,7 +518,6 @@ export class Matrix {
 
         const sol: number[] = [];
         const rows: number = this.rows;
-        const columns: number = this.columns;
 
 
         for (let i = 0; i < rows; i++) {
@@ -510,6 +636,15 @@ export class Matrix {
      */
     public clone(): Matrix {
         return new Matrix(this.toArray())
+    }
+
+    /**
+     * Checks if a given number is a power of two
+     * @param {number} n The number to check
+     * @returns {boolean} 'true' if a power of two 'false' otherwise
+     */
+    private isPowerOfTwo(n: number): boolean {
+        return (n & (n - 1)) === 0;
     }
 
     /**
@@ -946,28 +1081,16 @@ export class Matrix {
 //     });
 // }
 
+
+
 // function tester() {
 //     const a = [];
 //     for (let i = 1; i < 501; i++) {
-//         let m1 = Matrix.ones(i, i);
+//         let m1 = Matrix.ones(i, i)
 //         let s = performance.now();
-//         m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
+//         m1.fastMultiply(m1); // Use await to wait for the parallel multiplication to complete
 //         let e = performance.now();
-//         // console.log((e - s) / 1000,i)
 //         a.push((e - s) / 1000);
-
 //     }
-//     writeArrayToFile(a, "betterCaching.txt");
+//     writeArrayToFile(a, "karatsuba.txt");
 // }
-
-
-// tester()
-
-// let m1 = Matrix.ones(3000, 3000);
-// let s = performance.now();
-// m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
-// let e = performance.now();
-// console.log((e - s) / 1000)
-
-
-
