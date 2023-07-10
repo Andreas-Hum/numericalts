@@ -1,7 +1,7 @@
 import MatrixError from "../errors/MatrixError";
 import * as fs from 'fs';
 import { DELTA } from "../utils/constants";
-
+import os = require('os');
 //TODO: Add impliment and continue adding methods
 export class Matrix {
 
@@ -234,44 +234,129 @@ export class Matrix {
 
 
 
-
+    // NOT TRANSPOSED
     /**
       * Multiplies this matrix with another matrix.
       * @public
       * @param {Matrix} B - The matrix to multiply with.
       * @returns {Matrix} The resulting matrix.
       */
+    // public naiveMultiply(B: Matrix): Matrix {
+    //     if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+    //     if (this.shape === "(1,1)" && B.shape === "(1,1)") return new Matrix([[B.mElements[0] * this.mElements[0]]])
+
+    //     const result: Matrix = Matrix.zeros(this.rows, B.columns)
+
+    //     const rows = this.rows;
+    //     const columns = this.columns;
+    //     const matrixColumns = B.columns;
+    //     const multiplyersA = this.mElements;
+    //     const multipliersB = B.mElements;
+    //     const resultMultipliers = result.mElements;
+
+    //     for (let i = 0; i < rows; i++) {
+    //         for (let j = 0; j < matrixColumns; j++) {
+    //             let sum = 0;
+    //             for (let k = 0; k < columns; k++) {
+    //                 sum += multiplyersA[i * columns + k] * multipliersB[k * matrixColumns + j];
+    //             }
+    //             resultMultipliers[i * matrixColumns + j] = sum
+    //         }
+    //     }
+    //     return result;
+    // }
+
+
+    //  TRANSPOSED
+
+    // public naiveMultiply(B: Matrix): Matrix {
+    //     if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+
+    //     const result: Matrix = Matrix.zeros(this.rows, B.columns)
+
+    //     const rows = this.rows;
+    //     const columns = this.columns;
+    //     const matrixColumns = B.columns;
+    //     const multiplyersA = this.mElements;
+    //     const multipliersB = B.transpose().mElements;
+    //     const resultMultipliers = result.mElements;
+
+    //     for (let i = 0; i < rows; i++) {
+    //         for (let j = 0; j < matrixColumns; j++) {
+    //             let sum = 0;
+    //             for (let k = 0; k < columns; k++) {
+    //                 sum += multiplyersA[i * columns + k] * multipliersB[j * columns + k];
+    //             }
+    //             resultMultipliers[i * matrixColumns + j] = sum;
+    //         }
+    //     }
+
+    //     return result;
+    // }
+
     public naiveMultiply(B: Matrix): Matrix {
-        if (this.columns !== B.rows) throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-
-
-        // Transpose Matrix B first
-        const BT: Matrix = B.transpose();
-        const result: Matrix = Matrix.zeros(this.rows, B.columns)
-
+        if (this.columns !== B.rows) {
+            throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+        }
+    
+        const result: number[][] = [];
         const rows = this.rows;
         const columns = this.columns;
-        const matrixColumns = BT.columns;
+        const matrixColumns = B.columns;
         const multiplyersA = this.mElements;
-        const multipliersBT = BT.mElements; // We use the multipliers of B Transpose  
-        const resultMultipliers = result.mElements;
-
-
+        const multipliersB = B.transpose().mElements;
+    
         for (let i = 0; i < rows; i++) {
-            for (let k = 0; k < matrixColumns; k++) { // Changed the order of the loops to ikj 
+            const rowOffsetA = i * columns;
+            const resultRow: number[] = [];
+            for (let j = 0; j < matrixColumns; j++) {
+                const colOffsetB = j * columns;
                 let sum = 0;
-                for (let j = 0; j < columns; j++) {
-                    sum += multiplyersA[i * columns + j] * multipliersBT[k * columns + j]; // changed the second multiplier to B transposed 
+                for (let k = 0; k < columns; k++) {
+                    sum += multiplyersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
                 }
-                resultMultipliers[i * matrixColumns + k] = sum // This remains same
+                resultRow.push(sum);
             }
+            result.push(resultRow);
         }
-
-        return result;
+    
+        return new Matrix(result);
     }
+    
 
-
+    // public naiveMultiply(B: Matrix): Matrix {
+    //     if (this.columns !== B.rows) {
+    //         throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
+    //     }
+    //     if (!(B instanceof Matrix)) {
+    //         throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+    //     }
+    
+    //     const result: Matrix = Matrix.zeros(this.rows, B.columns);
+    
+    //     const rows = this.rows;
+    //     const columns = this.columns;
+    //     const matrixColumns = B.columns;
+    //     const multiplyersA = this.mElements;
+    //     const multipliersB = B.transpose().mElements;
+    //     const resultMultipliers = result.mElements;
+    
+    //     for (let i = 0; i < rows; i++) {
+    //         for (let j = 0; j < matrixColumns; j++) {
+    //             let sum = 0;
+    //             const startIndexA = i * columns;
+    //             const startIndexB = j * columns;
+    //             for (let k = 0; k < columns; k++) {
+    //                 sum += multiplyersA[startIndexA + k] * multipliersB[startIndexB + k];
+    //             }
+    //             resultMultipliers[i * matrixColumns + j] = sum;
+    //         }
+    //     }
+    
+    //     return result;
+    // }
 
 
     /**
@@ -906,3 +991,39 @@ export class Matrix {
 
 
 }
+// function writeArrayToFile(array: any, filePath: any) {
+//     // Convert the array to a string
+//     const arrayString = array.join('\n');
+
+//     // Write the array string to the file
+//     fs.writeFile(filePath, arrayString, (err) => {
+//         if (err) {
+//             console.error('Error writing to file:', err);
+//         } else {
+//             console.log('Array written to file successfully!');
+//         }
+//     });
+// }
+
+//  function tester() {
+//     const a = [];
+//     for (let i = 1; i < 501; i++) {
+//         let m1 = Matrix.ones(i, i);
+//         let s = performance.now();
+//         m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
+//         let e = performance.now();
+//         // console.log((e - s) / 1000,i)
+//         a.push((e - s) / 1000);
+
+//     }
+//     writeArrayToFile(a, "betterCaching.txt");
+// }
+
+
+// tester()
+
+let m1 = Matrix.ones(2000, 2000);
+let s = performance.now();
+m1.naiveMultiply(m1); // Use await to wait for the parallel multiplication to complete
+let e = performance.now();
+console.log((e - s) / 1000)
