@@ -272,20 +272,20 @@ export class Matrix {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
 
-        const rows = this.rows;
-        const columns = this.columns;
-        const matrixColumns = B.columns;
-        const multipliersA = this.mElements;
-        const multipliersB = B.transpose().mElements;
+        const rows: number = this.rows;
+        const columns: number = this.columns;
+        const matrixColumns: number = B.columns;
+        const multipliersA: Float32Array = this.mElements;
+        const multipliersB: Float32Array = B.transpose().mElements;
 
         const result: Float32Array = new Float32Array(rows * matrixColumns);
 
         for (let i = 0; i < rows; i++) {
-            const rowOffsetA = i * columns;
+            const rowOffsetA: number = i * columns;
 
             for (let j = 0; j < matrixColumns; j++) {
-                const colOffsetB = j * columns;
-                let sum = 0;
+                const colOffsetB: number = j * columns;
+                let sum: number = 0;
 
                 for (let k = 0; k < columns; k++) {
                     sum += multipliersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
