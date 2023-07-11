@@ -1,12 +1,12 @@
 //Type imports
 
 //Error import
-import {MatrixError} from "../errors/MatrixError";
+import {MatrixError} from "../errors/matrix.error";
 
 //Vector import
-import { Vector } from "../vector/Vector";
+import { Vector } from "../vector/vector";
 import { DELTA } from "../utils/constants";
-import VectorError from "../errors/VectorError";
+import VectorError from "../errors/vector.error";
 
 
 //TODO TEST TEST OG JSDOC

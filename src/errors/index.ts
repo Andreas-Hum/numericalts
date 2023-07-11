@@ -1,2 +1,2 @@
-export * from './MatrixError';
-export * from './VectorError';
+export * from './matrix.error';
+export * from './vector.error';

@@ -1,5 +1,5 @@
-import VectorError from "../errors/VectorError";
-import { Vector } from "../vector/Vector";
+import VectorError from "../errors/vector.error";
+import { Vector } from "../vector/vector";
 import { DELTA } from "./constants";
 
 export {

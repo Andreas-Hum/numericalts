@@ -1,2 +1,2 @@
-export * from './Vector';
+export * from './vector';
 export * from '../@interfaces/vector';

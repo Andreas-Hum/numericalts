@@ -3,7 +3,7 @@
 import type VectorTypes from "../@interfaces/vector";
 
 // Importing a custom Error class dedicated for errors related to Vectors
-import VectorError from "../errors/VectorError";
+import VectorError from "../errors/vector.error";
 
 // Importing vector checks
 import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck, vectorZeroError } from "../utils/vectorChecks";
