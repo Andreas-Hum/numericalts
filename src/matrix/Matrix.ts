@@ -254,8 +254,8 @@ export class Matrix implements MatrixTypes {
         const submatrixElements: Float32Array = new Float32Array(size * size);
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                const index = i * size + j;
-                const originalIndex = (startRow + i) * this.columns + (startCol + j);
+                const index: number = i * size + j;
+                const originalIndex: number = (startRow + i) * this.columns + (startCol + j);
                 submatrixElements[index] = this.mElements[originalIndex];
             }
         }
@@ -272,7 +272,7 @@ export class Matrix implements MatrixTypes {
         const size: number = Math.sqrt(submatrixElements.length);
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                const index = (startRow + i) * this.columns + (startCol + j);
+                const index: number = (startRow + i) * this.columns + (startCol + j);
                 this.mElements[index] = submatrixElements[i * size + j];
             }
         }
@@ -295,8 +295,8 @@ export class Matrix implements MatrixTypes {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
-        const resultElements = new Float32Array(this.mElements);
-        const size = this.size;
+        const resultElements: Float32Array = new Float32Array(this.mElements);
+        const size: number = this.size;
 
         for (let i = 0; i < size; i++) {
             resultElements[i] += B.mElements[i];
@@ -316,18 +316,18 @@ export class Matrix implements MatrixTypes {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
-        const resultElements = new Float32Array(this.mElements);
-        const size = this.size;
+        const resultElements: Float32Array = new Float32Array(this.mElements);
+        const size: number = this.size;
 
         // Calculate the chunk size based on the number of available processors
-        const numProcessors = os.cpus().length;
-        const chunkSize = Math.ceil(size / numProcessors);
+        const numProcessors: number = os.cpus().length;
+        const chunkSize: number = Math.ceil(size / numProcessors);
 
-        const promises = [];
+        const promises: any[] = [];
 
         for (let i = 0; i < numProcessors; i++) {
-            const start = i * chunkSize;
-            const end = Math.min(start + chunkSize, size);
+            const start: number = i * chunkSize;
+            const end: number = Math.min(start + chunkSize, size);
 
             promises.push(
                 new Promise<void>((resolve) => {
@@ -377,7 +377,7 @@ export class Matrix implements MatrixTypes {
                 const colOffsetB: number = j * unrollingFactor;
 
                 for (let k = 0; k < columns; k += unrollingFactor) {
-                    const limit = Math.min(k + unrollingFactor, columns);
+                    const limit: number = Math.min(k + unrollingFactor, columns);
 
                     for (let u = k; u < limit; u++) {
                         sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
@@ -410,7 +410,7 @@ export class Matrix implements MatrixTypes {
      * @param {Matrix} other - The matrix to multiply with.
      * @returns {Matrix} - The resulting matrix.
      */
-    public strassenMatrixMultiplication(other: Matrix): Matrix {
+    public strassenMultiply(other: Matrix): Matrix {
         // Check if matrices are square and have dimensions that are powers of 2
         const n = this.rows;
         if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !MathUtils.isPowerOfTwo(n)) {
@@ -418,40 +418,38 @@ export class Matrix implements MatrixTypes {
         }
 
         // Base case: if dimensions are small enough, perform conventional matrix multiplication
-        if (n <= 2) {
-            return this.naiveMultiply(other);
-        }
+        if (n <= 2) return this.naiveMultiply(other);
 
         // Divide matrices into submatrices
         const halfSize = n / 2;
 
-        const A11 = this.getSubmatrix(0, 0, halfSize);
-        const A12 = this.getSubmatrix(0, halfSize, halfSize);
-        const A21 = this.getSubmatrix(halfSize, 0, halfSize);
-        const A22 = this.getSubmatrix(halfSize, halfSize, halfSize);
+        const A11: Matrix = this.getSubmatrix(0, 0, halfSize);
+        const A12: Matrix = this.getSubmatrix(0, halfSize, halfSize);
+        const A21: Matrix = this.getSubmatrix(halfSize, 0, halfSize);
+        const A22: Matrix = this.getSubmatrix(halfSize, halfSize, halfSize);
 
-        const B11 = other.getSubmatrix(0, 0, halfSize);
-        const B12 = other.getSubmatrix(0, halfSize, halfSize);
-        const B21 = other.getSubmatrix(halfSize, 0, halfSize);
-        const B22 = other.getSubmatrix(halfSize, halfSize, halfSize);
+        const B11: Matrix = other.getSubmatrix(0, 0, halfSize);
+        const B12: Matrix = other.getSubmatrix(0, halfSize, halfSize);
+        const B21: Matrix = other.getSubmatrix(halfSize, 0, halfSize);
+        const B22: Matrix = other.getSubmatrix(halfSize, halfSize, halfSize);
 
         // Calculate the seven required products using the submatrices
-        const P1 = A11.strassenMatrixMultiplication(B12.subtract(B22));
-        const P2 = A11.add(A12).strassenMatrixMultiplication(B22);
-        const P3 = A21.add(A22).strassenMatrixMultiplication(B11);
-        const P4 = A22.strassenMatrixMultiplication(B21.subtract(B11));
-        const P5 = A11.add(A22).strassenMatrixMultiplication(B11.add(B22));
-        const P6 = A12.subtract(A22).strassenMatrixMultiplication(B21.add(B22));
-        const P7 = A11.subtract(A21).strassenMatrixMultiplication(B11.add(B12));
+        const P1: Matrix = A11.strassenMultiply(B12.subtract(B22));
+        const P2: Matrix = A11.add(A12).strassenMultiply(B22);
+        const P3: Matrix = A21.add(A22).strassenMultiply(B11);
+        const P4: Matrix = A22.strassenMultiply(B21.subtract(B11));
+        const P5: Matrix = A11.add(A22).strassenMultiply(B11.add(B22));
+        const P6: Matrix = A12.subtract(A22).strassenMultiply(B21.add(B22));
+        const P7: Matrix = A11.subtract(A21).strassenMultiply(B11.add(B12));
 
         // Calculate the resulting submatrices
-        const C11 = P5.add(P4).subtract(P2).add(P6);
-        const C12 = P1.add(P2);
-        const C21 = P3.add(P4);
-        const C22 = P5.add(P1).subtract(P3).subtract(P7);
+        const C11: Matrix = P5.add(P4).subtract(P2).add(P6);
+        const C12: Matrix = P1.add(P2);
+        const C21: Matrix = P3.add(P4);
+        const C22: Matrix = P5.add(P1).subtract(P3).subtract(P7);
 
         // Combine the resulting submatrices to form the final matrix C
-        const C = new Matrix(new Float32Array(n * n), n, n);
+        const C: Matrix = new Matrix(new Float32Array(n * n), n, n);
         C.setSubmatrix(0, 0, C11.mElements);
         C.setSubmatrix(0, halfSize, C12.mElements);
         C.setSubmatrix(halfSize, 0, C21.mElements);
@@ -471,17 +469,14 @@ export class Matrix implements MatrixTypes {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
+        const resultElements: Float32Array = new Float32Array(this.mElements);
+        const size: number = this.size;
 
-        const result: Matrix = Matrix.zeros(this.rows, this.columns)
-
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                const difference: number = this.getElement(i, j) - B.getElement(i, j);
-                result.setElement(i, j, difference);
-            }
+        for (let i = 0; i < size; i++) {
+            resultElements[i] -= B.mElements[i];
         }
 
-        return result;
+        return new Matrix(resultElements, this.rows, this.columns);
     }
 
 
