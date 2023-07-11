@@ -2,6 +2,8 @@ import MatrixError from "../errors/MatrixError";
 import { DELTA } from "../utils/constants";
 import * as fs from "fs"
 import * as os from 'os';
+import { Worker, workerData, parentPort } from 'worker_threads';
+
 
 export class Matrix {
 
@@ -334,44 +336,7 @@ export class Matrix {
     }
 
 
-    // /**
-    //   * Multiplies this matrix with another matrix.
-    //   * @public
-    //   * @param {Matrix} B - The matrix to multiply with.
-    //   * @returns {Matrix} The resulting matrix.
-    //   */
-    // public naiveMultiply(B: Matrix): Matrix {
-    //     if (this.columns !== B.rows) {
-    //         throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
-    //     }
-
-    //     const rows: number = this.rows;
-    //     const columns: number = this.columns;
-    //     const matrixColumns: number = B.columns;
-    //     const multipliersA: Float32Array = this.mElements;
-    //     const multipliersB: Float32Array = B.transpose().mElements;
-
-    //     const result: Float32Array = new Float32Array(rows * matrixColumns);
-
-    //     for (let i = 0; i < rows; i++) {
-    //         const rowOffsetA: number = i * columns;
-
-    //         for (let j = 0; j < matrixColumns; j++) {
-    //             const colOffsetB: number = j * columns;
-    //             let sum: number = 0;
-
-    //             for (let k = 0; k < columns; k++) {
-    //                 sum += multipliersA[rowOffsetA + k] * multipliersB[colOffsetB + k];
-    //             }
-
-    //             result[i * matrixColumns + j] = sum;
-    //         }
-    //     }
-
-    //     return new Matrix(result, rows, matrixColumns);
-    // }
-
-
+ 
     /**
      * Multiplies this matrix with another matrix using dynamic loop unrolling.
      * @public
@@ -391,23 +356,24 @@ export class Matrix {
 
         const result: Float32Array = new Float32Array(rows * matrixColumns);
 
-        // Set the loop unrolling factor based on the number of columns of the first matrix Math.min(columns, Math.ceil(columns / 32))
-        const unrollingFactor: number = 16
+        const unrollingFactor: number = Math.min(columns, 16);
 
         for (let i = 0; i < rows; i++) {
             const rowOffsetA: number = i * columns;
+            const rowOffsetResult: number = i * matrixColumns;
 
             for (let j = 0; j < matrixColumns; j++) {
-                const colOffsetB: number = j * unrollingFactor;
                 let sum: number = 0;
+                const colOffsetB: number = j * unrollingFactor;
 
                 for (let k = 0; k < columns; k += unrollingFactor) {
-                    for (let u = 0; u < unrollingFactor && k + u < columns; u++) {
-                        sum += multipliersA[rowOffsetA + k + u] * multipliersB[colOffsetB + k + u];
+                    const limit = Math.min(k + unrollingFactor, columns);
+
+                    for (let u = k; u < limit; u++) {
+                        sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
                     }
                 }
-
-                result[i * matrixColumns + j] = sum;
+                result[rowOffsetResult + j] = sum;
             }
         }
 
@@ -426,6 +392,8 @@ export class Matrix {
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
     }
+
+
 
     /**
      * Performs matrix multiplication using Strassen's algorithm.
@@ -1111,36 +1079,36 @@ export class Matrix {
 
 }
 
-// function writeArrayToFile(array: any, filePath: any) {
-//     // Convert the array to a string
-//     const arrayString = array.join('\n');
+function writeArrayToFile(array: any, filePath: any) {
+    // Convert the array to a string
+    const arrayString = array.join('\n');
 
-//     // Write the array string to the file
-//     fs.writeFile(filePath, arrayString, (err) => {
-//         if (err) {
-//             console.error('Error writing to file:', err);
-//         } else {
-//             console.log('Array written to file successfully!');
-//         }
-//     });
-// }
+    // Write the array string to the file
+    fs.writeFile(filePath, arrayString, (err) => {
+        if (err) {
+            console.error('Error writing to file:', err);
+        } else {
+            console.log('Array written to file successfully!');
+        }
+    });
+}
 
-// function tester() {
-//     const a = [];
-//     for (let i = 1; i < 1001; i++) {
-//         let m1 = Matrix.ones(i, i);
-//         let s = performance.now();
-//         m1.naiveMultiply(m1);
-//         let e = performance.now();
-//         a.push((e - s) / 1000);
-//     }
-//     writeArrayToFile(a, "unroller.txt");
-// }
+function tester() {
+    const a = [];
+    for (let i = 1; i < 1001; i++) {
+        let m1 = Matrix.ones(i, i);
+        let s = performance.now();
+        m1.naiveMultiply(m1);
+        let e = performance.now();
+        a.push((e - s) / 1000);
+    }
+    writeArrayToFile(a, "unroller.txt");
+}
 
-// tester();
+tester();
 
-let m1 = Matrix.ones(1000, 1000);
-let s = performance.now();
-m1.naiveMultiply(m1);
-let e = performance.now();
-console.log((e - s) / 1000);
+// let m1 = Matrix.ones(1000, 1000);
+// let s = performance.now();
+// m1.naiveMultiply(m1);
+// let e = performance.now();
+// console.log((e - s) / 1000);
