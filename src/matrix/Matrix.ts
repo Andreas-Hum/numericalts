@@ -1,16 +1,21 @@
-//Interface import
-
-import { MatrixTypes } from "./index";
-import MatrixError from "../errors/MatrixError";
-import { DELTA } from "../utils/constants";
+// Interface import
+import { MatrixTypes } from ".";
 
 
+// Error import
+import { MatrixError } from "../errors";
+
+// Utility import
+import { DELTA, MathUtils } from "../utils";
+
+
+// Node import
 import * as fs from "fs"
 import * as os from 'os';
 
 
 
-export class Matrix implements MatrixTypes {
+class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public isSquare: boolean = false;
@@ -1113,6 +1118,8 @@ function tester() {
 
 tester();
 
+
+export { MatrixTypes };
 // let m1 = Matrix.ones(1000, 1000);
 // let s = performance.now();
 // m1.naiveMultiply(m1);

@@ -1,7 +1,7 @@
 //Type imports
 
 //Error import
-import MatrixError from "../errors/MatrixError";
+import {MatrixError} from "../errors/MatrixError";
 
 //Vector import
 import { Vector } from "../vector/Vector";

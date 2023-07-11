@@ -1,6 +1,5 @@
-export type { MatrixTypes }
 
-interface MatrixTypes {
+export interface MatrixTypes {
 
     shape: string;
     isSquare: boolean;

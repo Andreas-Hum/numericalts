@@ -1,6 +1,5 @@
-export {MathUtility}
 
-class MathUtility {
+export class MathUtils {
 
     /**
      * Method used to find the next power of two for a given number.
