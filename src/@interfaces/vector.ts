@@ -1,6 +1,7 @@
 
 
-export default interface VectorTypes {
+
+export interface VectorTypes {
     //Shape type
     shape: string
 

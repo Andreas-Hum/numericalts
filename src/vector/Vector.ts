@@ -1,6 +1,6 @@
 
 // Type imports
-import type VectorTypes from "./VectorTypes";
+import type VectorTypes from "../@interfaces/vector";
 
 // Importing a custom Error class dedicated for errors related to Vectors
 import VectorError from "../errors/VectorError";

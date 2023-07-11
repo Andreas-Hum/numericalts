@@ -1,2 +1,2 @@
 export * from './Vector';
-export * from './VectorTypes';
+export * from '../@interfaces/vector';

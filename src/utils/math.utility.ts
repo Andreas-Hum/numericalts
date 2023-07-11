@@ -1,6 +1,17 @@
 
 export class MathUtils {
 
+
+    /**
+     * Checks if a given number is a power of two
+     * @param {number} n The number to check
+     * @returns {boolean} 'true' if a power of two 'false' otherwise
+     */
+    public static isPowerOfTwo(n: number): boolean {
+        return (n & (n - 1)) === 0;
+    }
+
+
     /**
      * Method used to find the next power of two for a given number.
      * @param {number} n - The number for which to find the next power of two.

@@ -1,12 +1,12 @@
 // Interface import
-import { MatrixTypes } from ".";
+import { MatrixTypes } from "../@interfaces";
 
 
 // Error import
 import { MatrixError } from "../errors";
 
 // Utility import
-import { DELTA, MathUtils } from "../utils";
+import { DELTA, MathUtils, MatrixUtils } from "../utils";
 
 
 // Node import
@@ -15,7 +15,7 @@ import * as os from 'os';
 
 
 
-class Matrix implements MatrixTypes {
+export class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public isSquare: boolean = false;
@@ -398,7 +398,7 @@ class Matrix implements MatrixTypes {
      */
     public scale(scalar: number): Matrix {
         if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
-        const scaledMatrix: Matrix = this.clone();
+        const scaledMatrix: Matrix = MatrixUtils.clone(this);
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
     }
@@ -413,7 +413,7 @@ class Matrix implements MatrixTypes {
     public strassenMatrixMultiplication(other: Matrix): Matrix {
         // Check if matrices are square and have dimensions that are powers of 2
         const n = this.rows;
-        if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !this.isPowerOfTwo(n)) {
+        if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !MathUtils.isPowerOfTwo(n)) {
             throw new Error('Matrices must be square and have dimensions that are powers of 2');
         }
 
@@ -650,23 +650,6 @@ class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Clones the matrix instance and returns the clone
-     * @public
-     * @returns {Matrix} The cloned matrix
-     */
-    public clone(): Matrix {
-        return new Matrix(this.toArray())
-    }
-
-    /**
-     * Checks if a given number is a power of two
-     * @param {number} n The number to check
-     * @returns {boolean} 'true' if a power of two 'false' otherwise
-     */
-    private isPowerOfTwo(n: number): boolean {
-        return (n & (n - 1)) === 0;
-    }
 
     /**
      * Prints the matrix in a formatted way.
@@ -697,7 +680,6 @@ class Matrix implements MatrixTypes {
             );
         });
     }
-
 
 
     /**
@@ -829,7 +811,7 @@ class Matrix implements MatrixTypes {
      */
     public transpose(): Matrix {
 
-        const transposedMatrix: Matrix = this.clone()
+        const transposedMatrix: Matrix = MatrixUtils.clone(this)
         const rows: number = transposedMatrix.rows;
         const columns: number = transposedMatrix.columns;
 
