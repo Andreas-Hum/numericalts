@@ -17,8 +17,7 @@ describe('MatrixUtils', () => {
         it('should return the padded matrix with dimensions as a power of two', () => {
             const matrix = new Matrix([[1], [4]]);
             const paddedMatrix = MatrixUtils.padMatrixToPowerOfTwo(matrix);
-            console.log(paddedMatrix.toString())
-            expect(paddedMatrix).toEqual(matrix);
+            expect(paddedMatrix).toEqual(new Matrix([[1, 0], [4, 0]]));
         });
     });
 
