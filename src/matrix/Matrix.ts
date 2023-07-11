@@ -563,7 +563,7 @@ export class Matrix implements MatrixTypes {
         const Q: Matrix = this.gramSmith();
         const QT: Matrix = Q.transpose();
         const R: Matrix = QT.naiveMultiply(this);
-        R.roundToZero()
+        MatrixUtils.roundMatrixToZero(this)
         return { Q: Q, R: R };
     }
 
@@ -682,22 +682,7 @@ export class Matrix implements MatrixTypes {
     }
 
 
-    /**
-     * Rounds values close to zero in a the matrix to zero.
-     * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
-     * @returns {void}
-     */
-    public roundToZero(threshold: number = DELTA): void {
-        const result: Float32Array = this.mElements;
-        const size: number = this.size;
-        for (let i = 0; i < size; i++) {
-            if (Math.abs(result[i]) < threshold) {
-                this.mElements[i] = 0;
-            } else {
-                this.mElements[i] = result[i];
-            }
-        }
-    }
+
 
 
     /**
@@ -1098,10 +1083,9 @@ function tester() {
     writeArrayToFile(a, "unroller.txt");
 }
 
-tester();
+// tester();
 
 
-export { MatrixTypes };
 // let m1 = Matrix.ones(1000, 1000);
 // let s = performance.now();
 // m1.naiveMultiply(m1);

@@ -32,4 +32,15 @@ export class MathUtils {
         return 1 << count;
     }
 
+    /**
+     * Rounds a number to a specified number of decimal places using a specified base.
+     * @param {number} num - The number to round.
+     * @param {number} digits - The number of decimal places to round to.
+     * @param {number} base - The base to use for rounding.Defaults to 10 if not provided.
+     * @returns {number} The rounded number.
+     */
+    public static toFixedNumber(num: number, digits: number, base: number = 10): number {
+        const pow = Math.pow(base, digits);
+        return Math.round(num * pow) / pow;
+    }
 }

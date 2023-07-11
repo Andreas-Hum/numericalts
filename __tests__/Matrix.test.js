@@ -1,5 +1,5 @@
 const { default: expect } = require("expect")
-const matrix_module = require("../dist/matrix/Matrix")
+const matrix_module = require("../dist/matrix")
 const Matrix = matrix_module.Matrix
 
 
