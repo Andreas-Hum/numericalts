@@ -336,7 +336,7 @@ export class Matrix {
     }
 
 
- 
+
     /**
      * Multiplies this matrix with another matrix using dynamic loop unrolling.
      * @public
@@ -687,6 +687,7 @@ export class Matrix {
             );
         });
     }
+
 
 
     /**
