@@ -21,23 +21,16 @@ export class MatrixUtils {
      * Method used to pad the matrix dimensions to the nearest power of two.
      * @returns {Matrix} The padded matrix with dimensions as a power of two.
      */
-    // public padMatrixToPowerOfTwo(A: Matrix): Matrix {
-    //     let padMatrix: Matrix = MatrixUtils.clone(A)
-    //     const maxDimension = Math.max(padMatrix.rows, padMatrix.columns);
-    //     const nextPower = MathUtils.nextPowerOfTwo(maxDimension);
+    public padMatrixToPowerOfTwo(A: Matrix): Matrix {
+        const maxDimension = Math.max(A.rows, A.columns);
+        const nextPower = MathUtils.nextPowerOfTwo(maxDimension);
 
-    //     if (nextPower === padMatrix.rows && nextPower === padMatrix.columns)
-    //         return padMatrix;
+        if (nextPower === A.rows && nextPower === A.columns) {
+            return A;
+        }
 
-    //     const paddedMatrix = Matrix.zeros(nextPower, nextPower);
 
-    //     for (let i = 0; i < padMatrix.rows; i++) {
-    //         for (let j = 0; j < padMatrix.columns; j++) {
-    //             paddedMatrix.mElements[i].vElements[j] = padMatrix.mElements[i].vElements[j];
-    //         }
-    //     }
-    //     return paddedMatrix;
-    // }
+    }
 
     /**
      * Rounds values close to zero in a the matrix to zero.

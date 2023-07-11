@@ -412,7 +412,7 @@ export class Matrix implements MatrixTypes {
      */
     public strassenMultiply(other: Matrix): Matrix {
         // Check if matrices are square and have dimensions that are powers of 2
-        const n = this.rows;
+        const n: number = this.rows;
         if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !MathUtils.isPowerOfTwo(n)) {
             throw new Error('Matrices must be square and have dimensions that are powers of 2');
         }
@@ -421,7 +421,7 @@ export class Matrix implements MatrixTypes {
         if (n <= 2) return this.naiveMultiply(other);
 
         // Divide matrices into submatrices
-        const halfSize = n / 2;
+        const halfSize: number = n / 2;
 
         const A11: Matrix = this.getSubmatrix(0, 0, halfSize);
         const A12: Matrix = this.getSubmatrix(0, halfSize, halfSize);
