@@ -1,5 +1,4 @@
 //Type imports
-import { MatrixTypes, MTypes } from "./MatrixTypes";
 
 //Error import
 import MatrixError from "../errors/MatrixError";
@@ -12,7 +11,7 @@ import VectorError from "../errors/VectorError";
 
 //TODO TEST TEST OG JSDOC
 
-export class Matrix implements MatrixTypes {
+class Matrix {
 
     public shape: string = "0";
     public isColumnMatrix: boolean = false;
@@ -257,7 +256,7 @@ export class Matrix implements MatrixTypes {
     * I
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     /**
      * Inverts an upper triangular matrix.
      *
@@ -409,7 +408,7 @@ export class Matrix implements MatrixTypes {
         return new Matrix(result)
     }
 
-    
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * O

@@ -1,3 +1,4 @@
+export {MathUtility}
 
 class MathUtility {
 

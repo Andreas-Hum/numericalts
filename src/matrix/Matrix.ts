@@ -1,11 +1,16 @@
+//Interface import
+
+import { MatrixTypes } from "./index";
 import MatrixError from "../errors/MatrixError";
 import { DELTA } from "../utils/constants";
+
+
 import * as fs from "fs"
 import * as os from 'os';
-import { Worker, workerData, parentPort } from 'worker_threads';
 
 
-export class Matrix {
+
+export class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public isSquare: boolean = false;
