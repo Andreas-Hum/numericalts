@@ -19,18 +19,31 @@ export class MatrixUtils {
 
     /**
      * Method used to pad the matrix dimensions to the nearest power of two.
+     * @public
+     * @static
      * @returns {Matrix} The padded matrix with dimensions as a power of two.
      */
-    public padMatrixToPowerOfTwo(A: Matrix): Matrix {
-        const maxDimension = Math.max(A.rows, A.columns);
-        const nextPower = MathUtils.nextPowerOfTwo(maxDimension);
+    public static padMatrixToPowerOfTwo(A: Matrix): Matrix {
+        const rows: number = A.rows;
+        const columns: number = A.columns
+        const maxDimension: number = Math.max(rows, columns);
+        const nextPower: number = MathUtils.nextPowerOfTwo(maxDimension);
 
-        if (nextPower === A.rows && nextPower === A.columns) {
-            return A;
+        if (nextPower === rows && nextPower === columns) {
+            return A; // No padding required as the matrix is already a power of two.
         }
 
+        const paddedMatrix: Float32Array = new Float32Array(nextPower * nextPower);
 
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                paddedMatrix[i * nextPower + j] = A.mElements[i * columns + j];
+            }
+        }
+
+        return new Matrix(paddedMatrix, nextPower, nextPower);
     }
+
 
     /**
      * Rounds values close to zero in a the matrix to zero.
