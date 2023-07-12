@@ -117,7 +117,7 @@ export default class Matrix implements MatrixTypes {
     private validateFloatArray(entries: Float32Array): void {
         for (let i = 0; i < entries.length; i++) {
             if (typeof entries[i] !== 'number' || isNaN(entries[i])) {
-                throw new MatrixError("Invalid Float32Array entries", 805);
+                throw new MatrixError("Invalid Float32Array entries", 805, { entry: entries[i] });
             }
         }
     }
@@ -302,7 +302,7 @@ export default class Matrix implements MatrixTypes {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract, naiveMultiply,strassens and scale
+    * Mathematical operations, example, add, subtract, naiveMultiply and so forth
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -411,6 +411,41 @@ export default class Matrix implements MatrixTypes {
         return new Matrix(result, rows, matrixColumns);
     }
 
+    //TODO: fix the negative pow
+    /**
+     * Raises the matrix to the power of `exp`.
+     * 
+     * @param exp - The exponent to raise the matrix to.
+     * @returns The resulting matrix after raising it to the power of `exp`.
+     * @throws {MatrixError} if the matrix is not square.
+     */
+    public pow(exp: number): Matrix {
+        if (!this.isSquare) {
+            throw new MatrixError("Can't multiply a non-square matrix with itself.", 810, { A: this.isSquare });
+        }
+
+        if (exp === 0) {
+            // Return the identity matrix if the exponent is 0
+            return MatrixUtils.identity(this.rows);
+        }
+
+        if (exp === 1) {
+            // Return the matrix itself if the exponent is 1
+            return this;
+        }
+
+        if (exp % 2 === 0) {
+            // If the exponent is even, recursively calculate the square root of the matrix
+            const sqrtMatrix = this.pow(exp / 2);
+            return sqrtMatrix.naiveMultiply(sqrtMatrix);
+        } else {
+            // If the exponent is odd, recursively calculate the square root of the matrix and multiply it with the matrix itself
+            const sqrtMatrix = this.pow((exp - 1) / 2);
+            return this.naiveMultiply(sqrtMatrix.naiveMultiply(sqrtMatrix));
+        }
+    }
+
+
     /**
      * Scales the matrix and returns a new matrix with the result of the scaling
      * @public
@@ -444,8 +479,8 @@ export default class Matrix implements MatrixTypes {
         if (!this.isSquare && !B.isSquare) {
             throw new MatrixError(
                 "Both matrices has to be square",
-                805,
-                { AColumns: this.columns, BRows: B.rows }
+                810,
+                { A: this.isSquare, B: B.isSquare }
             );
         }
 
@@ -590,6 +625,8 @@ export default class Matrix implements MatrixTypes {
 
     }
 
+
+
     /**
      * Performs QR decomposition on the matrix.
      * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
@@ -630,7 +667,7 @@ export default class Matrix implements MatrixTypes {
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
 
 
-        const identityMatrix: Matrix = Matrix.identity(this.rows);
+        const identityMatrix: Matrix = MatrixUtils.identity(this.rows);
         let invertedMatrixElements: number[][] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
@@ -663,7 +700,7 @@ export default class Matrix implements MatrixTypes {
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
 
 
-        const identityMatrix: Matrix = Matrix.identity(this.rows);
+        const identityMatrix: Matrix = MatrixUtils.identity(this.rows);
         let invertedMatrixElements: number[][] = [];
 
         for (let i = 0; i < this.rows; i++) {
@@ -998,96 +1035,6 @@ export default class Matrix implements MatrixTypes {
         return true;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * Static factory methods
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Creates an identity matrix with the specified dimension.
-     * @public
-     * @static
-     * @param {number} dimension - The dimension of the identity matrix.
-     * @returns {Matrix} The identity matrix.
-     * @throws {MatrixError} - If the dimension is less than or equal to 0.
-     */
-    public static identity(dimension: number): Matrix {
-        if (dimension <= 0 || typeof dimension !== "number") throw new MatrixError("Invalid argument", 606, { dimension });
-
-        const entries: number[][] = [];
-
-        for (let i = 0; i < dimension; i++) {
-            const row: number[] = [];
-            for (let j = 0; j < dimension; j++) {
-                if (i === j) {
-                    row.push(1);
-                } else {
-                    row.push(0);
-                }
-            }
-            entries.push(row);
-        }
-
-        return new Matrix(entries)
-    }
-
-    /**
-     * Creates a matrix filled with ones with the specified number of rows and columns.
-     * @public
-     * @static
-     * @param {number} rows - The number of rows in the matrix.
-     * @param {number} columns - The number of columns in the matrix.
-     * @returns {Matrix} - The matrix filled with ones.
-     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
-     */
-    public static ones(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
-    }
-
-
-    /**
-     * Creates a random matrix with the specified number of rows and columns.
-     * @public
-     * @static
-     * @param {number} rows - The number of rows in the matrix.
-     * @param {number} columns - The number of columns in the matrix
-     * @returns {Matrix} The randomized matrix
-     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
-     */
-    public static random(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-
-        const entries: number[][] = [];
-
-        for (let i = 0; i < rows; i++) {
-            const row: number[] = [];
-            for (let j = 0; j <
-                columns; j++) {
-                const randomValue: number = Math.random() * 100;
-                row.push(randomValue);
-            }
-            entries.push(row);
-        }
-
-        return new Matrix(entries);
-    }
-
-
-    /**
-     * Creates a matrix filled with zeros with the specified number of rows and columns.
-     * @public
-     * @static
-     * @param {number} rows - The number of rows in the matrix.
-     * @param {number} columns - The number of columns in the matrix.
-     * @returns {Matrix} - The matrix filled with zeros.
-     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
-     */
-    public static zeros(rows: number, columns: number): Matrix {
-        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
-    }
 
 
 }
@@ -1109,7 +1056,7 @@ function writeArrayToFile(array: any, filePath: any) {
 function tester() {
     const a = [];
     for (let i = 1; i < 1001; i++) {
-        let m1 = Matrix.ones(i, i);
+        let m1 = MatrixUtils.ones(i, i);
         let s = performance.now();
         m1.naiveMultiply(m1);
         let e = performance.now();

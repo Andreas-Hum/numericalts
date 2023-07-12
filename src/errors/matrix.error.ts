@@ -26,7 +26,9 @@ export class MatrixError extends Error {
         // 807: Matrix Dot Product Error - Occurs when the dot product of matrices of different dimensions is calculated.
         // 808: Zero Matrix Error - Occurs when an illegal operation is attempted on a zero matrix.
         // 809: Matrix Equality Check Error - Occurs when an equality check is made between matrices of different dimensions.
+
         // 810: Matrix Multiplication Error - Occurs when trying to multiply matrices of incompatible dimensions.
+
         // 811: Determinant of Non-Square Matrix Error - Occurs when trying to calculate the determinant of a non-square matrix.
         // 812: Inverse of Non-Square Matrix Error - Occurs when trying to calculate the inverse of a non-square matrix.
         // 813: Matrix Norm Error - Unknown error.

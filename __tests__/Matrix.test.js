@@ -209,6 +209,36 @@ describe('Matrix', () => {
     })
 
 
+
+    describe("pow", () => {
+        it("should raise the matrix to the specified power", () => {
+            const matrix = new Matrix([[1, 2], [3, 4]]);
+
+            // Test with exponent 0
+            expect(matrix.pow(0)).toEqual(new Matrix([[1, 0], [0, 1]]));
+
+            // Test with exponent 1
+            expect(matrix.pow(1)).toEqual(matrix);
+
+            // // Test with positive exponent
+            expect(matrix.pow(2)).toEqual(new Matrix([[7, 10], [15, 22]]));
+
+            // // Test with negative exponent
+            // expect(matrix.pow(-1)).toEqual(new Matrix([[-2, 1], [1.5, -0.5]]));
+
+            // // Test with larger exponent
+            // expect(matrix.pow(5)).toEqual(new Matrix([[1069, 1558], [2337, 3406]]));
+        });
+
+        it("should throw a MatrixError if the matrix is not square", () => {
+            const nonSquareMatrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+
+            expect(() => {
+                nonSquareMatrix.pow(2);
+            }).toThrow();
+        });
+    });
+
     describe('Scaling', () => {
         it('Scaling a 2x3 matrixwith 2', () => {
             const compareMatrix = new Matrix([[2, 4, 6], [8, 10, 12]])
@@ -256,7 +286,7 @@ describe('Matrix', () => {
 
             expect(() => {
                 A.strassenMultiply(B);
-            }).toThrow(); // Assume that your method throws an error in this case
+            }).toThrow();
         });
 
         // Test multiplication of a matrix with dimensions not a power of two
@@ -265,7 +295,6 @@ describe('Matrix', () => {
             const B = new Matrix(new Float32Array([9, 8, 7, 6, 5, 4, 3, 2, 1]), 3, 3);
             const result = A.strassenMultiply(B);
 
-            console.log(result.toString())
 
             // Expected result is manually calculated
             const expectedResult = new Float32Array([30, 24, 18, 84, 69, 54, 138, 114, 90]);
@@ -378,6 +407,7 @@ describe('Matrix', () => {
         });
     });
 
+    
 
     describe('QR decomposition', () => {
         it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
