@@ -1,6 +1,5 @@
-const matrix_module = require("../dist/matrix")
+const Matrix = require("../dist/matrix").default
 const importings = require("../dist/utils")
-const Matrix = matrix_module.Matrix
 const MatrixUtils = importings.MatrixUtils
 
 describe('MatrixUtils', () => {

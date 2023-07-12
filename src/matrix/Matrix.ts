@@ -15,7 +15,7 @@ import * as os from 'os';
 
 
 
-export default  class Matrix implements MatrixTypes {
+export default class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public isSquare: boolean = false;
@@ -441,9 +441,9 @@ export default  class Matrix implements MatrixTypes {
        * @returns {Matrix} The result of matrix multiplication.
        */
     public strassenMultiply(B: Matrix): Matrix {
-        if (this.columns !== B.rows) {
+        if (!this.isSquare && !B.isSquare) {
             throw new MatrixError(
-                "Invalid matrix dimensions for multiplication",
+                "Both matrices has to be square",
                 805,
                 { AColumns: this.columns, BRows: B.rows }
             );
@@ -467,10 +467,10 @@ export default  class Matrix implements MatrixTypes {
         const A12 = A.getSubMatrix(0, halfN, halfN, n);
         const A21 = A.getSubMatrix(halfN, n, 0, halfN);
         const A22 = A.getSubMatrix(halfN, n, halfN, n);
-        const B11 = B.getSubMatrix(0, halfN, 0, halfN);
-        const B12 = B.getSubMatrix(0, halfN, halfN, n);
-        const B21 = B.getSubMatrix(halfN, n, 0, halfN);
-        const B22 = B.getSubMatrix(halfN, n, halfN, n);
+        const B11 = C.getSubMatrix(0, halfN, 0, halfN);
+        const B12 = C.getSubMatrix(0, halfN, halfN, n);
+        const B21 = C.getSubMatrix(halfN, n, 0, halfN);
+        const B22 = C.getSubMatrix(halfN, n, halfN, n);
 
         // Compute intermediate matrices
         const P1 = A11.strassenMultiply(B12.subtract(B22));
@@ -488,13 +488,14 @@ export default  class Matrix implements MatrixTypes {
         const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix([], n, n);
+        const result = new Matrix(new Float32Array(n * n), n, n);
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
         result.setSubMatrix(halfN, n - 1, halfN, n - 1, C22);
 
-        return result;
+
+        return result.getSubMatrix(0, this.rows, 0, B.columns);
     }
 
 

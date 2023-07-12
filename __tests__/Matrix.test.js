@@ -1,7 +1,5 @@
 const { default: expect } = require("expect")
-const matrix_module = require("../dist/matrix")
-const Matrix = matrix_module.Matrix
-
+const Matrix = require("../dist/matrix").default
 
 let twoByThree, threeByTwo, twoByTwo
 describe('Matrix', () => {
@@ -266,6 +264,8 @@ describe('Matrix', () => {
             const A = new Matrix(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 3, 3);
             const B = new Matrix(new Float32Array([9, 8, 7, 6, 5, 4, 3, 2, 1]), 3, 3);
             const result = A.strassenMultiply(B);
+
+            console.log(result.toString())
 
             // Expected result is manually calculated
             const expectedResult = new Float32Array([30, 24, 18, 84, 69, 54, 138, 114, 90]);
