@@ -1,6 +1,6 @@
 import VectorError from "../errors/vector.error";
 import { Vector } from "../vector/vector";
-import { DELTA } from "./constants";
+import Constants from "./constants";
 
 export {
     vectorArrayCheck,
@@ -39,7 +39,7 @@ function vectorScalarCheck(scalar: number) {
 }
 
 function vectorZeroError(property: number, message: string) {
-    if (Math.abs(property) < DELTA) {
+    if (Math.abs(property) < Constants.DELTA) {
         throw new VectorError(message, 704);
 
     }

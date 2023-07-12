@@ -4,12 +4,12 @@ import { VectorTypes } from "../@interfaces";
 
 // Importing a custom Error class dedicated for errors related to Vectors
 import VectorError from "../errors/vector.error";
+import { Constants } from "../utils";
 
 // Importing vector checks
 import { vectorArrayCheck, vectorScalarCheck, vectorSizeCheck, vectorShapeCheck, vectorZeroError } from "../utils/vectorChecks";
 
 // Importing constants;
-import { DELTA } from "../utils/constants";
 
 
 /**
@@ -663,7 +663,7 @@ export class Vector implements VectorTypes {
         strict && vectorShapeCheck(this, vector);
 
         const [v1, v2] = [this.vElements.flat(), vector.vElements.flat()];
-        return !v1.some((val, i) => Math.abs(val - v2[i]) > DELTA);
+        return !v1.some((val, i) => Math.abs(val - v2[i]) > Constants.DELTA);
     }
 
     /**
@@ -672,7 +672,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} true if every component of the vector is positive and the total sum of the components is within the range [1-DELTA, 1+DELTA], false otherwise.
      */
     public isProbability(): boolean {
-        return this.isPositive() && this.sum() <= (DELTA + 1) && (1 - DELTA) <= this.sum()
+        return this.isPositive() && this.sum() <= (Constants.DELTA + 1) && (1 - Constants.DELTA) <= this.sum()
     }
 
     /**
@@ -690,7 +690,7 @@ export class Vector implements VectorTypes {
      * @returns {boolean} 'true' if the dot product of this vector and the given vector is zero, otherwise 'false'.
      */
     public isOrthogonal(vector: Vector | number[] | number[][]): boolean {
-        return Math.abs(this.dot(vector)) < DELTA;
+        return Math.abs(this.dot(vector)) < Constants.DELTA;
     }
 
     /**
@@ -715,7 +715,7 @@ export class Vector implements VectorTypes {
     public isOrthonormal(vector: Vector | number[] | number[][]): boolean {
         vector = vector instanceof Vector ? vector : new Vector(vector);
 
-        return Math.abs(this.dot(vector)) < DELTA && Math.abs(this.euclNorm()) - 1 < DELTA && Math.abs(vector.euclNorm()) - 1 < DELTA;
+        return Math.abs(this.dot(vector)) < Constants.DELTA && Math.abs(this.euclNorm()) - 1 < Constants.DELTA && Math.abs(vector.euclNorm()) - 1 < Constants.DELTA;
 
     }
 

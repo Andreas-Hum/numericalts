@@ -6,7 +6,7 @@ import { MatrixTypes } from "../@interfaces";
 import { MatrixError } from "../errors";
 
 // Utility import
-import { DELTA, MatrixUtils } from "../utils";
+import { Constants, MatrixUtils } from "../utils";
 
 
 // Node import
@@ -811,7 +811,7 @@ export default  class Matrix implements MatrixTypes {
                 orthogonalProjection = orthogonalProjection.map((entry: number, index: number) => entry - projectionOf_I_onto_J[index])
 
             }
-            if ((Math.sqrt(orthogonalProjection.map(x => x ** 2).reduce((acc, x) => acc + x))) < DELTA) {
+            if ((Math.sqrt(orthogonalProjection.map(x => x ** 2).reduce((acc, x) => acc + x))) < Constants.DELTA) {
                 throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
             }
             orthogonalColumns.push(orthogonalProjection)
