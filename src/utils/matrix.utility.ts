@@ -1,9 +1,10 @@
 // Matrix class
-import { Matrix } from "../matrix"
+import Matrix from "../matrix"
 
 // Math utility class
-import { DELTA, MathUtils } from ".";
+import { Constants } from ".";
 
+import math from "../math";
 
 export class MatrixUtils {
 
@@ -27,7 +28,7 @@ export class MatrixUtils {
         const rows: number = A.rows;
         const columns: number = A.columns
         const maxDimension: number = Math.max(rows, columns);
-        const nextPower: number = MathUtils.nextPowerOfTwo(maxDimension);
+        const nextPower: number = math.nextPowerOfTwo(maxDimension);
 
         if (nextPower === rows && nextPower === columns) {
             return A; // No padding required as the matrix is already a power of two.
@@ -52,7 +53,7 @@ export class MatrixUtils {
      * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
      * @returns {void}
      */
-    public static roundMatrixToZero(A: Matrix, threshold: number = DELTA): void {
+    public static roundMatrixToZero(A: Matrix, threshold: number = Constants.DELTA): void {
         const size: number = A.size;
         for (let i = 0; i < size; i++) {
             A.mElements[i] = A.mElements[i] * (Number(Math.abs(A.mElements[i]) < threshold))
@@ -70,7 +71,7 @@ export class MatrixUtils {
      * @returns {void}
      */
     public static toFixedMatrix(A: Matrix, digits: number, base: number = 10): void {
-        A.mElements = A.mElements.map((entry: number) => MathUtils.toFixedNumber(entry, digits, base))
+        A.mElements = A.mElements.map((entry: number) => math.toFixedNumber(entry, digits, base))
     }
 
 

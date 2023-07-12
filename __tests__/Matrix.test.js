@@ -143,6 +143,46 @@ describe('Matrix', () => {
         })
     })
 
+    describe('getSubMatrix', () => {
+        it('should return the correct submatrix', () => {
+            const matrix = new Matrix([
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+            ]);
+
+            const submatrix = matrix.getSubMatrix(0, 2, 0, 2);
+
+            expect(submatrix.toArray()).toEqual([
+                [1, 2],
+                [4, 5],
+            ]);
+        });
+    });
+
+    describe('setSubMatrix', () => {
+        it('should set the elements of the submatrix correctly', () => {
+            const matrix = new Matrix([
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+            ]);
+
+            const submatrix = new Matrix([
+                [10, 11],
+                [12, 13],
+            ]);
+
+            matrix.setSubMatrix(0, 1, 0, 1, submatrix);
+
+            expect(matrix.toArray()).toEqual([
+                [10, 11, 3],
+                [12, 13, 6],
+                [7, 8, 9],
+            ]);
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Basic operations add, subtract, scale and naiveMultiply
@@ -188,6 +228,51 @@ describe('Matrix', () => {
 
     })
 
+    describe('Strassens', () => {
+
+        // Test multiplication of 2x2 matrices
+        test('2x2 Matrix multiplication', () => {
+            const A = new Matrix(new Float32Array([1, 2, 3, 4]), 2, 2);
+            const B = new Matrix(new Float32Array([2, 0, 1, 2]), 2, 2);
+            const result = A.strassenMultiply(B);
+
+            // Expected result is a new Matrix with elements [4, 4, 10, 8]
+            expect(result).toEqual(new Matrix(new Float32Array([4, 4, 10, 8]), 2, 2));
+        });
+
+        // Test multiplication of matrices of size that is a power of two
+        test('Power of two Matrix multiplication', () => {
+            const A = new Matrix(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), 4, 4);
+            const B = new Matrix(new Float32Array([16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]), 4, 4);
+            const result = A.strassenMultiply(B);
+
+            // Expected result is manually calculated
+            const expectedResult = new Float32Array([80, 70, 60, 50, 240, 214, 188, 162, 400, 358, 316, 274, 560, 502, 444, 386]);
+            expect(result).toEqual(new Matrix(expectedResult, 4, 4));
+        });
+
+        // Test multiplication of a non-square matrix
+        test('Non-square Matrix multiplication', () => {
+            const A = new Matrix(new Float32Array([1, 2, 3, 4, 5, 6]), 2, 3);
+            const B = new Matrix(new Float32Array([2, 0, 1, 2, 1, 2]), 3, 2);
+
+            expect(() => {
+                A.strassenMultiply(B);
+            }).toThrow(); // Assume that your method throws an error in this case
+        });
+
+        // Test multiplication of a matrix with dimensions not a power of two
+        test('Not power of two Matrix multiplication', () => {
+            const A = new Matrix(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 3, 3);
+            const B = new Matrix(new Float32Array([9, 8, 7, 6, 5, 4, 3, 2, 1]), 3, 3);
+            const result = A.strassenMultiply(B);
+
+            // Expected result is manually calculated
+            const expectedResult = new Float32Array([30, 24, 18, 84, 69, 54, 138, 114, 90]);
+            expect(result).toEqual(new Matrix(expectedResult, 3, 3));
+        });
+    });
+
 
     describe('Subtraction', () => {
         it('Subtracting a 2x3 with itself', () => {
@@ -213,7 +298,7 @@ describe('Matrix', () => {
     describe('Naive multiplication', () => {
         it('Multiplying a 2x3 matrix with a 3x2', () => {
             const compareMatrix = new Matrix([[14, 32], [32, 77]])
-    
+
             expect(twoByThree.naiveMultiply(threeByTwo)).toEqual(compareMatrix)
         })
 

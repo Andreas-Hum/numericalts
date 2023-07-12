@@ -1,6 +1,5 @@
 
-export class MathUtils {
-
+export default class math {
 
     /**
      * Checks if a given number is a power of two

@@ -6,7 +6,7 @@ import { MatrixTypes } from "../@interfaces";
 import { MatrixError } from "../errors";
 
 // Utility import
-import { DELTA, MathUtils, MatrixUtils } from "../utils";
+import { DELTA, MatrixUtils } from "../utils";
 
 
 // Node import
@@ -15,7 +15,7 @@ import * as os from 'os';
 
 
 
-export class Matrix implements MatrixTypes {
+export default  class Matrix implements MatrixTypes {
 
     public shape: string = "0";
     public isSquare: boolean = false;
@@ -38,6 +38,7 @@ export class Matrix implements MatrixTypes {
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
                 throw new MatrixError("Rows and columns must be defined for Float32Array entries, be of type number and not be 0 or negative", 804);
             }
+
 
             this.validateFloatArray(entries);
             this.mElements = entries;
@@ -247,33 +248,53 @@ export class Matrix implements MatrixTypes {
      * @public
      * @param {number} startRow - The starting row index of the submatrix.
      * @param {number} startCol - The starting column index of the submatrix.
-     * @param {number} size - The size of the submatrix (number of rows and columns).
+     * @param {number} endRow - The ending row index of the submatrix (exclusive).
+     * @param {number} endCol - The ending column index of the submatrix (exclusive).
      * @returns {Matrix} A new Matrix object representing the submatrix.
      */
-    public getSubmatrix(startRow: number, startCol: number, size: number): Matrix {
-        const submatrixElements: Float32Array = new Float32Array(size * size);
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                const index: number = i * size + j;
+    public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix {
+        const numRows: number = endRow - startRow;
+        const numCols: number = endCol - startCol;
+        const submatrixElements: Float32Array = new Float32Array(numRows * numCols);
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCols; j++) {
+                const index: number = i * numCols + j;
                 const originalIndex: number = (startRow + i) * this.columns + (startCol + j);
                 submatrixElements[index] = this.mElements[originalIndex];
             }
         }
-        return new Matrix(submatrixElements, size, size);
+        return new Matrix(submatrixElements, numRows, numCols);
     }
 
     /**
-     * @public
-     * @param {number} startRow - The starting row index of the submatrix.
-     * @param {number} startCol - The starting column index of the submatrix.
-     * @param {number} submatrixElements - The elements of the submatrix to be set.
-     */
-    public setSubmatrix(startRow: number, startCol: number, submatrixElements: Float32Array): void {
-        const size: number = Math.sqrt(submatrixElements.length);
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                const index: number = (startRow + i) * this.columns + (startCol + j);
-                this.mElements[index] = submatrixElements[i * size + j];
+    * @public
+    * @param {number} startRow - The starting row index of the submatrix.
+    * @param {number} startCol - The starting column index of the submatrix.
+    * @param {number} endRow - The ending row index of the submatrix.
+    * @param {number} endCol - The ending column index of the submatrix.
+    * @param {number[]} submatrixElements - The elements of the submatrix to be set.
+    */
+    public setSubMatrix(startRow: number, endRow: number, startColumn: number, endColumn: number, subMatrix: Matrix): void {
+        if (startRow < 0 || startRow >= this.rows || endRow < 0 || endRow >= this.rows || startColumn < 0 || startColumn >= this.columns || endColumn < 0 || endColumn >= this.columns) {
+            throw new MatrixError("Invalid submatrix indices", 805);
+        }
+
+        const subMatrixRows = endRow - startRow + 1;
+        const subMatrixColumns = endColumn - startColumn + 1;
+
+        if (subMatrixRows !== subMatrix.rows || subMatrixColumns !== subMatrix.columns) {
+            throw new MatrixError("Submatrix dimensions do not match", 806);
+        }
+
+        const subMatrixElements = subMatrix.mElements;
+
+        for (let i = startRow; i <= endRow; i++) {
+            for (let j = startColumn; j <= endColumn; j++) {
+                const subMatrixRowIndex = i - startRow;
+                const subMatrixColumnIndex = j - startColumn;
+                const subMatrixValue = subMatrixElements[subMatrixRowIndex * subMatrix.columns + subMatrixColumnIndex];
+                const index = i * this.columns + j;
+                this.mElements[index] = subMatrixValue;
             }
         }
     }
@@ -407,55 +428,73 @@ export class Matrix implements MatrixTypes {
 
     /**
      * Performs matrix multiplication using Strassen's algorithm.
-     * @param {Matrix} other - The matrix to multiply with.
+     * @param {Matrix} B - The matrix to multiply with.
      * @returns {Matrix} - The resulting matrix.
      */
-    public strassenMultiply(other: Matrix): Matrix {
-        // Check if matrices are square and have dimensions that are powers of 2
-        const n: number = this.rows;
-        if (!this.isSquare || !other.isSquare || this.columns !== other.rows || !MathUtils.isPowerOfTwo(n)) {
-            throw new Error('Matrices must be square and have dimensions that are powers of 2');
+
+    // Pseudo code at: https://en.wikipedia.org/wiki/Strassen_algorithm
+
+    /**
+       * Performs matrix multiplication using the Strassen's algorithm.
+       * @public
+       * @param {Matrix} B - The matrix to multiply with.
+       * @returns {Matrix} The result of matrix multiplication.
+       */
+    public strassenMultiply(B: Matrix): Matrix {
+        if (this.columns !== B.rows) {
+            throw new MatrixError(
+                "Invalid matrix dimensions for multiplication",
+                805,
+                { AColumns: this.columns, BRows: B.rows }
+            );
         }
 
-        // Base case: if dimensions are small enough, perform conventional matrix multiplication
-        if (n <= 2) return this.naiveMultiply(other);
+        // Base case: If matrices are 1x1, perform simple multiplication
+        if (this.rows === 1 && this.columns === 1 && B.rows === 1 && B.columns === 1) {
+            const resultElement = this.mElements[0] * B.mElements[0];
+            return new Matrix(new Float32Array([resultElement]), 1, 1);
+        }
 
-        // Divide matrices into submatrices
-        const halfSize: number = n / 2;
+        // Pad matrices to the nearest power of two
+        const A = MatrixUtils.padMatrixToPowerOfTwo(this);
+        const C = MatrixUtils.padMatrixToPowerOfTwo(B);
 
-        const A11: Matrix = this.getSubmatrix(0, 0, halfSize);
-        const A12: Matrix = this.getSubmatrix(0, halfSize, halfSize);
-        const A21: Matrix = this.getSubmatrix(halfSize, 0, halfSize);
-        const A22: Matrix = this.getSubmatrix(halfSize, halfSize, halfSize);
+        const n = A.rows;
+        const halfN = n / 2;
 
-        const B11: Matrix = other.getSubmatrix(0, 0, halfSize);
-        const B12: Matrix = other.getSubmatrix(0, halfSize, halfSize);
-        const B21: Matrix = other.getSubmatrix(halfSize, 0, halfSize);
-        const B22: Matrix = other.getSubmatrix(halfSize, halfSize, halfSize);
+        // Create submatrices for A and B
+        const A11 = A.getSubMatrix(0, halfN, 0, halfN);
+        const A12 = A.getSubMatrix(0, halfN, halfN, n);
+        const A21 = A.getSubMatrix(halfN, n, 0, halfN);
+        const A22 = A.getSubMatrix(halfN, n, halfN, n);
+        const B11 = B.getSubMatrix(0, halfN, 0, halfN);
+        const B12 = B.getSubMatrix(0, halfN, halfN, n);
+        const B21 = B.getSubMatrix(halfN, n, 0, halfN);
+        const B22 = B.getSubMatrix(halfN, n, halfN, n);
 
-        // Calculate the seven required products using the submatrices
-        const P1: Matrix = A11.strassenMultiply(B12.subtract(B22));
-        const P2: Matrix = A11.add(A12).strassenMultiply(B22);
-        const P3: Matrix = A21.add(A22).strassenMultiply(B11);
-        const P4: Matrix = A22.strassenMultiply(B21.subtract(B11));
-        const P5: Matrix = A11.add(A22).strassenMultiply(B11.add(B22));
-        const P6: Matrix = A12.subtract(A22).strassenMultiply(B21.add(B22));
-        const P7: Matrix = A11.subtract(A21).strassenMultiply(B11.add(B12));
+        // Compute intermediate matrices
+        const P1 = A11.strassenMultiply(B12.subtract(B22));
+        const P2 = A11.add(A12).strassenMultiply(B22);
+        const P3 = A21.add(A22).strassenMultiply(B11);
+        const P4 = A22.strassenMultiply(B21.subtract(B11));
+        const P5 = A11.add(A22).strassenMultiply(B11.add(B22));
+        const P6 = A12.subtract(A22).strassenMultiply(B21.add(B22));
+        const P7 = A11.subtract(A21).strassenMultiply(B11.add(B12));
 
-        // Calculate the resulting submatrices
-        const C11: Matrix = P5.add(P4).subtract(P2).add(P6);
-        const C12: Matrix = P1.add(P2);
-        const C21: Matrix = P3.add(P4);
-        const C22: Matrix = P5.add(P1).subtract(P3).subtract(P7);
+        // Compute submatrices of the result
+        const C11 = P5.add(P4).subtract(P2).add(P6);
+        const C12 = P1.add(P2);
+        const C21 = P3.add(P4);
+        const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
-        // Combine the resulting submatrices to form the final matrix C
-        const C: Matrix = new Matrix(new Float32Array(n * n), n, n);
-        C.setSubmatrix(0, 0, C11.mElements);
-        C.setSubmatrix(0, halfSize, C12.mElements);
-        C.setSubmatrix(halfSize, 0, C21.mElements);
-        C.setSubmatrix(halfSize, halfSize, C22.mElements);
+        // Create the result matrix
+        const result = new Matrix([], n, n);
+        result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
+        result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
+        result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
+        result.setSubMatrix(halfN, n - 1, halfN, n - 1, C22);
 
-        return C;
+        return result;
     }
 
 

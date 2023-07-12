@@ -1,1 +1,1 @@
-export * from './matrix';
+export { default as default } from './matrix';
