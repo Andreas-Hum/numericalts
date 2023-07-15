@@ -573,7 +573,7 @@ export default class Matrix implements MatrixTypes {
     public backSubstitution(b: number[]): number[] {
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
         if (!Array.isArray(b)) throw new MatrixError("b is not an array", 606, { b });
-
+        if (b.length !== this.rows) throw new MatrixError("b does not have the same number of entries as the amount of rows of the matrix A", 802, { rowsOfA: this.rows, entriesOfb: b.length })
 
         const sol: number[] = [];
         const rows: number = this.rows;
@@ -596,16 +596,16 @@ export default class Matrix implements MatrixTypes {
 
 
     /**
-     * Performs back-substitution on an upper triangular matrix to solve
+     * Performs forward-substitution on an lower triangular matrix to solve
      * a system of linear equations.
      * @public
      * @returns {number[]} Solution to the system of linear equations
-     *
-     * @throws {MatrixError} if the matrix is not upper traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     * @throws {MatrixError} if the matrix is not lowerf traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
      */
     public forwardSubstitution(b: number[]): number[] {
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 816, { matrix: this });
         if (!Array.isArray(b)) throw new MatrixError("b is not an array", 606, { b });
+        if (b.length !== this.rows) throw new MatrixError("b does not have the same number of entries as the amount of rows of the matrix A", 802, { rowsOfA: this.rows, entriesOfb: b.length })
 
         const sol: number[] = [];
         const rows: number = this.rows;
@@ -624,6 +624,28 @@ export default class Matrix implements MatrixTypes {
 
 
     }
+
+
+    // public gaussianElimination(b: number[]) {
+    //     if (!Array.isArray(b)) throw new MatrixError("b is not an array", 606, { b });
+    //     if (b.length !== this.rows) throw new MatrixError("b does not have the same number of entries as the amount of rows of the matrix A", 802, { rowsOfA: this.rows, entriesOfb: b.length })
+
+    //     const rows: number = this.rows;
+    //     const columns: number = this.columns;
+    //     let currentRow: number = 0;
+
+    //     for (let col = 0; col < columns - 1; col++) {
+
+    //         let pivot: number = currentRow;
+    //         for (let i = currentRow + 1; i < rows; i++) {
+    //             if (Math.abs(b)) {
+
+    //             }
+    //         }
+    //     }
+
+
+    // }
 
 
 
@@ -722,94 +744,6 @@ export default class Matrix implements MatrixTypes {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /**
-     * Prints the matrix in a formatted way.
-     * @public
-     * @returns {void}
-     */
-    public print(): void {
-        const shape: number[] = [this.rows, this.columns];
-
-        function col(mat: number[][], i: number): number[] {
-            return mat.map(row => row[i]);
-        }
-
-        const colMaxes: number[] = [];
-        for (let i = 0; i < shape[1]; i++) {
-            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
-        }
-
-        this.toArray().forEach(row => {
-            console.log(
-                ...row.map((val, j) => {
-                    return (
-                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
-                        val.toString() +
-                        "  "
-                    );
-                })
-            );
-        });
-    }
-
-
-
-
-
-    /**
-     * Converts the matrix to a 2D array.
-     * @public
-     * @returns {number[][]} The matrix as a 2D array.
-     */
-    public toArray(): number[][] {
-        const array: number[][] = [];
-
-        for (let i = 0; i < this.rows; i++) {
-            const row: number[] = [];
-            for (let j = 0; j < this.columns; j++) {
-                const value = this.getElement(i, j);
-                row.push(value);
-            }
-            array.push(row);
-        }
-
-        return array;
-    }
-
-    /**
-     * Converts the matrix to a printable string
-     * @public
-     * @returns {string} The printable matrix in a nice format
-     */
-    public toString(): string {
-        const shape: number[] = [this.rows, this.columns];
-
-        function col(mat: number[][], i: number): number[] {
-            return mat.map(row => row[i]);
-        }
-
-        const colMaxes: number[] = [];
-        for (let i = 0; i < shape[1]; i++) {
-            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
-        }
-
-        let output: string = "";
-        this.toArray().forEach(row => {
-            output += row
-                .map((val, j) => {
-                    return (
-                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
-                        val.toString() +
-                        "  "
-                    );
-                })
-                .join("") + "\n";
-        });
-
-        return output;
-    }
-
     /**
      * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
      * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
@@ -862,6 +796,168 @@ export default class Matrix implements MatrixTypes {
     }
 
     /**
+     * Prints the matrix in a formatted way.
+     * @public
+     * @returns {void}
+     */
+    public print(): void {
+        const shape: number[] = [this.rows, this.columns];
+
+        function col(mat: number[][], i: number): number[] {
+            return mat.map(row => row[i]);
+        }
+
+        const colMaxes: number[] = [];
+        for (let i = 0; i < shape[1]; i++) {
+            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
+        }
+
+        this.toArray().forEach(row => {
+            console.log(
+                ...row.map((val, j) => {
+                    return (
+                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        val.toString() +
+                        "  "
+                    );
+                })
+            );
+        });
+    }
+
+
+
+
+    /**
+     * Converts the matrix to a 2D array.
+     * @public
+     * @returns {number[][]} The matrix as a 2D array.
+     */
+    public toArray(): number[][] {
+        const array: number[][] = [];
+
+        for (let i = 0; i < this.rows; i++) {
+            const row: number[] = [];
+            for (let j = 0; j < this.columns; j++) {
+                const value = this.getElement(i, j);
+                row.push(value);
+            }
+            array.push(row);
+        }
+
+        return array;
+    }
+
+
+    /**
+     * Converts the matrix to Row Echelon Form (REF).
+     * This method does not modify the original matrix.
+     * @public
+     * @returns {Matrix} A new matrix that is the REF of the original matrix.
+     */
+    public gaussianElim(): Matrix {
+        let lead: number = 0;
+        let matrixClone: Matrix = MatrixUtils.clone(this); // clone the matrix
+
+        for (let r = 0; r < matrixClone.rows; r++) {
+            if (matrixClone.columns <= lead) {
+                break;
+            }
+
+            let i: number = r;
+            while (matrixClone.mElements[i * matrixClone.columns + lead] === 0) {
+                i++;
+
+                if (matrixClone.rows === i) {
+                    i = r;
+                    lead++;
+
+                    if (matrixClone.columns === lead) {
+                        return matrixClone;
+                    }
+                }
+            }
+
+            // Swap rows i and r
+            let tmp: Float32Array = matrixClone.mElements.subarray(i * matrixClone.columns, (i + 1) * matrixClone.columns);
+            matrixClone.mElements.set(matrixClone.mElements.subarray(r * matrixClone.columns, (r + 1) * matrixClone.columns), i * matrixClone.columns);
+            matrixClone.mElements.set(tmp, r * matrixClone.columns);
+
+            // Subtract multiples of row r from the other rows to make the rest of the entries of the current column as zero
+            for (let i = r + 1; i < matrixClone.rows; i++) {
+                let val = matrixClone.mElements[i * matrixClone.columns + lead] / matrixClone.mElements[r * matrixClone.columns + lead];
+
+                for (let j = 0; j < matrixClone.columns; j++) {
+                    matrixClone.mElements[i * matrixClone.columns + j] -= val * matrixClone.mElements[r * matrixClone.columns + j];
+                }
+            }
+
+            lead++;
+        }
+
+        return matrixClone;
+    }
+
+    /**
+     * Converts the matrix to Reduced Row Echelon Form (RREF).
+     * This method does not modify the original matrix.
+     * @public
+     * @returns {Matrix} A new matrix that is the RREF of the original matrix.
+     */
+    public gaussJordan(): Matrix {
+        let lead: number = 0;
+        let matrixClone: Matrix = MatrixUtils.clone(this); // clone the matrix
+
+        for (let r = 0; r < matrixClone.rows; r++) {
+            if (matrixClone.columns <= lead) {
+                break;
+            }
+
+            let i: number = r;
+            while (matrixClone.mElements[i * matrixClone.columns + lead] === 0) {
+                i++;
+
+                if (matrixClone.rows === i) {
+                    i = r;
+                    lead++;
+
+                    if (matrixClone.columns === lead) {
+                        return matrixClone;
+                    }
+                }
+            }
+
+            // Swap rows i and r
+            let tmp: Float32Array = matrixClone.mElements.subarray(i * matrixClone.columns, (i + 1) * matrixClone.columns);
+            matrixClone.mElements.set(matrixClone.mElements.subarray(r * matrixClone.columns, (r + 1) * matrixClone.columns), i * matrixClone.columns);
+            matrixClone.mElements.set(tmp, r * matrixClone.columns);
+
+            let val: number = matrixClone.mElements[r * matrixClone.columns + lead];
+
+            // Scale row r to make the leading coefficient = 1
+            for (let j = 0; j < matrixClone.columns; j++) {
+                matrixClone.mElements[r * matrixClone.columns + j] /= val;
+            }
+
+            // Subtract multiples of row r from the other rows to make the rest of the entries of current column as zero
+            for (let i = 0; i < matrixClone.rows; i++) {
+                if (i === r) continue;
+
+                val = matrixClone.mElements[i * matrixClone.columns + lead];
+
+                for (let j = 0; j < matrixClone.columns; j++) {
+                    matrixClone.mElements[i * matrixClone.columns + j] -= val * matrixClone.mElements[r * matrixClone.columns + j];
+                }
+            }
+
+            lead++;
+        }
+
+        return matrixClone;
+    }
+
+
+    /**
      * Transposes a matrix.
      * @public
      * @returns {Matrix} The transposed matrix.
@@ -892,6 +988,42 @@ export default class Matrix implements MatrixTypes {
 
         return transposedMatrix;
     }
+
+
+
+    /**
+     * Converts the matrix to a printable string
+     * @public
+     * @returns {string} The printable matrix in a nice format
+     */
+    public toString(): string {
+        const shape: number[] = [this.rows, this.columns];
+
+        function col(mat: number[][], i: number): number[] {
+            return mat.map(row => row[i]);
+        }
+
+        const colMaxes: number[] = [];
+        for (let i = 0; i < shape[1]; i++) {
+            colMaxes.push(Math.max(...col(this.toArray(), i).map(n => n.toString().length)));
+        }
+
+        let output: string = "";
+        this.toArray().forEach(row => {
+            output += row
+                .map((val, j) => {
+                    return (
+                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        val.toString() +
+                        "  "
+                    );
+                })
+                .join("") + "\n";
+        });
+
+        return output;
+    }
+
 
 
 

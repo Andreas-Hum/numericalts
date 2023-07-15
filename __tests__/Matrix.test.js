@@ -407,7 +407,7 @@ describe('Matrix', () => {
         });
     });
 
-    
+
 
     describe('QR decomposition', () => {
         it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
@@ -548,6 +548,57 @@ describe('Matrix', () => {
 
     })
 
+    describe('GaussianElim', () => {
+        it('First matrix', () => {
+            const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+            const result = matrix.gaussianElim();
+            const expected = new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]]);
+            expect(result).toEqual(expected);
+        });
+
+        it('Second matrix', () => {
+            const matrix = new Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
+            const result = matrix.gaussianElim();
+
+            const expected = new Matrix([[10, 11, 12], [0, -3 / 10, -3 / 5], [0, 0, 0]]);
+            expect(result).toEqual(expected);
+        });
+        test('Third matrix', () => {
+            const matrix = new Matrix([[3, 2, 1], [4, 3, 5], [5, 3, 2]]);
+            const result = matrix.gaussianElim();
+
+            const expected = new Matrix([[3, 2, 1], [0, 1 / 3, 11 / 3], [0, 0, 4]]);
+            expect(result).toEqual(expected);
+        });
+    });
+
+    describe('GaussJordan', () => {
+        it('First matrix', () => {
+            const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+            const result = matrix.gaussJordan();
+            const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+            result.mElements[3] = 0;
+            expect(result).toEqual(expected);
+        });
+
+        it('Second matrix', () => {
+            const matrix = new Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
+            const result = matrix.gaussJordan();
+
+            const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+            result.mElements[3] = 0;
+
+            expect(result).toEqual(expected);
+        });
+        test('Third matrix', () => {
+            const matrix = new Matrix([[3, 2, 1], [4, 3, 5], [5, 3, 2]]);
+            const result = matrix.gaussJordan();
+
+            const expected = new Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+            expect(result).toEqual(expected);
+        });
+    });
+
     describe('Transpose', () => {
         it('Transposing a 2x2 matrix', () => {
             const compareMatrix = new Matrix([[1, 3], [2, 4]])
@@ -559,6 +610,8 @@ describe('Matrix', () => {
         })
 
     })
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

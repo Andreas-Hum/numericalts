@@ -7,7 +7,7 @@
     "target": "ES2020",
     "allowJs": true,
     "moduleResolution": "node",
-    "removeComments": true,
+    "removeComments": false,
     "declaration": true,
   },
   "include": [
