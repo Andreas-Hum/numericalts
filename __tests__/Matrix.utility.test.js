@@ -22,7 +22,7 @@ describe('MatrixUtils', () => {
 
     describe('roundMatrixToZero', () => {
         it('should round values close to zero in the matrix to zero', () => {
-            const matrix = new Matrix([[0.000001, 0.000002], [0.000003, 0.000004]]);
+            const matrix = new Matrix([[0.000000000001, 0.000000000001], [0.000000000001, 0.000000000001]]);
             MatrixUtils.roundMatrixToZero(matrix);
             expect(matrix).toEqual(new Matrix([[0, 0], [0, 0]]));
         });

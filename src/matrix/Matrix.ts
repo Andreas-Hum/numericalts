@@ -173,7 +173,7 @@ export default class Matrix implements MatrixTypes {
     * @param {number} column - The row index of the element starts from zero.
     * @returns {number} The value of the element.
     * @throws {MatrixError} - If index is out of bounds
-    */ 
+    */
     public getElement(row: number, column: number): number {
         if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
         const index: number = row * this.columns + column;
@@ -235,7 +235,7 @@ export default class Matrix implements MatrixTypes {
      * @param {number} value - The value to set.
      * @returns {void}
      * @throws {MatrixError} - If the value is an invalid element or index is out of bounds
-     */ 
+     */
     public setElement(row: number, column: number, value: number): void {
         if (typeof value !== "number" || typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { value, row, column })
         const index: number = row * this.columns + column;
@@ -633,9 +633,9 @@ export default class Matrix implements MatrixTypes {
      * This method does not modify the original matrix.
      * @public
      * 
-     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix.
+     * @returns {Matrix } 
      */ //TODO: lav en type til normale options
-    public gaussianElimination(options: { solve: boolean } = { solve: false }): Matrix {
+    public gaussianElimination(options: { solve: boolean, fractionless: boolean } = { solve: false, fractionless: false }): Matrix {
         let lead: number = 0;
         let matrixClone: Matrix = MatrixUtils.clone(this); // clone the matrix
 
@@ -733,6 +733,7 @@ export default class Matrix implements MatrixTypes {
             lead++;
         }
 
+        MatrixUtils.roundMatrixToZero(matrixClone)
         return matrixClone;
     }
 
@@ -774,7 +775,7 @@ export default class Matrix implements MatrixTypes {
      */
     public invertUpper(): Matrix {
         //TODO: Psudo inverse
-        if (!this.isSquare) throw new MatrixError("Uninvertable matrix: not a square matrix", 812, { matrix: this });
+        if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
 
 
@@ -807,7 +808,7 @@ export default class Matrix implements MatrixTypes {
      */
     public invertLower(): Matrix {
         //TODO: Psudo inverse
-        if (!this.isSquare) throw new MatrixError("Uninvertable matrix: not a square matrix", 812, { matrix: this });
+        if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
 
 
@@ -834,12 +835,26 @@ export default class Matrix implements MatrixTypes {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+     * Augments the current matrix with another matrix.
+     * @param {Matrix} B  - The matrix to be augmented with.
+     * @returns {Matrix} A new matrix that is the result of augmenting the current matrix with the provided matrix.
+     * @throws {MatrixError} If the argument is not an instance of Matrix, or if the current matrix and the provided matrix do not have the same number of rows.
+     */
+    public augment(B: Matrix): Matrix {
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+        if (B.rows !== this.rows) throw new MatrixError("A and B does not have the same number of rows", 802, { ARows: this.rows, BRows: B.rows });
+        let AA: number[][] = this.toArray()
+        let BA: number[][] = B.toArray()
+        return new Matrix(AA.map((row: number[], index: number) => row.concat(BA[index])))
+    }
+
+    /**
      * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
      * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
      *
      * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
      * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
-     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal 
+     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
      * vectors from the column vector itself.
      *
      * @returns {Matrix} A new Matrix instance constructed using the orthonormal vectors as columns.

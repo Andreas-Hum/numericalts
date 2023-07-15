@@ -530,6 +530,29 @@ describe('Matrix', () => {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    describe('Augment', () => {
+        it('Converting a 2x3 Matrix to a 2d array', () => {
+            const compareArray = new Matrix([[1, 3], [-5, 0]])
+            const compareArray2 = new Matrix([[1, 0], [0, 1]])
+
+            console.log((compareArray.augment(compareArray2).gaussJordan().toString()))
+
+
+            // expect(twoByThree.toArray()).toEqual(compareArray)
+        })
+
+        // it('Converting a 3x2 Matrix to a 2d array', () => {
+        //     const compareArray = [[1, 4], [2, 5], [3, 6]]
+        //     expect(threeByTwo.toArray()).toEqual(compareArray)
+        // })
+
+        // it('Converting a 2x2 Matrix to a 2d array', () => {
+        //     const compareArray = [[1, 2], [3, 4]]
+        //     expect(twoByTwo.toArray()).toEqual(compareArray)
+        // })
+
+    })
+
     describe('To array', () => {
         it('Converting a 2x3 Matrix to a 2d array', () => {
             const compareArray = [[1, 2, 3], [4, 5, 6]]
@@ -552,8 +575,8 @@ describe('Matrix', () => {
         it('First matrix', () => {
             const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
             const result = matrix.gaussianElimination();
-            // const expected = new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]]);
-            // expect(result).toEqual(expected);
+            const expected = new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]]);
+            expect(result).toEqual(expected);
         });
 
         it('Second matrix', () => {
@@ -564,10 +587,10 @@ describe('Matrix', () => {
             expect(result).toEqual(expected);
         });
         test('Third matrix', () => {
-            const matrix = new Matrix([[3, 2, 1,23], [4, 3, 5,13], [5, 3, 2,22]]);
+            const matrix = new Matrix([[3, 2, 1, 23], [4, 3, 5, 13], [5, 3, 2, 22]]);
             const result = matrix.gaussianElimination();
 
-            const expected = new Matrix([[3, 2, 1], [0, 1 / 3, 11 / 3], [0, 0, 4]]);
+            const expected = new Matrix([[3, 2, 1, 23], [0, 1 / 3, 11 / 3, -53 / 3], [0, 0, 4, -34]]);
             expect(result).toEqual(expected);
         });
     });

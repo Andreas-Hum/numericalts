@@ -48,7 +48,7 @@ export class MatrixUtils {
 
 
     /**
-     * Rounds values close to zero in a the matrix to zero.
+     * Rounds values close to zero in the given array and modifies the matrix in place
      * @public
      * @static
      * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
@@ -57,7 +57,9 @@ export class MatrixUtils {
     public static roundMatrixToZero(A: Matrix, threshold: number = Constants.DELTA): void {
         const size: number = A.size;
         for (let i = 0; i < size; i++) {
-            A.mElements[i] = A.mElements[i] * (Number(Math.abs(A.mElements[i]) < threshold))
+            if(Math.abs(A.mElements[i]) < threshold){
+                A.mElements[i] = 0;
+            }
         }
     }
 
