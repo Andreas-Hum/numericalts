@@ -185,16 +185,18 @@ export default class Matrix implements MatrixTypes {
     /**
      * Gets a specific row of the matrix.
      * @public
-     * @param {number} rowIndex - The index of the row to retrieve (starting from 0).
+     * @param {number} rowIndex - The index of the row to retrieve (starting from 1).
      * @returns {number[]} An array representing the specified row of the matrix.
      * @throws {MatrixError} If the rowIndex is out of bounds.
-     */ //TODO: type til modify
+     */
     public getRow(rowIndex: number): number[] {
-        if (typeof rowIndex !== "number") throw new MatrixError("Invalid arugment", 606, { rowIndex })
-        if (rowIndex < 0 || rowIndex >= this.rows) throw new MatrixError("Row index out of bounds", 800, { rowIndex });
+        if (typeof rowIndex !== "number")
+            throw new MatrixError("Invalid argument", 606, { rowIndex });
+        if (rowIndex <= 0 || rowIndex > this.rows)
+            throw new MatrixError("Row index out of bounds", 800, { rowIndex });
 
         const row: number[] = [];
-        const startIndex: number = rowIndex * this.columns;
+        const startIndex: number = (rowIndex - 1) * this.columns;
         const endIndex: number = startIndex + this.columns;
 
         for (let i = startIndex; i < endIndex; i++) {
@@ -207,17 +209,19 @@ export default class Matrix implements MatrixTypes {
     /**
      * Gets a specific column of the matrix.
      * @public
-     * @param {number} columnIndex - The index of the column to retrieve (starting from 0).
+     * @param {number} columnIndex - The index of the column to retrieve (starting from 1).
      * @returns {number[]} An array representing the specified column of the matrix.
      * @throws {MatrixError} If the columnIndex is out of bounds.
-     */ //TODO: type til modify
+     */
     public getColumn(columnIndex: number): number[] {
-        if (typeof columnIndex !== "number") throw new MatrixError("Invalid arugment", 606, { columnIndex })
-        if (columnIndex < 0 || columnIndex >= this.columns) throw new MatrixError("Row index out of bounds", 800, { columnIndex });
+        if (typeof columnIndex !== "number")
+            throw new MatrixError("Invalid argument", 606, { columnIndex });
+        if (columnIndex <= 0 || columnIndex > this.columns)
+            throw new MatrixError("Column index out of bounds", 800, { columnIndex });
 
         const column: number[] = [];
-        const startIndex: number = columnIndex;
-        const endIndex: number = this.rows * this.columns + columnIndex;
+        const startIndex: number = columnIndex - 1;
+        const endIndex: number = this.rows * this.columns + (columnIndex - 1);
 
         for (let i = startIndex; i < endIndex; i += this.columns) {
             column.push(this.mElements[i]);
@@ -225,8 +229,6 @@ export default class Matrix implements MatrixTypes {
 
         return column;
     }
-
-
     /**
      * Sets the value of an element in the matrix.
      * @public
@@ -629,50 +631,62 @@ export default class Matrix implements MatrixTypes {
 
 
     /**
-     * Converts the matrix to Row Echelon Form (REF).
+     * Converts the matrix to Reduced Row Echelon Form (RREF).
      * This method does not modify the original matrix.
      * @public
-     * 
-     * @returns {Matrix } 
-     */ //TODO: lav en type til normale options
-    public gaussianElimination(options: { solve: boolean, fractionless: boolean } = { solve: false, fractionless: false }): Matrix {
+     * @param {Object} options - The options for the Gauss-Jordan elimination.
+     * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
+     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. If `options.fractionless` is true, the result matrix will be returned without fractions.
+    */ //TODO: lav en type til normale options
+    public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix | number[] {
         let lead: number = 0;
         let matrixClone: Matrix = MatrixUtils.clone(this); // clone the matrix
 
-        for (let r = 0; r < matrixClone.rows; r++) {
-            if (matrixClone.columns <= lead) {
+        let rows: number = this.rows;
+        let columns: number = this.columns;
+
+        for (let r = 0; r < rows; r++) {
+            if (columns <= lead) {
                 break;
             }
 
             let i: number = r;
-            while (matrixClone.mElements[i * matrixClone.columns + lead] === 0) {
+            while (matrixClone.mElements[i * columns + lead] === 0) {
                 i++;
 
-                if (matrixClone.rows === i) {
+                if (rows === i) {
                     i = r;
                     lead++;
 
-                    if (matrixClone.columns === lead) {
+                    if (columns === lead) {
                         return matrixClone;
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: Float32Array = matrixClone.mElements.subarray(i * matrixClone.columns, (i + 1) * matrixClone.columns);
-            matrixClone.mElements.set(matrixClone.mElements.subarray(r * matrixClone.columns, (r + 1) * matrixClone.columns), i * matrixClone.columns);
-            matrixClone.mElements.set(tmp, r * matrixClone.columns);
+            let tmp: Float32Array = matrixClone.mElements.subarray(i * columns, (i + 1) * columns);
+            matrixClone.mElements.set(matrixClone.mElements.subarray(r * columns, (r + 1) * columns), i * columns);
+            matrixClone.mElements.set(tmp, r * columns);
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of the current column as zero
-            for (let i = r + 1; i < matrixClone.rows; i++) {
-                let val = matrixClone.mElements[i * matrixClone.columns + lead] / matrixClone.mElements[r * matrixClone.columns + lead];
+            for (let i = r + 1; i < rows; i++) {
+                let val = matrixClone.mElements[i * columns + lead] / matrixClone.mElements[r * columns + lead];
 
-                for (let j = 0; j < matrixClone.columns; j++) {
-                    matrixClone.mElements[i * matrixClone.columns + j] -= val * matrixClone.mElements[r * matrixClone.columns + j];
+                for (let j = 0; j < columns; j++) {
+                    matrixClone.mElements[i * columns + j] -= val * matrixClone.mElements[r * columns + j];
                 }
             }
 
             lead++;
+        }
+
+
+        MatrixUtils.roundMatrixToZero(matrixClone)
+
+        if (options.solve) {
+            const augmentedColumn: number[] = matrixClone.getColumn(columns)
+            return matrixClone.getSubMatrix(0, rows, 0, columns - 1).backSubstitution(augmentedColumn)
         }
 
         return matrixClone;
@@ -682,51 +696,55 @@ export default class Matrix implements MatrixTypes {
      * Converts the matrix to Reduced Row Echelon Form (RREF).
      * This method does not modify the original matrix.
      * @public
-     * @returns {Matrix} A new matrix that is the RREF of the original matrix.
-     */ //TODO: lav en type til normale options
-    public gaussJordan(options: { solve: boolean } = { solve: false }): Matrix | number[] {
+      * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
+     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. If `options.fractionless` is true, the result matrix will be returned without fractions.
+    */ //TODO: lav en type til normale options
+    public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix | number[] {
         let lead: number = 0;
         let matrixClone: Matrix = MatrixUtils.clone(this); // clone the matrix
 
-        for (let r = 0; r < matrixClone.rows; r++) {
-            if (matrixClone.columns <= lead) {
+        let rows: number = this.rows;
+        let columns: number = this.columns;
+
+        for (let r = 0; r < rows; r++) {
+            if (columns <= lead) {
                 break;
             }
 
             let i: number = r;
-            while (matrixClone.mElements[i * matrixClone.columns + lead] === 0) {
+            while (matrixClone.mElements[i * columns + lead] === 0) {
                 i++;
 
-                if (matrixClone.rows === i) {
+                if (rows === i) {
                     i = r;
                     lead++;
 
-                    if (matrixClone.columns === lead) {
+                    if (columns === lead) {
                         return matrixClone;
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: Float32Array = matrixClone.mElements.subarray(i * matrixClone.columns, (i + 1) * matrixClone.columns);
-            matrixClone.mElements.set(matrixClone.mElements.subarray(r * matrixClone.columns, (r + 1) * matrixClone.columns), i * matrixClone.columns);
-            matrixClone.mElements.set(tmp, r * matrixClone.columns);
+            let tmp: Float32Array = matrixClone.mElements.subarray(i * columns, (i + 1) * columns);
+            matrixClone.mElements.set(matrixClone.mElements.subarray(r * columns, (r + 1) * columns), i * columns);
+            matrixClone.mElements.set(tmp, r * columns);
 
-            let val: number = matrixClone.mElements[r * matrixClone.columns + lead];
+            let val: number = matrixClone.mElements[r * columns + lead];
 
             // Scale row r to make the leading coefficient = 1
-            for (let j = 0; j < matrixClone.columns; j++) {
-                matrixClone.mElements[r * matrixClone.columns + j] /= val;
+            for (let j = 0; j < columns; j++) {
+                matrixClone.mElements[r * columns + j] /= val;
             }
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of current column as zero
-            for (let i = 0; i < matrixClone.rows; i++) {
+            for (let i = 0; i < rows; i++) {
                 if (i === r) continue;
 
-                val = matrixClone.mElements[i * matrixClone.columns + lead];
+                val = matrixClone.mElements[i * columns + lead];
 
-                for (let j = 0; j < matrixClone.columns; j++) {
-                    matrixClone.mElements[i * matrixClone.columns + j] -= val * matrixClone.mElements[r * matrixClone.columns + j];
+                for (let j = 0; j < columns; j++) {
+                    matrixClone.mElements[i * columns + j] -= val * matrixClone.mElements[r * columns + j];
                 }
             }
 
@@ -734,6 +752,12 @@ export default class Matrix implements MatrixTypes {
         }
 
         MatrixUtils.roundMatrixToZero(matrixClone)
+
+
+        if (options.solve) {
+            return matrixClone.getColumn(columns);
+        }
+
         return matrixClone;
     }
 
@@ -783,7 +807,7 @@ export default class Matrix implements MatrixTypes {
         let invertedMatrixElements: number[][] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
-            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(this.rows - i - 1));
+            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(this.rows - i));
         }
 
         invertedMatrixElements.reverse()
@@ -816,7 +840,7 @@ export default class Matrix implements MatrixTypes {
         let invertedMatrixElements: number[][] = [];
 
         for (let i = 0; i < this.rows; i++) {
-            invertedMatrixElements[i] = this.forwardSubstitution(identityMatrix.getRow(i));
+            invertedMatrixElements[i] = this.forwardSubstitution(identityMatrix.getRow(i + 1));
         }
 
         // invertedMatrixElements.reverse()
@@ -867,17 +891,17 @@ export default class Matrix implements MatrixTypes {
     public gramSmith(): Matrix {
         const orthogonalColumns: number[][] = []
 
-        orthogonalColumns.push(this.getColumn(0));
+        orthogonalColumns.push(this.getColumn(1));
 
         const columns: number = this.columns;
 
 
         for (let i = 1; i < columns; i++) {
-            let orthogonalProjection: number[] = [...this.getColumn(i)]; // Initialize orthogonalProjection as a copy of the current column
+            let orthogonalProjection: number[] = [...this.getColumn(i + 1)]; // Initialize orthogonalProjection as a copy of the current column
 
             for (let j = 0; j < i; j++) {
                 let u: number[] = orthogonalColumns[j]
-                let v: number[] = this.getColumn(i)
+                let v: number[] = this.getColumn(i + 1)
                 let uv: number = Matrix.dot(u, v)
                 let uu: number = Matrix.dot(u, u)
                 let scalar: number = uv / uu;

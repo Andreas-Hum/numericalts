@@ -86,7 +86,7 @@ describe('Matrix', () => {
     describe('Get row', () => {
         it('Return the first row of a 2x3 matrix', () => {
 
-            const result = twoByThree.getRow(0);
+            const result = twoByThree.getRow(1);
             const expected = [1, 2, 3];
             expect(result).toEqual(expected);
         });
@@ -99,7 +99,7 @@ describe('Matrix', () => {
     describe('Get column', () => {
         it('Return the first column of a 2x3 matrix', () => {
 
-            const result = twoByThree.getColumn(0);
+            const result = twoByThree.getColumn(1);
             const expected = [1, 4];
             expect(result).toEqual(expected);
         });
@@ -535,7 +535,9 @@ describe('Matrix', () => {
             const compareArray = new Matrix([[1, 2, 3], [3, 4, 7], [6, 5, 9]])
             const compareArray2 = new Matrix([[0], [2], [11]])
 
-            console.log((compareArray.augment(compareArray2).gaussJordan().getColumn(3)))
+            console.log(compareArray.augment(compareArray2).gaussJordan({ solve: true }))
+
+            // console.log(test.getSubMatrix(0, 3, 0, 3).backSubstitution(tew2))
 
 
             // expect(twoByThree.toArray()).toEqual(compareArray)

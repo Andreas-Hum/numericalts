@@ -42,4 +42,46 @@ export default class math {
         const pow = Math.pow(base, digits);
         return Math.round(num * pow) / pow;
     }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Utility methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+        Calculates the greatest common divisor (GCD) of two numbers.
+        @param {number} a - The first number.
+        @param {number} b - The second number.
+        @returns {number} The GCD of the two numbers. 
+    */
+    public static GCD(a: number, b: number): number {
+        if (b === 0) {
+            return a;
+        }
+
+        return this.GCD(b, a % b);
+    }
+
+    /**
+     * Calculates the least common divisor (LCD) of two numbers.
+        @param {number} a - The first number.
+        @param {number} b - The second number.
+        @returns {number} The LCD of the two numbers. 
+     */
+    public static LCD(a: number, b: number): number {
+        // Calculate the GCD (Greatest Common Divisor) using the Euclidean algorithm
+        const gcd = this.GCD(a, b);
+
+        // Calculate the LCD using the formula: LCD = (a * b) / GCD
+        const lcd = (a * b) / gcd;
+
+        return lcd;
+    }
+
+
+
+
 }
