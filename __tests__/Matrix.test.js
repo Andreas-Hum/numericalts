@@ -532,10 +532,10 @@ describe('Matrix', () => {
 
     describe('Augment', () => {
         it('Converting a 2x3 Matrix to a 2d array', () => {
-            const compareArray = new Matrix([[1, 3], [-5, 0]])
-            const compareArray2 = new Matrix([[1, 0], [0, 1]])
+            const compareArray = new Matrix([[1, 2, 3], [3, 4, 7], [6, 5, 9]])
+            const compareArray2 = new Matrix([[0], [2], [11]])
 
-            console.log((compareArray.augment(compareArray2).gaussJordan().toString()))
+            console.log((compareArray.augment(compareArray2).gaussJordan().getColumn(3)))
 
 
             // expect(twoByThree.toArray()).toEqual(compareArray)

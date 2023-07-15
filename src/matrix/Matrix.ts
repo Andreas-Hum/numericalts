@@ -213,7 +213,7 @@ export default class Matrix implements MatrixTypes {
      */ //TODO: type til modify
     public getColumn(columnIndex: number): number[] {
         if (typeof columnIndex !== "number") throw new MatrixError("Invalid arugment", 606, { columnIndex })
-        if (columnIndex < 0 || columnIndex >= this.rows) throw new MatrixError("Row index out of bounds", 800, { columnIndex });
+        if (columnIndex < 0 || columnIndex >= this.columns) throw new MatrixError("Row index out of bounds", 800, { columnIndex });
 
         const column: number[] = [];
         const startIndex: number = columnIndex;
