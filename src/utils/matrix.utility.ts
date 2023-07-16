@@ -13,19 +13,24 @@ export class MatrixUtils {
      * Clones the matrix instance and returns the clone
      * @public
      * @static
-     * @returns {Matrix} The cloned matrix
+     * @returns {Matrix<any>} The cloned matrix
      */
-    public static clone(A: Matrix): Matrix {
+    public static clone(A: Matrix<any>): Matrix<any> {
+
+        const test = new Matrix([[1, 2, 3, 4, 5, 6]])
         return new Matrix(A.toArray())
+
+
     }
 
     /**
      * Method used to pad the matrix dimensions to the nearest power of two.
      * @public
      * @static
-     * @returns {Matrix} The padded matrix with dimensions as a power of two.
+     * @param {Matrix<number>} A - The matrix to pad
+     * @returns {Matrix<number>} The padded matrix with dimensions as a power of two.
      */
-    public static padMatrixToPowerOfTwo(A: Matrix): Matrix {
+    public static padMatrixToPowerOfTwo(A: Matrix<number>): Matrix<number> {
         const rows: number = A.rows;
         const columns: number = A.columns
         const maxDimension: number = Math.max(rows, columns);
@@ -35,7 +40,7 @@ export class MatrixUtils {
             return A; // No padding required as the matrix is already a power of two.
         }
 
-        const paddedMatrix: Float32Array = new Float32Array(nextPower * nextPower);
+        const paddedMatrix: number[] = Array<number>(nextPower*nextPower).fill(0);
 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < columns; j++) {
@@ -51,13 +56,14 @@ export class MatrixUtils {
      * Rounds values close to zero in the given array and modifies the matrix in place
      * @public
      * @static
+     * @param { Matrix<number>} A - Matrix consisting of numbers
      * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
      * @returns {void}
      */
-    public static roundMatrixToZero(A: Matrix, threshold: number = Constants.DELTA): void {
+    public static roundMatrixToZero(A: Matrix<number>, threshold: number = Constants.DELTA): void {
         const size: number = A.size;
         for (let i = 0; i < size; i++) {
-            if(Math.abs(A.mElements[i]) < threshold){
+            if (Math.abs(A.mElements[i]) < threshold) {
                 A.mElements[i] = 0;
             }
         }
@@ -73,7 +79,7 @@ export class MatrixUtils {
      * @param {number} base - The base to use for rounding. Defaults to 10 if not provided.
      * @returns {void}
      */
-    public static toFixedMatrix(A: Matrix, digits: number, base: number = 10): void {
+    public static toFixedMatrix(A: Matrix<number>, digits: number, base: number = 10): void {
         A.mElements = A.mElements.map((entry: number) => math.toFixedNumber(entry, digits, base))
     }
 
@@ -93,7 +99,7 @@ export class MatrixUtils {
      * @returns {Matrix} The identity matrix.
      * @throws {MatrixError} - If the dimension is less than or equal to 0.
      */
-    public static identity(dimension: number): Matrix {
+    public static identity(dimension: number): Matrix<number> {
         if (dimension <= 0 || typeof dimension !== "number") throw new MatrixError("Invalid argument", 606, { dimension });
 
         const entries: number[][] = [];
@@ -110,7 +116,7 @@ export class MatrixUtils {
             entries.push(row);
         }
 
-        return new Matrix(entries)
+        return new Matrix<number>(entries)
     }
 
     /**
@@ -122,9 +128,9 @@ export class MatrixUtils {
      * @returns {Matrix} - The matrix filled with ones.
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
-    public static ones(rows: number, columns: number): Matrix {
+    public static ones(rows: number, columns: number): Matrix<number> {
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
+        return new Matrix<number>(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
     }
 
 
@@ -137,7 +143,7 @@ export class MatrixUtils {
      * @returns {Matrix} The randomized matrix
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
-    public static random(rows: number, columns: number): Matrix {
+    public static random(rows: number, columns: number): Matrix<number> {
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
 
         const entries: number[][] = [];
@@ -152,7 +158,7 @@ export class MatrixUtils {
             entries.push(row);
         }
 
-        return new Matrix(entries);
+        return new Matrix<number>(entries);
     }
 
 
@@ -165,9 +171,9 @@ export class MatrixUtils {
      * @returns {Matrix} - The matrix filled with zeros.
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
      */
-    public static zeros(rows: number, columns: number): Matrix {
+    public static zeros(rows: number, columns: number): Matrix<number> {
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
+        return new Matrix<number>(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
     }
 
 }
