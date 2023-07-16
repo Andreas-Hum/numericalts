@@ -65,7 +65,7 @@ export class MatrixUtils {
 
 
     /**
-     * Rounds all elements of a matrix to a specified number of decimal places using a specified base.
+     * Rounds all elements of a matrix in place to a specified number of decimal places using a specified base.
      * @public
      * @static
      * @param {Matrix} A - The matrix to round.

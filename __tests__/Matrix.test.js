@@ -1,5 +1,7 @@
 const { default: expect } = require("expect")
 const Matrix = require("../dist/matrix").default
+const importings = require("../dist/utils")
+const MatrixUtils = importings.MatrixUtils
 
 let twoByThree, threeByTwo, twoByTwo
 describe('Matrix', () => {
@@ -499,6 +501,26 @@ describe('Matrix', () => {
     * Inverting
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Inverting a square matrix", () => {
+        it("Inverting a 2x2 square matrix", () => {
+            const matrix = new Matrix([[1, -2], [-1, 3]]);
+            expect(matrix.invertSquare()).toEqual(new Matrix([[3, 2], [1, 1]]))
+
+        });
+
+
+        it("Inverting a 5x5 square matrix", () => {
+            const matrix = new Matrix([[39, 50, 86, 61, 63], [80, 30, 95, -57, -90], [-89, -28, 32, -31, -11], [24, 82, -41, 47, 75], [67, -68, 77, 31, 33]])
+            const testings = matrix.invertSquare()
+            MatrixUtils.toFixedMatrix(testings,3)
+            console.log(testings.toString())
+            // expect(matrix.invertSquare()).toEqual(new Matrix([]))
+
+        });
+
+
+    });
 
     describe("Inverting an upper triangular matrix", () => {
         test("Inverting a 3x3 upper triangular matrix", () => {

@@ -1,8 +1,27 @@
 
 export default class math {
 
+
+
+    /**
+     * Returns the absolute value of a number.
+     *
+     * @param {number} num - The number to calculate the absolute value of.
+     * @returns The absolute value of the number.
+     */
+    public static abs(num: number): number {
+        if (num < 0) {
+            return num * -1;
+        } else {
+            return num;
+        }
+    }
+
+
     /**
      * Checks if a given number is a power of two
+     *  @public
+     *  @static
      * @param {number} n The number to check
      * @returns {boolean} 'true' if a power of two 'false' otherwise
      */
@@ -13,6 +32,8 @@ export default class math {
 
     /**
      * Method used to find the next power of two for a given number.
+     *  @public
+     *  @static
      * @param {number} n - The number for which to find the next power of two.
      * @returns {number} The next power of two for the given number.
      */
@@ -33,6 +54,8 @@ export default class math {
 
     /**
      * Rounds a number to a specified number of decimal places using a specified base.
+     * @public
+     * @static
      * @param {number} num - The number to round.
      * @param {number} digits - The number of decimal places to round to.
      * @param {number} base - The base to use for rounding.Defaults to 10 if not provided.
@@ -45,14 +68,83 @@ export default class math {
 
 
 
+    /**
+     * Returns the sign of a number.
+       @public
+       @static
+     * @param {number} num - The number to determine the sign of.
+     * @returns {number} The sign of the number: -1 if negative, 0 if zero, 1 if positive.
+     */
+    public static sign(num: number): number {
+        let sign: number = 0;
+
+        if (num < 0) {
+            sign = -1;
+        } else if (num > 0) {
+            sign = 1;
+        }
+
+        return sign;
+    }
+
+
+
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Utility methods
+    * floor, ceil and trunc
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+     * Calculates the floor of a number
+     * @param {number} num - The number to calculate the floor for.
+     * @returns {number} The largest integer less than or equal to the given number.
+     */
+    public static floor(num: number): number {
+        return Math.floor(num)
+    }
+
+    /**
+     * Calculates the ceil of a number
+     * @param {number} num - The number to calculate the ceil for.
+     * @returns {number} The smallest integer greater than or equal to the given number.
+     */
+    public static ceil(num: number): number {
+        return Math.ceil(num)
+    }
+
+    /**
+     * Calculates the truncation of a number
+     * @param  {number} num - The number to calculate the truncation for.
+     * @returns {number} The integer part of the given number.
+     */
+    public static trunc(num: number): number {
+        return Math.trunc(num)
+    }
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Fractional operations
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    // public static fracPart(num: number) {
+    //     const abs: number = this.abs(num)
+    //     return number - 
+    // }
+
+    /**
         Calculates the greatest common divisor (GCD) of two numbers.
+        @public
+        @static
         @param {number} a - The first number.
         @param {number} b - The second number.
         @returns {number} The GCD of the two numbers. 
@@ -67,6 +159,8 @@ export default class math {
 
     /**
      * Calculates the least common divisor (LCD) of two numbers.
+     *  @public
+     *  @static
         @param {number} a - The first number.
         @param {number} b - The second number.
         @returns {number} The LCD of the two numbers. 
@@ -79,6 +173,12 @@ export default class math {
         const lcd = (a * b) / gcd;
 
         return lcd;
+    }
+
+
+
+    public static equal(x: number, y: number, tolerance = Number.EPSILON) {
+        return this.abs(x - y) < tolerance;
     }
 
 

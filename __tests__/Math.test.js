@@ -2,6 +2,28 @@ const math = require("../dist/math").default
 
 
 describe('math', () => {
+
+
+    describe('isPowerOfTwo', () => {
+        it('should return the absolute value of a positive number', () => {
+            const result = math.abs(5);
+            expect(result).toBe(5);
+        });
+
+        it('should return the absolute value of a negative number', () => {
+            const result = math.abs(-5);
+            expect(result).toBe(5);
+        });
+
+        it('should return 0 for 0', () => {
+            const result = math.abs(0);
+            expect(result).toBe(0);
+        });
+
+    });
+
+
+
     describe('isPowerOfTwo', () => {
         it('Number is a power of two', () => {
             expect(math.isPowerOfTwo(2)).toBe(true);
@@ -34,6 +56,107 @@ describe('math', () => {
         it('should round a number to the specified number of decimal places using a specified base', () => {
             expect(math.toFixedNumber(3.14159, 2, 2)).toBe(3.25);
             expect(math.toFixedNumber(2.71828, 3, 2)).toBe(2.75);
+        });
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Fractional operations
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe('sign', () => {
+        it('should return -1 when the number is negative', () => {
+            const result = math.sign(-5);
+            expect(result).toBe(-1);
+        });
+
+        it('should return 0 when the number is zero', () => {
+            const result = math.sign(0);
+            expect(result).toBe(0);
+        });
+
+        it('should return 1 when the number is positive', () => {
+            const result = math.sign(5);
+            expect(result).toBe(1);
+        });
+    });
+
+
+    describe('GCD', () => {
+        it('should calculate the greatest common divisor', () => {
+            expect(math.GCD(12, 8)).toBe(4);
+            expect(math.GCD(17, 23)).toBe(1);
+            expect(math.GCD(0, 10)).toBe(10);
+        });
+    });
+
+    describe('LCD', () => {
+        it('should calculate the least common divisor', () => {
+            expect(math.LCD(12, 8)).toBe(24);
+            expect(math.LCD(17, 23)).toBe(391);
+            expect(math.LCD(0, 10)).toBe(0);
+        });
+    });
+
+
+
+    describe('floor', () => {
+        it('returns the floor value of a positive number', () => {
+            expect(math.floor(4.8)).toBe(4);
+            expect(math.floor(10)).toBe(10);
+            expect(math.floor(0.3)).toBe(0);
+        });
+
+        it('returns the floor value of a negative number', () => {
+            expect(math.floor(-2.3)).toBe(-3);
+            expect(math.floor(-5)).toBe(-5);
+            expect(math.floor(-0.6)).toBe(-1);
+        });
+
+        it('returns the same value for zero', () => {
+            expect(math.floor(0)).toBe(0);
+        });
+    });
+
+    // Test for the ceil function
+    describe('ceil', () => {
+        it('returns the ceiling value of a positive number', () => {
+            expect(math.ceil(4.8)).toBe(5);
+            expect(math.ceil(10)).toBe(10);
+            expect(math.ceil(0.3)).toBe(1);
+        });
+
+        it('returns the ceiling value of a negative number', () => {
+            expect(math.ceil(-2.3)).toBe(-2);
+            expect(math.ceil(-5)).toBe(-5);
+            expect(math.ceil(-0.6)).toBe(0);
+        });
+
+        it('returns the same value for zero', () => {
+            expect(math.ceil(0)).toBe(0);
+        });
+    });
+
+
+
+    describe('trunc', () => {
+        it('should truncate positive numbers correctly', () => {
+            expect(math.trunc(4.7)).toBe(4);
+            expect(math.trunc(10.2)).toBe(10);
+            expect(math.trunc(100.9)).toBe(100);
+        });
+
+        it('should truncate negative numbers correctly', () => {
+            expect(math.trunc(-2.1)).toBe(-2);
+            expect(math.trunc(-5.8)).toBe(-5);
+            expect(math.trunc(-99.9)).toBe(-99);
+        });
+
+        it('should return the same integer for whole numbers', () => {
+            expect(math.trunc(0)).toBe(0);
+            expect(math.trunc(10)).toBe(10);
+            expect(math.trunc(-5)).toBe(-5);
         });
     });
 });

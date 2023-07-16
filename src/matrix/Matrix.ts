@@ -281,14 +281,14 @@ export default class Matrix implements MatrixTypes {
             throw new MatrixError("Invalid submatrix indices", 805);
         }
 
-        const subMatrixRows = endRow - startRow + 1;
-        const subMatrixColumns = endColumn - startColumn + 1;
+        const subMatrixRows: number = endRow - startRow + 1;
+        const subMatrixColumns: number = endColumn - startColumn + 1;
 
         if (subMatrixRows !== subMatrix.rows || subMatrixColumns !== subMatrix.columns) {
             throw new MatrixError("Submatrix dimensions do not match", 806);
         }
 
-        const subMatrixElements = subMatrix.mElements;
+        const subMatrixElements: Float32Array = subMatrix.mElements;
 
         for (let i = startRow; i <= endRow; i++) {
             for (let j = startColumn; j <= endColumn; j++) {
@@ -463,13 +463,6 @@ export default class Matrix implements MatrixTypes {
 
 
 
-    /**
-     * Performs matrix multiplication using Strassen's algorithm.
-     * @param {Matrix} B - The matrix to multiply with.
-     * @returns {Matrix} - The resulting matrix.
-     */
-
-    // Pseudo code at: https://en.wikipedia.org/wiki/Strassen_algorithm
 
     /**
        * Performs matrix multiplication using the Strassen's algorithm.
@@ -488,7 +481,7 @@ export default class Matrix implements MatrixTypes {
 
         // Base case: If matrices are 1x1, perform simple multiplication
         if (this.rows === 1 && this.columns === 1 && B.rows === 1 && B.columns === 1) {
-            const resultElement = this.mElements[0] * B.mElements[0];
+            const resultElement: number = this.mElements[0] * B.mElements[0];
             return new Matrix(new Float32Array([resultElement]), 1, 1);
         }
 
@@ -496,8 +489,8 @@ export default class Matrix implements MatrixTypes {
         const A = MatrixUtils.padMatrixToPowerOfTwo(this);
         const C = MatrixUtils.padMatrixToPowerOfTwo(B);
 
-        const n = A.rows;
-        const halfN = n / 2;
+        const n: number = A.rows;
+        const halfN: number = n / 2;
 
         // Create submatrices for A and B
         const A11 = A.getSubMatrix(0, halfN, 0, halfN);
@@ -661,7 +654,7 @@ export default class Matrix implements MatrixTypes {
      * @public
      * @param {Object} options - The options for the Gauss-Jordan elimination.
      * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. If `options.fractionless` is true, the result matrix will be returned without fractions.
+     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. 
     */ //TODO: lav en type til normale options
     public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix | number[] {
         let lead: number = 0;
@@ -722,7 +715,7 @@ export default class Matrix implements MatrixTypes {
      * This method does not modify the original matrix.
      * @public
       * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. If `options.fractionless` is true, the result matrix will be returned without fractions.
+     * @returns {Matrix | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array.
     */ //TODO: lav en type til normale options
     public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix | number[] {
         let lead: number = 0;
@@ -806,6 +799,15 @@ export default class Matrix implements MatrixTypes {
     * Inverting
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public invertSquare(): Matrix {
+        if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { isSquare: this.isSquare });
+        const squareIdentity: Matrix = MatrixUtils.identity(this.rows)
+        const augmented: Matrix = this.augment(squareIdentity)
+        const inverse: Matrix = augmented.gaussJordan() as Matrix
+        return inverse.getSubMatrix(0, this.rows, this.columns, inverse.columns)
+    }
 
 
     /**
