@@ -304,7 +304,7 @@ export default class Matrix implements MatrixTypes {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Mathematical operations, example, add, subtract, naiveMultiply and so forth
+    * Mathematical operations, example, add, subtract, multiply and so forth
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -371,12 +371,12 @@ export default class Matrix implements MatrixTypes {
 
 
     /**
-     * Multiplies this matrix with another matrix using dynamic loop unrolling.
+     * Multiplies this matrix with another matrix using the naive algorithm
      * @public
      * @param {Matrix} B - The matrix to multiply with.
      * @returns {Matrix} The resulting matrix.
      */
-    public naiveMultiply(B: Matrix): Matrix {
+    public multiply(B: Matrix): Matrix {
         if (this.columns !== B.rows) {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
@@ -439,11 +439,11 @@ export default class Matrix implements MatrixTypes {
         if (exp % 2 === 0) {
             // If the exponent is even, recursively calculate the square root of the matrix
             const sqrtMatrix = this.pow(exp / 2);
-            return sqrtMatrix.naiveMultiply(sqrtMatrix);
+            return sqrtMatrix.multiply(sqrtMatrix);
         } else {
             // If the exponent is odd, recursively calculate the square root of the matrix and multiply it with the matrix itself
             const sqrtMatrix = this.pow((exp - 1) / 2);
-            return this.naiveMultiply(sqrtMatrix.naiveMultiply(sqrtMatrix));
+            return this.multiply(sqrtMatrix.multiply(sqrtMatrix));
         }
     }
 
@@ -770,7 +770,7 @@ export default class Matrix implements MatrixTypes {
     public QRDecomposition(): { Q: Matrix, R: Matrix } {
         const Q: Matrix = this.gramSmith();
         const QT: Matrix = Q.transpose();
-        const R: Matrix = QT.naiveMultiply(this);
+        const R: Matrix = QT.multiply(this);
         MatrixUtils.roundMatrixToZero(this)
         return { Q: Q, R: R };
     }
@@ -1211,7 +1211,7 @@ function tester() {
     for (let i = 1; i < 1001; i++) {
         let m1 = MatrixUtils.ones(i, i);
         let s = performance.now();
-        m1.naiveMultiply(m1);
+        m1.multiply(m1);
         let e = performance.now();
         a.push((e - s) / 1000);
     }
@@ -1223,6 +1223,6 @@ function tester() {
 
 // let m1 = Matrix.ones(1000, 1000);
 // let s = performance.now();
-// m1.naiveMultiply(m1);
+// m1.multiply(m1);
 // let e = performance.now();
 // console.log((e - s) / 1000);

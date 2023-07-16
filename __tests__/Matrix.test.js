@@ -183,7 +183,7 @@ describe('Matrix', () => {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Basic operations add, subtract, scale and naiveMultiply
+    * Basic operations add, subtract, scale and multiply
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -328,20 +328,20 @@ describe('Matrix', () => {
         it('Multiplying a 2x3 matrix with a 3x2', () => {
             const compareMatrix = new Matrix([[14, 32], [32, 77]])
 
-            expect(twoByThree.naiveMultiply(threeByTwo)).toEqual(compareMatrix)
+            expect(twoByThree.multiply(threeByTwo)).toEqual(compareMatrix)
         })
 
         it('Multiplying a 2x2 with itself', () => {
             const compareMatrix = new Matrix([[7, 10], [15, 22]])
-            expect(twoByTwo.naiveMultiply(twoByTwo)).toEqual(compareMatrix)
+            expect(twoByTwo.multiply(twoByTwo)).toEqual(compareMatrix)
         })
 
         it('Error: Incompatible dimensions', () => {
-            expect(() => twoByThree.naiveMultiply(twoByThree)).toThrow()
+            expect(() => twoByThree.multiply(twoByThree)).toThrow()
         })
 
         it('Error: B not an instance of Matrix', () => {
-            expect(() => twoByThree.naiveMultiply("threeByTwo")).toThrow()
+            expect(() => twoByThree.multiply("threeByTwo")).toThrow()
         })
 
     })
@@ -533,25 +533,10 @@ describe('Matrix', () => {
     describe('Augment', () => {
         it('Converting a 2x3 Matrix to a 2d array', () => {
             const compareArray = new Matrix([[1, 2, 3], [3, 4, 7], [6, 5, 9]])
-            const compareArray2 = new Matrix([[0], [2], [11]])
+            const compareArray2 = new Matrix([[0, 2, 11]])
 
-            console.log(compareArray.augment(compareArray2).gaussJordan({ solve: true }))
-
-            // console.log(test.getSubMatrix(0, 3, 0, 3).backSubstitution(tew2))
-
-
-            // expect(twoByThree.toArray()).toEqual(compareArray)
+            expect(compareArray.augment(compareArray2)).toEqual(new Matrix([[1, 2, 3, 0], [3, 4, 7, 2], [6, 5, 9, 11]]))
         })
-
-        // it('Converting a 3x2 Matrix to a 2d array', () => {
-        //     const compareArray = [[1, 4], [2, 5], [3, 6]]
-        //     expect(threeByTwo.toArray()).toEqual(compareArray)
-        // })
-
-        // it('Converting a 2x2 Matrix to a 2d array', () => {
-        //     const compareArray = [[1, 2], [3, 4]]
-        //     expect(twoByTwo.toArray()).toEqual(compareArray)
-        // })
 
     })
 
