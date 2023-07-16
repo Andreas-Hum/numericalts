@@ -442,6 +442,56 @@ export default class Matrix<T> implements MatrixTypes<T> {
     // }
 
 
+    /**
+         * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
+         * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
+         *
+         * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
+         * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
+         * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
+         * vectors from the column vector itself.
+         *
+         * @returns {Matrix<number>} A new Matrix instance constructed using the orthonormal vectors as columns.
+         *
+         * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
+         * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
+         *
+         * @public
+         */
+    public gramSmith(): Matrix<number> {
+        const orthogonalColumns: number[][] = []
+
+        orthogonalColumns.push((this as Matrix<number>).getColumn(1));
+
+        const columns: number = this.columns;
+
+
+        for (let i = 1; i < columns; i++) {
+            let orthogonalProjection: number[] = [...(this as Matrix<number>).getColumn(i + 1)]; // Initialize orthogonalProjection as a copy of the current column
+
+            for (let j = 0; j < i; j++) {
+                let u: number[] = orthogonalColumns[j]
+                let v: number[] = (this as Matrix<number>).getColumn(i + 1)
+                let uv: number = math.dot(u, v)
+                let uu: number = math.dot(u, u)
+                let scalar: number = uv / uu;
+
+                let projectionOf_I_onto_J: number[] = u.map((entry: number) => entry * scalar);
+
+                orthogonalProjection = orthogonalProjection.map((entry: number, index: number) => entry - projectionOf_I_onto_J[index])
+
+            }
+            if ((Math.sqrt(orthogonalProjection.map(x => x ** 2).reduce((acc, x) => acc + x))) < Constants.DELTA) {
+                throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
+            }
+            orthogonalColumns.push(orthogonalProjection)
+
+        }
+
+        const normalizedColumns: number[][] = orthogonalColumns.map((column: number[]) => math.normalize(column))
+        const transposedArray: number[][] = normalizedColumns[0].map((_, colIndex) => normalizedColumns.map(row => row[colIndex]));
+        return new Matrix<number>(transposedArray);
+    }
 
     /**
      * Multiplies this matrix with another matrix using the naive algorithm
@@ -873,13 +923,75 @@ export default class Matrix<T> implements MatrixTypes<T> {
     }
 
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Reshapeing
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Augments the current matrix with another matrix.
+     * @param {Matrix<T>} B  - The matrix to be augmented with.
+     * @returns {Matrix<T>} A new matrix that is the result of augmenting the current matrix with the provided matrix.
+     * @throws {MatrixError} If the argument is not an instance of Matrix, or if the current matrix and the provided matrix do not have the same number of rows.
+     */
+    public augment(B: Matrix<T>): Matrix<T> {
+        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+        if (B.rows !== this.rows) throw new MatrixError("A and B does not have the same number of rows", 802, { ARows: this.rows, BRows: B.rows });
+        let AA: T[][] = this.toArray()
+        let BA: T[][] = B.toArray()
+        return new Matrix(AA.map((row: T[], index: number) => row.concat(BA[index])))
+    }
+
+
+
+    /**
+     * Transposes a matrix.
+     * @public
+     * @returns {Matrix<T>} The transposed matrix.
+     */
+    public transpose(): Matrix<T> {
+
+        const transposedMatrix: Matrix<T> = MatrixUtils.clone(this)
+        const rows: number = transposedMatrix.rows;
+        const columns: number = transposedMatrix.columns;
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                transposedMatrix.mElements[j * rows + i] = this.mElements[i * columns + j];
+            }
+        }
+        transposedMatrix.rows = columns;
+        transposedMatrix.columns = rows;
+
+        if (transposedMatrix.isTall) {
+            transposedMatrix.isTall = false;
+            transposedMatrix.isWide = true;
+        } else if (transposedMatrix.isWide) {
+            transposedMatrix.isTall = true;
+            transposedMatrix.isWide = false;
+        }
+
+        transposedMatrix.updateShape()
+
+        return transposedMatrix;
+    }
+
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Inverting
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    /**
+    Inverts a square matrix.
+    @returns { Matrix<number>} The inverse of the square matrix.
+    @throws {MatrixError} If the matrix is not square.
+    */
     public invertSquare(): Matrix<number> {
         if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { isSquare: this.isSquare });
         const squareIdentity: Matrix<number> = MatrixUtils.identity(this.rows)
@@ -964,20 +1076,6 @@ export default class Matrix<T> implements MatrixTypes<T> {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Augments the current matrix with another matrix.
-     * @param {Matrix<T>} B  - The matrix to be augmented with.
-     * @returns {Matrix<T>} A new matrix that is the result of augmenting the current matrix with the provided matrix.
-     * @throws {MatrixError} If the argument is not an instance of Matrix, or if the current matrix and the provided matrix do not have the same number of rows.
-     */
-    public augment(B: Matrix<T>): Matrix<T> {
-        if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-        if (B.rows !== this.rows) throw new MatrixError("A and B does not have the same number of rows", 802, { ARows: this.rows, BRows: B.rows });
-        let AA: T[][] = this.toArray()
-        let BA: T[][] = B.toArray()
-        return new Matrix(AA.map((row: T[], index: number) => row.concat(BA[index])))
-    }
-
 
 
     /**
@@ -993,56 +1091,6 @@ export default class Matrix<T> implements MatrixTypes<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
-    /**
-     * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
-     * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
-     *
-     * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
-     * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
-     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
-     * vectors from the column vector itself.
-     *
-     * @returns {Matrix<number>} A new Matrix instance constructed using the orthonormal vectors as columns.
-     *
-     * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
-     * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
-     *
-     * @public
-     */
-    public gramSmith(): Matrix<number> {
-        const orthogonalColumns: number[][] = []
-
-        orthogonalColumns.push((this as Matrix<number>).getColumn(1));
-
-        const columns: number = this.columns;
-
-
-        for (let i = 1; i < columns; i++) {
-            let orthogonalProjection: number[] = [...(this as Matrix<number>).getColumn(i + 1)]; // Initialize orthogonalProjection as a copy of the current column
-
-            for (let j = 0; j < i; j++) {
-                let u: number[] = orthogonalColumns[j]
-                let v: number[] = (this as Matrix<number>).getColumn(i + 1)
-                let uv: number = math.dot(u, v)
-                let uu: number = math.dot(u, u)
-                let scalar: number = uv / uu;
-
-                let projectionOf_I_onto_J: number[] = u.map((entry: number) => entry * scalar);
-
-                orthogonalProjection = orthogonalProjection.map((entry: number, index: number) => entry - projectionOf_I_onto_J[index])
-
-            }
-            if ((Math.sqrt(orthogonalProjection.map(x => x ** 2).reduce((acc, x) => acc + x))) < Constants.DELTA) {
-                throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
-            }
-            orthogonalColumns.push(orthogonalProjection)
-
-        }
-
-        const normalizedColumns: number[][] = orthogonalColumns.map((column: number[]) => math.normalize(column))
-        const transposedArray: number[][] = normalizedColumns[0].map((_, colIndex) => normalizedColumns.map(row => row[colIndex]));
-        return new Matrix<number>(transposedArray);
-    }
 
     /**
      * Prints the matrix in a formatted way.
@@ -1099,39 +1147,6 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
 
 
-    /**
-     * Transposes a matrix.
-     * @public
-     * @returns {Matrix<T>} The transposed matrix.
-     */
-    public transpose(): Matrix<T> {
-
-        const transposedMatrix: Matrix<T> = MatrixUtils.clone(this)
-        const rows: number = transposedMatrix.rows;
-        const columns: number = transposedMatrix.columns;
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                transposedMatrix.mElements[j * rows + i] = this.mElements[i * columns + j];
-            }
-        }
-        transposedMatrix.rows = columns;
-        transposedMatrix.columns = rows;
-
-        if (transposedMatrix.isTall) {
-            transposedMatrix.isTall = false;
-            transposedMatrix.isWide = true;
-        } else if (transposedMatrix.isWide) {
-            transposedMatrix.isTall = true;
-            transposedMatrix.isWide = false;
-        }
-
-        transposedMatrix.updateShape()
-
-        return transposedMatrix;
-    }
-
-
 
     /**
      * Converts the matrix to a printable string
@@ -1176,7 +1191,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-   
+
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
