@@ -6,7 +6,7 @@ export default class Constants {
      * A small value used for comparing floating-point numbers.
      * Can be used for precision comparisons in mathematical calculations.
      */
-    static readonly DELTA: number = 1e-7;
+    static readonly DELTA: number = 1e-12;
 
     /**
      * The mathematical constant pi (approximately 3.14159).

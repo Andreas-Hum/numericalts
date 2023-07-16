@@ -18,13 +18,124 @@ export default class math {
     }
 
 
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * floor, ceil and trunc
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Checks if a given number is a power of two
+     * Calculates the floor of a number
+     * @param {number} num - The number to calculate the floor for.
+     * @returns {number} The largest integer less than or equal to the given number.
+     */
+    public static floor(num: number): number {
+        return Math.floor(num)
+    }
+
+    /**
+     * Calculates the ceil of a number
+     * @param {number} num - The number to calculate the ceil for.
+     * @returns {number} The smallest integer greater than or equal to the given number.
+     */
+    public static ceil(num: number): number {
+        return Math.ceil(num)
+    }
+
+    /**
+     * Calculates the truncation of a number
+     * @param  {number} num - The number to calculate the truncation for.
+     * @returns {number} The integer part of the given number.
+     */
+    public static trunc(num: number): number {
+        return Math.trunc(num)
+    }
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Fractional operations
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    /**
+     * Returns the fractional part of a number.
+     * @param {number} num - The number to extract the fractional part from.
+     * @returns {number} The fractional part of the number.
+     */
+    public static fracPart(num: number): number {
+        const abs: number = this.abs(num)
+        return abs - this.trunc(abs)
+    }
+
+    /**
+        Calculates the greatest common divisor (GCD) of two numbers.
+        @public
+        @static
+        @param {number} a - The first number.
+        @param {number} b - The second number.
+        @returns {number} The GCD of the two numbers. 
+    */
+    public static GCD(a: number, b: number): number {
+        if (b === 0) {
+            return a;
+        }
+
+        return this.GCD(b, a % b);
+    }
+
+    /**
+     * Calculates the least common divisor (LCD) of two numbers.
      *  @public
      *  @static
-     * @param {number} n The number to check
-     * @returns {boolean} 'true' if a power of two 'false' otherwise
+        @param {number} a - The first number.
+        @param {number} b - The second number.
+        @returns {number} The LCD of the two numbers. 
      */
+    public static LCD(a: number, b: number): number {
+        // Calculate the GCD (Greatest Common Divisor) using the Euclidean algorithm
+        const gcd = this.GCD(a, b);
+
+        // Calculate the LCD using the formula: LCD = (a * b) / GCD
+        const lcd = (a * b) / gcd;
+
+        return lcd;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Utility functions
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Checks if two numbers are approximately equal within a specified tolerance.
+     * @param {number} x - The first number to compare.
+     * @param {number} y - The second number to compare.
+     * @param {number} tolerance - The maximum difference allowed between the numbers. Defaults to Number.EPSILON.
+     * @returns {boolean} 'true' if the numbers are approximately equal, 'false' otherwise.
+     */
+    public static equal(x: number, y: number, tolerance: number = Number.EPSILON): boolean {
+        return this.abs(x - y) < tolerance;
+    }
+
+
+    /**
+        * Checks if a given number is a power of two
+        *  @public
+        *  @static
+        * @param {number} n The number to check
+        * @returns {boolean} 'true' if a power of two 'false' otherwise
+        */
     public static isPowerOfTwo(n: number): boolean {
         return (n & (n - 1)) === 0;
     }
@@ -85,100 +196,6 @@ export default class math {
         }
 
         return sign;
-    }
-
-
-
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * floor, ceil and trunc
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Calculates the floor of a number
-     * @param {number} num - The number to calculate the floor for.
-     * @returns {number} The largest integer less than or equal to the given number.
-     */
-    public static floor(num: number): number {
-        return Math.floor(num)
-    }
-
-    /**
-     * Calculates the ceil of a number
-     * @param {number} num - The number to calculate the ceil for.
-     * @returns {number} The smallest integer greater than or equal to the given number.
-     */
-    public static ceil(num: number): number {
-        return Math.ceil(num)
-    }
-
-    /**
-     * Calculates the truncation of a number
-     * @param  {number} num - The number to calculate the truncation for.
-     * @returns {number} The integer part of the given number.
-     */
-    public static trunc(num: number): number {
-        return Math.trunc(num)
-    }
-
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * Fractional operations
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    // public static fracPart(num: number) {
-    //     const abs: number = this.abs(num)
-    //     return number - 
-    // }
-
-    /**
-        Calculates the greatest common divisor (GCD) of two numbers.
-        @public
-        @static
-        @param {number} a - The first number.
-        @param {number} b - The second number.
-        @returns {number} The GCD of the two numbers. 
-    */
-    public static GCD(a: number, b: number): number {
-        if (b === 0) {
-            return a;
-        }
-
-        return this.GCD(b, a % b);
-    }
-
-    /**
-     * Calculates the least common divisor (LCD) of two numbers.
-     *  @public
-     *  @static
-        @param {number} a - The first number.
-        @param {number} b - The second number.
-        @returns {number} The LCD of the two numbers. 
-     */
-    public static LCD(a: number, b: number): number {
-        // Calculate the GCD (Greatest Common Divisor) using the Euclidean algorithm
-        const gcd = this.GCD(a, b);
-
-        // Calculate the LCD using the formula: LCD = (a * b) / GCD
-        const lcd = (a * b) / gcd;
-
-        return lcd;
-    }
-
-
-
-    public static equal(x: number, y: number, tolerance = Number.EPSILON) {
-        return this.abs(x - y) < tolerance;
     }
 
 

@@ -5,6 +5,9 @@ import { MatrixTypes } from "../@interfaces";
 // Error import
 import { MatrixError } from "../errors";
 
+// Math class  import
+import math from "../math";
+
 // Utility import
 import { Constants, MatrixUtils } from "../utils";
 
@@ -973,6 +976,21 @@ export default class Matrix<T> implements MatrixTypes<T> {
         let AA: T[][] = this.toArray()
         let BA: T[][] = B.toArray()
         return new Matrix(AA.map((row: T[], index: number) => row.concat(BA[index])))
+    }
+
+
+
+    /**
+     * Checks if the current matrix is equal to another matrix.
+     * @param {Matrix<T>} B - The matrix to compare with.
+     * @returns {boolean} 'true' if the matrices are equal, 'false' otherwise.
+     */
+    public equal(B: Matrix<T>): boolean {
+        if (B.dataType !== this.dataType || B.shape !== this.shape) return false;
+        if (B.dataType === "number") {
+            return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index]))
+        }
+        return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
     /**
