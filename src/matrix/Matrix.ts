@@ -1210,7 +1210,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
      * @public
      * @static
-     * @param {number[]} array - The 1D array to reshape.
+     * @param {any[]} array - The 1D array to reshape.
      * @param {number} newRows - The number of rows in the reshaped matrix.
      * @param {number} newColumns - The number of columns in the reshaped matrix.
      * @returns {Matrix<any>} The reshaped matrix.
@@ -1231,9 +1231,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
                 colIndex = 0;
             }
 
-            if (!newEntries[rowIndex]) {
-                newEntries[rowIndex] = [];
-            }
+            if (!newEntries[rowIndex]) newEntries[rowIndex] = [];
 
             newEntries[rowIndex][colIndex] = array[i];
             colIndex++;

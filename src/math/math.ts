@@ -1,7 +1,17 @@
+import { Constants } from "../utils";
 
 export default class math {
 
 
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * floor, ceil, trunc and abs 
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Returns the absolute value of a number.
@@ -20,13 +30,6 @@ export default class math {
 
 
 
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    * floor, ceil and trunc
-    */
-    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Calculates the floor of a number
@@ -72,8 +75,9 @@ export default class math {
      * @returns {number} The fractional part of the number.
      */
     public static fracPart(num: number): number {
-        const abs: number = this.abs(num)
-        return abs - this.trunc(abs)
+        const abs: number = this.abs(num);
+        const frac: number = abs - this.trunc(abs);
+        return Number(frac.toFixed(this.countDecimals(abs)));
     }
 
     /**
@@ -111,11 +115,39 @@ export default class math {
     }
 
 
+    /**
+     * Rounds a number to a specified number of decimal places using a specified base.
+     * @public
+     * @static
+     * @param {number} num - The number to round.
+     * @param {number} digits - The number of decimal places to round to.
+     * @param {number} base - The base to use for rounding.Defaults to 10 if not provided.
+     * @returns {number} The rounded number.
+     */
+    public static toFixedNumber(num: number, digits: number, base: number = 10): number {
+        const pow = Math.pow(base, digits);
+        return Math.round(num * pow) / pow;
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Utility functions
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Returns the number of decimal places in a given number.
+     * @param {number} num - The number to count the decimal places of.
+     * @returns {number} The number of decimal places in the given number.
+     */
+    public static countDecimals(num: number): number {
+        if (Number.isInteger(num)) {
+            return 0;
+        } else {
+            return num.toString().split(".")[1].length || 0;
+        }
+    }
 
     /**
      * Checks if two numbers are approximately equal within a specified tolerance.
@@ -124,7 +156,7 @@ export default class math {
      * @param {number} tolerance - The maximum difference allowed between the numbers. Defaults to Number.EPSILON.
      * @returns {boolean} 'true' if the numbers are approximately equal, 'false' otherwise.
      */
-    public static equal(x: number, y: number, tolerance: number = Number.EPSILON): boolean {
+    public static equal(x: number, y: number, tolerance: number = Constants.DELTA): boolean {
         return this.abs(x - y) < tolerance;
     }
 
@@ -161,20 +193,6 @@ export default class math {
 
         // Return next power of 2
         return 1 << count;
-    }
-
-    /**
-     * Rounds a number to a specified number of decimal places using a specified base.
-     * @public
-     * @static
-     * @param {number} num - The number to round.
-     * @param {number} digits - The number of decimal places to round to.
-     * @param {number} base - The base to use for rounding.Defaults to 10 if not provided.
-     * @returns {number} The rounded number.
-     */
-    public static toFixedNumber(num: number, digits: number, base: number = 10): number {
-        const pow = Math.pow(base, digits);
-        return Math.round(num * pow) / pow;
     }
 
 

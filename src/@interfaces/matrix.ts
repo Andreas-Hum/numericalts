@@ -31,6 +31,7 @@ export interface MatrixTypes<T> {
     invertUpper(): Matrix<number>
     invertLower(): Matrix<number>
     augment(B: Matrix<T>): Matrix<T>
+    equal(B: Matrix<T>): boolean
     gramSmith(): Matrix<number>
     print(): void
     toArray(): T[][]
