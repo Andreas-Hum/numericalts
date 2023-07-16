@@ -346,6 +346,37 @@ describe('Matrix', () => {
 
     })
 
+    describe('Vector matrix multiply', () => {
+
+        it('should perform vector-matrix multiplication correctly', () => {
+            const matrix = new Matrix([[1, 2, 3],
+            [4, 5, 6]]);
+            const vector = [2, 3, 4];
+
+            const expected = new Matrix([[2, 6, 12], [8, 15, 24]]);
+
+            matrix.vMultiply(vector);
+
+            expect(matrix.vMultiply(vector)).toEqual(expected);
+        });
+
+        it('should throw an error if the input vector is not an array', () => {
+            const matrix = new Matrix([[1, 2, 3]]);
+            const invalidVector = 'not an array';
+
+            expect(() => matrix.vMultiply(invalidVector)).toThrow();
+
+        });
+
+        it('should throw an error if the input vector length does not match the number of columns in the matrix', () => {
+            const matrix = new Matrix([[1, 2, 3]]);
+            const invalidVector = [1, 2];
+            expect(() => matrix.vMultiply(invalidVector)).toThrow();
+
+        });
+    });
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Solving systems
@@ -533,7 +564,7 @@ describe('Matrix', () => {
     describe('Augment', () => {
         it('Converting a 2x3 Matrix to a 2d array', () => {
             const compareArray = new Matrix([[1, 2, 3], [3, 4, 7], [6, 5, 9]])
-            const compareArray2 = new Matrix([[0, 2, 11]])
+            const compareArray2 = new Matrix([[0], [2], [11]])
 
             expect(compareArray.augment(compareArray2)).toEqual(new Matrix([[1, 2, 3, 0], [3, 4, 7, 2], [6, 5, 9, 11]]))
         })

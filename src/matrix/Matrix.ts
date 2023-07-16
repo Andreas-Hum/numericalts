@@ -556,6 +556,31 @@ export default class Matrix implements MatrixTypes {
         return new Matrix(resultElements, this.rows, this.columns);
     }
 
+    /**
+     * Performs vector-matrix multiplication by multiplying each element of the matrix by the corresponding element in the input vector.
+     * @param vector - The input vector.
+     * @returns A new matrix resulting from the vector-matrix multiplication.
+     * @throws {MatrixError} If the input vector is not an array or if its length doesn't match the number of columns in the matrix.
+     */
+    public vMultiply(vector: number[]): Matrix {
+        if (!Array.isArray(vector)) throw new MatrixError("The input vector is not an array", 606, { vector });
+        if (vector.length !== this.columns) throw new MatrixError("The length of the input vector must be equal to the number of columns in the matrix", 802, { matrixColumns: this.columns, vectorLength: vector.length });
+
+        let resultMatrix: Matrix = MatrixUtils.clone(this);
+        const rows: number = resultMatrix.rows;
+        const columns: number = resultMatrix.columns;
+
+        for (let i = 0; i < columns; i++) {
+            let multiplier: number = vector[i];
+            for (let j = 0; j < rows; j++) {
+                resultMatrix.mElements[j * columns + i] = resultMatrix.mElements[j * columns + i] * multiplier;
+            }
+        }
+
+        return resultMatrix;
+    }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
