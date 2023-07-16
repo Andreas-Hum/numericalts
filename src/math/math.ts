@@ -3,7 +3,39 @@ import { Constants } from "../utils";
 export default class math {
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Vector operations
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+    * Calculates the dot product of two vectors.
+    * @public
+    * @static
+    * @param {number[]} vector1 - The first vector.
+    * @param {number[]} vector2 - The second vector.
+    * @returns {number} The dot product of the two vectors.
+    */
+    public static dot(vector1: number[], vector2: number[]): number {
+        let dotProduct: number = 0;
+        for (let i = 0; i < vector1.length; i++) {
+            dotProduct += vector1[i] * vector2[i]
+        }
+        return dotProduct;
+    }
+
+    /**
+     * Normalizes a vector.
+     * @public
+     * @static
+     * @param {number[]} vector1 - The vector to normalize.
+     * @returns {number[]} The normalized vector.
+     */
+    public static normalize(vector1: number[]): number[] {
+        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
+        return vector1.map((entry: number) => entry * scalar)
+    }
 
 
 
@@ -12,6 +44,9 @@ export default class math {
     * floor, ceil, trunc and abs 
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     /**
      * Returns the absolute value of a number.
