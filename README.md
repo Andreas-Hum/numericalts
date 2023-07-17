@@ -19,7 +19,7 @@ Please note that numerical.js is currently a work in progress and is not availab
 - And many more
 
 ## Usage (Coming Soon)
-Installnumerical.js using [npm](https://www.npmjs.com/package/numericaljs):
+Install numerical.js using [npm](https://www.npmjs.com/package/numericaljs):
 
 
 ```bash
