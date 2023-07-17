@@ -14,10 +14,8 @@ import { Constants, MatrixUtils } from "../utils";
 
 // Node import
 import * as fs from "fs"
-import * as os from 'os';
 
 
-type NumericType = number | bigint;
 
 export default class Matrix<T> implements MatrixTypes<T> {
 
