@@ -224,6 +224,7 @@
     "README.md",
     "HISTORY.md"
   ],
+  "types": "./types/index.d.ts",
   "scripts": {
     "test": "jest --detectOpenHandles",
     "build": "tsc",

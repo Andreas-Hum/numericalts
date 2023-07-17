@@ -18,10 +18,6 @@ Please note that numerical.js is currently a work in progress and is not availab
 - Complex numbers
 - And many more
 
-## Installation (Coming Soon)
-
-Once numerical.js is available as a package, you will be able to install it using npm:
-
 ## Usage (Coming Soon)
 
 After installing numerical.js, you will be able to import and use the library in your TypeScript project:
