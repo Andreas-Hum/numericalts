@@ -2,7 +2,7 @@
 
 numerical.js is a TypeScript/JavaScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript or TypeScript.
 
-Please note that numerical.js is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
+Please note that numerical.js is currently a work in progress
 
 [![Version](https://img.shields.io/npm/v/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
 [![Downloads](https://img.shields.io/npm/dm/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
@@ -97,7 +97,7 @@ console.log(normalizedVector); // [0.2672612419124244, 0.5345224838248488, 0.801
 
 ## Documentation (Coming Soon)
 
-Once numerical.js is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
+Once numerical.js is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations, math operations and so forth, and provide code examples to help you understand how to use numerical.ts effectively.
 For now a simple documentation can be see [here](https://andreas-hum.github.io/numerical.js/)
 
 ## Contributing
