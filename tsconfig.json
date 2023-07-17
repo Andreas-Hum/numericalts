@@ -3,6 +3,7 @@
     "outDir": "./lib",
     "sourceMap": true,
     "module": "ESNext",
+    "allowImportingTsExtensions": true,
     "target": "ES6",
     "moduleResolution": "node",
     "removeComments": false,
@@ -13,9 +14,8 @@
     "strictNullChecks": false,
     "strictFunctionTypes": true,
     "esModuleInterop": true,
-    "paths": {
-      "mathjs": ["./types/index.d.ts"]
-    },
+    "emitDeclarationOnly": true,
+
   },
   "include": [
     "./src/**/*"

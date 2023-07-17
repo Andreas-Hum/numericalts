@@ -1,4 +1,4 @@
-import { MatrixTypes } from "./@interfaces";
+import { MatrixTypes } from "./@interfaces/index.ts";
 export default class Matrix<T> implements MatrixTypes<T> {
     shape: string;
     isSquare: boolean;

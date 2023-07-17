@@ -1,8 +1,8 @@
 
-import Matrix from "../matrix";
+import { Matrix } from "../index.ts";
 
 
-export default interface MatrixTypes<T> {
+export  interface MatrixTypes<T> {
 
     shape: string;
     isSquare: boolean;

@@ -1,1 +1,1 @@
-export { default as MatrixTypes } from './matrix';
+export * from './matrixType.ts';
