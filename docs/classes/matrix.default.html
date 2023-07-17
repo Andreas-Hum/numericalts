@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>default | mathts</title><meta name="description" content="Documentation for mathts"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>default | numerical.js</title><meta name="description" content="Documentation for numerical.js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,15 +6,15 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">mathts</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">numerical.js</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-content">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
-<li><a href="../index.html">mathts</a></li>
-<li><a href="../modules/matrix_matrix.html">matrix/matrix</a></li>
-<li><a href="matrix_matrix.default.html">default</a></li></ul>
+<li><a href="../index.html">numerical.js</a></li>
+<li><a href="../modules/matrix.html">matrix</a></li>
+<li><a href="matrix.default.html">default</a></li></ul>
 <h1>Class default&lt;T&gt;</h1></div> 
 <section class="tsd-panel">
 <h4>Type Parameters</h4>
@@ -30,7 +30,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/_interfaces_matrix.MatrixTypes.html" class="tsd-signature-type tsd-kind-interface">MatrixTypes</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:22</li></ul></aside>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L14">src/matrix.ts:14</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -38,73 +38,81 @@
 <div class="tsd-accordion-details">
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Constructors</h3>
-<div class="tsd-index-list"><a href="matrix_matrix.default.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-512"><rect fill="var(--color-icon-background)" stroke="#4D7FFF" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>constructor</span></a>
+<div class="tsd-index-list"><a href="matrix.default.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-512"><rect fill="var(--color-icon-background)" stroke="#4D7FFF" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>constructor</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="matrix_matrix.default.html#columns" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g></svg><span>columns</span></a>
-<a href="matrix_matrix.default.html#dataType" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>data<wbr/>Type</span></a>
-<a href="matrix_matrix.default.html#isSquare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Square</span></a>
-<a href="matrix_matrix.default.html#isTall" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Tall</span></a>
-<a href="matrix_matrix.default.html#isWide" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Wide</span></a>
-<a href="matrix_matrix.default.html#mElements" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>m<wbr/>Elements</span></a>
-<a href="matrix_matrix.default.html#rows" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rows</span></a>
-<a href="matrix_matrix.default.html#shape" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>shape</span></a>
-<a href="matrix_matrix.default.html#size" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>size</span></a>
+<div class="tsd-index-list"><a href="matrix.default.html#columns" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g></svg><span>columns</span></a>
+<a href="matrix.default.html#dataType" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>data<wbr/>Type</span></a>
+<a href="matrix.default.html#isSquare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Square</span></a>
+<a href="matrix.default.html#isTall" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Tall</span></a>
+<a href="matrix.default.html#isWide" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>is<wbr/>Wide</span></a>
+<a href="matrix.default.html#mElements" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>m<wbr/>Elements</span></a>
+<a href="matrix.default.html#rows" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>rows</span></a>
+<a href="matrix.default.html#shape" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>shape</span></a>
+<a href="matrix.default.html#size" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>size</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="matrix_matrix.default.html#QRDecomposition" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g></svg><span>QRDecomposition</span></a>
-<a href="matrix_matrix.default.html#add" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add</span></a>
-<a href="matrix_matrix.default.html#augment" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>augment</span></a>
-<a href="matrix_matrix.default.html#backSubstitution" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>back<wbr/>Substitution</span></a>
-<a href="matrix_matrix.default.html#equal" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>equal</span></a>
-<a href="matrix_matrix.default.html#forwardSubstitution" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>forward<wbr/>Substitution</span></a>
-<a href="matrix_matrix.default.html#gaussJordan" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gauss<wbr/>Jordan</span></a>
-<a href="matrix_matrix.default.html#gaussianElimination" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gaussian<wbr/>Elimination</span></a>
-<a href="matrix_matrix.default.html#getColumn" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Column</span></a>
-<a href="matrix_matrix.default.html#getElement" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Element</span></a>
-<a href="matrix_matrix.default.html#getInterfaceName" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Interface<wbr/>Name</span></a>
-<a href="matrix_matrix.default.html#getRow" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Row</span></a>
-<a href="matrix_matrix.default.html#getSubMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Sub<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#getType" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Type</span></a>
-<a href="matrix_matrix.default.html#gramSmith" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gram<wbr/>Smith</span></a>
-<a href="matrix_matrix.default.html#invertLower" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Lower</span></a>
-<a href="matrix_matrix.default.html#invertSquare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Square</span></a>
-<a href="matrix_matrix.default.html#invertUpper" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Upper</span></a>
-<a href="matrix_matrix.default.html#is1dArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is1d<wbr/>Array</span></a>
-<a href="matrix_matrix.default.html#isBigIntArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Big<wbr/>Int<wbr/>Array</span></a>
-<a href="matrix_matrix.default.html#isBigIntMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Big<wbr/>Int<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#isNumberArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Number<wbr/>Array</span></a>
-<a href="matrix_matrix.default.html#isNumberMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Number<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#multiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>multiply</span></a>
-<a href="matrix_matrix.default.html#pow" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pow</span></a>
-<a href="matrix_matrix.default.html#print" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>print</span></a>
-<a href="matrix_matrix.default.html#scale" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>scale</span></a>
-<a href="matrix_matrix.default.html#setElement" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Element</span></a>
-<a href="matrix_matrix.default.html#setSubMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Sub<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#strassenMultiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>strassen<wbr/>Multiply</span></a>
-<a href="matrix_matrix.default.html#subtract" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>subtract</span></a>
-<a href="matrix_matrix.default.html#toArray" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>Array</span></a>
-<a href="matrix_matrix.default.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a>
-<a href="matrix_matrix.default.html#transpose" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>transpose</span></a>
-<a href="matrix_matrix.default.html#updateMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#updateShape" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Shape</span></a>
-<a href="matrix_matrix.default.html#updateSpecification" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Specification</span></a>
-<a href="matrix_matrix.default.html#vMultiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>v<wbr/>Multiply</span></a>
-<a href="matrix_matrix.default.html#valida1Dentries" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>valida1<wbr/>Dentries</span></a>
-<a href="matrix_matrix.default.html#validateMatrixEntries" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>validate<wbr/>Matrix<wbr/>Entries</span></a>
-<a href="matrix_matrix.default.html#isIntMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Int<wbr/>Matrix</span></a>
-<a href="matrix_matrix.default.html#isLowerTriangular" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Lower<wbr/>Triangular</span></a>
-<a href="matrix_matrix.default.html#isUpperTriangular" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Upper<wbr/>Triangular</span></a>
-<a href="matrix_matrix.default.html#reshape" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reshape</span></a>
+<div class="tsd-index-list"><a href="matrix.default.html#QRDecomposition" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g></svg><span>QRDecomposition</span></a>
+<a href="matrix.default.html#add" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add</span></a>
+<a href="matrix.default.html#augment" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>augment</span></a>
+<a href="matrix.default.html#backSubstitution" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>back<wbr/>Substitution</span></a>
+<a href="matrix.default.html#equal" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>equal</span></a>
+<a href="matrix.default.html#forwardSubstitution" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>forward<wbr/>Substitution</span></a>
+<a href="matrix.default.html#gaussJordan" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gauss<wbr/>Jordan</span></a>
+<a href="matrix.default.html#gaussianElimination" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gaussian<wbr/>Elimination</span></a>
+<a href="matrix.default.html#getColumn" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Column</span></a>
+<a href="matrix.default.html#getElement" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Element</span></a>
+<a href="matrix.default.html#getInterfaceName" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Interface<wbr/>Name</span></a>
+<a href="matrix.default.html#getRow" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Row</span></a>
+<a href="matrix.default.html#getSubMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Sub<wbr/>Matrix</span></a>
+<a href="matrix.default.html#getType" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Type</span></a>
+<a href="matrix.default.html#gramSmith" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>gram<wbr/>Smith</span></a>
+<a href="matrix.default.html#invertLower" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Lower</span></a>
+<a href="matrix.default.html#invertSquare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Square</span></a>
+<a href="matrix.default.html#invertUpper" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>invert<wbr/>Upper</span></a>
+<a href="matrix.default.html#is1dArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is1d<wbr/>Array</span></a>
+<a href="matrix.default.html#isBigIntArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Big<wbr/>Int<wbr/>Array</span></a>
+<a href="matrix.default.html#isBigIntMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Big<wbr/>Int<wbr/>Matrix</span></a>
+<a href="matrix.default.html#isNumberArray" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Number<wbr/>Array</span></a>
+<a href="matrix.default.html#isNumberMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Number<wbr/>Matrix</span></a>
+<a href="matrix.default.html#multiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>multiply</span></a>
+<a href="matrix.default.html#pow" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pow</span></a>
+<a href="matrix.default.html#print" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>print</span></a>
+<a href="matrix.default.html#scale" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>scale</span></a>
+<a href="matrix.default.html#setElement" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Element</span></a>
+<a href="matrix.default.html#setSubMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Sub<wbr/>Matrix</span></a>
+<a href="matrix.default.html#strassenMultiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>strassen<wbr/>Multiply</span></a>
+<a href="matrix.default.html#subtract" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>subtract</span></a>
+<a href="matrix.default.html#toArray" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>Array</span></a>
+<a href="matrix.default.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>String</span></a>
+<a href="matrix.default.html#transpose" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>transpose</span></a>
+<a href="matrix.default.html#updateMatrix" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Matrix</span></a>
+<a href="matrix.default.html#updateShape" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Shape</span></a>
+<a href="matrix.default.html#updateSpecification" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Specification</span></a>
+<a href="matrix.default.html#vMultiply" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>v<wbr/>Multiply</span></a>
+<a href="matrix.default.html#valida1Dentries" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>valida1<wbr/>Dentries</span></a>
+<a href="matrix.default.html#validateMatrixEntries" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>validate<wbr/>Matrix<wbr/>Entries</span></a>
+<a href="matrix.default.html#clone" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>clone</span></a>
+<a href="matrix.default.html#identity" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>identity</span></a>
+<a href="matrix.default.html#isIntMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Int<wbr/>Matrix</span></a>
+<a href="matrix.default.html#isLowerTriangular" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Lower<wbr/>Triangular</span></a>
+<a href="matrix.default.html#isUpperTriangular" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Upper<wbr/>Triangular</span></a>
+<a href="matrix.default.html#ones" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>ones</span></a>
+<a href="matrix.default.html#padMatrixToPowerOfTwo" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pad<wbr/>Matrix<wbr/>To<wbr/>Power<wbr/>Of<wbr/>Two</span></a>
+<a href="matrix.default.html#random" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>random</span></a>
+<a href="matrix.default.html#reshape" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reshape</span></a>
+<a href="matrix.default.html#roundMatrixToZero" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>round<wbr/>Matrix<wbr/>To<wbr/>Zero</span></a>
+<a href="matrix.default.html#toFixedMatrix" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>Fixed<wbr/>Matrix</span></a>
+<a href="matrix.default.html#zeros" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>zeros</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Constructors</h2>
 <section class="tsd-panel tsd-member"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_default"><span class="tsd-kind-constructor-signature">new default</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">entries</span>, <span class="tsd-kind-parameter">rows</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">columns</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_default" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_default"><span class="tsd-kind-constructor-signature">new default</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">entries</span>, <span class="tsd-kind-parameter">rows</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">columns</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_default" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Constructs a matrix object.</p>
 </div>
@@ -131,10 +139,10 @@
 <div class="tsd-comment tsd-typography"><p>The number of columns in the matrix.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:42</li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L34">src/matrix.ts:34</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="columns" class="tsd-anchor"></a>
@@ -142,79 +150,79 @@
 <div class="tsd-signature"><span class="tsd-kind-property">columns</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Infinity</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#columns">columns</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:30</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L22">src/matrix.ts:22</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="dataType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>data<wbr/>Type</span><a href="#dataType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">data<wbr/>Type</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">data<wbr/>Type</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;none&quot;</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#dataType">dataType</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:34</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L26">src/matrix.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isSquare" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Square</span><a href="#isSquare" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Square</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#isSquare">isSquare</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:25</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L17">src/matrix.ts:17</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isTall" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Tall</span><a href="#isTall" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Tall</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#isTall">isTall</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:26</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L18">src/matrix.ts:18</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isWide" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Wide</span><a href="#isWide" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Wide</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#isWide">isWide</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:27</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L19">src/matrix.ts:19</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="mElements" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>m<wbr/>Elements</span><a href="#mElements" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">m<wbr/>Elements</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#mElements">mElements</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:32</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L24">src/matrix.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="rows" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rows</span><a href="#rows" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">rows</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Infinity</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#rows">rows</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:29</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L21">src/matrix.ts:21</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="shape" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>shape</span><a href="#shape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">shape</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;0&quot;</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#shape">shape</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:24</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L16">src/matrix.ts:16</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="size" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>size</span><a href="#size" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">size</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Infinity</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#size">size</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:31</li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L23">src/matrix.ts:23</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="QRDecomposition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>QRDecomposition</span><a href="#QRDecomposition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="QRDecomposition.QRDecomposition-1"><span class="tsd-kind-call-signature">QRDecomposition</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><a href="#QRDecomposition.QRDecomposition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="QRDecomposition.QRDecomposition-1"><span class="tsd-kind-call-signature">QRDecomposition</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><a href="#QRDecomposition.QRDecomposition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Performs QR decomposition on the matrix.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h4><p>An object containing the Q and R matrices.</p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h4><p>An object containing the Q and R matrices.</p>
 
 <ul class="tsd-parameters">
 <li class="tsd-parameter">
-<h5><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
+<h5><span class="tsd-kind-property">Q</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
 <li class="tsd-parameter">
-<h5><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul>
+<h5><span class="tsd-kind-property">R</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#QRDecomposition">QRDecomposition</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:917</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L910">src/matrix.ts:910</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="add" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add</span><a href="#add" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="add.add-1"><span class="tsd-kind-call-signature">add</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#add.add-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="add.add-1"><span class="tsd-kind-call-signature">add</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#add.add-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Adds another matrix to this matrix.</p>
 </div>
@@ -222,20 +230,20 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to add.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#add">add</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:384</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L377">src/matrix.ts:377</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="augment" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>augment</span><a href="#augment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="augment.augment-1"><span class="tsd-kind-call-signature">augment</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#augment.augment-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="augment.augment-1"><span class="tsd-kind-call-signature">augment</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#augment.augment-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Augments the current matrix with another matrix.</p>
 </div>
@@ -243,18 +251,18 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to be augmented with.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the result of augmenting the current matrix with the provided matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the result of augmenting the current matrix with the provided matrix.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If the argument is not an instance of Matrix, or if the current matrix and the provided matrix do not have the same number of rows.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#augment">augment</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:939</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L932">src/matrix.ts:932</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="backSubstitution" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>back<wbr/>Substitution</span><a href="#backSubstitution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -275,7 +283,7 @@ a system of linear equations.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#backSubstitution">backSubstitution</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:717</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L710">src/matrix.ts:710</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="equal" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>equal</span><a href="#equal" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -287,7 +295,7 @@ a system of linear equations.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to compare with.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
@@ -296,7 +304,7 @@ a system of linear equations.</p>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#equal">equal</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1086</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1079">src/matrix.ts:1079</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="forwardSubstitution" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>forward<wbr/>Substitution</span><a href="#forwardSubstitution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -317,11 +325,11 @@ a system of linear equations.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#forwardSubstitution">forwardSubstitution</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:750</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L743">src/matrix.ts:743</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="gaussJordan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>gauss<wbr/>Jordan</span><a href="#gaussJordan" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="gaussJordan.gaussJordan-1"><span class="tsd-kind-call-signature">gauss<wbr/>Jordan</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gaussJordan.gaussJordan-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="gaussJordan.gaussJordan-1"><span class="tsd-kind-call-signature">gauss<wbr/>Jordan</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gaussJordan.gaussJordan-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Converts the matrix to Reduced Row Echelon Form (RREF).
 This method does not modify the original matrix.</p>
@@ -340,16 +348,16 @@ This method does not modify the original matrix.</p>
 <div class="tsd-comment tsd-typography"><p>Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the REF of the original matrix if <code>options.solve</code> is false. If <code>options.solve</code> is true, it returns the solution to the system of equations as an array.</p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the REF of the original matrix if <code>options.solve</code> is false. If <code>options.solve</code> is true, it returns the solution to the system of equations as an array.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#gaussJordan">gaussJordan</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:847</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L840">src/matrix.ts:840</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="gaussianElimination" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>gaussian<wbr/>Elimination</span><a href="#gaussianElimination" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="gaussianElimination.gaussianElimination-1"><span class="tsd-kind-call-signature">gaussian<wbr/>Elimination</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gaussianElimination.gaussianElimination-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="gaussianElimination.gaussianElimination-1"><span class="tsd-kind-call-signature">gaussian<wbr/>Elimination</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gaussianElimination.gaussianElimination-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Converts the matrix to Reduced Row Echelon Form (RREF).
 This method does not modify the original matrix.</p>
@@ -368,12 +376,12 @@ This method does not modify the original matrix.</p>
 <div class="tsd-comment tsd-typography"><p>Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the REF of the original matrix if <code>options.solve</code> is false. If <code>options.solve</code> is true, it returns the solution to the system of equations as an array.</p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix that is the REF of the original matrix if <code>options.solve</code> is false. If <code>options.solve</code> is true, it returns the solution to the system of equations as an array.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#gaussianElimination">gaussianElimination</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:783</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L776">src/matrix.ts:776</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getColumn" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Column</span><a href="#getColumn" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -395,7 +403,7 @@ This method does not modify the original matrix.</p>
 <h4>Throws</h4><p>If the columnIndex is out of bounds.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:283</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L276">src/matrix.ts:276</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getElement" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Element</span><a href="#getElement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -424,7 +432,7 @@ This method does not modify the original matrix.</p>
 </ul>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:244</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L237">src/matrix.ts:237</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="getInterfaceName" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>get<wbr/>Interface<wbr/>Name</span><a href="#getInterfaceName" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -442,7 +450,7 @@ This method does not modify the original matrix.</p>
 <h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:108</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L100">src/matrix.ts:100</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getRow" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Row</span><a href="#getRow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -464,11 +472,11 @@ This method does not modify the original matrix.</p>
 <h4>Throws</h4><p>If the rowIndex is out of bounds.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:259</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L252">src/matrix.ts:252</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getSubMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Sub<wbr/>Matrix</span><a href="#getSubMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getSubMatrix.getSubMatrix-1"><span class="tsd-kind-call-signature">get<wbr/>Sub<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">startRow</span>, <span class="tsd-kind-parameter">endRow</span>, <span class="tsd-kind-parameter">startCol</span>, <span class="tsd-kind-parameter">endCol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#getSubMatrix.getSubMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getSubMatrix.getSubMatrix-1"><span class="tsd-kind-call-signature">get<wbr/>Sub<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">startRow</span>, <span class="tsd-kind-parameter">endRow</span>, <span class="tsd-kind-parameter">startCol</span>, <span class="tsd-kind-parameter">endCol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#getSubMatrix.getSubMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Retrieves a submatrix from the current matrix.</p>
 </div>
@@ -495,11 +503,11 @@ This method does not modify the original matrix.</p>
 <div class="tsd-comment tsd-typography"><p>The ending column index of the submatrix (exclusive).</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new Matrix object representing the submatrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new Matrix object representing the submatrix.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:324</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L317">src/matrix.ts:317</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="getType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>get<wbr/>Type</span><a href="#getType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -517,11 +525,11 @@ This method does not modify the original matrix.</p>
 <h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:112</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L105">src/matrix.ts:105</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="gramSmith" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>gram<wbr/>Smith</span><a href="#gramSmith" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="gramSmith.gramSmith-1"><span class="tsd-kind-call-signature">gram<wbr/>Smith</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gramSmith.gramSmith-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="gramSmith.gramSmith-1"><span class="tsd-kind-call-signature">gram<wbr/>Smith</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#gramSmith.gramSmith-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
 to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.</p>
@@ -530,7 +538,7 @@ set of vectors that spans the same column space as the original set. The set of 
 sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
 vectors from the column vector itself.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new Matrix instance constructed using the orthonormal vectors as columns.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new Matrix instance constructed using the orthonormal vectors as columns.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
@@ -538,11 +546,11 @@ constant - <code>DELTA</code>). In this case, this means that the provided set i
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#gramSmith">gramSmith</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:461</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L454">src/matrix.ts:454</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="invertLower" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>invert<wbr/>Lower</span><a href="#invertLower" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="invertLower.invertLower-1"><span class="tsd-kind-call-signature">invert<wbr/>Lower</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertLower.invertLower-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="invertLower.invertLower-1"><span class="tsd-kind-call-signature">invert<wbr/>Lower</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertLower.invertLower-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Inverts a lower triangular matrix.</p>
 <p>This function computes the inverse of an upper lower matrix. If the matrix
@@ -552,33 +560,33 @@ first. Then the function applies foward substitution on each element in the
 identity matrix, storing the results in a separate array. These results are
 transposed, reversed, and returned.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverted lower triangular matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverted lower triangular matrix.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If the original matrix is not square or a lower triangular matrix , an error is thrown.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#invertLower">invertLower</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1051</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1044">src/matrix.ts:1044</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="invertSquare" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>invert<wbr/>Square</span><a href="#invertSquare" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="invertSquare.invertSquare-1"><span class="tsd-kind-call-signature">invert<wbr/>Square</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertSquare.invertSquare-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="invertSquare.invertSquare-1"><span class="tsd-kind-call-signature">invert<wbr/>Square</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertSquare.invertSquare-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Inverts a square matrix.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverse of the square matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverse of the square matrix.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If the matrix is not square.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#invertSquare">invertSquare</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:995</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L988">src/matrix.ts:988</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="invertUpper" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>invert<wbr/>Upper</span><a href="#invertUpper" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="invertUpper.invertUpper-1"><span class="tsd-kind-call-signature">invert<wbr/>Upper</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertUpper.invertUpper-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="invertUpper.invertUpper-1"><span class="tsd-kind-call-signature">invert<wbr/>Upper</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#invertUpper.invertUpper-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Inverts an upper triangular matrix.</p>
 <p>This function computes the inverse of an upper triangular matrix. If the matrix
@@ -588,14 +596,14 @@ first. Then the function applies back substitution on each element in the
 identity matrix, storing the results in a separate array. These results are
 transposed, reversed, and returned</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverted upper triangular matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The inverted upper triangular matrix.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If the original matrix is not square or an upper triangular matrix, an error is thrown.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#invertUpper">invertUpper</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1018</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1011">src/matrix.ts:1011</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="is1dArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>is1d<wbr/>Array</span><a href="#is1dArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -608,7 +616,7 @@ transposed, reversed, and returned</p>
 <h5><span class="tsd-kind-parameter">entries</span>: <span class="tsd-signature-type">any</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">entries</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:157</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L150">src/matrix.ts:150</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="isBigIntArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>is<wbr/>Big<wbr/>Int<wbr/>Array</span><a href="#isBigIntArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -621,20 +629,20 @@ transposed, reversed, and returned</p>
 <h5><span class="tsd-kind-parameter">arr</span>: <span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">arr</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:102</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L94">src/matrix.ts:94</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="isBigIntMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>is<wbr/>Big<wbr/>Int<wbr/>Matrix</span><a href="#isBigIntMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
-<li class="tsd-signature tsd-anchor-link" id="isBigIntMatrix.isBigIntMatrix-1"><span class="tsd-kind-call-signature">is<wbr/>Big<wbr/>Int<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span><a href="#isBigIntMatrix.isBigIntMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="isBigIntMatrix.isBigIntMatrix-1"><span class="tsd-kind-call-signature">is<wbr/>Big<wbr/>Int<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span><a href="#isBigIntMatrix.isBigIntMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">matrix</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">matrix</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:93</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L85">src/matrix.ts:85</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="isNumberArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>is<wbr/>Number<wbr/>Array</span><a href="#isNumberArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -647,24 +655,24 @@ transposed, reversed, and returned</p>
 <h5><span class="tsd-kind-parameter">arr</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">arr</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:98</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L90">src/matrix.ts:90</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="isNumberMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>is<wbr/>Number<wbr/>Matrix</span><a href="#isNumberMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
-<li class="tsd-signature tsd-anchor-link" id="isNumberMatrix.isNumberMatrix-1"><span class="tsd-kind-call-signature">is<wbr/>Number<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#isNumberMatrix.isNumberMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="isNumberMatrix.isNumberMatrix-1"><span class="tsd-kind-call-signature">is<wbr/>Number<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#isNumberMatrix.isNumberMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">matrix</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">matrix</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-kind-parameter">matrix</span><span class="tsd-signature-symbol"> is </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:89</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L81">src/matrix.ts:81</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="multiply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>multiply</span><a href="#multiply" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="multiply.multiply-1"><span class="tsd-kind-call-signature">multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#multiply.multiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="multiply.multiply-1"><span class="tsd-kind-call-signature">multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#multiply.multiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Multiplies this matrix with another matrix using the naive algorithm</p>
 </div>
@@ -672,20 +680,20 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to multiply with.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#multiply">multiply</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:502</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L495">src/matrix.ts:495</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="pow" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pow</span><a href="#pow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="pow.pow-1"><span class="tsd-kind-call-signature">pow</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">exp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#pow.pow-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="pow.pow-1"><span class="tsd-kind-call-signature">pow</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">exp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#pow.pow-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Raises the matrix to the power of <code>exp</code>.</p>
 </div>
@@ -697,14 +705,14 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"><p>The exponent to raise the matrix to.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix after raising it to the power of <code>exp</code>.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix after raising it to the power of <code>exp</code>.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>if the matrix is not square.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#pow">pow</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:548</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L541">src/matrix.ts:541</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="print" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>print</span><a href="#print" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -716,11 +724,11 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#print">print</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1100</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1093">src/matrix.ts:1093</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scale" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scale</span><a href="#scale" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="scale.scale-1"><span class="tsd-kind-call-signature">scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">scalar</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#scale.scale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="scale.scale-1"><span class="tsd-kind-call-signature">scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">scalar</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#scale.scale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Scales the matrix and returns a new matrix with the result of the scaling</p>
 </div>
@@ -732,12 +740,12 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"><p>The scalar to scale the matrix with</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The scaled matrix</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The scaled matrix</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#scale">scale</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:581</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L574">src/matrix.ts:574</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setElement" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Element</span><a href="#setElement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -770,7 +778,7 @@ transposed, reversed, and returned</p>
 </ul>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:308</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L301">src/matrix.ts:301</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setSubMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Sub<wbr/>Matrix</span><a href="#setSubMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -800,18 +808,18 @@ transposed, reversed, and returned</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">subMatrix</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">subMatrix</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The elements of the submatrix to be set.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:346</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L339">src/matrix.ts:339</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="strassenMultiply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>strassen<wbr/>Multiply</span><a href="#strassenMultiply" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="strassenMultiply.strassenMultiply-1"><span class="tsd-kind-call-signature">strassen<wbr/>Multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#strassenMultiply.strassenMultiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="strassenMultiply.strassenMultiply-1"><span class="tsd-kind-call-signature">strassen<wbr/>Multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#strassenMultiply.strassenMultiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Performs matrix multiplication using the Strassen&#39;s algorithm.</p>
 </div>
@@ -819,19 +827,19 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to multiply with.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The result of matrix multiplication.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The result of matrix multiplication.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:597</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L590">src/matrix.ts:590</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="subtract" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>subtract</span><a href="#subtract" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="subtract.subtract-1"><span class="tsd-kind-call-signature">subtract</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#subtract.subtract-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="subtract.subtract-1"><span class="tsd-kind-call-signature">subtract</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#subtract.subtract-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Subtracts another matrix from this matrix.</p>
 </div>
@@ -839,16 +847,16 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">B</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to subtract.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The resulting matrix.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#subtract">subtract</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:662</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L655">src/matrix.ts:655</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Array</span><a href="#toArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -861,7 +869,7 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#toArray">toArray</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1133</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1130">src/matrix.ts:1130</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -874,20 +882,20 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#toString">toString</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:1156</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1153">src/matrix.ts:1153</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="transpose" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>transpose</span><a href="#transpose" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="transpose.transpose-1"><span class="tsd-kind-call-signature">transpose</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#transpose.transpose-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="transpose.transpose-1"><span class="tsd-kind-call-signature">transpose</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#transpose.transpose-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Transposes a matrix.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The transposed matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The transposed matrix.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#transpose">transpose</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:954</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L947">src/matrix.ts:947</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="updateMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>update<wbr/>Matrix</span><a href="#updateMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -898,7 +906,7 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:198</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L191">src/matrix.ts:191</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="updateShape" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>update<wbr/>Shape</span><a href="#updateShape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -909,7 +917,7 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:224</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L217">src/matrix.ts:217</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="updateSpecification" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>update<wbr/>Specification</span><a href="#updateSpecification" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -920,11 +928,11 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:208</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L201">src/matrix.ts:201</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="vMultiply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>v<wbr/>Multiply</span><a href="#vMultiply" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="vMultiply.vMultiply-1"><span class="tsd-kind-call-signature">v<wbr/>Multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">vector</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#vMultiply.vMultiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="vMultiply.vMultiply-1"><span class="tsd-kind-call-signature">v<wbr/>Multiply</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">vector</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#vMultiply.vMultiply-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Performs vector-matrix multiplication by multiplying each element of the matrix by the corresponding element in the input vector.</p>
 </div>
@@ -936,14 +944,14 @@ transposed, reversed, and returned</p>
 <div class="tsd-comment tsd-typography"><p>The input vector.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix resulting from the vector-matrix multiplication.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new matrix resulting from the vector-matrix multiplication.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Throws</h4><p>If the input vector is not an array or if its length doesn&#39;t match the number of columns in the matrix.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/_interfaces_matrix.MatrixTypes.html">MatrixTypes</a>.<a href="../interfaces/_interfaces_matrix.MatrixTypes.html#vMultiply">vMultiply</a></p>
 <ul>
-<li>Defined in src/matrix/matrix.ts:682</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L675">src/matrix.ts:675</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="valida1Dentries" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>valida1<wbr/>Dentries</span><a href="#valida1Dentries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -962,7 +970,7 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:168</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L161">src/matrix.ts:161</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="validateMatrixEntries" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>validate<wbr/>Matrix<wbr/>Entries</span><a href="#validateMatrixEntries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -982,7 +990,50 @@ transposed, reversed, and returned</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:128</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L121">src/matrix.ts:121</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="clone" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>clone</span><a href="#clone" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="clone.clone-1"><span class="tsd-kind-call-signature">clone</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><a href="#clone.clone-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Clones the matrix instance and returns the clone</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The cloned matrix</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1238">src/matrix.ts:1238</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="identity" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>identity</span><a href="#identity" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="identity.identity-1"><span class="tsd-kind-call-signature">identity</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">dimension</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#identity.identity-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates an identity matrix with the specified dimension.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">dimension</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The dimension of the identity matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The identity matrix.</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4>
+<h4>Throws</h4><ul>
+<li>If the dimension is less than or equal to 0.</li>
+</ul>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1321">src/matrix.ts:1321</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="isIntMatrix" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>is<wbr/>Int<wbr/>Matrix</span><a href="#isIntMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -994,7 +1045,7 @@ transposed, reversed, and returned</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to check.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
@@ -1004,7 +1055,7 @@ transposed, reversed, and returned</p>
 <h4>Throws</h4><p>If the argument is not an instance of Matrix.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:1246</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1415">src/matrix.ts:1415</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="isLowerTriangular" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>is<wbr/>Lower<wbr/>Triangular</span><a href="#isLowerTriangular" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1017,7 +1068,7 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to checkF</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
@@ -1028,7 +1079,7 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 <div class="tsd-comment tsd-typography">
 <h4>Static</h4></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:1261</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1430">src/matrix.ts:1430</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="isUpperTriangular" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>is<wbr/>Upper<wbr/>Triangular</span><a href="#isUpperTriangular" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1046,7 +1097,7 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The matrix to checkF
  *</p>
 </div>
@@ -1059,11 +1110,94 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 </ul>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:1284</li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1453">src/matrix.ts:1453</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="ones" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>ones</span><a href="#ones" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="ones.ones-1"><span class="tsd-kind-call-signature">ones</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rows</span>, <span class="tsd-kind-parameter">columns</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#ones.ones-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a matrix filled with ones with the specified number of rows and columns.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">rows</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of rows in the matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">columns</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of columns in the matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><ul>
+<li>The matrix filled with ones.</li>
+</ul>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4>
+<h4>Throws</h4><ul>
+<li>If the rows and or columns is less than or equal to 0.</li>
+</ul>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1350">src/matrix.ts:1350</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="padMatrixToPowerOfTwo" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>pad<wbr/>Matrix<wbr/>To<wbr/>Power<wbr/>Of<wbr/>Two</span><a href="#padMatrixToPowerOfTwo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="padMatrixToPowerOfTwo.padMatrixToPowerOfTwo-1"><span class="tsd-kind-call-signature">pad<wbr/>Matrix<wbr/>To<wbr/>Power<wbr/>Of<wbr/>Two</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#padMatrixToPowerOfTwo.padMatrixToPowerOfTwo-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Method used to pad the matrix dimensions to the nearest power of two.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<div class="tsd-comment tsd-typography"><p>The matrix to pad</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The padded matrix with dimensions as a power of two.</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1252">src/matrix.ts:1252</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="random" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>random</span><a href="#random" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="random.random-1"><span class="tsd-kind-call-signature">random</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rows</span>, <span class="tsd-kind-parameter">columns</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#random.random-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a random matrix with the specified number of rows and columns.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">rows</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of rows in the matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">columns</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of columns in the matrix</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The randomized matrix</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4>
+<h4>Throws</h4><ul>
+<li>If the rows and or columns is less than or equal to 0.</li>
+</ul>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1365">src/matrix.ts:1365</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="reshape" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>reshape</span><a href="#reshape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="reshape.reshape-1"><span class="tsd-kind-call-signature">reshape</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">array</span>, <span class="tsd-kind-parameter">newRows</span>, <span class="tsd-kind-parameter">newColumns</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><a href="#reshape.reshape-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="reshape.reshape-1"><span class="tsd-kind-call-signature">reshape</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">array</span>, <span class="tsd-kind-parameter">newRows</span>, <span class="tsd-kind-parameter">newColumns</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><a href="#reshape.reshape-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Reshapes a 1D array into a matrix with the specified number of rows and columns.</p>
 </div>
@@ -1085,7 +1219,7 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 <div class="tsd-comment tsd-typography"><p>The number of columns in the reshaped matrix.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="matrix_matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The reshaped matrix.</p>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4><p>The reshaped matrix.</p>
 
 <div class="tsd-comment tsd-typography">
 <h4>Static</h4>
@@ -1094,7 +1228,94 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 </ul>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/matrix/matrix.ts:1206</li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1207">src/matrix.ts:1207</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="roundMatrixToZero" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>round<wbr/>Matrix<wbr/>To<wbr/>Zero</span><a href="#roundMatrixToZero" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="roundMatrixToZero.roundMatrixToZero-1"><span class="tsd-kind-call-signature">round<wbr/>Matrix<wbr/>To<wbr/>Zero</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">A</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#roundMatrixToZero.roundMatrixToZero-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Rounds values close to zero in the given array and modifies the matrix in place</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<div class="tsd-comment tsd-typography"><p>Matrix consisting of numbers</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = Constants.DELTA</span></h5>
+<div class="tsd-comment tsd-typography"><p>The threshold value for rounding to zero. Default is 1e-7.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1282">src/matrix.ts:1282</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="toFixedMatrix" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>to<wbr/>Fixed<wbr/>Matrix</span><a href="#toFixedMatrix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="toFixedMatrix.toFixedMatrix-1"><span class="tsd-kind-call-signature">to<wbr/>Fixed<wbr/>Matrix</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">A</span>, <span class="tsd-kind-parameter">digits</span>, <span class="tsd-kind-parameter">base</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#toFixedMatrix.toFixedMatrix-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Rounds all elements of a matrix in place to a specified number of decimal places using a specified base.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">A</span>: <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<div class="tsd-comment tsd-typography"><p>The matrix to round.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">digits</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of decimal places to round to.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">base</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></h5>
+<div class="tsd-comment tsd-typography"><p>The base to use for rounding. Defaults to 10 if not provided.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1301">src/matrix.ts:1301</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="zeros" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>zeros</span><a href="#zeros" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="zeros.zeros-1"><span class="tsd-kind-call-signature">zeros</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rows</span>, <span class="tsd-kind-parameter">columns</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#zeros.zeros-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a matrix filled with zeros with the specified number of rows and columns.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">rows</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of rows in the matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">columns</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The number of columns in the matrix.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="matrix.default.html" class="tsd-signature-type tsd-kind-class">default</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><ul>
+<li>The matrix filled with zeros.</li>
+</ul>
+
+<div class="tsd-comment tsd-typography">
+<h4>Static</h4>
+<h4>Throws</h4><ul>
+<li>If the rows and or columns is less than or equal to 0.</li>
+</ul>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Andreas-Hum/mathTS/blob/61b6e94/src/matrix.ts#L1393">src/matrix.ts:1393</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -1164,34 +1385,35 @@ A matrix is said to be lower triangular if all its entries above the main diagon
 <li><a href="#vMultiply" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>v<wbr/>Multiply</span></a></li>
 <li><a href="#valida1Dentries" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>valida1<wbr/>Dentries</span></a></li>
 <li><a href="#validateMatrixEntries" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>validate<wbr/>Matrix<wbr/>Entries</span></a></li>
+<li><a href="#clone" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>clone</span></a></li>
+<li><a href="#identity" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>identity</span></a></li>
 <li><a href="#isIntMatrix" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Int<wbr/>Matrix</span></a></li>
 <li><a href="#isLowerTriangular" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Lower<wbr/>Triangular</span></a></li>
 <li><a href="#isUpperTriangular" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Upper<wbr/>Triangular</span></a></li>
-<li><a href="#reshape" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reshape</span></a></li></ul></div></details></div>
+<li><a href="#ones" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>ones</span></a></li>
+<li><a href="#padMatrixToPowerOfTwo" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pad<wbr/>Matrix<wbr/>To<wbr/>Power<wbr/>Of<wbr/>Two</span></a></li>
+<li><a href="#random" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>random</span></a></li>
+<li><a href="#reshape" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reshape</span></a></li>
+<li><a href="#roundMatrixToZero" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>round<wbr/>Matrix<wbr/>To<wbr/>Zero</span></a></li>
+<li><a href="#toFixedMatrix" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>to<wbr/>Fixed<wbr/>Matrix</span></a></li>
+<li><a href="#zeros" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>zeros</span></a></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>mathts</span></a>
+<nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>numerical.js</span></a>
 <ul class="tsd-small-nested-navigation">
+<li><a href="../modules/_error_types.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@error.types</span></a></li>
+<li><a href="../modules/_error_types_matrix_error.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@error.types/matrix.error</span></a></li>
+<li><a href="../modules/_error_types_vector_error.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@error.types/vector.error</span></a></li>
 <li><a href="../modules/_interfaces.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@interfaces</span></a></li>
 <li><a href="../modules/_interfaces_matrix.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@interfaces/matrix</span></a></li>
 <li><a href="../modules/_interfaces_vector.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@interfaces/vector</span></a></li>
-<li><a href="../modules/errors.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>errors</span></a></li>
-<li><a href="../modules/errors_matrix_error.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>errors/matrix.error</span></a></li>
-<li><a href="../modules/errors_vector_error.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>errors/vector.error</span></a></li>
-<li><a href="../modules/lin_alg_lin_alg.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>lin-<wbr/>alg/lin-<wbr/>alg</span></a></li>
+<li><a href="../modules/constants.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>constants</span></a></li>
 <li><a href="../modules/math.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>math</span></a></li>
-<li><a href="../modules/math_math.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>math/math</span></a></li>
-<li><a href="../modules/matrix.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>matrix</span></a></li>
 <li>
-<details class="tsd-index-accordion" open data-key="matrix/matrix"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg><a href="../modules/matrix_matrix.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>matrix/matrix</span></a></summary>
+<details class="tsd-index-accordion" open data-key="matrix"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg><a href="../modules/matrix.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>matrix</span></a></summary>
 <div class="tsd-accordion-details">
 <ul class="tsd-nested-navigation">
-<li><a href="matrix_matrix.default.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-128"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>default</span></a></li></ul></div></details></li>
-<li><a href="../modules/utils.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>utils</span></a></li>
-<li><a href="../modules/utils_constants.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>utils/constants</span></a></li>
-<li><a href="../modules/utils_matrix_utility.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>utils/matrix.utility</span></a></li>
-<li><a href="../modules/utils_vectorChecks.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>utils/vector<wbr/>Checks</span></a></li>
-<li><a href="../modules/vector.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>vector</span></a></li>
-<li><a href="../modules/vector_vector.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>vector/vector</span></a></li></ul></nav></div></div></div>
+<li><a href="matrix.default.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-128"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>default</span></a></li></ul></div></details></li>
+<li><a href="../modules/matrix_utility.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>matrix.utility</span></a></li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div></body></html>

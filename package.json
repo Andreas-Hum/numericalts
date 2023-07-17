@@ -230,7 +230,8 @@
     "preBuild": "tsc",
     "build": "npm run preBuild && npm run babel ",
     "build:test": "npm run build && npm run test",
-    "babel": "babel preDist -d dist"
+    "babel": "babel preDist -d dist",
+    "docs": "npx typedoc --entryPointStrategy expand ./src"
   },
   "bugs": {
     "url": "https://github.com/Andreas-Hum/mathts/issues"
