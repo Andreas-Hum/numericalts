@@ -1,4 +1,4 @@
-const math = require("../lib/math").default
+const math = require("../lib/cjs/math.js")
 
 describe('math', () => {
 

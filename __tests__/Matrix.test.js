@@ -1,4 +1,4 @@
-const Matrix = require("../lib/matrix.js").default
+const Matrix = require("../lib/cjs/matrix.js")
 
 
 let twoByThree, threeByTwo, twoByTwo
@@ -58,7 +58,7 @@ describe('Matrix', () => {
         });
 
         it('Error: not an array', () => {
-            expect(() => new Matrix([1,2,3],"sda",2312)).toThrow()
+            expect(() => new Matrix([1, 2, 3], "sda", 2312)).toThrow()
         });
 
     });
