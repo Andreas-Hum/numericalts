@@ -1,8 +1,8 @@
-# mathTS (Work in Progress)
+# math.ts (Work in Progress)
 
-mathTS is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
+math.ts is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
 
-Please note that mathTS is currently a work in progress and is not available for download as a package yet. However, we are actively working on developing and refining the library, and it will be released as a package soon.
+Please note that math.ts is currently a work in progress and is not available for download as a package yet. However, we are actively working on developing and refining the library, and it will be released as a package soon.
 
 ## Features (Planned)
 
@@ -14,27 +14,30 @@ Please note that mathTS is currently a work in progress and is not available for
 - QR decomposition.
 - Least squares regression.
 - Optimization algorithms.
+- Parsing mathematical statements
+- Complex numbers
+- And many more
 
 ## Installation (Coming Soon)
 
-Once mathTS is available as a package, you will be able to install it using npm:
+Once math.ts is available as a package, you will be able to install it using npm:
 
 ## Usage (Coming Soon)
 
-After installing mathTS, you will be able to import and use the library in your TypeScript project:
+After installing math.ts, you will be able to import and use the library in your TypeScript project:
 
 
 ## Documentation (Coming Soon)
 
-Once mathTS is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use mathTS effectively.
+Once math.ts is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
 
 ## Contributing
 
-Contributions to mathTS are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. We appreciate your support and contributions to make mathTS even better.
+Contributions to math.ts are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. We appreciate your support and contributions to make math.ts even better.
 
 ## License
 
-mathTS is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+math.ts is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Contact
 
