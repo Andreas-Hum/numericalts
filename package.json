@@ -11,7 +11,7 @@
     "build:test": "npm run tsc && jest",
     "test": "jest"
   },
-  "name": "math.ts",
+  "name": "mathts",
   "description": "",
   "version": "0.0.2",
   "author": "Andreas Hummelmose",
