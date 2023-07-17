@@ -77,31 +77,23 @@ export default class Matrix<T> implements MatrixTypes<T> {
     /////////////////////////////////////////////////////////////////////////////////////////////////s
 
 
-
-    private isNumberMatrix(matrix: Matrix<number>): matrix is Matrix<number> {
-        return matrix.mElements.every((element) => typeof element === "number");
-    }
-
-    private isBigIntMatrix(matrix: Matrix<bigint>): matrix is Matrix<bigint> {
-        return matrix.mElements.every((element) => typeof element === "bigint");
-    }
-
-
-    private isNumberArray(arr: number[]): arr is number[] {
-        return arr.every((element) => typeof element === "number");
-    }
-
-    private isBigIntArray(arr: bigint[]): arr is bigint[] {
-        return arr.every((element) => typeof element === "number");
-    }
-
-
-
+    /**
+        Retrieves the name of the interface or class of a given value.
+        @template {T} T - The type of the value.
+        @param {T} value - The value to retrieve the interface or class name from.
+        @returns {string} The name of the interface or class. 
+    */
     private getInterfaceName<T>(value: T): string {
         //@ts-ignore
         return (value.constructor as { name: string }).name;
     }
 
+    /**
+        Retrieves the type of a given value.
+        @template T - The type of the value.
+        @param value - The value to retrieve the type from.
+        @returns The type of the value.     
+    */
     private getType<T>(value: T): string {
         return typeof value
     }
@@ -112,41 +104,13 @@ export default class Matrix<T> implements MatrixTypes<T> {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////s
 
+
     /**
-     * Validates the entries of a matrix to ensure they are of the correct form.
-     * @private
-     * @param {T[][]} entries - The entries of the matrix.
-     * @returns {boolean} True if the entries are valid, false otherwise.
-     */ //TODO: make better typecheck
-    private validateMatrixEntries(entries: T[][]): boolean {
-        const numRows: number = entries.length;
-        if (numRows === 0) {
-            return false;
-        }
-
-        const numCols: number = entries[0].length;
-        if (numCols === 0) {
-            return false;
-        }
-        let typeName: string;
-
-
-        for (let i = 0; i < numRows; i++) {
-            if (!Array.isArray(entries[i]) || entries[i].length !== numCols) {
-                return false;
-            }
-
-            for (let j = 0; j < numCols; j++) {
-                if (typeof entries[i][j] !== typeof entries[0][0]) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-
+    Checks if the given entries are a one-dimensional array of a specific type.
+    @template T - The type of the array elements.
+    @param entries - The entries to check.
+    @returns True if the entries are a one-dimensional array of type T, false otherwise. 
+    */
     private is1dArray(entries: any): entries is T[] {
         return !(entries.some((entry: T) => Array.isArray(entry)))
     }
@@ -1229,12 +1193,12 @@ export default class Matrix<T> implements MatrixTypes<T> {
     }
 
 
-     /**
-     * Clones the matrix instance and returns the clone
-     * @public
-     * @static
-     * @returns {Matrix<any>} The cloned matrix
-     */
+    /**
+    * Clones the matrix instance and returns the clone
+    * @public
+    * @static
+    * @returns {Matrix<any>} The cloned matrix
+    */
     public static clone(A: Matrix<any>): Matrix<any> {
 
         return new Matrix(A.toArray())

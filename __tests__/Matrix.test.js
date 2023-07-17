@@ -53,6 +53,14 @@ describe('Matrix', () => {
             expect(() => new Matrix([1, 3, [3]])).toThrow()
         });
 
+        it('Error: not an array', () => {
+            expect(() => new Matrix(123)).toThrow()
+        });
+
+        it('Error: not an array', () => {
+            expect(() => new Matrix([1,2,3],"sda",2312)).toThrow()
+        });
+
     });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
