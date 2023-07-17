@@ -1,6 +1,6 @@
-# math.ts (Work in Progress)
+# numerical.js (Work in Progress)
 
-numerical.js is a TypeScript/JavaScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
+numerical.js is a TypeScript/JavaScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript or TypeScript.
 
 Please note that numerical.js is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
 
@@ -20,25 +20,25 @@ Please note that numerical.js is currently a work in progress and is not availab
 
 ## Installation (Coming Soon)
 
-Once math.ts is available as a package, you will be able to install it using npm:
+Once numerical.js is available as a package, you will be able to install it using npm:
 
 ## Usage (Coming Soon)
 
-After installing math.ts, you will be able to import and use the library in your TypeScript project:
+After installing numerical.js, you will be able to import and use the library in your TypeScript project:
 
 
 ## Documentation (Coming Soon)
 
-Once math.ts is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
-For now a simple documentation can be see here https://andreas-hum.github.io/mathts/
+Once numerical.js is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
+For now a simple documentation can be see here https://andreas-hum.github.io/numerical.js/
 
 ## Contributing
 
-Contributions to math.ts are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. I appreciate your support and contributions to make math.ts even better.
+Contributions to numerical.js are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. I appreciate your support and contributions to make numerical.js even better.
 
 ## License
 
-math.ts is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+numerical.js is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Contact
 
