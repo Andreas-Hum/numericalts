@@ -35,7 +35,9 @@ For a full list of currently implemented methods and types please see [here](htt
 ### Matrix Operations
 ```js
 
-import { Matrix } from 'numericaljs'; // Can also be imported as import Matrix  from 'numericaljs/matrix'
+import { Matrix } from 'numericaljs';
+// const {Matrix} = require("numericaljs")
+// The matrix class can also be imported directly with 'numericaljs/matrix'
 
 const A = new Matrix([[1, 2], [3, 4]]);
 const B = new Matrix([[5, 6], [7, 8]]);
@@ -60,7 +62,9 @@ console.log(R.toArray()); // [[-3.1622776601683795, -4.427188724235731], [0, 0.6
 ### Number Manipulation
 
 ```js
-import { math } from 'numericaljs'; // Can also be imported as import Matrix  from 'numericaljs/matrix'
+import { math } from 'numericaljs';
+// const {math} = require("numericaljs")
+// The math class can also be imported directly with 'numericaljs/matrix'
 
 const num = 3.14159;
 
