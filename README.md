@@ -30,7 +30,7 @@ After installing math.ts, you will be able to import and use the library in your
 ## Documentation (Coming Soon)
 
 Once math.ts is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
-For now a simple documentation can be see here https://andreas-hum.github.io/mathtsdocs/index.html
+For now a simple documentation can be see here https://andreas-hum.github.io/mathts/
 
 ## Contributing
 
