@@ -1,6 +1,6 @@
 {
   "name": "numericaljs",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "numerical.js is a comprehensive TypeScript/JavaScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
   "author": "Andreas Hummelmose <andreas@hummelmose.com> (https://github.com/Andreas-Hum)",
   "homepage": "https://andreas-hum.github.io/numericaljs/",
@@ -225,7 +225,7 @@
     "typescript": "^5.1.6"
   },
   "files": [
-    "dist",
+    "lib",
     "LICENSE",
     "NOTICE",
     "README.md",
@@ -241,6 +241,16 @@
       "types": "./types/index.d.ts",
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
+    },
+    "./matrix": {
+      "types": "./types/index.d.ts",
+      "import": "./lib/esm/matrix.js",
+      "require": "./lib/cjs/matrix.js"
+    },
+    "./math": {
+      "types": "./types/index.d.ts",
+      "import": "./lib/esm/math.js",
+      "require": "./lib/cjs/math.js"
     }
   },
   "scripts": {
