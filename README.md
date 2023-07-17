@@ -6,6 +6,8 @@ Please note that numerical.js is currently a work in progress and is not availab
 
 [![Version](https://img.shields.io/npm/v/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
 [![Downloads](https://img.shields.io/npm/dm/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
+[![Build Status](https://github.com/Andreas-Hum/numericaljs/workflows/Node.js/badge.svg)](https://github.com/Andreas-Hum/numericaljs/actions)
+
 [![License](https://img.shields.io/github/license/Andreas-Hum/numericaljs.svg)](https://github.com//Andreas-Hum/numericaljs/blob/master/LICENSE)
 
 ## Features (Planned)
