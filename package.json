@@ -1,7 +1,7 @@
 {
-  "name": "mathts",
+  "name": "numerical.js",
   "version": "0.1.1",
-  "description": "math.ts is a comprehensive TypeScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
+  "description": "numerical.js is a comprehensive TypeScript/JavaScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
   "author": "Andreas Hummelmose <andreas@hummelmose.com> (https://github.com/Andreas-Hum)",
   "homepage": "https://andreas-hum.github.io/mathtsdocs/",
   "repository": {

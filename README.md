@@ -1,8 +1,8 @@
 # math.ts (Work in Progress)
 
-math.ts is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
+numerical.js is a TypeScript/JavaScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
 
-Please note that math.ts is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
+Please note that numerical.js is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
 
 ## Features (Planned)
 
