@@ -1,4 +1,4 @@
-const math = require("../dist/math").default
+const math = require("../dist/math.js").default
 
 
 describe('math', () => {

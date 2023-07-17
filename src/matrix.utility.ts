@@ -1,13 +1,13 @@
 // Matrix class
-import Matrix from "../matrix"
+import Matrix from "./matrix"
 
 // Math utility class
-import { Constants } from ".";
+import Constants from "./constants";
 
-import math from "../math";
-import { MatrixError } from "../errors";
+import math from "./math";
+import { MatrixError } from "./@error.types";
 
-export class MatrixUtils {
+export default class MatrixUtils {
 
     /**
      * Clones the matrix instance and returns the clone
@@ -17,7 +17,6 @@ export class MatrixUtils {
      */
     public static clone(A: Matrix<any>): Matrix<any> {
 
-        const test = new Matrix([[1, 2, 3, 4, 5, 6]])
         return new Matrix(A.toArray())
 
 
@@ -40,7 +39,7 @@ export class MatrixUtils {
             return A; // No padding required as the matrix is already a power of two.
         }
 
-        const paddedMatrix: number[] = Array<number>(nextPower*nextPower).fill(0);
+        const paddedMatrix: number[] = Array<number>(nextPower * nextPower).fill(0);
 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < columns; j++) {

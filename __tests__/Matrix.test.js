@@ -1,7 +1,5 @@
-const { default: expect } = require("expect")
 const Matrix = require("../dist/matrix").default
-const importings = require("../dist/utils")
-const MatrixUtils = importings.MatrixUtils
+const MatrixUtils = require("../dist/matrix.utility").default
 
 let twoByThree, threeByTwo, twoByTwo
 describe('Matrix', () => {

@@ -1,4 +1,4 @@
-import { Constants } from "../utils";
+import Constants from "./constants";
 
 export default class math {
 

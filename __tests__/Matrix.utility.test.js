@@ -1,6 +1,6 @@
 const Matrix = require("../dist/matrix").default
-const importings = require("../dist/utils")
-const MatrixUtils = importings.MatrixUtils
+const MatrixUtils = require("../dist/matrix.utility").default
+
 
 describe('MatrixUtils', () => {
     describe('clone', () => {

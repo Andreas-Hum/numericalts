@@ -1,21 +1,16 @@
 // Interface import
-import { MatrixTypes } from "../@interfaces";
+import { MatrixTypes } from "./@interfaces";
 
 
 // Error import
-import { MatrixError } from "../errors";
+import { MatrixError } from "./@error.types";
 
 // Math class  import
-import math from "../math";
+import math from "./math";
 
 // Utility import
-import { Constants, MatrixUtils } from "../utils";
-
-
-// Node import
-import * as fs from "fs"
-
-
+import Constants from "./constants";
+import MatrixUtils from "./matrix.utility"
 
 export default class Matrix<T> implements MatrixTypes<T> {
 
@@ -29,7 +24,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
     public size: number = Infinity;
     public mElements: T[];
 
-    public dataType: string;
+    public dataType: string = "none";
 
     /**
      * Constructs a matrix object.
@@ -44,7 +39,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         if (this.is1dArray(entries)) {
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
-                throw new MatrixError("Rows and columns must be defined for Float32Array entries, be of type number and not be 0 or negative", 804);
+                throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
 
 
@@ -104,6 +99,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
 
     private getInterfaceName<T>(value: T): string {
+        //@ts-ignore
         return (value.constructor as { name: string }).name;
     }
 
@@ -1104,6 +1100,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         const colMaxes: number[] = [];
         for (let i = 0; i < shape[1]; i++) {
+            //@ts-ignore
             colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => n.toString().length)));
         }
 
@@ -1111,7 +1108,10 @@ export default class Matrix<T> implements MatrixTypes<T> {
             console.log(
                 ...row.map((val, j) => {
                     return (
+                        //@ts-ignore
                         new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        //@ts-ignore
+
                         val.toString() +
                         "  "
                     );
@@ -1160,6 +1160,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         const colMaxes: number[] = [];
         for (let i = 0; i < shape[1]; i++) {
+            //@ts-ignore
             colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => n.toString().length)));
         }
 
@@ -1168,7 +1169,10 @@ export default class Matrix<T> implements MatrixTypes<T> {
             output += row
                 .map((val, j) => {
                     return (
+                        //@ts-ignore
                         new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        //@ts-ignore
+
                         val.toString() +
                         "  "
                     );
@@ -1296,37 +1300,3 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
 }
 
-function writeArrayToFile(array: any, filePath: any) {
-    // Convert the array to a string
-    const arrayString = array.join('\n');
-
-    // Write the array string to the file
-    fs.writeFile(filePath, arrayString, (err) => {
-        if (err) {
-            console.error('Error writing to file:', err);
-        } else {
-            console.log('Array written to file successfully!');
-        }
-    });
-}
-
-function tester() {
-    const a = [];
-    for (let i = 1; i < 1001; i++) {
-        let m1 = MatrixUtils.ones(i, i);
-        let s = performance.now();
-        m1.multiply(m1);
-        let e = performance.now();
-        a.push((e - s) / 1000);
-    }
-    writeArrayToFile(a, "unroller.txt");
-}
-
-// tester();
-
-
-// let m1 = Matrix.ones(1000, 1000);
-// let s = performance.now();
-// m1.multiply(m1);
-// let e = performance.now();
-// console.log((e - s) / 1000);
