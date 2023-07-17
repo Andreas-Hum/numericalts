@@ -4,6 +4,10 @@ numerical.js is a TypeScript/JavaScript library that focuses primarily on linear
 
 Please note that numerical.js is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
 
+[![Version](https://img.shields.io/npm/v/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
+[![Downloads](https://img.shields.io/npm/dm/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
+[![License](https://img.shields.io/github/license/Andreas-Hum/numericaljs.svg)](https://github.com//Andreas-Hum/numericaljs/blob/master/LICENSE)
+
 ## Features (Planned)
 
 - Vector operations: Addition, subtraction, dot product, cross product, and more.
