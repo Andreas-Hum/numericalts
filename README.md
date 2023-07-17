@@ -18,19 +18,81 @@ Please note that numerical.js is currently a work in progress and is not availab
 - Complex numbers
 - And many more
 
-## Installation (Coming Soon)
-
-Once numerical.js is available as a package, you will be able to install it using npm:
-
 ## Usage (Coming Soon)
+Installnumerical.js using [npm](https://www.npmjs.com/package/numericaljs):
 
-After installing numerical.js, you will be able to import and use the library in your TypeScript project:
 
+```bash
+npm install numericaljs
+```
+For a full list of currently implemented methods and types please see [here](https://andreas-hum.github.io/numerical.js/)
+### Matrix Operations
+```js
+
+import { Matrix } from 'numericaljs'; // Can also be imported as import Matrix  from 'numericaljs/matrix'
+
+const A = new Matrix([[1, 2], [3, 4]]);
+const B = new Matrix([[5, 6], [7, 8]]);
+
+// Matrix multiplication
+const C = A.multiply(B);
+console.log(C.toArray()); // [[19, 22], [43, 50]]
+
+// Matrix exponentiation
+const D = A.pow(2);
+console.log(D.toArray()); // [[7, 10], [15, 22]]
+
+// Matrix multiplication using Strassen's algorithm
+const E = A.strassenMultiply(B);
+console.log(E.toArray()); // [[19, 22], [43, 50]]
+
+// QR decomposition
+const { Q, R } = A.QRDecomposition();
+console.log(Q.toArray()); // [[-0.31622776601683794, -0.9486832980505138], [-0.9486832980505138, 0.31622776601683794]]
+console.log(R.toArray()); // [[-3.1622776601683795, -4.427188724235731], [0, 0.6324555320336759]]
+```
+### Number Manipulation
+
+```js
+import { math } from 'numericaljs'; // Can also be imported as import Matrix  from 'numericaljs/matrix'
+
+const num = 3.14159;
+
+// Get the fractional part of a number
+const frac = math.fracPart(num);
+console.log(frac); // 0.14159
+
+// Calculate the greatest common divisor (GCD) of two numbers
+const gcd = math.GCD(24, 36);
+console.log(gcd); // 12
+
+// Calculate the least common divisor (LCD) of two numbers
+const lcd = math.LCD(24, 36);
+console.log(lcd); // 72
+
+// Round a number to a specified number of decimal places
+const rounded = math.toFixedNumber(num, 2);
+console.log(rounded); // 3.14
+
+// Count the number of decimal places in a number
+const decimalPlaces = math.countDecimals(num);
+console.log(decimalPlaces); // 5
+
+// Calculate the dot product of two vectors
+const vector1 = [1, 2, 3];
+const vector2 = [4, 5, 6];
+const dotProduct = math.dot(vector1, vector2);
+console.log(dotProduct); // 32
+
+// Normalize a vector
+const normalizedVector = math.normalize(vector1);
+console.log(normalizedVector); // [0.2672612419124244, 0.5345224838248488, 0.8017837257372732]
+```
 
 ## Documentation (Coming Soon)
 
-Once numerical.js is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
-For now a simple documentation can be see here https://andreas-hum.github.io/numerical.js/
+Once numerical.js is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
+For now a simple documentation can be see [here](https://andreas-hum.github.io/numerical.js/)
 
 ## Contributing
 
