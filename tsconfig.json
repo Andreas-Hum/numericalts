@@ -9,6 +9,7 @@
     "moduleResolution": "node",
     "removeComments": false,
     "declaration": true,
+    "declarationDir": "./dist/types"
   },
   "include": [
     "./src/**/*"
