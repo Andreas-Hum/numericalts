@@ -16,18 +16,26 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @param {number} columns - The number of columns in the matrix.
      */
     constructor(entries: T[][] | T[], rows?: number, columns?: number);
-    private isNumberMatrix;
-    private isBigIntMatrix;
-    private isNumberArray;
-    private isBigIntArray;
+    /**
+        Retrieves the name of the interface or class of a given value.
+        @template {T} T - The type of the value.
+        @param {T} value - The value to retrieve the interface or class name from.
+        @returns {string} The name of the interface or class.
+    */
     private getInterfaceName;
+    /**
+        Retrieves the type of a given value.
+        @template T - The type of the value.
+        @param value - The value to retrieve the type from.
+        @returns The type of the value.
+    */
     private getType;
     /**
-     * Validates the entries of a matrix to ensure they are of the correct form.
-     * @private
-     * @param {T[][]} entries - The entries of the matrix.
-     * @returns {boolean} True if the entries are valid, false otherwise.
-     */ private validateMatrixEntries;
+    Checks if the given entries are a one-dimensional array of a specific type.
+    @template T - The type of the array elements.
+    @param entries - The entries to check.
+    @returns True if the entries are a one-dimensional array of type T, false otherwise.
+    */
     private is1dArray;
     /**
      * Validates the entries of a 1d T array to ensure they are valid.

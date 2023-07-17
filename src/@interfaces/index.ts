@@ -1,2 +1,1 @@
-export * from './matrix';
-export * from './vector';
+export {default as  MatrixTypes} from './matrix';

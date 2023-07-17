@@ -1,5 +1,5 @@
 import Matrix from "../matrix";
-export interface MatrixTypes<T> {
+export default interface MatrixTypes<T> {
     shape: string;
     isSquare: boolean;
     isTall: boolean;

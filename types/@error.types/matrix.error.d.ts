@@ -1,4 +1,4 @@
-export declare class MatrixError extends Error {
+export default class MatrixError extends Error {
     readonly name: string;
     readonly timestamp: string;
     readonly statusCode: number;

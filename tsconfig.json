@@ -2,22 +2,28 @@
   "compilerOptions": {
     "outDir": "./lib",
     "sourceMap": true,
-    "module": "CommonJS",
+    "module": "ESNext",
     "target": "ES6",
     "moduleResolution": "node",
     "removeComments": false,
     "declaration": true,
     "declarationDir": "./types",
-    "lib": ["ES6", "DOM"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
     "strictFunctionTypes": true,
+    "esModuleInterop": true,
+    "paths": {
+      "mathjs": ["./types/index.d.ts"]
+    },
   },
   "include": [
     "./src/**/*"
   ],
   "exclude": [
-    "node_modules",
-  ]
+    "node_modules"
+  ],
+  "js": {
+    "checkJs": true
+  }
 }

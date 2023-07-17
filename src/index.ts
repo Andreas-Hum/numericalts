@@ -1,5 +1,5 @@
 export * from './@error.types';
 export * from './@interfaces';
-export * from './constants';
-export * from './math';
-export * from './matrix';
+export { default as Constants } from './constants';
+export { default as math } from './math';
+export { default as Matrix } from './matrix';
