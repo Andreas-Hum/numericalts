@@ -234,5 +234,8 @@
   },
   "bugs": {
     "url": "https://github.com/Andreas-Hum/mathts/issues"
+  },
+  "engines": {
+    "node": ">= 14"
   }
 }
