@@ -9,28 +9,18 @@ on:
       - main
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Set up Node 18
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
-
+          node-version: 18
       - name: Install dependencies
         run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Run tests
+      - name: Run tests and collect coverage
         run: npm run test
-
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
