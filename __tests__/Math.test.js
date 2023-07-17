@@ -1,6 +1,5 @@
 const math = require("../dist/math.js").default
 
-
 describe('math', () => {
 
 

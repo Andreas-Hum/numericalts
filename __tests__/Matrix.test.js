@@ -1,5 +1,4 @@
-const Matrix = require("../dist/matrix").default
-const MatrixUtils = require("../dist/matrix.utility").default
+const Matrix = require("../dist/matrix.js").default
 
 let twoByThree, threeByTwo, twoByTwo
 describe('Matrix', () => {
@@ -511,9 +510,8 @@ describe('Matrix', () => {
         it("Inverting a 5x5 square matrix", () => {
             const matrix = new Matrix([[39, 50, 86, 61, 63], [80, 30, 95, -57, -90], [-89, -28, 32, -31, -11], [24, 82, -41, 47, 75], [67, -68, 77, 31, 33]])
             const testings = matrix.invertSquare()
-            MatrixUtils.toFixedMatrix(testings, 3)
-            // console.log(testings.toString())
-            // expect(matrix.invertSquare()).toEqual(new Matrix([]))
+            Matrix.toFixedMatrix(testings, 3)
+            expect(testings.equal(new Matrix([[-0.007, 0.004, -0.003, 0.007, 0.007], [0.004, 0.003, 0.001, 0.004, -0.007], [0.005, 0.002, 0.005, -0.001, 0.001], [0.026, -0.015, -0.026, -0.035, -0.019], [-0.016, 0.006, 0.019, 0.029, 0.018]]))).toBeTruthy()
 
         });
 
@@ -681,6 +679,27 @@ describe('Matrix', () => {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+    describe('clone', () => {
+        it('should clone the matrix instance and return the clone', () => {
+            const matrix = new Matrix([[1, 2], [3, 4]]);
+            const clone = Matrix.clone(matrix);
+            expect(clone).toEqual(matrix);
+            expect(clone).not.toBe(matrix);
+        });
+    });
+
+    describe('padMatrixToPowerOfTwo', () => {
+        it('should return the padded matrix with dimensions as a power of two', () => {
+            const matrix = new Matrix([[1], [4]]);
+            const paddedMatrix = Matrix.padMatrixToPowerOfTwo(matrix);
+            expect(paddedMatrix).toEqual(new Matrix([[1, 0], [4, 0]]));
+        });
+    });
+
+
+
     describe('Reshape', () => {
         it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
             const compareMatrix = new Matrix([[1, 2], [3, 4]])
@@ -703,8 +722,21 @@ describe('Matrix', () => {
     })
 
 
+    describe('roundMatrixToZero', () => {
+        it('should round values close to zero in the matrix to zero', () => {
+            const matrix = new Matrix([[0.000000000001, 0.000000000001], [0.000000000001, 0.000000000001]]);
+            Matrix.roundMatrixToZero(matrix, 1e-7);
+            expect(matrix).toEqual(new Matrix([[0, 0], [0, 0]]));
+        });
+    });
 
-
+    describe('toFixedMatrix', () => {
+        it('should round all elements of the matrix to the specified number of decimal places', () => {
+            const matrix = new Matrix([[1.23456789, 2.3456789], [3.456789, 4.56789]]);
+            Matrix.toFixedMatrix(matrix, 2);
+            expect(matrix).toEqual(new Matrix([[1.23, 2.35], [3.46, 4.57]]));
+        });
+    });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

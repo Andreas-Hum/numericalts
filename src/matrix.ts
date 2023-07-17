@@ -10,7 +10,6 @@ import math from "./math";
 
 // Utility import
 import Constants from "./constants";
-import MatrixUtils from "./matrix.utility"
 
 export default class Matrix<T> implements MatrixTypes<T> {
 
@@ -546,7 +545,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         if (exp === 0) {
             // Return the identity matrix if the exponent is 0
-            return MatrixUtils.identity(this.rows);
+            return Matrix.identity(this.rows);
         }
 
         if (exp === 1) {
@@ -574,7 +573,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
      */
     public scale(scalar: number): Matrix<number> {
         if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
-        const scaledMatrix: Matrix<number> = MatrixUtils.clone(this);
+        const scaledMatrix: Matrix<number> = Matrix.clone(this);
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
     }
@@ -604,8 +603,8 @@ export default class Matrix<T> implements MatrixTypes<T> {
         }
 
         // Pad matrices to the nearest power of two
-        const A = MatrixUtils.padMatrixToPowerOfTwo(this as Matrix<number>);
-        const C = MatrixUtils.padMatrixToPowerOfTwo(B);
+        const A = Matrix.padMatrixToPowerOfTwo(this as Matrix<number>);
+        const C = Matrix.padMatrixToPowerOfTwo(B);
 
         const n: number = A.rows;
         const halfN: number = n / 2;
@@ -677,7 +676,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         if (!Array.isArray(vector)) throw new MatrixError("The input vector is not an array", 606, { vector });
         if (vector.length !== this.columns) throw new MatrixError("The length of the input vector must be equal to the number of columns in the matrix", 802, { matrixColumns: this.columns, vectorLength: vector.length });
 
-        let resultMatrix: Matrix<number> = MatrixUtils.clone(this);
+        let resultMatrix: Matrix<number> = Matrix.clone(this);
         const rows: number = resultMatrix.rows;
         const columns: number = resultMatrix.columns;
 
@@ -820,7 +819,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
 
         matrixClone = new Matrix<number>(Array.from(matrixClone), rows, columns)
-        MatrixUtils.roundMatrixToZero(matrixClone)
+        Matrix.roundMatrixToZero(matrixClone)
 
 
         if (options.solve) {
@@ -892,7 +891,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         }
 
         matrixClone = new Matrix<number>(Array.from(matrixClone), rows, columns)
-        MatrixUtils.roundMatrixToZero(matrixClone)
+        Matrix.roundMatrixToZero(matrixClone)
 
 
         if (options.solve) {
@@ -912,7 +911,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         const Q: Matrix<number> = this.gramSmith();
         const QT: Matrix<number> = Q.transpose();
         const R: Matrix<number> = QT.multiply(this as Matrix<number>);
-        MatrixUtils.roundMatrixToZero(this as Matrix<number>)
+        Matrix.roundMatrixToZero(this as Matrix<number>)
         return { Q: Q, R: R };
     }
 
@@ -947,7 +946,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
      */
     public transpose(): Matrix<T> {
 
-        const transposedMatrix: Matrix<T> = MatrixUtils.clone(this)
+        const transposedMatrix: Matrix<T> = Matrix.clone(this)
         const rows: number = transposedMatrix.rows;
         const columns: number = transposedMatrix.columns;
 
@@ -988,7 +987,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
     */
     public invertSquare(): Matrix<number> {
         if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { isSquare: this.isSquare });
-        const squareIdentity: Matrix<number> = MatrixUtils.identity(this.rows)
+        const squareIdentity: Matrix<number> = Matrix.identity(this.rows)
         const augmented: Matrix<number> = (this as Matrix<number>).augment(squareIdentity)
         const inverse: Matrix<number> = augmented.gaussJordan() as Matrix<number>
         return inverse.getSubMatrix(0, this.rows, this.columns, inverse.columns)
@@ -1015,7 +1014,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
 
 
-        const identityMatrix: Matrix<number> = MatrixUtils.identity(this.rows);
+        const identityMatrix: Matrix<number> = Matrix.identity(this.rows);
         let invertedMatrixElements: number[][] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
@@ -1048,7 +1047,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
 
 
-        const identityMatrix: Matrix<number> = MatrixUtils.identity(this.rows);
+        const identityMatrix: Matrix<number> = Matrix.identity(this.rows);
         let invertedMatrixElements: number[][] = [];
 
         for (let i = 0; i < this.rows; i++) {
@@ -1228,6 +1227,174 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         return new Matrix(newEntries);
     }
+
+
+     /**
+     * Clones the matrix instance and returns the clone
+     * @public
+     * @static
+     * @returns {Matrix<any>} The cloned matrix
+     */
+    public static clone(A: Matrix<any>): Matrix<any> {
+
+        return new Matrix(A.toArray())
+
+
+    }
+
+    /**
+     * Method used to pad the matrix dimensions to the nearest power of two.
+     * @public
+     * @static
+     * @param {Matrix<number>} A - The matrix to pad
+     * @returns {Matrix<number>} The padded matrix with dimensions as a power of two.
+     */
+    public static padMatrixToPowerOfTwo(A: Matrix<number>): Matrix<number> {
+        const rows: number = A.rows;
+        const columns: number = A.columns
+        const maxDimension: number = Math.max(rows, columns);
+        const nextPower: number = math.nextPowerOfTwo(maxDimension);
+
+        if (nextPower === rows && nextPower === columns) {
+            return A; // No padding required as the matrix is already a power of two.
+        }
+
+        const paddedMatrix: number[] = Array<number>(nextPower * nextPower).fill(0);
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                paddedMatrix[i * nextPower + j] = A.mElements[i * columns + j];
+            }
+        }
+
+        return new Matrix(paddedMatrix, nextPower, nextPower);
+    }
+
+
+    /**
+     * Rounds values close to zero in the given array and modifies the matrix in place
+     * @public
+     * @static
+     * @param { Matrix<number>} A - Matrix consisting of numbers
+     * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
+     * @returns {void}
+     */
+    public static roundMatrixToZero(A: Matrix<number>, threshold: number = Constants.DELTA): void {
+        const size: number = A.size;
+        for (let i = 0; i < size; i++) {
+            if (Math.abs(A.mElements[i]) < threshold) {
+                A.mElements[i] = 0;
+            }
+        }
+    }
+
+
+    /**
+     * Rounds all elements of a matrix in place to a specified number of decimal places using a specified base.
+     * @public
+     * @static
+     * @param {Matrix} A - The matrix to round.
+     * @param {number} digits - The number of decimal places to round to.
+     * @param {number} base - The base to use for rounding. Defaults to 10 if not provided.
+     * @returns {void}
+     */
+    public static toFixedMatrix(A: Matrix<number>, digits: number, base: number = 10): void {
+        A.mElements = A.mElements.map((entry: number) => math.toFixedNumber(entry, digits, base))
+    }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static factory methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Creates an identity matrix with the specified dimension.
+     * @public
+     * @static
+     * @param {number} dimension - The dimension of the identity matrix.
+     * @returns {Matrix} The identity matrix.
+     * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     */
+    public static identity(dimension: number): Matrix<number> {
+        if (dimension <= 0 || typeof dimension !== "number") throw new MatrixError("Invalid argument", 606, { dimension });
+
+        const entries: number[][] = [];
+
+        for (let i = 0; i < dimension; i++) {
+            const row: number[] = [];
+            for (let j = 0; j < dimension; j++) {
+                if (i === j) {
+                    row.push(1);
+                } else {
+                    row.push(0);
+                }
+            }
+            entries.push(row);
+        }
+
+        return new Matrix<number>(entries)
+    }
+
+    /**
+     * Creates a matrix filled with ones with the specified number of rows and columns.
+     * @public
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
+     * @returns {Matrix} - The matrix filled with ones.
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     */
+    public static ones(rows: number, columns: number): Matrix<number> {
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
+        return new Matrix<number>(new Array(rows).fill(1).map(() => new Array(columns).fill(1)))
+    }
+
+
+    /**
+     * Creates a random matrix with the specified number of rows and columns.
+     * @public
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix
+     * @returns {Matrix} The randomized matrix
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     */
+    public static random(rows: number, columns: number): Matrix<number> {
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
+
+        const entries: number[][] = [];
+
+        for (let i = 0; i < rows; i++) {
+            const row: number[] = [];
+            for (let j = 0; j <
+                columns; j++) {
+                const randomValue: number = Math.random() * 100;
+                row.push(randomValue);
+            }
+            entries.push(row);
+        }
+
+        return new Matrix<number>(entries);
+    }
+
+
+    /**
+     * Creates a matrix filled with zeros with the specified number of rows and columns.
+     * @public
+     * @static
+     * @param {number} rows - The number of rows in the matrix.
+     * @param {number} columns - The number of columns in the matrix.
+     * @returns {Matrix} - The matrix filled with zeros.
+     * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     */
+    public static zeros(rows: number, columns: number): Matrix<number> {
+        if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
+        return new Matrix<number>(new Array(rows).fill(0).map(() => new Array(columns).fill(0)))
+    }
+
 
 
 
