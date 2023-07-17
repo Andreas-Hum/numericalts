@@ -11,10 +11,11 @@
     "build:test": "npm run tsc && jest",
     "test": "jest"
   },
-  "name": "linear-algebra",
+  "name": "math.ts",
   "description": "",
-  "version": "0.0.1",
-  "main": "index.js",
+  "version": "0.0.2",
+  "author": "Andreas Hummelmose",
+  "license": "Apache-2.0",
   "dependencies": {
     "ansi-escapes": "^4.3.2",
     "ansi-regex": "^5.0.1",
@@ -201,7 +202,5 @@
     "yargs": "^17.7.2",
     "yargs-parser": "^21.1.1",
     "yocto-queue": "^0.1.0"
-  },
-  "author": "Andreas Hummelmose",
-  "license": "ISC"
+  }
 }
