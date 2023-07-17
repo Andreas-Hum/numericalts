@@ -2,7 +2,7 @@
 
 math.ts is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript.
 
-Please note that math.ts is currently a work in progress and is not available for download as a package yet. However, we are actively working on developing and refining the library, and it will be released as a package soon.
+Please note that math.ts is currently a work in progress and is not available for download as a package yet. However, I are actively working on developing and refining the library, and it will be released as a package soon.
 
 ## Features (Planned)
 
@@ -30,10 +30,11 @@ After installing math.ts, you will be able to import and use the library in your
 ## Documentation (Coming Soon)
 
 Once math.ts is released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations and provide code examples to help you understand how to use math.ts effectively.
+For now a simple documentation can be see here https://andreas-hum.github.io/mathtsdocs/index.html
 
 ## Contributing
 
-Contributions to math.ts are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. We appreciate your support and contributions to make math.ts even better.
+Contributions to math.ts are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. I appreciate your support and contributions to make math.ts even better.
 
 ## License
 
