@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./preDist",
+    "outDir": "./lib",
     "sourceMap": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "target": "ES6",
     "moduleResolution": "node",
     "removeComments": false,
     "declaration": true,
-    "declarationDir": "./dist/types",
+    "declarationDir": "./lib/types",
     "lib": ["ES6", "DOM"],
     "noImplicitAny": true,
     "noImplicitThis": true,

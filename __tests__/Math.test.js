@@ -1,4 +1,4 @@
-const math = require("../dist/math.js").default
+const math = require("../lib/math").default
 
 describe('math', () => {
 
@@ -12,10 +12,11 @@ describe('math', () => {
 
 
     describe('abs', () => {
-        it('should return the absolute value of a positive number', () => {
-            const result = math.abs(5);
+        it('should return the absolute; value of a positive number', () => {
+            const result = math.abs(5)
             expect(result).toBe(5);
         });
+
 
         it('should return the absolute value of a negative number', () => {
             const result = math.abs(-5);

@@ -1,4 +1,5 @@
-const Matrix = require("../dist/matrix.js").default
+const Matrix = require("../lib/matrix.js").default
+
 
 let twoByThree, threeByTwo, twoByTwo
 describe('Matrix', () => {
