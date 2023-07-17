@@ -3,7 +3,7 @@ import { MatrixTypes } from "./@interfaces/index.ts";
 
 
 // Error import
-import {MatrixError} from "./@error.types/index.ts";
+import { MatrixError } from "./@error.types/index.ts";
 
 // Math class  import
 import math from "./math.ts";

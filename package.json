@@ -232,30 +232,44 @@
     "HISTORY.md",
     "types"
   ],
-  "type": "module",
   "main": "./lib/cjs",
   "types": "./types/index.d.ts",
   "module": "./lib/esm",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/esm/index.ts"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
     },
     "./matrix": {
-      "types": "./types/index.d.ts",
-      "import": "./lib/esm/matrix.js",
-      "require": "./lib/cjs/matrix.js"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/esm/matrix.js"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/cjs/matrix.js"
+      }
     },
     "./math": {
-      "types": "./types/index.d.ts",
-      "import": "./lib/esm/math.js",
-      "require": "./lib/cjs/math.js"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/esm/math.js"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/cjs/math.js"
+      }
     }
   },
   "scripts": {
     "test": "jest --detectOpenHandles",
-    "build": "rollup -c && npm run buildts ",
+    "build": "rollup -c --bundleConfigAsCjs && npm run buildts ",
     "buildts": "tsc",
     "build:test": "npm run build && npm run test",
     "docs": "npx typedoc --entryPointStrategy expand ./src"
