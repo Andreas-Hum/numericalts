@@ -6,12 +6,12 @@ import { MatrixInterface } from "./@interfaces/matrix";
 import { MatrixError } from "./@error.types/index";
 
 // Math class  import
-import math from "./math";
+import { math } from "./math";
 
 // Utility import
-import Constants from "./constants";
+import { Constants } from "./constants";
 
-export default class Matrix<T> implements MatrixInterface<T> {
+export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**

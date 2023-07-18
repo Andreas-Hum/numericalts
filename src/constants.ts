@@ -1,7 +1,7 @@
 /**
  * A class that contains various mathematical constants.
  */
-export default class Constants {
+export  class Constants {
     /**
      * A small value used for comparing floating-point numbers.
      * Can be used for precision comparisons in mathematical calculations.

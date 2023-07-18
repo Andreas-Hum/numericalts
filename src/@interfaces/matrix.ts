@@ -1,17 +1,51 @@
 export {Matrix as MatrixInterface}
 interface Matrix<T>  {
+    /*
+    * The shape of the matrix.
+    * @type {string}
+    */
+    shape: string 
+    /**
+     * Indicates whether the matrix is square.
+     * @type {boolean}
+     */
+    isSquare: boolean
+    /**
+     * Indicates whether the matrix is tall (more rows than columns).
+     * @type {boolean}
+     */
+    isTall: boolean 
+    /**
+     * Indicates whether the matrix is wide (more columns than rows).
+     * @type {boolean}
+     */
+    isWide: boolean 
+    /**
+     * The number of rows in the matrix.
+     * @type {number}
+     */
+    rows: number 
+    /**
+     * The number of columns in the matrix.
+     * @type {number}
+     */
+    columns: number 
+    /**
+     * The total number of elements in the matrix.
+     * @type {number}
+     */
+    size: number 
+    /**
+     * The elements of the matrix.
+     * @type {Array<T>}
+     */
+    mElements: Array<T>
+    /**
+     * The data type of the matrix elements.
+     * @type {string}
+     */
+    dataType: string 
 
-    shape: string;
-    isSquare: boolean;
-    isTall: boolean;
-    isWide: boolean;
-
-    rows: number;
-    columns: number;
-    size: number;
-    mElements: Array<T>;
-
-    dataType: string
     add(B: Matrix<number>): Matrix<number>
     multiply(B: Matrix<number>): Matrix<number>
     pow(exp: number): Matrix<number>

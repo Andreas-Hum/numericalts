@@ -1,6 +1,6 @@
-import Constants from "./constants";
+import { Constants } from "./constants";
 
-export default  class math {
+export class math {
 
 
 
@@ -26,7 +26,7 @@ export default  class math {
         }
         return dotProduct;
     }
- 
+
     /**
      * Normalizes a vector.
      * @public

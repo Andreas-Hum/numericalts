@@ -233,6 +233,10 @@
     "types"
   ],
   "main": "./src/index.ts",
+  "exports": {
+    "./matrix": "./src/matrix.ts",
+    "./math": "./src/math.ts"
+  },
   "scripts": {
     "test": "jest --detectOpenHandles",
     "build": "tsc",
