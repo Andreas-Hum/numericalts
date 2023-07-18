@@ -1,4 +1,4 @@
-const Matrix = require("../lib/matrix.ts").default
+const Matrix = require("../lib/matrix.js").default
 
 
 let twoByThree, threeByTwo, twoByTwo
