@@ -8,7 +8,6 @@
 <a href="https://github.com/Andreas-Hum/numericalts/actions"><img src="https://github.com/Andreas-Hum/numericalts/workflows/Node.js/badge.svg" alt="Build Status"></a>
 <a href="https://codecov.io/gh/Andreas-Hum/numericalts"><img src="https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC" alt="codecov"></a>
 <a href="https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Andreas-Hum/numericalts.svg" alt="License"></a>
-<a href="https://snyk.io/test/github//Andreas-Hum/numericalts"><img src="https://snyk.io/test/github/Andreas-Hum/numericalts/badge.svg" alt="Known Vulnerabilities"></a>
 </p>
 
 
