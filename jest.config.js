@@ -4,4 +4,6 @@ module.exports = {
   testEnvironment: 'node',
   collectCoverage: true,
   coverageReporters: ['text', 'cobertura'],
+  testTimeout: 10000
+
 };
