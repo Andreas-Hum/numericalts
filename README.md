@@ -38,11 +38,11 @@ For a full list of currently implemented methods and types please see [here](htt
 ```ts
 
 import { Matrix } from 'numericalts';
-// The matrix class can also be imported directly with 'numericalts/matrix'
 
 const A: Matrix<number> = new Matrix([[1, 2], [3, 4]]);
 const B: Matrix<number> = new Matrix([[5, 6, 7, 8], 2, 2]);
 const stringA: Matrix<string>
+
 //A = new Matrix<number>([["1","2"],["3","4"]]) throws a typeerror while new Matrix<string>([["1","2"],["3","4"]]) does not
 
 // Matrix multiplication

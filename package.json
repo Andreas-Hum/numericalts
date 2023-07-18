@@ -1,6 +1,6 @@
 {
   "name": "numericalts",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "numerical.js is a comprehensive TypeScript/JavaScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
   "author": "Andreas Hummelmose <andreas@hummelmose.com> (https://github.com/Andreas-Hum)",
   "homepage": "https://andreas-hum.github.io/numericalts/",
@@ -230,24 +230,10 @@
     "HISTORY.md",
     "types"
   ],
-  "type": "module",
-  "main": "./src/index.ts",
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/index.ts"
-      }
-    },
-    "./matrix": {
-      "import": {
-        "default": "./src/matrix.ts"
-      }
-    },
-    "./math": {
-      "import": {
-        "default": "./src/math.ts"
-      }
-    }
+    ".": "./src/index",
+    "./matrix": "./src/matrix.ts",
+    "./math": "./src/math.ts"
   },
   "scripts": {
     "test": "jest --detectOpenHandles",
