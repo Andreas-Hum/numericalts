@@ -11,6 +11,8 @@ Please note that numerical.ts is currently a work in progress
 [![Build Status](https://github.com/Andreas-Hum/numericalts/workflows/Node.js/badge.svg)](https://github.com/Andreas-Hum/numericalts/actions)
 [![codecov](https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC)](https://codecov.io/gh/Andreas-Hum/numericalts)
 [![License](https://img.shields.io/github/license/Andreas-Hum/numericalts.svg)](https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE)
+[![Known Vulnerabilities](https://snyk.io/test/github/Andreas-Hum/numericalts/badge.svg)](https://snyk.io/test/github//Andreas-Hum/numericalts)
+
 
 ## Features (Planned)
 
