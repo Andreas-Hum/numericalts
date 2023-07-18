@@ -1,7 +1,6 @@
-const { Matrix } = require("../lib/matrix.js")
+import { Matrix } from "../src"
 
-
-let twoByThree, threeByTwo, twoByTwo
+let twoByThree: Matrix<number>, threeByTwo: Matrix<number>, twoByTwo: Matrix<number>
 describe('Matrix', () => {
 
 
@@ -54,10 +53,12 @@ describe('Matrix', () => {
         });
 
         it('Error: not an array', () => {
+            //@ts-ignore
             expect(() => new Matrix(123)).toThrow()
         });
 
         it('Error: not an array', () => {
+            //@ts-ignore
             expect(() => new Matrix([1, 2, 3], "sda", 2312)).toThrow()
         });
 
@@ -87,6 +88,7 @@ describe('Matrix', () => {
         })
 
         it('Error: Invalid arguments', () => {
+            //@ts-ignore
             expect(() => twoByThree.getElement("10", 10)).toThrow()
         })
     })
@@ -141,10 +143,12 @@ describe('Matrix', () => {
         })
 
         it('Error: Invalid value', () => {
+            //@ts-ignore
             expect(() => twoByThree.setElement(0, 0, "error")).toThrow()
         })
 
         it('Error: Invalid argument', () => {
+            //@ts-ignore
             expect(() => twoByThree.setElement(0, "0", 10)).toThrow()
         })
     })
@@ -211,6 +215,7 @@ describe('Matrix', () => {
         })
 
         it('Error: B not an instance of Matrix', () => {
+            //@ts-ignore
             expect(() => twoByThree.add("threeByTwo")).toThrow()
         })
 
@@ -259,6 +264,7 @@ describe('Matrix', () => {
         })
 
         it('Error: Invalid scalar', () => {
+            //@ts-ignore
             expect(() => twoByThree.scale("invalid")).toThrow()
         })
 
@@ -327,6 +333,7 @@ describe('Matrix', () => {
         })
 
         it('Error: B not an instance of Matrix', () => {
+            //@ts-ignore
             expect(() => twoByThree.subtract("threeByTwo")).toThrow()
         })
 
@@ -349,6 +356,7 @@ describe('Matrix', () => {
         })
 
         it('Error: B not an instance of Matrix', () => {
+            //@ts-ignore
             expect(() => twoByThree.multiply("threeByTwo")).toThrow()
         })
 
@@ -371,7 +379,7 @@ describe('Matrix', () => {
         it('should throw an error if the input vector is not an array', () => {
             const matrix = new Matrix([[1, 2, 3]]);
             const invalidVector = 'not an array';
-
+            //@ts-ignore
             expect(() => matrix.vMultiply(invalidVector)).toThrow();
 
         });
@@ -415,6 +423,7 @@ describe('Matrix', () => {
 
         it('Error: Invalid argument', () => {
             const solTest = new Matrix([[1, 2, 2], [0, 1, 3], [0, 0, 1]])
+            //@ts-ignore
             expect(() => solTest.backSubstitution("[4, 2, 13]")).toThrow()
         });
     });
@@ -442,6 +451,7 @@ describe('Matrix', () => {
 
         it('Error: Invalid argument', () => {
             const solTest = new Matrix([[1, 0, 0], [2, 1, 0], [2, 2, 1]])
+            //@ts-ignore
             expect(() => solTest.forwardSubstitution("[4, 2, 13]")).toThrow()
         });
     });
@@ -621,6 +631,7 @@ describe('Matrix', () => {
             const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
             const result = matrix.gaussianElimination();
             const expected = new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]]);
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
 
@@ -629,6 +640,7 @@ describe('Matrix', () => {
             const result = matrix.gaussianElimination();
 
             const expected = new Matrix([[10, 11, 12], [0, -3 / 10, -3 / 5], [0, 0, 0]]);
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
         test('Third matrix', () => {
@@ -636,6 +648,7 @@ describe('Matrix', () => {
             const result = matrix.gaussianElimination();
 
             const expected = new Matrix([[3, 2, 1, 23], [0, 1 / 3, 11 / 3, -53 / 3], [0, 0, 4, -34]]);
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
     });
@@ -645,7 +658,9 @@ describe('Matrix', () => {
             const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
             const result = matrix.gaussJordan();
             const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+            //@ts-ignore
             result.mElements[3] = 0;
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
 
@@ -654,9 +669,10 @@ describe('Matrix', () => {
             const result = matrix.gaussJordan();
 
             const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+            //@ts-ignore
             result.mElements[3] = 0;
 
-
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
         test('Third matrix', () => {
@@ -664,6 +680,7 @@ describe('Matrix', () => {
             const result = matrix.gaussJordan();
 
             const expected = new Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+            //@ts-ignore
             expect(result.equal(expected)).toBeTruthy();
         });
     });
@@ -675,6 +692,7 @@ describe('Matrix', () => {
         })
 
         it('Transposing a 2x3 matrix', () => {
+            //@ts-ignore
             expect(twoByThree.transpose(twoByThree)).toEqual(threeByTwo)
         })
 
@@ -725,6 +743,7 @@ describe('Matrix', () => {
         })
 
         it('Error: Invalid argument', () => {
+            //@ts-ignore
             expect(() => Matrix.reshape([1, 2, 3, 4], "2", "10")).toThrow()
         })
 
@@ -765,6 +784,7 @@ describe('Matrix', () => {
         })
 
         it('Error: A not an instance of Matrix', () => {
+            //@ts-ignore
             expect(() => Matrix.isLowerTriangular("upperTriangular")).toThrow()
         })
 
@@ -784,6 +804,7 @@ describe('Matrix', () => {
         })
 
         it('Error: A not an instance of Matrix', () => {
+            //@ts-ignore
             expect(() => Matrix.isUpperTriangular("upperTriangular")).toThrow()
         })
 

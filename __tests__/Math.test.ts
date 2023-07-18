@@ -1,4 +1,6 @@
-const { math } = require("../lib/math.js")
+import { math } from "../src"
+
+
 describe('math', () => {
 
 
