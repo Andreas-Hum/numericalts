@@ -8,7 +8,7 @@ Please note that numerical.ts is currently a work in progress
 
 [![Version](https://img.shields.io/npm/v/numericalts.svg)](https://www.npmts.com/package/numericalts)
 [![Downloads](https://img.shields.io/npm/dm/numericalts.svg)](https://www.npmts.com/package/numericalts)
-[![Build Status](https://github.com/Andreas-Hum/numericalts/workflows/Node.yaml/badge.svg)](https://github.com/Andreas-Hum/numericalts/actions)
+[![Build Status](https://github.com/Andreas-Hum/numericalts/workflows/build.yaml/badge.svg)](https://github.com/Andreas-Hum/numericalts/actions)
 [![codecov](https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC)](https://codecov.io/gh/Andreas-Hum/numericalts)
 [![License](https://img.shields.io/github/license/Andreas-Hum/numericalts.svg)](https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE)
 
