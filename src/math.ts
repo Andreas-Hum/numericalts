@@ -1,6 +1,6 @@
 import Constants from "./constants";
 
-export default class math {
+export default  class math {
 
 
 
