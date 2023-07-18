@@ -1,4 +1,4 @@
-import Constants from "./constants.ts";
+import Constants from "./constants";
 
 export default class math {
 

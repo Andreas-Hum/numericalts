@@ -1,3 +1,3 @@
-export { default as Constants } from './constants.ts';
-export { default as math } from './math.ts';
-export { default as Matrix } from './matrix.ts';
+export { default as Constants } from './constants';
+export { default as math } from './math';
+export { default as Matrix } from './matrix';

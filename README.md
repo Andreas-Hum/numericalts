@@ -1,8 +1,10 @@
-# numerical.js (Work in Progress)
+# numerical.ts (Work in Progress)
 
-numerical.js is a TypeScript/JavaScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in JavaScript or TypeScript.
+numerical.ts is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in TypeScript-
 
-Please note that numerical.js is currently a work in progress
+The library leverages the power of generic types to enable flexible usage with different data types while ensuring type safety. This allows you to perform linear algebra operations on various numeric types, such as `number`, `bigint`, or custom numerical types. The use of generics provides versatility and adaptability to different use cases and data structures.
+
+Please note that numerical.ts is currently a work in progress
 
 [![Version](https://img.shields.io/npm/v/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
 [![Downloads](https://img.shields.io/npm/dm/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
@@ -24,30 +26,31 @@ Please note that numerical.js is currently a work in progress
 - Complex numbers
 - And many more
 
-## Usage (Coming Soon)
-Install numerical.js using [npm](https://www.npmjs.com/package/numericaljs):
+## Usage 
+Install numerical.ts using [npm](https://www.npmjs.com/package/numericalts):
 
 
 ```bash
-npm install numericaljs
+npm install numericalts
 ```
-For a full list of currently implemented methods and types please see [here](https://andreas-hum.github.io/numerical.js/)
+For a full list of currently implemented methods and types please see [here](https://andreas-hum.github.io/numericalts/)
 ### Matrix Operations
-```js
+```ts
 
-import { Matrix } from 'numericaljs';
-// const {Matrix} = require("numericaljs")
-// The matrix class can also be imported directly with 'numericaljs/matrix'
+import { Matrix } from 'numericalts';
+// The matrix class can also be imported directly with 'numericalts/matrix'
 
-const A = new Matrix([[1, 2], [3, 4]]);
-const B = new Matrix([[5, 6], [7, 8]]);
+const A: Matrix<number> = new Matrix([[1, 2], [3, 4]]);
+const B: Matrix<number> = new Matrix([[5, 6, 7, 8], 2, 2]);
+const stringA: Matrix<string>
+//A = new Matrix<number>([["1","2"],["3","4"]]) throws a typeerror while new Matrix<string>([["1","2"],["3","4"]]) does not
 
 // Matrix multiplication
-const C = A.multiply(B);
+const C: Matrix<number> = A.multiply(B);
 console.log(C.toArray()); // [[19, 22], [43, 50]]
 
 // Matrix exponentiation
-const D = A.pow(2);
+const D: Matrix<number> = A.pow(2);
 console.log(D.toArray()); // [[7, 10], [15, 22]]
 
 // Matrix multiplication using Strassen's algorithm
@@ -61,42 +64,41 @@ console.log(R.toArray()); // [[-3.1622776601683795, -4.427188724235731], [0, 0.6
 ```
 ### Number Manipulation
 
-```js
-import { math } from 'numericaljs';
-// const {math} = require("numericaljs")
-// The math class can also be imported directly with 'numericaljs/matrix'
+```ts
+import { math } from 'numericalts';
 
-const num = 3.14159;
+const num: number = 3.14159;
 
 // Get the fractional part of a number
-const frac = math.fracPart(num);
+const frac: number = math.fracPart(num);
 console.log(frac); // 0.14159
 
 // Calculate the greatest common divisor (GCD) of two numbers
-const gcd = math.GCD(24, 36);
+const gcd: number = math.GCD(24, 36);
 console.log(gcd); // 12
 
 // Calculate the least common divisor (LCD) of two numbers
-const lcd = math.LCD(24, 36);
+const lcd: number = math.LCD(24, 36);
 console.log(lcd); // 72
 
 // Round a number to a specified number of decimal places
-const rounded = math.toFixedNumber(num, 2);
+const rounded: number = math.toFixedNumber(num, 2);
 console.log(rounded); // 3.14
 
 // Count the number of decimal places in a number
-const decimalPlaces = math.countDecimals(num);
+const decimalPlaces: number = math.countDecimals(num);
 console.log(decimalPlaces); // 5
 
 // Calculate the dot product of two vectors
-const vector1 = [1, 2, 3];
-const vector2 = [4, 5, 6];
-const dotProduct = math.dot(vector1, vector2);
+const vector1: number[] = [1, 2, 3];
+const vector2: number[] = [4, 5, 6];
+const dotProduct: number = math.dot(vector1, vector2);
 console.log(dotProduct); // 32
 
 // Normalize a vector
-const normalizedVector = math.normalize(vector1);
+const normalizedVector: number[] = math.normalize(vector1);
 console.log(normalizedVector); // [0.2672612419124244, 0.5345224838248488, 0.8017837257372732]
+
 ```
 
 ## Documentation (Coming Soon)

@@ -1,29 +1,66 @@
 // Interface import
-import { MatrixInterface } from "./@interfaces/matrix.ts";
+import { MatrixInterface } from "./@interfaces/matrix";
 
 
 // Error import
-import { MatrixError } from "./@error.types/index.ts";
+import { MatrixError } from "./@error.types/index";
 
 // Math class  import
-import math from "./math.ts";
+import math from "./math";
 
 // Utility import
-import Constants from "./constants.ts";
+import Constants from "./constants";
 
 export default class Matrix<T> implements MatrixInterface<T> {
 
-    public shape: string = "0";
-    public isSquare: boolean = false;
-    public isTall: boolean = false;
-    public isWide: boolean = false;
 
-    public rows: number = Infinity;
-    public columns: number = Infinity;
-    public size: number = Infinity;
-    public mElements: T[];
+    /**
+    * The shape of the matrix.
+    * @type {string}
+    */
+    shape: string = "0"
+    /**
+     * Indicates whether the matrix is square.
+     * @type {boolean}
+     */
+    isSquare: boolean = false
+    /**
+     * Indicates whether the matrix is tall (more rows than columns).
+     * @type {boolean}
+     */
+    isTall: boolean = false
+    /**
+     * Indicates whether the matrix is wide (more columns than rows).
+     * @type {boolean}
+     */
+    isWide: boolean = false
+    /**
+     * The number of rows in the matrix.
+     * @type {number}
+     */
+    rows: number = Infinity
+    /**
+     * The number of columns in the matrix.
+     * @type {number}
+     */
+    columns: number = Infinity
+    /**
+     * The total number of elements in the matrix.
+     * @type {number}
+     */
+    size: number = Infinity
+    /**
+     * The elements of the matrix.
+     * @type {Array<T>}
+     */
+    mElements: Array<T> = []
+    /**
+     * The data type of the matrix elements.
+     * @type {string}
+     */
+    dataType: string = ""
 
-    public dataType: string = "none";
+
 
     /**
      * Constructs a matrix object.

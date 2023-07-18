@@ -1,9 +1,9 @@
 {
-  "name": "numericaljs",
-  "version": "0.1.7",
+  "name": "numericalts",
+  "version": "0.2.1",
   "description": "numerical.js is a comprehensive TypeScript/JavaScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
   "author": "Andreas Hummelmose <andreas@hummelmose.com> (https://github.com/Andreas-Hum)",
-  "homepage": "https://andreas-hum.github.io/numericaljs/",
+  "homepage": "https://andreas-hum.github.io/numericalts/",
   "repository": {
     "type": "git",
     "url": "https://github.com/Andreas-Hum"
@@ -225,52 +225,35 @@
     "typescript": "^5.1.6"
   },
   "files": [
-    "lib",
+    "src",
     "LICENSE",
     "NOTICE",
     "README.md",
     "HISTORY.md",
     "types"
   ],
-  "main": "./lib/cjs",
-  "types": "./types/index.d.ts",
-  "module": "./lib/esm",
+  "type": "module",
+  "main": "./src/index.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/esm/index.ts"
-      },
-      "require": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/cjs/index.js"
+        "default": "./src/index.ts"
       }
     },
     "./matrix": {
       "import": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/esm/matrix.js"
-      },
-      "require": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/cjs/matrix.js"
+        "default": "./src/matrix.ts"
       }
     },
     "./math": {
       "import": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/esm/math.js"
-      },
-      "require": {
-        "types": "./types/index.d.ts",
-        "default": "./lib/cjs/math.js"
+        "default": "./src/math.ts"
       }
     }
   },
   "scripts": {
     "test": "jest --detectOpenHandles",
-    "build": "rollup -c --bundleConfigAsCjs && npm run buildts ",
-    "buildts": "tsc",
+    "build": "tsc",
     "build:test": "npm run build && npm run test",
     "docs": "npx typedoc --entryPointStrategy expand ./src"
   },

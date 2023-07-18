@@ -1,1 +1,1 @@
-export { default as MatrixError } from './matrix.error.ts';
+export { default as MatrixError } from './matrix.error';
