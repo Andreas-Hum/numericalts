@@ -1,17 +1,22 @@
-# numerical.ts (Work in Progress)
+
+<h1 align="center">
+ numerical.ts (Work in Progress)
+</h1>
+<p align="center">
+<a href="https://www.npmjs.com/package/numericalts"><img src="https://img.shields.io/npm/v/numericalts.svg" alt="Version"></a>
+<a href="https://www.npmjs.com/package/numericalts"><img src="https://img.shields.io/npm/dm/numericalts.svg" alt="Downloads"></a>
+<a href="https://github.com/Andreas-Hum/numericalts/actions"><img src="https://github.com/Andreas-Hum/numericalts/workflows/Node.js/badge.svg" alt="Build Status"></a>
+<a href="https://codecov.io/gh/Andreas-Hum/numericalts"><img src="https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC" alt="codecov"></a>
+<a href="https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Andreas-Hum/numericalts.svg" alt="License"></a>
+<a href="https://snyk.io/test/github//Andreas-Hum/numericalts"><img src="https://snyk.io/test/github/Andreas-Hum/numericalts/badge.svg" alt="Known Vulnerabilities"></a>
+</p>
+
 
 numerical.ts is a TypeScript library that focuses primarily on linear algebra functions, with plans to expand to include other mathematical functions in the future. It aims to provide a comprehensive set of tools for performing various linear algebra operations efficiently in TypeScript-
 
 The library leverages the power of generic types to enable flexible usage with different data types while ensuring type safety. This allows you to perform linear algebra operations on various numeric types, such as `number`, `bigint`, or custom numerical types. The use of generics provides versatility and adaptability to different use cases and data structures.
 
 Please note that numerical.ts is currently a work in progress
-
-[![Version](https://img.shields.io/npm/v/numericalts.svg)](https://www.npmjs.com/package/numericalts)
-[![Downloads](https://img.shields.io/npm/dm/numericalts.svg)](https://www.npmjs.com/package/numericalts)
-[![Build Status](https://github.com/Andreas-Hum/numericalts/workflows/Node.js/badge.svg)](https://github.com/Andreas-Hum/numericalts/actions)
-[![codecov](https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC)](https://codecov.io/gh/Andreas-Hum/numericalts)
-[![License](https://img.shields.io/github/license/Andreas-Hum/numericalts.svg)](https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE)
-
 ## Features (Planned)
 
 - Vector operations: Addition, subtraction, dot product, cross product, and more.
