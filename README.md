@@ -6,11 +6,11 @@ The library leverages the power of generic types to enable flexible usage with d
 
 Please note that numerical.ts is currently a work in progress
 
-[![Version](https://img.shields.io/npm/v/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
-[![Downloads](https://img.shields.io/npm/dm/numericaljs.svg)](https://www.npmjs.com/package/numericaljs)
-[![Build Status](https://github.com/Andreas-Hum/numericaljs/workflows/Node.js/badge.svg)](https://github.com/Andreas-Hum/numericaljs/actions)
-[![codecov](https://codecov.io/gh/Andreas-Hum/numericaljs/branch/main/graph/badge.svg?token=KM5KFXL4UC)](https://codecov.io/gh/Andreas-Hum/numericaljs)
-[![License](https://img.shields.io/github/license/Andreas-Hum/numericaljs.svg)](https://github.com//Andreas-Hum/numericaljs/blob/master/LICENSE)
+[![Version](https://img.shields.io/npm/v/numericalts.svg)](https://www.npmts.com/package/numericalts)
+[![Downloads](https://img.shields.io/npm/dm/numericalts.svg)](https://www.npmts.com/package/numericalts)
+[![Build Status](https://github.com/Andreas-Hum/numericalts/workflows/Node.ts/badge.svg)](https://github.com/Andreas-Hum/numericalts/actions)
+[![codecov](https://codecov.io/gh/Andreas-Hum/numericalts/branch/main/graph/badge.svg?token=KM5KFXL4UC)](https://codecov.io/gh/Andreas-Hum/numericalts)
+[![License](https://img.shields.io/github/license/Andreas-Hum/numericalts.svg)](https://github.com//Andreas-Hum/numericalts/blob/master/LICENSE)
 
 ## Features (Planned)
 
@@ -27,7 +27,7 @@ Please note that numerical.ts is currently a work in progress
 - And many more
 
 ## Usage 
-Install numerical.ts using [npm](https://www.npmjs.com/package/numericalts):
+Install numerical.ts using [npm](https://www.npmts.com/package/numericalts):
 
 
 ```bash
@@ -103,16 +103,16 @@ console.log(normalizedVector); // [0.2672612419124244, 0.5345224838248488, 0.801
 
 ## Documentation (Coming Soon)
 
-Once numerical.js is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations, math operations and so forth, and provide code examples to help you understand how to use numerical.ts effectively.
-For now a simple documentation can be see [here](https://andreas-hum.github.io/numericaljs/)
+Once numerical.ts is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations, math operations and so forth, and provide code examples to help you understand how to use numerical.ts effectively.
+For now a simple documentation can be see [here](https://andreas-hum.github.io/numericalts/)
 
 ## Contributing
 
-Contributions to numerical.js are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. I appreciate your support and contributions to make numerical.js even better.
+Contributions to numerical.ts are welcome! If you are interested in contributing to the development of the library, please stay tuned for updates on how you can get involved. I appreciate your support and contributions to make numerical.ts even better.
 
 ## License
 
-numerical.js is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+numerical.ts is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Contact
 
