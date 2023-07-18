@@ -3,19 +3,23 @@
     "outDir": "./lib",
     "sourceMap": true,
     "module": "ESNext",
-    "allowImportingTsExtensions": true,
     "target": "ES6",
     "moduleResolution": "node",
     "removeComments": false,
-    "declaration": true,
-    "declarationDir": "./types",
+    "esModuleInterop": true,
+    "emitDeclarationOnly": false,
+    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
     "strictFunctionTypes": true,
-    "esModuleInterop": true,
-    "emitDeclarationOnly": true,
-
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "numericjs": [
+        "./types/index.d.ts"
+      ]
+    }
   },
   "include": [
     "./src/**/*"

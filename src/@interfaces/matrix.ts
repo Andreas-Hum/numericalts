@@ -1,8 +1,5 @@
-
-import { Matrix } from "../index.ts";
-
-
-export  interface MatrixTypes<T> {
+export {Matrix as MatrixInterface}
+interface Matrix<T>  {
 
     shape: string;
     isSquare: boolean;
@@ -15,7 +12,6 @@ export  interface MatrixTypes<T> {
     mElements: Array<T>;
 
     dataType: string
-
     add(B: Matrix<number>): Matrix<number>
     multiply(B: Matrix<number>): Matrix<number>
     pow(exp: number): Matrix<number>

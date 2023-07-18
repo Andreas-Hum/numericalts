@@ -1,3 +1,3 @@
-import Matrix from "./lib/esm/matrix.js";
+import { Matrix } from "./types/index.d.ts";
 
 console.log(Matrix)

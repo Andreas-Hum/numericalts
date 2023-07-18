@@ -1,5 +1,5 @@
 // Interface import
-import { MatrixTypes } from "./@interfaces/index.ts";
+import { MatrixInterface } from "./@interfaces/matrix.ts";
 
 
 // Error import
@@ -11,7 +11,7 @@ import math from "./math.ts";
 // Utility import
 import Constants from "./constants.ts";
 
-export default class Matrix<T> implements MatrixTypes<T> {
+export default class Matrix<T> implements MatrixInterface<T> {
 
     public shape: string = "0";
     public isSquare: boolean = false;
@@ -40,7 +40,6 @@ export default class Matrix<T> implements MatrixTypes<T> {
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
-
 
             this.valida1Dentries(entries);
             this.mElements = entries;
@@ -92,7 +91,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
         Retrieves the type of a given value.
         @template T - The type of the value.
         @param value - The value to retrieve the type from.
-        @returns The type of the value.     
+        @returns The type of the value.
     */
     private getType<T>(value: T): string {
         return typeof value
@@ -263,7 +262,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @throws {MatrixError} - If the value is an invalid element or index is out of bounds
      */
     public setElement(row: number, column: number, value: T): void {
-        if (typeof value !== typeof this.mElements[0] || typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { value, row, column })
+        if (typeof value !== this.dataType || typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { value, row, column })
         const index: number = row * this.columns + column;
         if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         this.mElements[index] = value;
@@ -279,6 +278,10 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @returns {Matrix<T>} A new Matrix object representing the submatrix.
      */
     public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix<T> {
+        if (typeof startRow !== "number" || typeof endRow !== "number" || typeof startCol !== "number" || typeof endCol !== "number") {
+            throw new MatrixError("Invalid arugment", 606, { startRow, endRow, startCol, endCol })
+        }
+
         const numRows: number = endRow - startRow;
         const numCols: number = endCol - startCol;
         const submatrixElements: Array<T> = new Array<T>(numRows * numCols);
@@ -342,9 +345,8 @@ export default class Matrix<T> implements MatrixTypes<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
-
-        if (this.dataType !== B.dataType) {
-            throw new MatrixError("Matrices have different element types", 806, { AType: typeof this.mElements[0], BType: typeof B.mElements[0] });
+        if (B.dataType !== "number" || this.dataType !== "number") {
+            throw new MatrixError("Can't add non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
         }
 
         const resultElements: Array<number> = JSON.parse(JSON.stringify(this.mElements));
@@ -416,6 +418,10 @@ export default class Matrix<T> implements MatrixTypes<T> {
          * @public
          */
     public gramSmith(): Matrix<number> {
+        if (this.dataType !== "number") {
+            throw new MatrixError("Can't perform the gramSmith algorithm on a non numeric matrix", 807, { AType: this.dataType });
+        }
+
         const orthogonalColumns: number[][] = []
 
         orthogonalColumns.push((this as Matrix<number>).getColumn(1));
@@ -461,6 +467,11 @@ export default class Matrix<T> implements MatrixTypes<T> {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
 
+
+        if (B.dataType !== "number" || this.dataType !== "number") {
+            throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        }
+
         const rows: number = this.rows;
         const columns: number = this.columns;
         const matrixColumns: number = B.columns;
@@ -503,9 +514,15 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @throws {MatrixError} if the matrix is not square.
      */
     public pow(exp: number): Matrix<number> {
+
+        if (this.dataType !== "number") {
+            throw new MatrixError("Can't raise take the exponent of a non numberic matrix", 807, { AType: this.dataType });
+        }
+
         if (!this.isSquare) {
             throw new MatrixError("Can't multiply a non-square matrix with itself.", 810, { A: this.isSquare });
         }
+
 
         if (exp === 0) {
             // Return the identity matrix if the exponent is 0
@@ -536,6 +553,9 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @returns { Matrix<number>} The scaled matrix
      */
     public scale(scalar: number): Matrix<number> {
+        if (this.dataType !== "number") {
+            throw new MatrixError("Can't scale a non numeric matrix", 807, { AType: this.dataType });
+        }
         if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
         const scaledMatrix: Matrix<number> = Matrix.clone(this);
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
@@ -552,6 +572,10 @@ export default class Matrix<T> implements MatrixTypes<T> {
        * @returns { Matrix<number>} The result of matrix multiplication.
        */
     public strassenMultiply(B: Matrix<number>): Matrix<number> {
+
+        if (B.dataType !== "number" || this.dataType !== "number") {
+            throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        }
         if (!this.isSquare && !B.isSquare) {
             throw new MatrixError(
                 "Both matrices has to be square",
@@ -610,6 +634,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
     }
 
 
+
     /**
      * Subtracts another matrix from this matrix.
      * @public
@@ -619,7 +644,9 @@ export default class Matrix<T> implements MatrixTypes<T> {
     public subtract(B: Matrix<number>): Matrix<number> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-
+        if (B.dataType !== "number" || this.dataType !== "number") {
+            throw new MatrixError("Can't subtract  non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        }
         const resultElements: number[] = JSON.parse(JSON.stringify(this.mElements as number[]));
         const size: number = this.size;
 
@@ -629,7 +656,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
 
         return new Matrix(resultElements, this.rows, this.columns);
     }
-
+    //TODO: FROM HERE TYPE
     /**
      * Performs vector-matrix multiplication by multiplying each element of the matrix by the corresponding element in the input vector.
      * @param {number[]} vector - The input vector.
@@ -738,6 +765,7 @@ export default class Matrix<T> implements MatrixTypes<T> {
      * @returns {Matrix<number> | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. 
     */ //TODO: lav en type til normale options
     public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix<number> | number[] {
+
         let lead: number = 0;
         let matrixClone: Float64Array | Matrix<number> = new Float64Array(this.mElements as number[]); // clone the matrix
 

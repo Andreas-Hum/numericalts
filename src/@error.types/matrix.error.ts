@@ -17,10 +17,9 @@ export default class MatrixError extends Error {
         // 803: Invalid element for matrix error - Occurs when the matrix contains a non-numeric value.
         // 804: Not an instance of Matrix.
 
-        // 805: Matrix Addition/Subtraction Error - Occurs when matrices of different dimensions are added or subtracted.
+        // 805: Matrix Addition/Subtraction Error - Occurs when matrices of different dimensions or invalid types are added are added or subtracted.
         // 806: Reshape error - Occurs when dimensions are not correct
-        // 807: Matrix Multiplication Error - Occurs when trying to multiply matrices of incompatible dimensions.
-
+        // 807: Non numeric matrix used
 
         // 806: Invalid Scalar for Matrix Multiplication Error - Occurs when a non-numeric value is used for scalar multiplication.
         // 807: Matrix Dot Product Error - Occurs when the dot product of matrices of different dimensions is calculated.
