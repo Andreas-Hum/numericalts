@@ -26,7 +26,7 @@ export default class math {
         }
         return dotProduct;
     }
-
+ 
     /**
      * Normalizes a vector.
      * @public
