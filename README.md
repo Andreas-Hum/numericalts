@@ -102,7 +102,7 @@ console.log(normalizedVector); // [0.2672612419124244, 0.5345224838248488, 0.801
 ## Documentation (Coming Soon)
 
 Once numerical.js is fully released, detailed documentation and examples will be provided to guide you through the library's usage and functionality. The documentation will cover various linear algebra operations, math operations and so forth, and provide code examples to help you understand how to use numerical.ts effectively.
-For now a simple documentation can be see [here](https://andreas-hum.github.io/numerical.js/)
+For now a simple documentation can be see [here](https://andreas-hum.github.io/numericaljs/)
 
 ## Contributing
 
