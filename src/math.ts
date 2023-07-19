@@ -26,8 +26,9 @@ class NumericalBigInt implements Numerical<bigint> {
 
 }
 
+//TODO: fix this
 function isNumeric<T>(x: any): x is Numerical<T> {
-    return x && 'zeroValue' in x && 'add' in x && 'multiply' in x;
+    return x && 'zeroValue' in x && 'add' in x && 'multiply' in x ;
 }
 
 export namespace math {
