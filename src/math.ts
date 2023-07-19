@@ -1,5 +1,5 @@
 import { Constants } from "./constants";
-import { Numerical } from "./@interfaces/Numerical";
+import { Numerical } from "./@interfaces/numerical";
 
 
 
@@ -7,7 +7,8 @@ import { Numerical } from "./@interfaces/Numerical";
 
 
 class NumericalNumber implements Numerical<number> {
-    zeroValue = 0;
+    zeroValue: number = 0;
+    oneValue: number = 1;
     add = (x: number, y: number): number => x + y;
     subtract = (x: number, y: number): number => x - y;
     multiply = (x: number, y: number): number => x * y;
@@ -16,7 +17,8 @@ class NumericalNumber implements Numerical<number> {
 }
 
 class NumericalBigInt implements Numerical<bigint> {
-    zeroValue = BigInt(0);
+    zeroValue: bigint = BigInt(0);
+    oneValue: bigint = BigInt(1);
     add = (x: bigint, y: bigint): bigint => x + y;
     subtract = (x: bigint, y: bigint): bigint => x - y;
     multiply = (x: bigint, y: bigint): bigint => x * y;
@@ -26,45 +28,65 @@ class NumericalBigInt implements Numerical<bigint> {
 
 }
 
-//TODO: fix this
-function isNumeric<T>(x: any): x is Numerical<T> {
-    return x && 'zeroValue' in x && 'add' in x && 'multiply' in x ;
-}
+
 
 export namespace math {
 
 
 
 
+
     /**
-     * Calculates the dot product of two vectors.
+     * Calculates the dot product of two vectors of numbers.
      * @public
-     * @static
      * @param {number[]} vector1 - The first vector.
      * @param {number[]} vector2 - The second vector.
      * @returns {number} The dot product of the two vectors.
      */
-    export function dot<T>(vector1: T[], vector2: T[], numeric?: Numerical<T>): T {
-        let sum: T;
-        if (vector1.length === 0 || vector2.length === 0) {
-            numeric = new NumericalNumber() as unknown as Numerical<T>;
-            return numeric.zeroValue;
-        }
-        if (typeof vector1[0] === "number") {
-            numeric = new NumericalNumber() as unknown as Numerical<T>;
-            sum = numeric.zeroValue;
-        } else if (typeof vector1[0] === "bigint") {
-            numeric = new NumericalBigInt() as unknown as Numerical<T>;
-            sum = numeric.zeroValue;
-        } else if (numeric && isNumeric(numeric)) {
-            sum = numeric.zeroValue;
-        } else {
+    export function dot(vector1: number[], vector2: number[]): number;
+    /**
+     * Calculates the dot product of two vectors of bigints.
+     * @public
+     * @param {bigint[]} vector1 - The first vector.
+     * @param {bigint[]} vector2 - The second vector.
+     * @returns {bigint} The dot product of the two vectors.
+     */
+    export function dot(vector1: bigint[], vector2: bigint[]): bigint;
+    /**
+     * Calculates the dot product of two vectors of a generic type.
+     * @public
+     * @param {T[]} vector1 - The first vector.
+     * @param {T[]} vector2 - The second vector.
+     * @param {Numerical<T>} numerical - An instance of a Numerical class that defines the operations for the generic type.
+     * @returns {T} The dot product of the two vectors.
+     */
+    export function dot<T>(vector1: T[], vector2: T[], numerical: Numerical<T>): T;
 
-            throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+    /**
+     * Implementation of the dot function. Calculates the dot product of two vectors.
+     * If no Numerical instance is provided, it defaults to NumericalNumber for number arrays and NumericalBigInt for bigint arrays.
+     * @public
+     * @param {T[]} vector1 - The first vector.
+     * @param {T[]} vector2 - The second vector.
+     * @param {Numerical<T>=} numerical - An optional instance of a Numerical class that defines the operations for the generic type.
+     * @throws {Error} If the vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.
+     * @returns {T} The dot product of the two vectors.
+     */
+    export function dot<T>(vector1: T[], vector2: T[], numerical?: Numerical<T>): T {
+        if (!numerical) {
+            if (typeof vector1[0] === "number" && typeof vector2[0] === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof vector1[0] === "bigint" && typeof vector2[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+            }
         }
+
+        let sum: T = numerical.zeroValue;
 
         for (let i = 0; i < vector1.length; i++) {
-            sum = numeric.add(sum, numeric.multiply(vector1[i], vector2[i]));
+            sum = numerical.add(sum, numerical.multiply(vector1[i], vector2[i]));
         }
         return sum;
     }
