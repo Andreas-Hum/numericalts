@@ -26,6 +26,11 @@ export class NumberClass implements Numerical<number>{
         return Math.sqrt(x)
     }
 
+
+    fromInteger(n: number): number {
+        return n;
+    }
+
 }
 
 
@@ -125,5 +130,15 @@ export class StringClass implements Numerical<string> {
         const result = this.oneValue.repeat(Math.floor(sqrtNumericValue));
 
         return result;
+    }
+
+    fromInteger(n: number): string {
+        if (n === 0) {
+            return this.zeroValue;
+        } else if (n === 1) {
+            return this.oneValue;
+        } else {
+            throw new Error("Invalid integer value for StringClas");
+        }
     }
 }

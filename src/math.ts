@@ -14,6 +14,10 @@ class NumericalNumber implements Numerical<number> {
     multiply = (x: number, y: number): number => x * y;
     divide = (x: number, y: number): number => x / y;
     sqrt = (x: number): number => Math.sqrt(x);
+
+    fromInteger(n: number): number {
+        return n;
+    }
 }
 
 class NumericalBigInt implements Numerical<bigint> {
@@ -25,6 +29,10 @@ class NumericalBigInt implements Numerical<bigint> {
     divide = (x: bigint, y: bigint): bigint => x / y;
     //@ts-ignore
     sqrt = (x: bigint): bigint => math.sqrt(x)
+
+    fromInteger(n: number): bigint {
+        return BigInt(n);
+    }
 
 }
 
@@ -92,16 +100,28 @@ export namespace math {
     }
 
 
+
+    export function normalize(vector: bigint[]): bigint[]
     /**
      * Normalizes a vector.
      * @public
      * @static
-     * @param {number[]} vector1 - The vector to normalize.
-     * @returns {number[]} The normalized vector.
+      * @throws {Error} If the vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.
+     * @param {T[]} vector - The vector to normalize.
+     * @returns {T[]} The normalized vector.
      */
-    export function normalize(vector1: number[]): number[] {
-        let scalar: number = 1 / (Math.sqrt(vector1.map(x => x ** 2).reduce((acc, x) => acc + x)))
-        return vector1.map((entry: number) => entry * scalar)
+    export function normalize<T>(vector: T[], numerical?: Numerical<T>): T[] {
+        if (!numerical) {
+            if (typeof vector[0] === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof vector[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+            }
+        }
+        let scalar: T = numerical.divide(numerical.oneValue, numerical.sqrt(vector.map((x: T) => numerical.multiply(x, x)).reduce((acc: T, x: T) => numerical.add(acc, x), numerical.zeroValue)))
+        return vector.map((entry: T) => numerical.multiply(entry, scalar))
     }
 
 

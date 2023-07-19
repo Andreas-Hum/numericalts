@@ -1,5 +1,5 @@
 
-export default class MatrixError extends Error {
+export class MatrixError extends Error {
     public readonly name: string;
     public readonly timestamp: string;
     public readonly statusCode: number;
