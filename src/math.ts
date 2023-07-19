@@ -2,6 +2,43 @@ import { Constants } from "./constants";
 
 
 
+
+
+
+interface Numerical<T> {
+    zeroValue: T;
+    add(x: T, y: T): T;
+    subtract(x: T, y: T): T;
+    multiply(x: T, y: T): T;
+    divide(x: T, y: T): T;
+    sqrt?(x: T, y: T): T;
+}
+
+class NumericalNumber implements Numerical<number> {
+    zeroValue = 0;
+    add = (x: number, y: number): number => x + y;
+    subtract = (x: number, y: number): number => x - y;
+    multiply = (x: number, y: number): number => x * y;
+    divide = (x: number, y: number): number => x / y;
+    sqrt = (x: number): number => Math.sqrt(x);
+}
+
+class NumericalBigInt implements Numerical<bigint> {
+    zeroValue = BigInt(0);
+    add = (x: bigint, y: bigint): bigint => x + y;
+    subtract = (x: bigint, y: bigint): bigint => x - y;
+    multiply = (x: bigint, y: bigint): bigint => x * y;
+    divide = (x: bigint, y: bigint): bigint => x / y;
+    //@ts-ignore
+    sqrt = (x: bigint): bigint => math.sqrt(x)
+
+}
+
+function isNumeric<T>(x: any): x is Numerical<T> {
+    return x && 'zeroValue' in x && 'add' in x && 'multiply' in x;
+}
+
+
 export namespace math {
     /**
      * Calculates the dot product of two vectors.
@@ -11,12 +48,24 @@ export namespace math {
      * @param {number[]} vector2 - The second vector.
      * @returns {number} The dot product of the two vectors.
      */
-    export function dot(vector1: number[], vector2: number[]): number {
-        let dotProduct: number = 0;
-        for (let i = 0; i < vector1.length; i++) {
-            dotProduct += vector1[i] * vector2[i]
+    export function dot<T>(vector1: T[], vector2: T[], numeric?: Numerical<T>): T {
+        let sum: T;
+        if (vector1[0] instanceof Number) {
+            numeric = new NumericalNumber() as unknown as Numerical<T>;
+            sum = numeric.zeroValue;
+        } else if (vector1[0] instanceof BigInt) {
+            numeric = new NumericalBigInt() as unknown as Numerical<T>;
+            sum = numeric.zeroValue;
+        } else if (numeric && isNumeric(numeric)) {
+            sum = numeric.zeroValue;
+        } else {
+            throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
         }
-        return dotProduct;
+
+        for (let i = 0; i < vector1.length; i++) {
+            sum = numeric.add(sum, numeric.multiply(vector1[i], vector2[i]));
+        }
+        return sum;
     }
 
 
@@ -246,6 +295,59 @@ export namespace math {
         return sign;
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Root operations 
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Calculates the approximate square root of a given bigint value.
+     * @param {bigint} x - The bigint value for which to calculate the square root.
+     * @returns {bigint} The approximate square root of the given value.
+     */
+    export function BigSqrt(x: bigint): bigint {
+        if (x < 2n) {
+            return x;
+        }
+
+        if (x < 16n) {
+            return BigInt(Math.sqrt(Number(x)) | 0);
+        }
+
+        let x0: bigint, x1: bigint;
+        if (x < 4503599627370496n) { // 1n << 52n
+            x1 = BigInt(Math.sqrt(Number(x)) | 0) - 3n;
+        } else {
+            let vlen = x.toString().length;
+            if (!(vlen & 1)) {
+                x1 = 10n ** (BigInt(vlen / 2));
+            } else {
+                x1 = 4n * 10n ** (BigInt((vlen / 2) | 0));
+            }
+        }
+
+        do {
+            x0 = x1;
+            x1 = ((x / x0) + x0) >> 1n;
+        } while (x0 !== x1 && x0 !== (x1 - 1n));
+
+        return x0;
+    }
+
+    /**
+     * Calculates the approximate square root of a given number or bigint value.
+     * @param {number | bigint} x - The number or bigint value for which to calculate the square root.
+     * @returns {number | bigint} The approximate square root of the given value.
+     */
+    export function sqrt(x: number | bigint): number | bigint {
+        if (typeof x === "number") {
+            return Math.sqrt(x) as number;
+        } else {
+            return BigSqrt(x) as bigint;
+        }
+    }
 
 }
 
