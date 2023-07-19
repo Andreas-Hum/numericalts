@@ -7,4 +7,5 @@ export interface Numerical<T> {
     divide(x: T, y: T): T;
     sqrt(x: T): T;
     fromInteger(n: number): T;
+    signOperator(x: T): number;
 }

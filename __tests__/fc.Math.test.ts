@@ -35,22 +35,28 @@ describe('math', () => {
       );
     });
 
-    it('should calculate the dot product correctly', () => {
-      fc.assert(
-        fc.property(fc.array(fc.constantFrom('a', 'x')), fc.array(fc.constantFrom('a', 'x')), (vectorA, vectorB) => {
-          const dotProductResult = math.dot(vectorA, vectorB, stringRep);
 
-          let expectedDotProduct = stringRep.zeroValue;
-          for (let i = 0; i < vectorA.length; i++) {
-            const product = stringRep.multiply(vectorA[i], vectorB[i]);
+    test("should calculate the dot product correctly when given the stringClass", () => {
+      fc.assert(
+        fc.property(fc.array(fc.constantFrom('a', 'x')), (vector) => {
+          const dotProductResult: string = math.dot(vector, vector, stringRep);
+
+          let expectedDotProduct: string = stringRep.zeroValue;
+          for (let i = 0; i < vector.length; i++) {
+            const product: string = stringRep.multiply(vector[i], vector[i]);
             expectedDotProduct = stringRep.add(expectedDotProduct, product);
           }
 
           expect(dotProductResult).toBe(expectedDotProduct);
         })
-      );
-    });
+      )
+    })
+
+
+
+
   });
+
 
 
 

@@ -9,6 +9,7 @@ import { Numerical } from "./@interfaces/numerical";
 class NumericalNumber implements Numerical<number> {
     zeroValue: number = 0;
     oneValue: number = 1;
+
     add = (x: number, y: number): number => x + y;
     subtract = (x: number, y: number): number => x - y;
     multiply = (x: number, y: number): number => x * y;
@@ -18,11 +19,17 @@ class NumericalNumber implements Numerical<number> {
     fromInteger(n: number): number {
         return n;
     }
+
+
+    signOperator(x: number): number {
+        return Math.sign(x);
+    }
 }
 
 class NumericalBigInt implements Numerical<bigint> {
     zeroValue: bigint = BigInt(0);
     oneValue: bigint = BigInt(1);
+
     add = (x: bigint, y: bigint): bigint => x + y;
     subtract = (x: bigint, y: bigint): bigint => x - y;
     multiply = (x: bigint, y: bigint): bigint => x * y;
@@ -33,7 +40,9 @@ class NumericalBigInt implements Numerical<bigint> {
     fromInteger(n: number): bigint {
         return BigInt(n);
     }
-
+    signOperator(x: bigint): number {
+        return x >= BigInt(0) ? 1 : -1;
+    }
 }
 
 
@@ -71,7 +80,7 @@ export namespace math {
     export function dot<T>(vector1: T[], vector2: T[], numerical: Numerical<T>): T;
 
     /**
-     * Implementation of the dot function. Calculates the dot product of two vectors.
+     * Calculates the dot product of two vectors.
      * If no Numerical instance is provided, it defaults to NumericalNumber for number arrays and NumericalBigInt for bigint arrays.
      * @public
      * @param {T[]} vector1 - The first vector.
@@ -91,6 +100,11 @@ export namespace math {
             }
         }
 
+        // Ensure vector1 and vector2 have the same length
+        if (vector1.length !== vector2.length) {
+            throw new Error("Vector lengths do not match.");
+        }
+
         let sum: T = numerical.zeroValue;
 
         for (let i = 0; i < vector1.length; i++) {
@@ -101,6 +115,8 @@ export namespace math {
 
 
 
+    export function normalize(vector: number[]): number[]
+    
     export function normalize(vector: bigint[]): bigint[]
     /**
      * Normalizes a vector.

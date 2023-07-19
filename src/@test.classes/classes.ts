@@ -1,43 +1,10 @@
 import { Numerical } from "../@interfaces/numerical";
 
 
-
-export class NumberClass implements Numerical<number>{
-    zeroValue: number = 0
-    oneValue: number = 1;
-
-    add(x: number, y: number): number {
-        return x + y * 2;
-    }
-
-    subtract(x: number, y: number): number {
-        return x - y * 2;
-    }
-
-    divide(x: number, y: number): number {
-        return x / (2 * y)
-    }
-
-    multiply(x: number, y: number): number {
-        return x * x * y + 2
-    }
-
-    sqrt(x: number): number {
-        return Math.sqrt(x)
-    }
-
-
-    fromInteger(n: number): number {
-        return n;
-    }
-
-}
-
-
-
 export class StringClass implements Numerical<string> {
     zeroValue: string = "a";
     oneValue: string = "x";
+
 
     add(x: string, y: string): string {
         return x += y;
@@ -141,4 +108,13 @@ export class StringClass implements Numerical<string> {
             throw new Error("Invalid integer value for StringClas");
         }
     }
+
+    signOperator(x: string): number {
+        // Compare `x` with `zeroValue`
+        if (x < this.zeroValue) return -1;
+        if (x === this.zeroValue) return 0;
+        return 1; // x > this.zeroValue
+    }
+
 }
+
