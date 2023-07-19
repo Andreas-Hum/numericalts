@@ -1,18 +1,10 @@
 import { Constants } from "./constants";
+import { Numerical } from "./@interfaces/Numerical";
 
 
 
 
 
-
-interface Numerical<T> {
-    zeroValue: T;
-    add(x: T, y: T): T;
-    subtract(x: T, y: T): T;
-    multiply(x: T, y: T): T;
-    divide(x: T, y: T): T;
-    sqrt?(x: T, y: T): T;
-}
 
 class NumericalNumber implements Numerical<number> {
     zeroValue = 0;
@@ -38,8 +30,11 @@ function isNumeric<T>(x: any): x is Numerical<T> {
     return x && 'zeroValue' in x && 'add' in x && 'multiply' in x;
 }
 
-
 export namespace math {
+
+
+
+
     /**
      * Calculates the dot product of two vectors.
      * @public
@@ -50,15 +45,20 @@ export namespace math {
      */
     export function dot<T>(vector1: T[], vector2: T[], numeric?: Numerical<T>): T {
         let sum: T;
-        if (vector1[0] instanceof Number) {
+        if (vector1.length === 0 || vector2.length === 0) {
+            numeric = new NumericalNumber() as unknown as Numerical<T>;
+            return numeric.zeroValue;
+        }
+        if (typeof vector1[0] === "number") {
             numeric = new NumericalNumber() as unknown as Numerical<T>;
             sum = numeric.zeroValue;
-        } else if (vector1[0] instanceof BigInt) {
+        } else if (typeof vector1[0] === "bigint") {
             numeric = new NumericalBigInt() as unknown as Numerical<T>;
             sum = numeric.zeroValue;
         } else if (numeric && isNumeric(numeric)) {
             sum = numeric.zeroValue;
         } else {
+
             throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
         }
 
