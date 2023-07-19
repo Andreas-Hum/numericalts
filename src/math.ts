@@ -17,13 +17,17 @@ class NumericalNumber implements Numerical<number> {
     divide = (x: number, y: number): number => x / y;
     sqrt = (x: number): number => Math.sqrt(x);
 
-    fromInteger(n: number): number {
+    fromNumber(n: number): number {
         return n;
     }
 
 
     signOperator(x: number): number {
         return Math.sign(x);
+    }
+
+    toNumber(n: number): number {
+        return n;
     }
 }
 
@@ -38,11 +42,15 @@ class NumericalBigInt implements Numerical<bigint> {
     //@ts-ignore
     sqrt = (x: bigint): bigint => math.sqrt(x)
 
-    fromInteger(n: number): bigint {
+    fromNumber(n: number): bigint {
         return BigInt(n);
     }
     signOperator(x: bigint): number {
         return x >= BigInt(0) ? 1 : -1;
+    }
+
+    toNumber(n: bigint): number {
+        return Number(n);
     }
 }
 
@@ -276,13 +284,12 @@ export namespace math {
         const sign: number = numerical.signOperator(num);
 
         //if sign is -1, multiply num by -1 to get positive value, otherwise leave num as it is
-        return sign === -1 ? numerical.multiply(num, numerical.fromInteger(-1)) : num;
+        return sign === -1 ? numerical.multiply(num, numerical.fromNumber(-1)) : num;
     }
 
 
 
-
-
+    //TODO: Figure out a way to use these dynamically
 
     /**
      * Calculates the floor of a number
@@ -339,7 +346,7 @@ export namespace math {
         @static
         @param {number} a - The first number.
         @param {number} b - The second number.
-        @returns {number} The GCD of the two numbers. 
+        @returns {number} The GCD of the two numbers.
     */
     export function GCD(a: number, b: number): number {
         if (b === 0) {

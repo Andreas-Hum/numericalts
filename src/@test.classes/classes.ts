@@ -99,13 +99,23 @@ export class StringClass implements Numerical<string> {
         return result;
     }
 
-    fromInteger(n: number): string {
+    fromNumber(n: number): string {
         if (n === 0) {
             return this.zeroValue;
         } else if (n === 1) {
             return this.oneValue;
         } else {
             throw new Error("Invalid integer value for StringClas");
+        }
+    }
+
+    toNumber(n: string): number {
+        if (n === this.zeroValue) {
+            return 0;
+        } else if (n === this.oneValue) {
+            return 1;
+        } else {
+            throw new Error("Invalid string value for ");
         }
     }
 
