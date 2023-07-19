@@ -1,5 +1,5 @@
 
-export  class NumericalError extends Error {
+export class NumericalError extends Error {
     public readonly name: string;
     public readonly timestamp: string;
     public readonly statusCode: number;
@@ -9,9 +9,10 @@ export  class NumericalError extends Error {
         super(message);
         this.name = 'NumericalError';
         this.timestamp = new Date().toISOString();
-        // Matrix Status Codes:
+        // Numerical Status Codes:
 
-      
+        // 901 No appropriate Numeric implementation was provided.
+
 
         this.statusCode = statusCode;
         this.details = details;
