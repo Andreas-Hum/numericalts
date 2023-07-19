@@ -1,5 +1,6 @@
 import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
+import { NumericalError } from "./@error.types";
 
 
 
@@ -54,78 +55,70 @@ export namespace math {
 
 
     /**
-  * Calculates the dot product of two vectors of numbers.
-  * 
-  * The function is an algebraic operation that takes two equal-length sequences of numbers
-  * (usually coordinate vectors) and returns a single number.
-  * 
-  * @public
-  * @static
-  * 
-  * @param {number[]} vector1 - The first vector to calculate the dot product.
-  * @param {number[]} vector2 - The second vector to calculate the dot product.
-  * 
-  * @throws {Error} If the vectors' lengths do not match.
-  * 
-  * @returns {number} A number representing the dot product of the two vectors.
-  * 
-  * @example
-  *
-  *    dot([1, 3, -5], [4, -2, -1]);  // Returns 3
-  * 
-  */
+     * Calculates the dot product of two vectors of numbers.
+     *
+     * The function is an algebraic operation that takes two equal-length sequences of numbers
+     * (usually coordinate vectors) and returns a single number.
+     *
+     * @param {number[]} vector1 - The first vector to calculate the dot product.
+     * @param {number[]} vector2 - The second vector to calculate the dot product.
+     *
+     * @throws {Error} If the vectors' lengths do not match.
+     *
+     * @returns {number} A number representing the dot product of the two vectors.
+     *
+     * @example
+     *
+     *    dot([1, 3, -5], [4, -2, -1]);  // Returns 3
+     *
+     */
     export function dot(vector1: number[], vector2: number[]): number;
 
     /**
      * Calculates the dot product of two vectors of bigints.
-     * 
+     *
      * The function is an algebraic operation that takes two equal-length sequences of bigints
      * (usually coordinate vectors) and returns a single bigint.
-     * 
-     * @public
-     * @static
-     * 
+     *
+     *
      * @param {bigint[]} vector1 - The first vector to calculate the dot product.
      * @param {bigint[]} vector2 - The second vector to calculate the dot product.
-     * 
+     *
      * @throws {Error} If the vectors' lengths do not match.
-     * 
+     *
      * @returns {bigint} A bigint representing the dot product of the two vectors.
-     * 
+     *
      * @example
      *
      *    dot([1n, 3n, -5n], [4n, -2n, -1n]);  // Returns 3n
-     * 
+     *
      */
     export function dot(vector1: bigint[], vector2: bigint[]): bigint;
 
     /**
      * Calculates the dot product of two vectors of a generic type.
-     * 
+     *
      * The function is an algebraic operation that takes two equal-length sequences of generic type
      * (usually coordinate vectors) and returns a single value of type T.
-     * 
-     * @public
-     * @static
-     * 
+     *
      * @template T - The numeric type of the elements in the vector. T is inferred and doesn't need to be supplied manually.
-     * 
+     *
      * @param {T[]} vector1 - The first vector to calculate the dot product.
      * @param {T[]} vector2 - The second vector to calculate the dot product.
-     * @param {Numerical<T>=} numerical - (optional) An instance of Numerical interface for the numeric type T. 
+     * @param {Numerical<T>} numerical - (optional) An instance of Numerical interface for the numeric type T. 
      *    - If not provided, it defaults to NumericalNumber if the vectors are of type number[],
      *      or to NumericalBigInt if the vectors are of type bigint[].
      *    - If vectors are neither of type number[] nor bigint[], a Numerical<T> instance must be provided.
-     * 
-     * @throws {Error} If the vectors' type is neither array of numbers nor bigints, and no Numerical<T> instance was provided.
-     * @throws {Error} If the vectors' lengths do not match.
-     * 
+     *
+     * @throws {NumericalError} If the vectors' type is neither array of numbers nor bigints, and no Numerical<T> instance was provided.
+     * @throws {error} If the vectors' lengths do not match.
+     *
      * @returns {T} A value of type T, representing the dot product of two vectors.
-     * 
+     *
      * @example
      *
      *    dot([1, 3, -5], [4, -2, -1], new Numerical());  // Where Numerical() is an implementation for type T.
-     * 
+     *
      */
     export function dot<T>(vector1: T[], vector2: T[], numerical: Numerical<T>): T;
 
@@ -138,7 +131,7 @@ export namespace math {
             } else if (typeof vector1[0] === "bigint" && typeof vector2[0] === "bigint") {
                 numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+                throw new NumericalError("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.", 901);
             }
         }
 
@@ -159,10 +152,10 @@ export namespace math {
 
     /**
     * Normalizes a vector of numbers.
-    * 
+    *
     * @param {number[]} vector - The vector of numbers to be normalized.
     * @returns {number[]} A new vector that represents the normalized form of the input vector.
-    * 
+    *
     * @example
     *    normalize([3, 4]);  // Returns [0.6, 0.8]
     */
@@ -172,7 +165,7 @@ export namespace math {
      * Normalizes a vector of bigints.
      * @param {bigint[]} vector - The vector of bigints to be normalized.
      * @returns {bigint[]} A new vector that represents the normalized form of the input vector.
-     * 
+     *
      * @example
      *    normalize([3n, 4n]);  // Returns [3n, 4n]
      */
@@ -180,29 +173,29 @@ export namespace math {
 
     /**
      * Normalizes a vector of numeric type T.
-     * 
+     *
      * The function computes the length of the vector and divides each element by the length,
      * thus normalizing the vector to a length/magnitude of 1 or -1.
      * The normalization is done based on the provided numeric type (number/bigint or other, with other requiring a Numerical<T> instance)
-     * 
+     *
      * @template T - The numeric type of the elements in the vector. T is inferred and doesn't need to be supplied manually.
-     * 
+     *
      * @param {T[]} vector - The vector to be normalized.
-     * @param {Numerical<T>=} numerical - (optional) An instance of Numerical interface for the numeric type T. 
+     * @param {Numerical<T>} numerical - (optional) An instance of Numerical interface for the numeric type T. 
      *    - If not provided, it defaults to NumericalNumber if the vector is of type number[],
      *      or to NumericalBigInt if the vector is of type bigint[].
      *    - If vector is neither number[] nor bigint[], a Numerical<T> instance must be provided.
      * 
-     * @throws {Error} If the vector's type is neither number[] nor bigint[], and no Numerical<T> instance was provided.
-     * 
+     * @throws {NumericalError} If the vector's type is neither number[] nor bigint[], and no Numerical<T> instance was provided.
+     *
      * @returns {T[]} A new vector that represents the normalized form of the input vector.
-     * 
+     *
      * @example
-     * 
+     *
      *    normalize([3, 4]);                  // Returns [0.6, 0.8]
      *    normalize([3n, 4n]);                // Returns [3n, 4n]
      *    normalize([3, 4], new Numerical()); // Where Numerical() is an implementation for type T.
-     * 
+     *
      */
     export function normalize<T>(vector: T[], numerical?: Numerical<T>): T[]
 
@@ -234,16 +227,58 @@ export namespace math {
     /**
      * Returns the absolute value of a number.
      *
-     * @param {number} num - The number to calculate the absolute value of.
+     * @param num - The number to calculate the absolute value of.
      * @returns The absolute value of the number.
+     *
+     * @example
+     *    abs(-5);   // Returns 5
      */
-    export function abs(num: number): number {
-        if (num < 0) {
-            return num * -1;
-        } else {
-            return num;
+    export function abs(num: number): number
+
+    /**
+     * Returns the absolute value of a bigint.
+     *
+     * @param num - The bigint to calculate the absolute value of.
+     * @returns The absolute value of the bigint.
+     *
+     * @example
+     *    abs(-5n);   // Returns 5n
+     */
+    export function abs(num: bigint): bigint
+
+    /**
+     * Returns the absolute value of a number of type T.
+     *
+     * @typeparam T - The data type for the numeric operations.
+     * @param {T} num - The number to calculate the absolute value of.
+     * @param {Numerical<T>} numerical - An instance of Numerical<T> interface for the numeric type T.
+     * @returns {T} The absolute value of the number of type T.
+     *
+     * @example
+     *    abs(-5);                        // Returns 5
+     *    abs(-5n);                       // Returns 5n
+     *    abs(-5, new Numerical<number>()); // Where Numerical<number>() is an implementation for numbers.
+     */
+    export function abs<T>(num: T, numerical?: Numerical<T>): T
+
+
+    export function abs<T>(num: T, numerical?: Numerical<T>): T {
+
+        if (!numerical) {
+            if (typeof num === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof num === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+            }
         }
+        const sign: number = numerical.signOperator(num);
+
+        //if sign is -1, multiply num by -1 to get positive value, otherwise leave num as it is
+        return sign === -1 ? numerical.multiply(num, numerical.fromInteger(-1)) : num;
     }
+
 
 
 
