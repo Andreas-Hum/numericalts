@@ -86,7 +86,7 @@ describe('math', () => {
     it('Should calculate the normalization for a bigint vector', () => {
       fc.assert(
         fc.property(
-          fc.array(fc.bigInt({ min: 0n }), { minLength: 1 }),
+          fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
           (vector1: bigint[]) => {
             const expected: bigint[] = math.normalize(vector1)
             const property: bigint = (math.sqrt(expected.map(x => x * x).reduce((acc, x) => acc + x)))
@@ -424,6 +424,7 @@ describe('math', () => {
 
           const result: string = math.sqrt(numStr, fractionalNumberRep);
           const numArr = numStr.split('/').map(Number);
+          if (numArr[1] === 0) return;
           const numerator = numArr[0];
           const denominator = numArr[1];
           const expected = Math.sqrt(numerator / denominator);

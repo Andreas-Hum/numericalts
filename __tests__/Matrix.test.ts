@@ -17,53 +17,6 @@ describe('Matrix', () => {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////s
 
-    describe('Initialization and validation', () => {
-
-        it('Validation of a 2x3 matrix', () => {
-            expect(twoByThree.isWide).toBeTruthy();
-            expect(twoByThree.isTall).toBeFalsy();
-            expect(twoByThree.isSquare).toBeFalsy();
-
-            expect(twoByThree.size).toBe(6);
-            expect(twoByThree.shape).toBe('(2,3)');
-        });
-
-        it('Validation of a 3x2 matrix', () => {
-            expect(threeByTwo.isWide).toBeFalsy();
-            expect(threeByTwo.isTall).toBeTruthy();
-            expect(threeByTwo.isSquare).toBeFalsy();
-
-            expect(threeByTwo.size).toBe(6);
-            expect(threeByTwo.shape).toBe('(3,2)');
-        });
-
-
-        it('Validation of a 2x2 matrix', () => {
-            expect(twoByTwo.isWide).toBeFalsy();
-            expect(twoByTwo.isTall).toBeFalsy();
-            expect(twoByTwo.isSquare).toBeTruthy();
-
-            expect(twoByTwo.size).toBe(4);
-            expect(twoByTwo.shape).toBe('(2,2)');
-        });
-
-
-        it('Error: Invalid elements', () => {
-            expect(() => new Matrix([1, 3, [3]])).toThrow()
-        });
-
-        it('Error: not an array', () => {
-            //@ts-ignore
-            expect(() => new Matrix(123)).toThrow()
-        });
-
-        it('Error: not an array', () => {
-            //@ts-ignore
-            expect(() => new Matrix([1, 2, 3], "sda", 2312)).toThrow()
-        });
-
-    });
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Set and get element

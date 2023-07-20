@@ -60,6 +60,8 @@ export class Matrix<T> implements MatrixInterface<T> {
      */
     dataType: string = ""
 
+    //TODO: add numerical<T> here
+
 
 
     /**
@@ -78,6 +80,9 @@ export class Matrix<T> implements MatrixInterface<T> {
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
 
+            if (entries.length !== rows * columns) {
+                throw new MatrixError("Rows and columns multiplied together has to equal the length of the 1d array", 804);
+            }
             this.valida1Dentries(entries);
             this.mElements = entries;
             this.rows = rows;
@@ -85,15 +90,18 @@ export class Matrix<T> implements MatrixInterface<T> {
             this.size = rows * columns;
         } else {
 
+
+            if (!entries.every((entry: T[]) => Array.isArray(entry))) {
+                throw new MatrixError("Invalid Matrix format", 804);
+            }
+
             const numRows: number = entries.length;
             const numCols: number = entries[0].length;
-            this.mElements = new Array<T>(numRows * numCols);
 
-            for (let i = 0; i < numRows; i++) {
-                for (let j = 0; j < numCols; j++) {
-                    const index: number = i * numCols + j;
-                    this.mElements[index] = entries[i][j];
-                }
+            this.mElements = entries.flat();
+
+            if (this.mElements.some((entry: T) => Array.isArray(entry))) {
+                throw new MatrixError("Matrix cannot be of a depth greater than one", 804);
             }
 
             this.valida1Dentries(this.mElements);
@@ -172,7 +180,6 @@ export class Matrix<T> implements MatrixInterface<T> {
             for (let i = 0; i < entries.length; i++) {
 
                 if (this.getType(entries[i]) !== typeName) {
-                    console.log(entries[15])
                     throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
                 }
             }
