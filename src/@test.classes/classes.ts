@@ -1,130 +1,118 @@
 import { Numerical } from "../@interfaces/numerical";
+import { math } from "../math"
 
 
-export class StringClass implements Numerical<string> {
-    zeroValue: string = "a";
-    oneValue: string = "x";
+export class FractionalNumberClass implements Numerical<string> {
+    // Custom mapping for fractions as strings
+    private customMapping: Record<string, number> = {};
 
+    zeroValue: string = "0/1";
+    oneValue: string = "1/1";
 
     add(x: string, y: string): string {
-        return x += y;
+        const [xNum, xDenom] = x.split('/').map(Number);
+        const [yNum, yDenom] = y.split('/').map(Number);
+
+        const resultNum = xNum * yDenom + yNum * xDenom;
+        const resultDenom = xDenom * yDenom;
+
+        const gcd = this.gcd(resultNum, resultDenom);
+        const simplifiedNum = resultNum / gcd;
+        const simplifiedDenom = resultDenom / gcd;
+
+        return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
     subtract(x: string, y: string): string {
-        // Use the replace method to remove the substring y from x
-        const result = x.split(y).join('');
+        const [xNum, xDenom] = x.split('/').map(Number);
+        const [yNum, yDenom] = y.split('/').map(Number);
 
-        return result;
+        const resultNum = xNum * yDenom - yNum * xDenom;
+        const resultDenom = xDenom * yDenom;
+
+        const gcd = this.gcd(resultNum, resultDenom);
+        const simplifiedNum = resultNum / gcd;
+        const simplifiedDenom = resultDenom / gcd;
+
+        return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
     multiply(x: string, y: string): string {
-        // Check for zeroValue or oneValue cases
-        if (x === this.zeroValue || y === this.zeroValue) {
-            return this.zeroValue;
-        }
+        const [xNum, xDenom] = x.split('/').map(Number);
+        const [yNum, yDenom] = y.split('/').map(Number);
 
-        if (x === this.oneValue) {
-            return y;
-        }
+        const resultNum = xNum * yNum;
+        const resultDenom = xDenom * yDenom;
 
-        if (y === this.oneValue) {
-            return x;
-        }
+        const gcd = this.gcd(resultNum, resultDenom);
+        const simplifiedNum = resultNum / gcd;
+        const simplifiedDenom = resultDenom / gcd;
 
-        // Handle regular multiplication
-        const result: string[] = [];
-        for (let i = 0; i < x.length; i++) {
-            for (let j = 0; j < y.length; j++) {
-                result.push(this.oneValue);
-            }
-        }
-
-        return result.join('');
+        return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
     divide(x: string, y: string): string {
+        const [xNum, xDenom] = x.split('/').map(Number);
+        const [yNum, yDenom] = y.split('/').map(Number);
+
         // Check for division by zero
-        if (y === this.zeroValue) {
+        if (yNum === 0) {
             throw new Error("Division by zero is not allowed.");
         }
 
-        // Check for zeroValue cases
-        if (x === this.zeroValue) {
-            return this.zeroValue;
-        }
+        const resultNum = xNum * yDenom;
+        const resultDenom = xDenom * yNum;
 
-        if (y === this.oneValue) {
-            return x;
-        }
+        const gcd = this.gcd(resultNum, resultDenom);
+        const simplifiedNum = resultNum / gcd;
+        const simplifiedDenom = resultDenom / gcd;
 
-        // Handle regular division
-        const xLength = x.length;
-        const yLength = y.length;
-
-        if (xLength < yLength) {
-            // If x is shorter than y, the result is zero
-            return this.zeroValue;
-        }
-
-        // Find the quotient by repeated subtraction of y from x
-        let quotient = this.zeroValue;
-        let temp = x;
-        while (temp.length >= yLength) {
-            temp = this.subtract(temp, y);
-            quotient = this.add(quotient, this.oneValue);
-        }
-
-        return quotient;
+        return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
     sqrt(x: string): string {
         // Handle zeroValue and oneValue cases
-        if (x === this.zeroValue) {
-            return this.zeroValue;
+        if (x === this.zeroValue || x === this.oneValue) {
+            return x;
         }
 
-        if (x === this.oneValue) {
-            return this.oneValue;
-        }
+        // Convert the string representation to the numerator and denominator
+        const [num, denom] = x.split('/').map(Number);
 
-        // Convert the string to a numeric value (approximated by its length)
-        const numericValue = x.length;
+        // Calculate the square root of the numerator and denominator
+        const sqrtNum = Math.sqrt(num);
+        const sqrtDenom = Math.sqrt(denom);
 
-        // Calculate the square root of the numeric value
-        const sqrtNumericValue = Math.sqrt(numericValue);
+        // Find the greatest common divisor and simplify the result
+        const gcd = this.gcd(sqrtNum, sqrtDenom);
+        const simplifiedNum = sqrtNum / gcd;
+        const simplifiedDenom = sqrtDenom / gcd;
 
-        // Approximate the square root as a string by repeating the "oneValue" character
-        const result = this.oneValue.repeat(Math.floor(sqrtNumericValue));
-
-        return result;
+        return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
     fromNumber(n: number): string {
-        if (n === 0) {
-            return this.zeroValue;
-        } else if (n === 1) {
-            return this.oneValue;
-        } else {
-            throw new Error("Invalid integer value for StringClas");
-        }
+        // Convert the number to a fraction with denominator 1
+        return `${n}/1`;
     }
 
     toNumber(n: string): number {
-        if (n === this.zeroValue) {
-            return 0;
-        } else if (n === this.oneValue) {
-            return 1;
-        } else {
-            throw new Error("Invalid string value for ");
-        }
+        // Convert the fraction to a numeric value
+        const [num, denom] = n.split('/').map(Number);
+        return num / denom;
     }
 
     signOperator(x: string): number {
         // Compare `x` with `zeroValue`
-        if (x < this.zeroValue) return -1;
-        if (x === this.zeroValue) return 0;
-        return 1; // x > this.zeroValue
+        const [num, denom] = x.split('/').map(Number);
+        const value = num / denom;
+
+        if (value < 0) return -1;
+        if (value === 0) return 0;
+        return 1; // value > 0
     }
 
+    private gcd(a: number, b: number): number {
+        return math.GCD(a, b)
+    }
 }
-

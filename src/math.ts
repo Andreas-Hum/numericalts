@@ -1,58 +1,6 @@
 import { Constants } from "./constants";
-import { Numerical } from "./@interfaces/numerical";
+import { Numerical, NumericalNumber, NumericalBigInt } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
-
-
-
-
-
-
-class NumericalNumber implements Numerical<number> {
-    zeroValue: number = 0;
-    oneValue: number = 1;
-
-    add = (x: number, y: number): number => x + y;
-    subtract = (x: number, y: number): number => x - y;
-    multiply = (x: number, y: number): number => x * y;
-    divide = (x: number, y: number): number => x / y;
-    sqrt = (x: number): number => Math.sqrt(x);
-
-    fromNumber(n: number): number {
-        return n;
-    }
-
-
-    signOperator(x: number): number {
-        return Math.sign(x);
-    }
-
-    toNumber(n: number): number {
-        return n;
-    }
-}
-
-class NumericalBigInt implements Numerical<bigint> {
-    zeroValue: bigint = BigInt(0);
-    oneValue: bigint = BigInt(1);
-
-    add = (x: bigint, y: bigint): bigint => x + y;
-    subtract = (x: bigint, y: bigint): bigint => x - y;
-    multiply = (x: bigint, y: bigint): bigint => x * y;
-    divide = (x: bigint, y: bigint): bigint => x / y;
-    //@ts-ignore
-    sqrt = (x: bigint): bigint => math.sqrt(x)
-
-    fromNumber(n: number): bigint {
-        return BigInt(n);
-    }
-    signOperator(x: bigint): number {
-        return x >= BigInt(0) ? 1 : -1;
-    }
-
-    toNumber(n: bigint): number {
-        return Number(n);
-    }
-}
 
 
 
@@ -133,6 +81,14 @@ export namespace math {
 
 
     export function dot<T>(vector1: T[], vector2: T[], numerical?: Numerical<T>): T {
+
+        // Ensure vector1 and vector2 have the same length
+        if (vector1.length !== vector2.length) {
+            throw new Error("Vector lengths do not match.");
+        } else if (vector1.length === 0) {
+            throw new Error("Vector length can't be 0.")
+        }
+
         if (!numerical) {
             if (typeof vector1[0] === "number" && typeof vector2[0] === "number") {
                 numerical = new NumericalNumber() as unknown as Numerical<T>;
@@ -143,10 +99,6 @@ export namespace math {
             }
         }
 
-        // Ensure vector1 and vector2 have the same length
-        if (vector1.length !== vector2.length) {
-            throw new Error("Vector lengths do not match.");
-        }
 
         let sum: T = numerical.zeroValue;
 
@@ -209,6 +161,10 @@ export namespace math {
 
 
     export function normalize<T>(vector: T[], numerical?: Numerical<T>): T[] {
+        if (vector.length === 0) {
+            throw new Error("Vector length can't be 0.")
+        }
+
         if (!numerical) {
             if (typeof vector[0] === "number") {
                 numerical = new NumericalNumber() as unknown as Numerical<T>;
@@ -218,8 +174,13 @@ export namespace math {
                 throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
             }
         }
-        let scalar: T = numerical.divide(numerical.oneValue, numerical.sqrt(vector.map((x: T) => numerical.multiply(x, x)).reduce((acc: T, x: T) => numerical.add(acc, x), numerical.zeroValue)))
-        return vector.map((entry: T) => numerical.multiply(entry, scalar))
+        let squaredValues = vector.map((value: T) => numerical.multiply(value, value));
+        let sumOfSquares = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
+        if (sumOfSquares === numerical.zeroValue) {
+            throw new Error("Can't normalize a zero vector")
+        }
+        let scalar: T = numerical.divide(numerical.oneValue, numerical.sqrt(sumOfSquares));
+        return vector.map((entry: T) => numerical.multiply(entry, scalar));
     }
 
 
@@ -284,7 +245,6 @@ export namespace math {
         }
         const sign: number = numerical.signOperator(x);
 
-        //if sign is -1, multiply num by -1 to get positive value, otherwise leave num as it is
         return sign === -1 ? numerical.multiply(x, numerical.fromNumber(-1)) : x;
     }
 
@@ -524,6 +484,7 @@ export namespace math {
      *    BigSqrt(100n);   // Returns 10n
      */
     export function BigSqrt(x: bigint): bigint {
+
         if (x < 2n) {
             return x;
         }
@@ -595,6 +556,10 @@ export namespace math {
             } else {
                 throw new NumericalError("x is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
             }
+        }
+
+        if (numerical.zeroValue === x) {
+            return numerical.zeroValue;
         }
 
         return numerical.sqrt(x);

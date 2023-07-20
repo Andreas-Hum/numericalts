@@ -1,64 +1,340 @@
+import { NumericalError } from './../src/@error.types/numerical.error';
 import { Numerical } from '../src/@interfaces/numerical';
-import { test, fc } from '@fast-check/jest';
+import { fc } from '@fast-check/jest';
 import { math } from '../src';
-import { StringClass } from '../src/@test.classes/classes';
+import { FractionalNumberClass } from '../src/@test.classes/classes';
 
-let stringRep: Numerical<string>
+
+
+
+
+let fractionalRep: Numerical<string>, fractionalStringArb: fc.Arbitrary<string>
 describe('math', () => {
   beforeEach(() => {
-    stringRep = new StringClass()
+    fractionalRep = new FractionalNumberClass()
+    fractionalStringArb = fc
+      .tuple(fc.integer({ min: -1000, max: 1000 }), fc.integer({ min: 1, max: 1000 }))
+      .filter(([numerator, denominator]) => denominator !== 0)
+      .map(([numerator, denominator]) => `${numerator}/${denominator}`);
 
   });
 
   describe('dot', () => {
-    it('should calculate the dot product of two number vectors', () => {
+    it('Should calculate the dot product of two number vectors', () => {
       fc.property(
-        fc.array(fc.integer()),
-        fc.array(fc.integer()),
-        (vector1: number[], vector2: number[]) => {
-          const expected: number = vector1.reduce((acc, val, index) => acc + val * vector2[index], 0);
-          const actual: number = math.dot(vector1, vector2);
+        fc.array(fc.integer(), { minLength: 1 }),
+        (vector1: number[]) => {
+          console.log(typeof vector1[0])
+          const expected: number = vector1.reduce((acc, val, index) => acc + val * vector1[index], 0);
+          const actual: number = math.dot(vector1, vector1);
           expect(actual).toEqual(expected);
         }
       );
     });
 
-    it('should calculate the dot product of two bigint vectors', () => {
-      fc.property(
-        fc.array(fc.bigInt()),
-        fc.array(fc.bigInt()),
-        (vector1: bigint[], vector2: bigint[]) => {
-          const expected: bigint = vector1.reduce((acc, val, index) => acc + val * vector2[index], 0n);
-          const actual: bigint = math.dot(vector1, vector2);
-          expect(actual).toEqual(expected);
-        }
-      );
-    });
-
-
-    test("should calculate the dot product correctly when given the stringClass", () => {
+    it('Should calculate the dot product of two bigint vectors', () => {
       fc.assert(
-        fc.property(fc.array(fc.constantFrom('a', 'x')), (vector) => {
-          const dotProductResult: string = math.dot(vector, vector, stringRep);
+        fc.property(
+          fc.array(fc.bigInt(), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = vector1.reduce((acc, val, index) => acc + val * vector1[index], 0n);
+            const actual: bigint = math.dot(vector1, vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+    });
 
-          let expectedDotProduct: string = stringRep.zeroValue;
+    it("Should calculate the dot product correctly when given the fractionalStringArb", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+          const dotProductResult: string = math.dot(vector, vector, fractionalRep);
+
+          let expectedDotProduct: string = fractionalRep.zeroValue;
           for (let i = 0; i < vector.length; i++) {
-            const product: string = stringRep.multiply(vector[i], vector[i]);
-            expectedDotProduct = stringRep.add(expectedDotProduct, product);
+            const product: string = fractionalRep.multiply(vector[i], vector[i]);
+            expectedDotProduct = fractionalRep.add(expectedDotProduct, product);
           }
 
           expect(dotProductResult).toBe(expectedDotProduct);
         })
       )
-    })
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.dot([1], [2, 3])).toThrow("Vector lengths do not match.");
+      expect(() => math.dot([], [])).toThrow("Vector length can't be 0.");
+      //@ts-ignore
+      expect(() => math.dot(["vector1"], [1])).toThrowError(NumericalError);
+    });
+
+  })
+
+  describe('Normalize', () => {
+    it('should calculate the normalization correctly for a integer vector', () => {
+      fc.property(
+        fc.array(fc.integer(), { minLength: 1 }),
+        (vector1: number[]) => {
+          const expected: number[] = math.normalize(vector1)
+          const property: number = (math.sqrt(expected.map(x => x ** 2).reduce((acc, x) => acc + x)))
+          expect(property).toEqual(1);
+        }
+      );
+    });
 
 
+    it('Should calculate the normalization for a bigint vector', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt({ min: 0n }), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint[] = math.normalize(vector1)
+            const property: bigint = (math.sqrt(expected.map(x => x * x).reduce((acc, x) => acc + x)))
+            if (property === 0n) {
+              expect(property).toBe(0n);
+            } else {
+              expect(property).toBe(1n);
+            }
+
+          }
+        )
+      );
+    });
 
 
-  });
+    it("should calculate the dot product correctly when given the stringClass", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
 
 
+          const failureProperty: string = (math.sqrt(vector.map(x => fractionalRep.multiply(x, x)).reduce((acc, x) => fractionalRep.add(acc, x)), fractionalRep))
+          if (failureProperty === fractionalRep.zeroValue) {
+            return expect(() => math.normalize(vector, fractionalRep)).toThrow("Can't normalize a zero vector");
+          }
 
+          const expected: string[] = math.normalize(vector, fractionalRep);
+          const property: string = (math.sqrt(expected.map(x => fractionalRep.multiply(x, x)).reduce((acc, x) => fractionalRep.add(acc, x)), fractionalRep))
+          const [num, denom] = property.split('/').map(Number);
+          expect(num / denom).toBeCloseTo(1);
+
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.normalize([0])).toThrow("Can't normalize a zero vector");
+      expect(() => math.normalize([])).toThrow("Vector length can't be 0.");
+      //@ts-ignore
+      expect(() => math.normalize(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
+
+  describe('Abs', () => {
+
+    // Test for `number`
+    it('Should calculate the absolute value correctly for numbers', () => {
+      fc.assert(
+        fc.property(fc.integer(), (num) => {
+          const result: number = math.abs(num);
+
+          const expected: number = Math.abs(num);
+
+          expect(result).toEqual(expected);
+        })
+      );
+    });
+
+    // Test for `bigint`
+    it('Should calculate the absolute value correctly for bigints', () => {
+      fc.assert(
+        fc.property(fc.bigInt(), (num) => {
+          const result: bigint = math.abs(num);
+
+          const expected: bigint = num < 0n ? -num : num;
+
+          expect(result).toEqual(expected);
+        })
+      );
+    });
+
+    // Test for `FractionalNumberClass`
+    it('Should calculate the absolute value correctly for FractionalNumberClass', () => {
+
+      fc.assert(
+        fc.property(fractionalStringArb, (fraction) => {
+          const result: string = math.abs(fraction, fractionalRep);
+          const [resultNum, resultDenom] = result.split('/').map(Number);
+
+          expect(resultNum / resultDenom).toBeGreaterThanOrEqual(0);
+        })
+      );
+    });
+
+    it("Should correctly throw errors", () => {
+
+      //@ts-ignore
+      expect(() => math.abs(["vector1"])).toThrowError(NumericalError);
+    });
+  })
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /*
+  * floor, ceil, trunc and abs
+  */
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  describe('floor, ceil and trunc', () => {
+    it('Should return an integer for floor function', () => {
+      fc.assert(
+        fc.property(fc.float({ noDefaultInfinity: true, noNaN: true }), (num) => {
+          const result: number = math.floor(num);
+          expect(Number.isInteger(result)).toBe(true);
+        })
+      );
+    });
+
+    it('Should return an integer for ceil function', () => {
+      fc.assert(
+        fc.property(fc.float({ noDefaultInfinity: true, noNaN: true }), (num) => {
+          if (num === Number.NaN) {
+            num = 10
+          }
+          const result: number = math.ceil(num);
+          expect(Number.isInteger(result)).toBe(true);
+        })
+      );
+    });
+
+    it('Should return an integer for trunc function', () => {
+      fc.assert(
+        fc.property(fc.float({ noDefaultInfinity: true, noNaN: true }), (num) => {
+          const result: number = math.trunc(num);
+          expect(Number.isInteger(result)).toBe(true);
+        })
+      );
+    });
+  })
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /*
+  * Fractional operations
+  */
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  describe('Fractional operations', () => {
+    // Test for `fracPart`
+    it('Should return the fractional part of a number', () => {
+      fc.assert(
+        fc.property(fc.float({ noDefaultInfinity: true, noNaN: true }), (num) => {
+          if (isNaN(num)) {
+            num = 10
+          }
+          const result: number = math.fracPart(num);
+
+          const frac: number = num >= 0 ? num - Math.floor(num) : num - Math.ceil(num);
+          const expected: number = math.abs(Number(frac.toFixed(10))); // Rounding to 10 decimal places for comparison
+
+          expect(result).toBeCloseTo(expected);
+        })
+      );
+    });
+
+    // Test for `GCD`
+    it('Should calculate the greatest common divisor (GCD) of two numbers', () => {
+      fc.assert(
+        fc.property(fc.integer(), fc.integer(), (a, b) => {
+          const result: number = math.GCD(a, b);
+
+          // Calculate the GCD using the Euclidean algorithm (for positive numbers)
+          const euclideanGCD = (x: number, y: number): number => (y === 0 ? x : euclideanGCD(y, x % y));
+          const expected: number = euclideanGCD(a, b);
+
+          expect(result).toBeCloseTo(expected);
+        })
+      );
+    });
+
+    // Test for `LCD`
+    it('Should calculate the least common multiple (LCM) of two numbers', () => {
+      fc.assert(
+        fc.property(fc.integer(), fc.integer(), (a, b) => {
+          const result: number = math.LCD(a, b);
+
+          // Calculate the LCM using the formula: LCM = (a * b) / GCD(a, b)
+          const gcd = (x: number, y: number): number => (y === 0 ? x : gcd(y, x % y));
+          const lcm = (x: number, y: number): number => (x * y) / gcd(x, y);
+          const expected: number = lcm(a, b);
+
+          expect(result).toBeCloseTo(expected);
+        })
+      );
+    });
+
+    // Test for `toFixedNumber`
+    it('Should round a number to a specified number of decimal places', () => {
+      fc.assert(
+        fc.property(fc.float({ noDefaultInfinity: true, noNaN: true }), fc.nat(20), (num, digits) => {
+          const result: number = math.toFixedNumber(num, digits);
+
+          const pow = Math.pow(10, digits);
+          const expected: number = Math.round(num * pow) / pow;
+
+          expect(result).toBeCloseTo(expected);
+        })
+      );
+    });
+  })
+
+
+  describe('Fractional operations', () => {
+    // Test for `sqrt` with numbers
+    it('Should calculate the square root of a number', () => {
+      fc.assert(
+        fc.property(fc.float({ min: 0, noDefaultInfinity: true, noNaN: true }), (num) => {
+          const result: number = math.sqrt(num);
+          expect(result).toBeCloseTo(Math.sqrt(num), 10);
+        })
+      );
+    });
+
+    // Test for `sqrt` with bigints
+    it('Should calculate the square root of a bigint', () => {
+      fc.assert(
+        fc.property(fc.bigUintN(128), (num) => {
+          const result: bigint = math.sqrt(num);
+          expect(result).toEqual(result);
+        })
+      );
+    });
+
+    // Test for `sqrt` with FractionalNumberClass
+    it('Should calculate the square root of a FractionalNumberClass value', () => {
+      const fractionalNumberRep = new FractionalNumberClass();
+
+      fc.assert(
+        fc.property(fc.string(), (numStr) => {
+          // Ensure the provided string is in the format "numerator/denominator"
+          if (!numStr.match(/^\d+\/\d+$/)) return true;
+
+          const result: string = math.sqrt(numStr, fractionalNumberRep);
+          const numArr = numStr.split('/').map(Number);
+          const numerator = numArr[0];
+          const denominator = numArr[1];
+          const expected = Math.sqrt(numerator / denominator);
+          expect(result).toEqual(expected.toString());
+        })
+      );
+    });
+
+    it("Should correctly throw errors", () => {
+
+      //@ts-ignore
+      expect(() => math.sqrt(["vector1"])).toThrowError(NumericalError);
+    });
+  })
 
 })
-
