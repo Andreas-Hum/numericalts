@@ -380,9 +380,6 @@ export namespace math {
      * Returns the number of decimal places in a given number.
      * @param {number} num - The number to count the decimal places of.
      * @returns {number} The number of decimal places in the given number.
-     * @example
-     *    countDecimals(3.14);    // Returns 2
-     *    countDecimals(10);      // Returns 0
      */
     export function countDecimals(num: number): number {
         if (Number.isInteger(num)) {
@@ -392,20 +389,51 @@ export namespace math {
         }
     }
 
+
     /**
-     * Checks if two numbers are approximately equal within a specified tolerance.
-     * @param {number} x - The first number to compare.
-     * @param {number} y - The second number to compare.
-     * @param {number} tolerance - The maximum difference allowed between the numbers. Defaults to Number.EPSILON.
+    * Checks if two numbers are approximately equal within a specified tolerance.
+    * @param {number} x - The first number to compare.
+    * @param {number} y - The second number to compare.
+    * @param {number} tolerance - The maximum difference allowed between the numbers. Defaults to Constants.DELTA (for regular numbers) or 0n (for bigints).
+    * @returns {boolean} 'true' if the numbers are approximately equal, 'false' otherwise.
+    * @example
+    *    equal(3.14159, 3.14, 0.01);    // Returns true
+    *    equal(10, 15, 0.1);            // Returns false
+    */
+    export function equal(x: number, y: number, tolerance?: number): boolean
+
+    /**
+    * Checks if two bigints are approximately equal within a specified tolerance.
+    * @param {bigint} x - The first bigint to compare.
+    * @param {bigint} y - The second bigint to compare.
+    * @param {bigint} tolerance - The maximum difference allowed between the numbers. Defaults to 0n .
+    * @returns {boolean} 'true' if the bigint are approximately equal, 'false' otherwise.
+    * @example
+    *    equal(2233n, 2233n, 0n);        // Returns true
+    *    equal(10n, 15n, 1n);            // Returns false
+    */
+    export function equal(x: bigint, y: bigint, tolerance?: bigint): boolean
+
+
+    /**
+     * Checks if two numbers (or bigints) are approximately equal within a specified tolerance.
+     * @param {number | bigint} x - The first number to compare.
+     * @param {number | bigint} y - The second number to compare.
+     * @param {number | bigint} tolerance - The maximum difference allowed between the numbers. Defaults to Constants.DELTA (for regular numbers) or 0n (for bigints).
      * @returns {boolean} 'true' if the numbers are approximately equal, 'false' otherwise.
      * @example
-     *    equal(3.14159, 3.14, 0.01);    // Returns true
+     *    equal(3.14159, 3.14, 0.01);     // Returns true
      *    equal(10, 15, 0.1);             // Returns false
+     *    equal(2233n, 2233n, 0n);        // Returns true
+     *    equal(10n, 15n, 1n);            // Returns false
      */
-    export function equal(x: number, y: number, tolerance: number = Constants.DELTA): boolean {
-        return math.abs(x - y) < tolerance;
-    }
+    export function equal(x: number | bigint, y: number | bigint, tolerance: number | bigint = Constants.DELTA): boolean {
+        if (typeof x === 'bigint' && typeof y === 'bigint') {
+            return math.abs(x - y) < (typeof tolerance === 'bigint' ? tolerance : 0n);
+        }
 
+        return Math.abs(Number(x) - Number(y)) < (typeof tolerance === 'number' ? tolerance : Constants.DELTA);
+    }
     /**
      * Checks if a given number is a power of two.
      * @public
@@ -416,7 +444,37 @@ export namespace math {
      *    isPowerOfTwo(4);     // Returns true
      *    isPowerOfTwo(10);    // Returns false
      */
-    export function isPowerOfTwo(n: number): boolean {
+    export function isPowerOfTwo(n: number): boolean;
+
+    /**
+     * Checks if a given bigint is a power of two.
+     * @public
+     * @static
+     * @param {bigint} n - The bigint to check.
+     * @returns {boolean} 'true' if the bigint is a power of two, 'false' otherwise.
+     * @example
+     *    isPowerOfTwo(4n);     // Returns true
+     *    isPowerOfTwo(10n);    // Returns false
+     */
+    export function isPowerOfTwo(n: bigint): boolean;
+
+    /**
+     * Checks if a given number (or bigint) is a power of two.
+     * @public
+     * @static
+     * @param {number | bigint} n - The number to check.
+     * @returns {boolean} 'true' if the number is a power of two, 'false' otherwise.
+     * @example
+     *    isPowerOfTwo(4);     // Returns true
+     *    isPowerOfTwo(10);    // Returns false
+     *    isPowerOfTwo(4n);    // Returns true
+     *    isPowerOfTwo(10n);   // Returns false
+     */
+    export function isPowerOfTwo(n: number | bigint): boolean {
+        if (typeof n === 'bigint') {
+            return (n & (n - 1n)) === 0n;
+        }
+
         return (n & (n - 1)) === 0;
     }
 
@@ -430,18 +488,59 @@ export namespace math {
      *    nextPowerOfTwo(6);     // Returns 8
      *    nextPowerOfTwo(15);    // Returns 16
      */
-    export function nextPowerOfTwo(n: number): number {
-        let count: number = 0;
+    export function nextPowerOfTwo(n: number): number;
 
-        if (n > 0 && (n & (n - 1)) === 0)
+    /**
+     * Method used to find the next power of two for a given bigint.
+     * @public
+     * @static
+     * @param {bigint} n - The bigint for which to find the next power of two.
+     * @returns {bigint} The next power of two for the given bigint.
+     * @example
+     *    nextPowerOfTwo(6n);     // Returns 8n
+     *    nextPowerOfTwo(15n);    // Returns 16n
+     */
+    export function nextPowerOfTwo(n: bigint): bigint;
+
+    /**
+     * Method used to find the next power of two for a given number (or bigint).
+     * @public
+     * @static
+     * @param {number | bigint} n - The number for which to find the next power of two.
+     * @returns {number | bigint} The next power of two for the given number (or bigint).
+     * @example
+     *    nextPowerOfTwo(6);     // Returns 8
+     *    nextPowerOfTwo(15);    // Returns 16
+     *    nextPowerOfTwo(6n);    // Returns 8n
+     *    nextPowerOfTwo(15n);   // Returns 16n
+     */
+    export function nextPowerOfTwo(n: number | bigint): number | bigint {
+        let count = 0;
+
+        if (typeof n === 'bigint') {
+            if (n > 0n && (n & (n - 1n)) === 0n) {
+                return n;
+            }
+
+            while (n !== 0n) {
+                n >>= 1n;
+                count += 1;
+            }
+
+            // Return next power of 2 as bigint
+            return 1n << BigInt(count);
+        }
+
+        if (n > 0 && (n & (n - 1)) === 0) {
             return n;
+        }
 
         while (n !== 0) {
             n >>= 1;
             count += 1;
         }
 
-        // Return next power of 2
+        // Return next power of 2 as number
         return 1 << count;
     }
 
@@ -456,17 +555,56 @@ export namespace math {
      *    sign(0);     // Returns 0
      *    sign(10);    // Returns 1
      */
-    export function sign(num: number): number {
-        let sign: number = 0;
+    export function sign(num: number): number;
 
-        if (num < 0) {
-            sign = -1;
-        } else if (num > 0) {
-            sign = 1;
+    /**
+     * Returns the sign of a bigint.
+     * @public
+     * @static
+     * @param {bigint} num - The bigint to determine the sign of.
+     * @returns {number} The sign of the bigint: -1 if negative, 0 if zero, 1 if positive.
+     * @example
+     *    sign(-5n);    // Returns -1
+     *    sign(0n);     // Returns 0
+     *    sign(10n);    // Returns 1
+     */
+    export function sign(num: bigint): number;
+
+    /**
+     * Returns the sign of a number (or bigint).
+     * @public
+     * @static
+     * @param {number | bigint} num - The number to determine the sign of.
+     * @returns {number} The sign of the number (or bigint): -1 if negative, 0 if zero, 1 if positive.
+     * @example
+     *    sign(-5);     // Returns -1
+     *    sign(0);      // Returns 0
+     *    sign(10);     // Returns 1
+     *    sign(-5n);    // Returns -1
+     *    sign(0n);     // Returns 0
+     *    sign(10n);    // Returns 1
+     */
+    export function sign(num: number | bigint): number {
+        if (typeof num === 'bigint') {
+            if (num === 0n) {
+                return 0;
+            } else if (num > 0n) {
+                return 1;
+            } else {
+                return -1;
+            }
         }
 
-        return sign;
+        if (num === 0) {
+            return 0;
+        } else if (num > 0) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*

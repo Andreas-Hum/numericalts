@@ -2,7 +2,7 @@ import { NumericalError } from './../src/@error.types/numerical.error';
 import { Numerical } from '../src/@interfaces/numerical';
 import { fc } from '@fast-check/jest';
 import { math } from '../src';
-import { FractionalNumberClass } from '../src/@test.classes/classes';
+import { FractionalNumberClass } from '../src/@t.classes/classes';
 
 
 
@@ -290,7 +290,109 @@ describe('math', () => {
   })
 
 
-  describe('Fractional operations', () => {
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /*
+  * Utility functions
+  */
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  describe('Utility functions', () => {
+
+    it("should return 2", () => {
+      expect(math.countDecimals(1.22)).toBe(2);
+    });
+
+    it("should return 3", () => {
+      expect(math.countDecimals(-3.456)).toBe(3);
+    });
+
+    it("should return 0 ", () => {
+      expect(math.countDecimals(5)).toBe(0);
+    });
+
+    it("should return 4", () => {
+      expect(math.countDecimals(2.3456)).toBe(4);
+    });
+
+
+    // Test for 'equal' function
+    it('equal - numbers', () => {
+      fc.assert(
+        fc.property(fc.double({ noDefaultInfinity: true, noNaN: true }), fc.double({ noDefaultInfinity: true, noNaN: true }), fc.double({ min: 0.01, max: 10 }), (a, b, tolerance) => {
+          return math.equal(a, b, tolerance) === Math.abs(a - b) < tolerance;
+        })
+      );
+    });
+
+    it('equal - bigints', () => {
+      fc.assert(
+        fc.property(fc.bigInt(), fc.bigInt(), fc.bigInt({ min: 0n, max: 100n }), (a, b, tolerance) => {
+          return math.equal(a, b, tolerance) === math.abs(a - b) < tolerance;
+        })
+      );
+    });
+
+    // Test for 'isPowerOfTwo' function
+    it('isPowerOfTwo - numbers', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 0, max: 1000 }), (n) => {
+          return math.isPowerOfTwo(n) === ((n & (n - 1)) === 0);
+        })
+      );
+    });
+
+    it('isPowerOfTwo - bigints', () => {
+      fc.assert(
+        fc.property(fc.bigInt({ min: 0n, max: 1000n }), (n) => {
+          return math.isPowerOfTwo(n) === ((n & (n - 1n)) === 0n);
+        })
+      );
+    });
+
+    // Test for 'nextPowerOfTwo' function
+    it('nextPowerOfTwo - numbers', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 0, max: 1000 }), (n) => {
+          const result = math.nextPowerOfTwo(n);
+          return typeof result === 'number' && (result & (result - 1)) === 0;
+        })
+      );
+    });
+
+    it('nextPowerOfTwo - bigints', () => {
+      fc.assert(
+        fc.property(fc.bigInt({ min: 0n, max: 1000n }), (n) => {
+          const result = math.nextPowerOfTwo(n);
+          return typeof result === 'bigint' && (result & (result - 1n)) === 0n;
+        })
+      );
+    });
+
+    // Test for 'sign' function
+    it('sign - numbers', () => {
+      fc.assert(
+        fc.property(fc.integer(), (n) => {
+          return math.sign(n) === Math.sign(n);
+        })
+      );
+    });
+
+    it('sign - bigints', () => {
+      fc.assert(
+        fc.property(fc.bigInt(), (n) => {
+          return math.sign(n) === (n === 0n ? 0 : n > 0n ? 1 : -1);
+        })
+      );
+    });
+  });
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /*
+  * Root operations
+  */
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  describe('Root operations', () => {
     // Test for `sqrt` with numbers
     it('Should calculate the square root of a number', () => {
       fc.assert(
@@ -336,5 +438,14 @@ describe('math', () => {
       expect(() => math.sqrt(["vector1"])).toThrowError(NumericalError);
     });
   })
+
+
+  describe('unique cases', () => {
+    expect(math.sign(0n)).toEqual(0)
+    expect(math.BigSqrt(0n)).toEqual(0n)
+
+  })
+
+
 
 })
