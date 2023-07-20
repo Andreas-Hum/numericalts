@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 
 import { NumericalError } from '../src/@error.types/numerical.error';
-import { MatrixError } from './../src/@error.types/matrix.error';
+import { MatrixError } from '../src/@error.types/matrix.error';
 
 describe('Error test ', () => {
     // Test for constructing NumericalError instances
