@@ -215,7 +215,7 @@ export namespace math {
             } else if (typeof vector[0] === "bigint") {
                 numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+                throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
             }
         }
         let scalar: T = numerical.divide(numerical.oneValue, numerical.sqrt(vector.map((x: T) => numerical.multiply(x, x)).reduce((acc: T, x: T) => numerical.add(acc, x), numerical.zeroValue)))
@@ -226,7 +226,7 @@ export namespace math {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * floor, ceil, trunc and abs 
+    * floor, ceil, trunc and abs
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -235,56 +235,57 @@ export namespace math {
     /**
      * Returns the absolute value of a number.
      *
-     * @param num - The number to calculate the absolute value of.
-     * @returns The absolute value of the number.
+     * @param {number} x - The number to calculate the absolute value of.
+     * @returns {number} The absolute value of the number.
      *
      * @example
      *    abs(-5);   // Returns 5
      */
-    export function abs(num: number): number
+    export function abs(x: number): number
 
     /**
      * Returns the absolute value of a bigint.
      *
-     * @param num - The bigint to calculate the absolute value of.
-     * @returns The absolute value of the bigint.
+     * @param {bigint} x - The bigint to calculate the absolute value of.
+     * @returns {bigint} The absolute value of the bigint.
      *
      * @example
      *    abs(-5n);   // Returns 5n
      */
-    export function abs(num: bigint): bigint
+    export function abs(x: bigint): bigint
 
     /**
      * Returns the absolute value of a number of type T.
      *
      * @typeparam T - The data type for the numeric operations.
-     * @param {T} num - The number to calculate the absolute value of.
+     * @param {T} x - The number to calculate the absolute value of.
      * @param {Numerical<T>} numerical - An instance of Numerical<T> interface for the numeric type T.
      * @returns {T} The absolute value of the number of type T.
+     * @throws {NumericalError} If x's type is neither number nor bigint, and no Numerical<T> instance was provided.
      *
      * @example
      *    abs(-5);                        // Returns 5
      *    abs(-5n);                       // Returns 5n
      *    abs(-5, new Numerical<number>()); // Where Numerical<number>() is an implementation for numbers.
      */
-    export function abs<T>(num: T, numerical?: Numerical<T>): T
+    export function abs<T>(x: T, numerical?: Numerical<T>): T
 
 
-    export function abs<T>(num: T, numerical?: Numerical<T>): T {
+    export function abs<T>(x: T, numerical?: Numerical<T>): T {
 
         if (!numerical) {
-            if (typeof num === "number") {
+            if (typeof x === "number") {
                 numerical = new NumericalNumber() as unknown as Numerical<T>;
-            } else if (typeof num === "bigint") {
+            } else if (typeof x === "bigint") {
                 numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                throw new Error("The vectors are neither numbers nor bigints and no appropriate Numeric implementation was provided.");
+                throw new NumericalError("x is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
             }
         }
-        const sign: number = numerical.signOperator(num);
+        const sign: number = numerical.signOperator(x);
 
         //if sign is -1, multiply num by -1 to get positive value, otherwise leave num as it is
-        return sign === -1 ? numerical.multiply(num, numerical.fromNumber(-1)) : num;
+        return sign === -1 ? numerical.multiply(x, numerical.fromNumber(-1)) : x;
     }
 
 
@@ -295,6 +296,9 @@ export namespace math {
      * Calculates the floor of a number
      * @param {number} num - The number to calculate the floor for.
      * @returns {number} The largest integer less than or equal to the given number.
+     * @example
+     *    floor(-4.6);                // Returns -4
+     *    floor(10.5);                // Returns 10
      */
     export function floor(num: number): number {
         return Math.floor(num)
@@ -304,6 +308,9 @@ export namespace math {
      * Calculates the ceil of a number
      * @param {number} num - The number to calculate the ceil for.
      * @returns {number} The smallest integer greater than or equal to the given number.
+      * @example
+     *    ceil(-4.6);                // Returns -5
+     *    ceil(10.5);                // Returns 11
      */
     export function ceil(num: number): number {
         return Math.ceil(num)
@@ -313,6 +320,9 @@ export namespace math {
      * Calculates the truncation of a number
      * @param  {number} num - The number to calculate the truncation for.
      * @returns {number} The integer part of the given number.
+     * @example
+     *    trunc(-4.6);             // Returns -4
+     *    trunc(10.5);             // Returns 10
      */
     export function trunc(num: number): number {
         return Math.trunc(num)
@@ -327,12 +337,15 @@ export namespace math {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    //TODO: Figure out a way to use these dynamically
 
     /**
      * Returns the fractional part of a number.
      * @param {number} num - The number to extract the fractional part from.
      * @returns {number} The fractional part of the number.
+     * @example
+     *    fracPart(-4.6);        // Returns 0.6
+     *    fracPart(10.5);        // Returns 0.5
      */
     export function fracPart(num: number): number {
         const abs: number = math.abs(num);
@@ -342,11 +355,12 @@ export namespace math {
 
     /**
         Calculates the greatest common divisor (GCD) of two numbers.
-        @public
-        @static
-        @param {number} a - The first number.
-        @param {number} b - The second number.
-        @returns {number} The GCD of the two numbers.
+        *@param {number} a - The first number.
+        *@param {number} b - The second number.
+        *@returns {number} The GCD of the two numbers.
+        * @example
+        *    GCD(12, 18);    // Returns 6
+        *    GCD(24, 36);    // Returns 12
     */
     export function GCD(a: number, b: number): number {
         if (b === 0) {
@@ -358,11 +372,14 @@ export namespace math {
 
     /**
      * Calculates the least common divisor (LCD) of two numbers.
-     *  @public
-     *  @static
-        @param {number} a - The first number.
-        @param {number} b - The second number.
-        @returns {number} The LCD of the two numbers. 
+     * @public
+     * @static
+     * @param {number} a - The first number.
+     * @param {number} b - The second number.
+     * @returns {number} The LCD of the two numbers.
+     * @example
+     *    LCD(12, 18);    // Returns 36
+     *    LCD(24, 36);    // Returns 72
      */
     export function LCD(a: number, b: number): number {
         // Calculate the GCD (Greatest Common Divisor) using the Euclidean algorithm
@@ -381,8 +398,11 @@ export namespace math {
      * @static
      * @param {number} num - The number to round.
      * @param {number} digits - The number of decimal places to round to.
-     * @param {number} base - The base to use for rounding.Defaults to 10 if not provided.
+     * @param {number} base - The base to use for rounding. Defaults to 10 if not provided.
      * @returns {number} The rounded number.
+     * @example
+     *    toFixedNumber(3.14159, 2);    // Returns 3.14
+     *    toFixedNumber(2.71828, 3, 2); // Returns 2.75
      */
     export function toFixedNumber(num: number, digits: number, base: number = 10): number {
         const pow = Math.pow(base, digits);
@@ -400,6 +420,9 @@ export namespace math {
      * Returns the number of decimal places in a given number.
      * @param {number} num - The number to count the decimal places of.
      * @returns {number} The number of decimal places in the given number.
+     * @example
+     *    countDecimals(3.14);    // Returns 2
+     *    countDecimals(10);      // Returns 0
      */
     export function countDecimals(num: number): number {
         if (Number.isInteger(num)) {
@@ -415,30 +438,37 @@ export namespace math {
      * @param {number} y - The second number to compare.
      * @param {number} tolerance - The maximum difference allowed between the numbers. Defaults to Number.EPSILON.
      * @returns {boolean} 'true' if the numbers are approximately equal, 'false' otherwise.
+     * @example
+     *    equal(3.14159, 3.14, 0.01);    // Returns true
+     *    equal(10, 15, 0.1);             // Returns false
      */
     export function equal(x: number, y: number, tolerance: number = Constants.DELTA): boolean {
         return math.abs(x - y) < tolerance;
     }
 
-
     /**
-        * Checks if a given number is a power of two
-        *  @public
-        *  @static
-        * @param {number} n The number to check
-        * @returns {boolean} 'true' if a power of two 'false' otherwise
-        */
+     * Checks if a given number is a power of two.
+     * @public
+     * @static
+     * @param {number} n - The number to check.
+     * @returns {boolean} 'true' if the number is a power of two, 'false' otherwise.
+     * @example
+     *    isPowerOfTwo(4);     // Returns true
+     *    isPowerOfTwo(10);    // Returns false
+     */
     export function isPowerOfTwo(n: number): boolean {
         return (n & (n - 1)) === 0;
     }
 
-
     /**
      * Method used to find the next power of two for a given number.
-     *  @public
-     *  @static
+     * @public
+     * @static
      * @param {number} n - The number for which to find the next power of two.
      * @returns {number} The next power of two for the given number.
+     * @example
+     *    nextPowerOfTwo(6);     // Returns 8
+     *    nextPowerOfTwo(15);    // Returns 16
      */
     export function nextPowerOfTwo(n: number): number {
         let count: number = 0;
@@ -455,14 +485,16 @@ export namespace math {
         return 1 << count;
     }
 
-
-
     /**
      * Returns the sign of a number.
-       @public
-       @static
+     * @public
+     * @static
      * @param {number} num - The number to determine the sign of.
      * @returns {number} The sign of the number: -1 if negative, 0 if zero, 1 if positive.
+     * @example
+     *    sign(-5);    // Returns -1
+     *    sign(0);     // Returns 0
+     *    sign(10);    // Returns 1
      */
     export function sign(num: number): number {
         let sign: number = 0;
@@ -478,7 +510,7 @@ export namespace math {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
-    * Root operations 
+    * Root operations
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -487,6 +519,9 @@ export namespace math {
      * Calculates the approximate square root of a given bigint value.
      * @param {bigint} x - The bigint value for which to calculate the square root.
      * @returns {bigint} The approximate square root of the given value.
+     * @example
+     *    BigSqrt(9n);     // Returns 3n
+     *    BigSqrt(100n);   // Returns 10n
      */
     export function BigSqrt(x: bigint): bigint {
         if (x < 2n) {
@@ -518,16 +553,53 @@ export namespace math {
     }
 
     /**
-     * Calculates the approximate square root of a given number or bigint value.
-     * @param {number | bigint} x - The number or bigint value for which to calculate the square root.
-     * @returns {number | bigint} The approximate square root of the given value.
+     * Calculates the square root of a given number.
+     * @param {number} x - The number for which to calculate the square root.
+     * @returns {number} The square root of the given number.
+     * @example
+     *    sqrt(9);     // Returns 3
+     *    sqrt(100);   // Returns 10
      */
-    export function sqrt(x: number | bigint): number | bigint {
-        if (typeof x === "number") {
-            return Math.sqrt(x) as number;
-        } else {
-            return BigSqrt(x) as bigint;
+    export function sqrt(x: number): number;
+
+    /**
+     * Calculates the square root of a given bigint value.
+     * @param {bigint} x - The bigint value for which to calculate the square root.
+     * @returns {bigint} The square root of the given value.
+     * @example
+     *    sqrt(9n);     // Returns 3n
+     *    sqrt(100n);   // Returns 10n
+     */
+    export function sqrt(x: bigint): bigint;
+
+    /**
+     * Calculates the square root of a given value using the provided numerical implementation.
+     * @template T - The type of the value.
+     * @param {T} x - The value for which to calculate the square root.
+     * @param {Numerical<T>} numerical - The numerical implementation to use. Defaults to NumericalNumber if not provided.
+     * @returns {T} The square root of the given value.
+     * @throws {NumericalError} If x's type is neither number nor bigint, and no Numerical<T> instance was provided.
+     * @example
+     *    const numericalNumber = new NumericalNumber();
+     *    sqrt(9, numericalNumber);   // Returns 3
+     * 
+     *    const numericalBigInt = new NumericalBigInt();
+     *    sqrt(9n, numericalBigInt);  // Returns 3n
+     */
+    export function sqrt<T>(x: T, numerical?: Numerical<T>): T
+
+    export function sqrt<T>(x: T, numerical?: Numerical<T>): T {
+        if (!numerical) {
+            if (typeof x === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof x === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError("x is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
+            }
         }
+
+        return numerical.sqrt(x);
     }
 
 }
