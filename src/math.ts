@@ -580,11 +580,9 @@ export namespace math {
      * @returns {T} The square root of the given value.
      * @throws {NumericalError} If x's type is neither number nor bigint, and no Numerical<T> instance was provided.
      * @example
-     *    const numericalNumber = new NumericalNumber();
-     *    sqrt(9, numericalNumber);   // Returns 3
-     * 
-     *    const numericalBigInt = new NumericalBigInt();
-     *    sqrt(9n, numericalBigInt);  // Returns 3n
+     *    sqrt(9);   // Returns 3
+     *    sqrt(9n);  // Returns 3n
+     *    sqrt(9, new Numerical<number>()); // Where Numerical<number>() is an implementation for numbers.
      */
     export function sqrt<T>(x: T, numerical?: Numerical<T>): T
 
