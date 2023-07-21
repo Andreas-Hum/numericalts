@@ -11,18 +11,34 @@ class ClassA {
 }
 
 // Define a custom arb to generate random named classes
-const classArb: fc.Arbitrary<any> = fc.oneof(
-    fc.record({ prop1: fc.integer(), prop2: fc.integer() }, { withDeletedKeys: true }).map(({ prop1, prop2 }) => new ClassA(prop1!, prop2!)),
-);
+let classArb: fc.Arbitrary<any>
+let array2Darb: any
+
 
 describe("Matrix", () => {
 
     beforeEach(() => {
+        //Class reps 
         fractionalRep = new FractionalNumberClass()
+
+
+        //Arbitraries
         fractionalStringArb = fc
             .tuple(fc.integer({ min: -1000, max: 1000 }), fc.integer({ min: 1, max: 1000 }))
             .filter(([numerator, denominator]) => denominator !== 0)
             .map(([numerator, denominator]) => `${numerator}/${denominator}`);
+        classArb = fc.oneof(
+            fc.record({ prop1: fc.integer(), prop2: fc.integer() }, { withDeletedKeys: true }).map(({ prop1, prop2 }) => new ClassA(prop1!, prop2!)),
+        );
+
+        array2Darb = (valueArb: fc.Arbitrary<any>) =>
+            fc.array(
+                fc.array(valueArb, { minLength: 1 }),
+                { minLength: 1 }
+            ).map(arr => {
+                const m = arr[0].length;
+                return arr.map(subArr => subArr.slice(0, m));
+            });
 
     });
 
@@ -49,39 +65,6 @@ describe("Matrix", () => {
                             expect(matrix.isSquare).toBeFalsy()
 
                         } else if (rows < columns) {
-                            expect(matrix.isTall).toBeFalsy()
-                            expect(matrix.isWide).toBeTruthy()
-                            expect(matrix.isSquare).toBeFalsy()
-                        } else {
-                            expect(matrix.isTall).toBeFalsy()
-                            expect(matrix.isWide).toBeFalsy()
-                            expect(matrix.isSquare).toBeTruthy()
-                        }
-                    }
-                )
-            );
-        });
-
-
-        it('Should construct a 2D matrix without specifying rows and columns and with a custom class', () => {
-            fc.assert(
-                fc.property(
-                    fc.array(fc.array(classArb, { minLength: 1 }), { minLength: 1 }),
-                    (entries) => {
-                        if (entries.some((entry: number[]) => entry.length !== entries[0].length)) return // Skip if entries dont have the same size is not equal to array length
-
-                        const matrix = new Matrix(entries);
-                        expect(matrix.rows).toEqual(entries.length);
-                        expect(matrix.columns).toEqual(entries[0].length);
-                        expect(matrix.size).toEqual(entries.length * entries[0].length);
-                        expect(matrix.shape).toEqual(`(${entries.length},${entries[0].length})`)
-
-                        if (entries.length > entries[0].length) {
-                            expect(matrix.isTall).toBeTruthy()
-                            expect(matrix.isWide).toBeFalsy()
-                            expect(matrix.isSquare).toBeFalsy()
-
-                        } else if (entries.length < entries[0].length) {
                             expect(matrix.isTall).toBeFalsy()
                             expect(matrix.isWide).toBeTruthy()
                             expect(matrix.isSquare).toBeFalsy()
@@ -129,11 +112,45 @@ describe("Matrix", () => {
             );
         });
 
+
+
+        it('Should construct a 2D matrix without specifying rows and columns and with a custom class', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(classArb),
+                    (entries: any[][]) => {
+
+                        const matrix = new Matrix(entries);
+                        expect(matrix.rows).toEqual(entries.length);
+                        expect(matrix.columns).toEqual(entries[0].length);
+                        expect(matrix.size).toEqual(entries.length * entries[0].length);
+                        expect(matrix.shape).toEqual(`(${entries.length},${entries[0].length})`)
+
+                        if (entries.length > entries[0].length) {
+                            expect(matrix.isTall).toBeTruthy()
+                            expect(matrix.isWide).toBeFalsy()
+                            expect(matrix.isSquare).toBeFalsy()
+
+                        } else if (entries.length < entries[0].length) {
+                            expect(matrix.isTall).toBeFalsy()
+                            expect(matrix.isWide).toBeTruthy()
+                            expect(matrix.isSquare).toBeFalsy()
+                        } else {
+                            expect(matrix.isTall).toBeFalsy()
+                            expect(matrix.isWide).toBeFalsy()
+                            expect(matrix.isSquare).toBeTruthy()
+                        }
+                    }
+                )
+            );
+        });
+
+
         it('Should construct a 2D matrix without specifying rows and columns', () => {
             fc.assert(
                 fc.property(
-                    fc.array(fc.array(fc.integer(), { minLength: 1 }), { minLength: 1 }),
-                    (entries) => {
+                    array2Darb(fc.integer()),
+                    (entries: number[][]) => {
                         if (entries.some((entry: number[]) => entry.length !== entries[0].length)) return // Skip if entries dont have the same size is not equal to array length
 
                         const matrix = new Matrix(entries);
@@ -162,6 +179,7 @@ describe("Matrix", () => {
         });
 
         it('Errors', () => {
+            expect(() => new Matrix([[new FractionalNumberClass(), new FractionalNumberClass(),"2133"]])).toThrow("Invalid entries not of the same type")
             expect(() => new Matrix([1, 32, 3, [2]])).toThrow("Invalid Matrix format")
             expect(() => new Matrix([[1, 32], [3, [4]]])).toThrow("Matrix cannot be of a depth greater than one")
             //@ts-ignore
