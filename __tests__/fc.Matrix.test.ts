@@ -36,8 +36,11 @@ describe("Matrix", () => {
                 fc.array(valueArb, { minLength: 1 }),
                 { minLength: 1 }
             ).map(arr => {
-                const m = arr[0].length;
-                return arr.map(subArr => subArr.slice(0, m));
+                // Find the length of the shortest subarray
+                const minLength = Math.min(...arr.map(subArr => subArr.length));
+
+                // Trim all subarrays to the length of the shortest subarray
+                return arr.map(subArr => subArr.slice(0, minLength));
             });
 
     });
@@ -179,9 +182,10 @@ describe("Matrix", () => {
         });
 
         it('Errors', () => {
-            expect(() => new Matrix([[new FractionalNumberClass(), new FractionalNumberClass(),"2133"]])).toThrow("Invalid entries not of the same type")
+            expect(() => new Matrix([[new FractionalNumberClass(), new FractionalNumberClass(), "2133"]])).toThrow("Invalid entries not of the same type")
             expect(() => new Matrix([1, 32, 3, [2]])).toThrow("Invalid Matrix format")
             expect(() => new Matrix([[1, 32], [3, [4]]])).toThrow("Matrix cannot be of a depth greater than one")
+            expect(() => new Matrix([[1, 32, 2], [3, [4]]])).toThrow("Matrix rows are now of the same length")
             //@ts-ignore
             expect(() => new Matrix(123)).toThrow("Matrix has to be an array")
             //@ts-ignore
@@ -196,5 +200,52 @@ describe("Matrix", () => {
 
     })
 
+
+    describe("Getting and setting", () => {
+        test('getElement should return the correct element', () => {
+            fc.assert(
+                fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
+                    const matrix = new Matrix(entries);
+
+                    const row = Math.floor(Math.random() * matrix.rows);
+                    const column = Math.floor(Math.random() * matrix.columns);
+
+                    const result = matrix.getElement(row, column);
+                    const index = row * matrix.columns + column;
+                    const expected = matrix.mElements[index];
+
+                    expect(result).toEqual(expected);
+                })
+            );
+        });
+
+        it('Should correctly get the 1 row of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const matrix: Matrix<any> = new Matrix(entries);
+
+                        // Create a random index between 1 and this.rows (inclusive).
+                        const randomIndex = Math.floor(Math.random() * matrix.rows + 1);
+
+                        expect(matrix.getRow(randomIndex)).toEqual(entries[(randomIndex - 1)]);
+                    }
+                )
+            );
+        });
+
+        it('Errors', () => {
+            const tMatrix: Matrix<number> = new Matrix([[1, 2], [3, 4]])
+
+            expect(() => tMatrix.getElement(1322131, 12312312)).toThrow("Index out of bounds")
+            //@ts-ignore
+            expect(() => tMatrix.getElement("1322131", "12312312")).toThrow("Invalid arugment")
+
+            expect(() => tMatrix.getRow(1322131)).toThrow("Row index out of bounds")
+            //@ts-ignore
+            expect(() => tMatrix.getRow("sdad")).toThrow("Invalid argument")
+        });
+    })
 
 })

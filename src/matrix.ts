@@ -90,9 +90,12 @@ export class Matrix<T> implements MatrixInterface<T> {
             this.size = rows * columns;
         } else {
 
-
             if (!entries.every((entry: T[]) => Array.isArray(entry))) {
                 throw new MatrixError("Invalid Matrix format", 804);
+            }
+
+            if (entries.some((entry: T[]) => entry.length !== entries[0].length)) {
+                throw new MatrixError("Matrix rows are now of the same length", 804);
             }
 
             const numRows: number = entries.length;
