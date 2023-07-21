@@ -45,7 +45,12 @@ describe("Matrix", () => {
 
     });
 
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Validation and updating
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
     describe("Initialization", () => {
         it('Should construct a 1D matrix with specified rows and columns', () => {
             fc.assert(
@@ -199,10 +204,14 @@ describe("Matrix", () => {
 
 
     })
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Set- and getter methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     describe("Getting and setting", () => {
-        test('getElement should return the correct element', () => {
+        it('getElement should return the correct element', () => {
             fc.assert(
                 fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
                     const matrix = new Matrix(entries);
@@ -219,7 +228,7 @@ describe("Matrix", () => {
             );
         });
 
-        it('Should correctly get the 1 row of a matrix', () => {
+        it('Should correctly get a row of a matrix', () => {
             fc.assert(
                 fc.property(
                     array2Darb(fc.integer()),
@@ -235,6 +244,61 @@ describe("Matrix", () => {
             );
         });
 
+
+        it('Should correctly get a column of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const matrix: Matrix<any> = new Matrix(entries);
+
+                        // Create a random index between 1 and this.rows (inclusive).
+                        const randomIndex = Math.floor(Math.random() * matrix.columns + 1);
+
+                        expect(matrix.getColumn(randomIndex)).toEqual(entries.map((entry: any[]) => entry[(randomIndex - 1)]));
+                    }
+                )
+            );
+        });
+
+
+        it('should return the correct submatrix', () => {
+            const matrix = new Matrix([
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+            ]);
+
+            const submatrix = matrix.getSubMatrix(0, 2, 0, 2);
+
+            expect(submatrix.toArray()).toEqual([
+                [1, 2],
+                [4, 5],
+            ]);
+        });
+
+        it('should set the elements of the submatrix correctly', () => {
+            const matrix = new Matrix([
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+            ]);
+
+            const submatrix = new Matrix([
+                [10, 11],
+                [12, 13],
+            ]);
+
+            matrix.setSubMatrix(0, 1, 0, 1, submatrix);
+
+            expect(matrix.toArray()).toEqual([
+                [10, 11, 3],
+                [12, 13, 6],
+                [7, 8, 9],
+            ]);
+        });
+
+
         it('Errors', () => {
             const tMatrix: Matrix<number> = new Matrix([[1, 2], [3, 4]])
 
@@ -245,7 +309,22 @@ describe("Matrix", () => {
             expect(() => tMatrix.getRow(1322131)).toThrow("Row index out of bounds")
             //@ts-ignore
             expect(() => tMatrix.getRow("sdad")).toThrow("Invalid argument")
+
+            expect(() => tMatrix.getColumn(1322131)).toThrow("Column index out of bounds")
+            //@ts-ignore
+            expect(() => tMatrix.getColumn("sdad")).toThrow("Invalid argument")
+
+            //@ts-ignore
+            expect(() => tMatrix.getSubMatrix("1322131", "12312312")).toThrow("Invalid arugment")
+            expect(() => tMatrix.setSubMatrix(1322131, 323232, 11, 22, tMatrix)).toThrow("Invalid submatrix indices")
+            expect(() => tMatrix.setSubMatrix(0, 1, 0, 1, new Matrix([[2]]))).toThrow("Submatrix dimensions do not match")
         });
     })
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Mathematical operations, example, add, subtract, multiply and so forth
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 })
