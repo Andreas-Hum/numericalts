@@ -1,10 +1,10 @@
-export {Matrix as MatrixInterface}
-interface Matrix<T>  {
+export { Matrix as MatrixInterface }
+interface Matrix<T> {
     /*
     * The shape of the matrix.
     * @type {string}
     */
-    shape: string 
+    shape: string
     /**
      * Indicates whether the matrix is square.
      * @type {boolean}
@@ -14,27 +14,27 @@ interface Matrix<T>  {
      * Indicates whether the matrix is tall (more rows than columns).
      * @type {boolean}
      */
-    isTall: boolean 
+    isTall: boolean
     /**
      * Indicates whether the matrix is wide (more columns than rows).
      * @type {boolean}
      */
-    isWide: boolean 
+    isWide: boolean
     /**
      * The number of rows in the matrix.
      * @type {number}
      */
-    rows: number 
+    rows: number
     /**
      * The number of columns in the matrix.
      * @type {number}
      */
-    columns: number 
+    columns: number
     /**
      * The total number of elements in the matrix.
      * @type {number}
      */
-    size: number 
+    size: number
     /**
      * The elements of the matrix.
      * @type {Array<T>}
@@ -44,7 +44,7 @@ interface Matrix<T>  {
      * The data type of the matrix elements.
      * @type {string}
      */
-    dataType: string 
+    dataType: string
 
     add(B: Matrix<number>): Matrix<number>
     multiply(B: Matrix<number>): Matrix<number>

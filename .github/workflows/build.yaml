@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests and collect coverage
-        run: npm run build:test
+        run: npm run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         env:

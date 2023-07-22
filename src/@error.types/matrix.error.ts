@@ -1,5 +1,5 @@
 
-export default class MatrixError extends Error {
+export class MatrixError extends Error {
     public readonly name: string;
     public readonly timestamp: string;
     public readonly statusCode: number;
@@ -14,7 +14,7 @@ export default class MatrixError extends Error {
         // 800: Out of bounds
         // 801: Matrix validation error - Occurs when the supplied elements fail to form a proper matrix.
         // 802: Matrix dimensions error - Occurs when attempting operations involving matrices of incompatible dimensions.
-        // 803: Invalid element for matrix error - Occurs when the matrix contains a non-numeric value.
+        // 803: Invalid element for matrix error - Occurs when the matrix contains a non valid value.
         // 804: Not an instance of Matrix.
 
         // 805: Matrix Addition/Subtraction Error - Occurs when matrices of different dimensions or invalid types are added are added or subtracted.
