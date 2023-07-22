@@ -1,5 +1,5 @@
 import { fc } from '@fast-check/jest';
-import { Matrix } from '../src';
+import { Matrix, math } from '../src';
 
 import { Numerical } from '../src/@interfaces/numerical';
 import { FractionalNumberClass } from '../src/@t.classes/classes';
@@ -341,7 +341,7 @@ describe("Matrix", () => {
 
                         expect(A.add(B)).toEqual(B.add(A));
                         expect(A.add(B).add(C)).toEqual(C.add(B).add(A));
-                        expect(A.add(Matrix.zeros(A.rows,A.columns))).toEqual(A)
+                        expect(A.add(Matrix.zeros(A.rows, A.columns))).toEqual(A)
                     }
                 )
             );
@@ -357,6 +357,27 @@ describe("Matrix", () => {
                         const B: Matrix<any> = Matrix.random(A.rows, A.columns)
                         expect(A.subtract(A)).toEqual(Matrix.zeros(A.rows, A.columns));
                         expect(A.subtract(B)).toEqual(A.add(B.scale(-1)))
+
+                    }
+                )
+            );
+        });
+
+
+
+        //TODO: fix this 
+        it('Should correctly perform the gram smith method', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer({ min: 1 })),
+                    (entries: any[][]) => {
+                        if(entries.length == 1 || entries.some((entry:any[]) => entry.length !== entries[0].length)) return
+                        const A: Matrix<any> = new Matrix(entries);
+                        const gramSmith: Matrix<any> = A.gramSmith()
+
+                        gramSmith.transpose().toArray().every((row: any[]) => expect(math.dot(row, row)).toBeCloseTo(1))
+
+
 
                     }
                 )

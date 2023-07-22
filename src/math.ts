@@ -81,7 +81,6 @@ export namespace math {
 
 
     export function dot<T>(vector1: T[], vector2: T[], numerical?: Numerical<T>): T {
-
         // Ensure vector1 and vector2 have the same length
         if (vector1.length !== vector2.length) {
             throw new Error("Vector lengths do not match.");
