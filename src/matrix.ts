@@ -612,6 +612,11 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         //Deprecated soon maybe
         if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
+        if (scalar === 1) {
+            return this as Matrix<number>
+        } else if (scalar === 0) {
+            return Matrix.zeros(this.rows, this.columns)
+        }
         const scaledMatrix: Matrix<number> = Matrix.clone(this);
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
         return scaledMatrix;
@@ -1127,7 +1132,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      */
     public equal(B: Matrix<T>): boolean {
         if (B.dataType !== this.dataType || B.shape !== this.shape) return false;
-        if (B.dataType === "number") {
+        if (B.dataType === "number") { //TODO: Check the equal
             return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index]))
         }
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
@@ -1331,7 +1336,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     public static roundMatrixToZero(A: Matrix<number>, threshold: number = Constants.DELTA): void {
         const size: number = A.size;
         for (let i = 0; i < size; i++) {
-            if (Math.abs(A.mElements[i]) < threshold) {
+            if (Math.abs(A.mElements[i]) < threshold || A.mElements[i] === -0) {
                 A.mElements[i] = 0;
             }
         }

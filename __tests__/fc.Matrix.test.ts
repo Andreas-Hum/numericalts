@@ -422,6 +422,8 @@ describe("Matrix", () => {
                         expect(A.multiply(A)).toEqual(A.pow(2))
                         expect(A.pow(0)).toEqual(iden)
                         expect(A.pow(1)).toEqual(A)
+                        expect(A.pow(3)).toBeTruthy()
+
 
 
                     }
@@ -429,8 +431,313 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correctly scale a matrix ', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
 
+                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
+
+                        expect(A.scale(1)).toEqual(A)
+                        expect(A.scale(0)).toEqual(zeros)
+
+
+
+                    }
+                )
+            );
+        });
+
+        it('Should correctly multiply two matricies together using strassens', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return
+                        const iden: Matrix<any> = Matrix.identity(A.rows)
+                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
+
+                        expect(A.strassenMultiply(iden)).toEqual(A)
+                        expect(A.strassenMultiply(zeros)).toEqual(zeros)
+
+                    }
+                )
+            );
+        });
+
+        it('Should correctly multiply two matricies together using strassens', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return
+                        const iden: Matrix<any> = Matrix.identity(A.rows)
+                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
+
+                        expect(A.strassenMultiply(iden)).toEqual(A)
+                        expect(A.strassenMultiply(zeros)).toEqual(zeros)
+
+                    }
+                )
+            );
+        });
+
+        it('should perform vector-matrix multiplication correctly', () => {
+            const matrix = new Matrix([[1, 2, 3],
+            [4, 5, 6]]);
+            const vector = [2, 3, 4];
+
+            const expected = new Matrix([[2, 6, 12], [8, 15, 24]]);
+
+            matrix.vMultiply(vector);
+
+            expect(matrix.vMultiply(vector)).toEqual(expected);
+        });
+
+        it('should throw an error if the input vector is not an array', () => {
+            const matrix = new Matrix([[1, 2, 3]]);
+            const invalidVector = 'not an array';
+            //@ts-ignore
+            expect(() => matrix.vMultiply(invalidVector)).toThrow();
+
+        });
+
+        it('should throw an error if the input vector length does not match the number of columns in the matrix', () => {
+            const matrix = new Matrix([[1, 2, 3]]);
+            const invalidVector = [1, 2];
+            expect(() => matrix.vMultiply(invalidVector)).toThrow();
+
+        });
 
     })
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Solving systems
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Solving systems", () => {
+        describe('Back substitution', () => {
+            it('An upper triangular matrix with the solution [4,-11,13]  ', () => {
+                const solTest = new Matrix([[1, 0, 0], [0, 1, 1], [0, 0, 1]])
+                expect(solTest.backSubstitution([4, 2, 13])).toEqual([4, -11, 13])
+            });
+
+            it('An upper triangular row matrix with the solution [52, -37, 13]  ', () => {
+                const solTest = new Matrix([[1, 2, 2], [0, 1, 3], [0, 0, 1]])
+                expect(solTest.backSubstitution([4, 2, 13])).toEqual([52, -37, 13])
+            });
+
+            it('Error: Unsolvable system', () => {
+                const solTest = new Matrix([[1, 2, 2], [0, 0, 0], [0, 0, 0]])
+                expect(() => solTest.backSubstitution([4, 2, 13])).toThrow()
+            });
+
+            it('Error: Non upper triangular matrix', () => {
+                const solTest = new Matrix([[1, 2, 2], [1, 1, 3], [1, 1, 1]])
+                expect(() => solTest.backSubstitution([4, 2, 13])).toThrow()
+            });
+
+            it('Error: Invalid argument', () => {
+                const solTest = new Matrix([[1, 2, 2], [0, 1, 3], [0, 0, 1]])
+                //@ts-ignore
+                expect(() => solTest.backSubstitution("[4, 2, 13]")).toThrow()
+            });
+        });
+
+        describe('Forward substitution', () => {
+            it('A lower triangular matrix with the solution [4, -2, 11]  ', () => {
+                const solTest = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+                expect(solTest.forwardSubstitution([4, 2, 13])).toEqual([4, -2, 11])
+            });
+
+            it('A lower triangular row matrix with the solution [4, -6, 17]  ', () => {
+                const solTest = new Matrix([[1, 0, 0], [2, 1, 0], [2, 2, 1]])
+                expect(solTest.forwardSubstitution([4, 2, 13])).toEqual([4, -6, 17])
+            });
+
+            it('Error: Unsolvable system', () => {
+                const solTest = new Matrix([[1, 0, 0], [2, 0, 0], [2, 2, 2]])
+                expect(() => solTest.forwardSubstitution([4, 2, 13])).toThrow()
+            });
+
+            it('Error: Non lower triangular matrix', () => {
+                const solTest = new Matrix([[1, 2, 2], [1, 1, 3], [1, 1, 1]])
+                expect(() => solTest.forwardSubstitution([4, 2, 13])).toThrow()
+            });
+
+            it('Error: Invalid argument', () => {
+                const solTest = new Matrix([[1, 0, 0], [2, 1, 0], [2, 2, 1]])
+                //@ts-ignore
+                expect(() => solTest.forwardSubstitution("[4, 2, 13]")).toThrow()
+            });
+        });
+
+
+        describe('gaussianElimination', () => {
+            it('First matrix', () => {
+                const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+                const result = matrix.gaussianElimination();
+                const expected = new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]]);
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it('Second matrix', () => {
+                const matrix = new Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
+                const result = matrix.gaussianElimination();
+
+                const expected = new Matrix([[10, 11, 12], [0, -3 / 10, -3 / 5], [0, 0, 0]]);
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+            test('Third matrix', () => {
+                const matrix = new Matrix([[3, 2, 1, 23], [4, 3, 5, 13], [5, 3, 2, 22]]);
+                const result = matrix.gaussianElimination();
+
+                const expected = new Matrix([[3, 2, 1, 23], [0, 1 / 3, 11 / 3, -53 / 3], [0, 0, 4, -34]]);
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it('Solving', () => {
+                const matrix = new Matrix([[2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3]]);
+                const result = matrix.gaussianElimination({ solve: true });
+
+
+                //@ts-ignore
+                expect(result).toEqual([2, 3, -1]);
+            });
+        });
+
+        describe('GaussJordan', () => {
+            it('First matrix', () => {
+                const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+                const result = matrix.gaussJordan();
+                const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+                //@ts-ignore
+                result.mElements[3] = 0;
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it('Second matrix', () => {
+                const matrix = new Matrix([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
+                const result = matrix.gaussJordan();
+
+                const expected = new Matrix([[1, 0, -1], [0, 1, 2], [0, 0, 0]]);
+                //@ts-ignore
+                result.mElements[3] = 0;
+
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+            it('Third matrix', () => {
+                const matrix = new Matrix([[3, 2, 1], [4, 3, 5], [5, 3, 2]]);
+                const result = matrix.gaussJordan();
+
+                const expected = new Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+                //@ts-ignore
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it('Solving', () => {
+                const matrix = new Matrix([[2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3]]);
+                const result = matrix.gaussJordan({ solve: true });
+
+
+                //@ts-ignore
+                expect(result).toEqual([2, 3, -1]);
+            });
+
+            describe('QR decomposition', () => {
+                it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
+                    const testMatrix = new Matrix([[1, 1], [0, 1]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+
+                    expect(Q).toEqual(new Matrix([[1, 0], [0, 1]]))
+                    expect(R).toEqual(new Matrix([[1, 1], [0, 1]]))
+                });
+
+                it('QR decomposition with a 4x4 row matrix [[0,0,1,0],[1,0,0,0],[0,1,1,0],[0,0,0,1]]', () => {
+                    const testMatrix = new Matrix([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 1, 0], [0, 0, 0, 1]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+
+                    expect(Q).toEqual(new Matrix([
+                        [0, 0, 1, 0],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0],
+                        [0, 0, 0, 1]]))
+                    expect(R).toEqual(new Matrix([
+                        [1, 0, 0, 0],
+                        [0, 1, 1, 0],
+                        [0, 0, 1, 0],
+                        [0, 0, 0, 1]]))
+                });
+
+                it('QR decomposition with a 4x3 row matrix [[0,0,1],[1,0,0],[0,1,1],[0,0,0]]', () => {
+                    const testMatrix = new Matrix([[0, 0, 1], [1, 0, 0], [0, 1, 1], [0, 0, 0]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+                    expect(Q).toEqual(new Matrix([
+                        [0, 0, 1],
+                        [1, 0, 0],
+                        [0, 1, 0],
+                        [0, 0, 0]]))
+
+                    expect(R).toEqual(new Matrix([
+                        [1, 0, 0],
+                        [0, 1, 1],
+                        [0, 0, 1]]))
+                });
+
+
+                it('Should correctly test the property A=QR ', () => {
+                    fc.assert(
+                        fc.property(
+                            array2Darb(fc.integer()),
+                            (entries: any[][]) => {
+                                const A: Matrix<any> = new Matrix(entries);
+                                if (!A.isSquare) return
+                                let gramSmith: { Q: Matrix<any>, R: Matrix<any> };
+                                try {
+                                    gramSmith = A.QRDecomposition()
+
+                                } catch (error) {
+                                    return
+                                }
+                                let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
+                                expect(TMatrix).toBeTruthy()
+                            }
+                        )
+                    );
+                });
+
+                it('Error: Non linear independent columns', () => {
+                    const testMatrix = new Matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]])
+                    expect(() => testMatrix.QRDecomposition()).toThrow()
+
+                });
+
+
+
+
+
+
+            });
+
+
+        });
+
+
+
+    })
 })
