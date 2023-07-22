@@ -13,11 +13,15 @@ class ClassA {
 // Define a custom arb to generate random named classes
 let classArb: fc.Arbitrary<any>
 let array2Darb: any
+let twoByThree: Matrix<number>, threeByTwo: Matrix<number>
 
 
 describe("Matrix", () => {
 
     beforeEach(() => {
+        twoByThree = new Matrix([[1, 2, 3], [4, 5, 6]]);
+        threeByTwo = new Matrix([[1, 4], [2, 5], [3, 6]]);
+
         //Class reps 
         fractionalRep = new FractionalNumberClass()
 
@@ -297,7 +301,37 @@ describe("Matrix", () => {
                 [7, 8, 9],
             ]);
         });
+        it('Set first element', () => {
+            twoByThree.setElement(0, 0, 10);
+            threeByTwo.setElement(0, 0, 10);
 
+            expect(twoByThree.getElement(0, 0)).toEqual(10)
+            expect(threeByTwo.getElement(0, 0)).toEqual(10)
+        })
+
+
+        it('Set last element', () => {
+            twoByThree.setElement(1, 2, 10);
+            threeByTwo.setElement(2, 1, 10);
+
+            expect(twoByThree.getElement(1, 2)).toEqual(10)
+            expect(threeByTwo.getElement(2, 1)).toEqual(10)
+        })
+
+
+        it('Error: out of bounds', () => {
+            expect(() => twoByThree.setElement(10, 10, 10)).toThrow()
+        })
+
+        it('Error: Invalid value', () => {
+            //@ts-ignore
+            expect(() => twoByThree.setElement(0, 0, "error")).toThrow()
+        })
+
+        it('Error: Invalid argument', () => {
+            //@ts-ignore
+            expect(() => twoByThree.setElement(0, "0", 10)).toThrow()
+        })
 
         it('Errors', () => {
             const tMatrix: Matrix<number> = new Matrix([[1, 2], [3, 4]])
@@ -305,6 +339,11 @@ describe("Matrix", () => {
             expect(() => tMatrix.getElement(1322131, 12312312)).toThrow("Index out of bounds")
             //@ts-ignore
             expect(() => tMatrix.getElement("1322131", "12312312")).toThrow("Invalid arugment")
+
+
+            //@ts-ignore
+            expect(() => tMatrix.setElement("1322131", "12312312")).toThrow("Invalid arugment")
+
 
             expect(() => tMatrix.getRow(1322131)).toThrow("Row index out of bounds")
             //@ts-ignore
@@ -509,7 +548,26 @@ describe("Matrix", () => {
             expect(() => matrix.vMultiply(invalidVector)).toThrow();
 
         });
+        it('Error: Incompatible dimensions', () => {
+            expect(() => twoByThree.add(threeByTwo)).toThrow()
+        })
 
+        it('Error: Incompatible dimensions', () => {
+            expect(() => twoByThree.multiply(twoByThree)).toThrow()
+        })
+
+        it('Error: B not an instance of Matrix', () => {
+            //@ts-ignore
+            expect(() => twoByThree.add("threeByTwo")).toThrow()
+        })
+
+        it("should throw a MatrixError if the matrix is not square", () => {
+            const nonSquareMatrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+
+            expect(() => {
+                nonSquareMatrix.pow(2);
+            }).toThrow();
+        });
     })
 
 
@@ -545,6 +603,29 @@ describe("Matrix", () => {
                 const solTest = new Matrix([[1, 2, 2], [0, 1, 3], [0, 0, 1]])
                 //@ts-ignore
                 expect(() => solTest.backSubstitution("[4, 2, 13]")).toThrow()
+            });
+
+
+            // Test multiplication of a non-square matrix
+            it('Non-square Matrix multiplication', () => {
+                const A = new Matrix([1, 2, 3, 4, 5, 6], 2, 3);
+                const B = new Matrix([2, 0, 1, 2, 1, 2], 3, 2);
+
+                expect(() => {
+                    A.strassenMultiply(B);
+                }).toThrow();
+            });
+
+            // Test multiplication of a matrix with dimensions not a power of two
+            it('Not power of two Matrix multiplication', () => {
+                const A = new Matrix([1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3);
+                const B = new Matrix([9, 8, 7, 6, 5, 4, 3, 2, 1], 3, 3);
+                const result = A.strassenMultiply(B);
+
+
+                // Expected result is manually calculated
+                const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
+                expect(result).toEqual(new Matrix(expectedResult, 3, 3));
             });
         });
 
