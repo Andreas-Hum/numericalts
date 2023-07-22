@@ -4,7 +4,7 @@ import { NumericalError } from '../src/@error.types/numerical.error';
 import { MatrixError } from '../src/@error.types/matrix.error';
 
 describe('Error test ', () => {
-    // Test for constructing NumericalError instances
+    // Test for constructing NumericalError instances 
     test('Creating NumericalError instance', () => {
         fc.assert(
             fc.property(fc.string(), fc.integer(), fc.oneof(fc.string(), fc.constant(null)), (message, statusCode, details) => {
