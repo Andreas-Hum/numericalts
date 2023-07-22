@@ -369,7 +369,7 @@ describe("Matrix", () => {
         it('Should correctly perform the gram smith method', () => {
             fc.assert(
                 fc.property(
-                    array2Darb(fc.integer({ min: 1 })),
+                    array2Darb(fc.integer()),
                     (entries: any[][]) => {
                         if (entries.length == 1 || entries.some((entry: any[]) => entry.length !== entries[0].length)) return
                         const A: Matrix<any> = new Matrix(entries);
@@ -388,5 +388,29 @@ describe("Matrix", () => {
             );
         });
 
+
+
+        it('Should correctly multiply two matricies together using the naive multiplication method', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return
+                        const iden: Matrix<any> = Matrix.identity(A.rows)
+                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
+
+                        expect(A.multiply(iden)).toEqual(A)
+                        expect(A.multiply(zeros)).toEqual(zeros)
+
+
+                    }
+                )
+            );
+        });
+
+
+
     })
-}) 
+
+})

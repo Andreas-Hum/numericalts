@@ -392,9 +392,10 @@ export class Matrix<T> implements MatrixInterface<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
-        if (B.dataType !== "number" || this.dataType !== "number") {
-            throw new MatrixError("Can't add non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        }
+        //Deprecated
+        // if (B.dataType !== "number" || this.dataType !== "number") {
+        //     throw new MatrixError("Can't add non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        // }
 
         const resultElements: Array<number> = JSON.parse(JSON.stringify(this.mElements));
         const size: number = this.size;
@@ -465,9 +466,11 @@ export class Matrix<T> implements MatrixInterface<T> {
          * @public
          */
     public gramSmith(): Matrix<number> {
-        if (this.dataType !== "number") {
-            throw new MatrixError("Can't perform the gramSmith algorithm on a non numeric matrix", 807, { AType: this.dataType });
-        }
+
+        //Deprecated
+        // if (this.dataType !== "number") {
+        //     throw new MatrixError("Can't perform the gramSmith algorithm on a non numeric matrix", 807, { AType: this.dataType });
+        // }
 
         const orthogonalColumns: number[][] = []
 
@@ -515,9 +518,10 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
 
-        if (B.dataType !== "number" || this.dataType !== "number") {
-            throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        }
+        //Deprecated
+        // if (B.dataType !== "number" || this.dataType !== "number") {
+        //     throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        // }
 
         const rows: number = this.rows;
         const columns: number = this.columns;
@@ -562,9 +566,10 @@ export class Matrix<T> implements MatrixInterface<T> {
      */
     public pow(exp: number): Matrix<number> {
 
-        if (this.dataType !== "number") {
-            throw new MatrixError("Can't raise take the exponent of a non numberic matrix", 807, { AType: this.dataType });
-        }
+        // Deprecated
+        // if (this.dataType !== "number") {
+        //     throw new MatrixError("Can't raise take the exponent of a non numberic matrix", 807, { AType: this.dataType });
+        // }
 
         if (!this.isSquare) {
             throw new MatrixError("Can't multiply a non-square matrix with itself.", 810, { A: this.isSquare });
@@ -600,9 +605,12 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @returns { Matrix<number>} The scaled matrix
      */
     public scale(scalar: number): Matrix<number> {
-        if (this.dataType !== "number") {
-            throw new MatrixError("Can't scale a non numeric matrix", 807, { AType: this.dataType });
-        }
+        // Deprecated
+        // if (this.dataType !== "number") {
+        //     throw new MatrixError("Can't scale a non numeric matrix", 807, { AType: this.dataType });
+        // }
+
+        //Deprecated soon maybe
         if (typeof scalar !== "number") throw new MatrixError("Invalid scalar", 606, { scalar });
         const scaledMatrix: Matrix<number> = Matrix.clone(this);
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: number) => entry * scalar)
@@ -620,9 +628,10 @@ export class Matrix<T> implements MatrixInterface<T> {
        */
     public strassenMultiply(B: Matrix<number>): Matrix<number> {
 
-        if (B.dataType !== "number" || this.dataType !== "number") {
-            throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        }
+        //deprecated
+        // if (B.dataType !== "number" || this.dataType !== "number") {
+        //     throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        // }
         if (!this.isSquare && !B.isSquare) {
             throw new MatrixError(
                 "Both matrices has to be square",
@@ -691,9 +700,10 @@ export class Matrix<T> implements MatrixInterface<T> {
     public subtract(B: Matrix<number>): Matrix<number> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
-        if (B.dataType !== "number" || this.dataType !== "number") {
-            throw new MatrixError("Can't subtract  non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        }
+        //Deprecated 
+        // if (B.dataType !== "number" || this.dataType !== "number") {
+        //     throw new MatrixError("Can't subtract  non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
+        // }
         const resultElements: number[] = JSON.parse(JSON.stringify(this.mElements as number[]));
         const size: number = this.size;
 
