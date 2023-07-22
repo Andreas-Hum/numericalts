@@ -409,6 +409,26 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correctly raise a square matrix to the power x ', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return
+                        const iden: Matrix<any> = Matrix.identity(A.rows)
+                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
+
+                        expect(A.multiply(A)).toEqual(A.pow(2))
+                        expect(A.pow(0)).toEqual(iden)
+                        expect(A.pow(1)).toEqual(A)
+
+
+                    }
+                )
+            );
+        });
+
 
 
     })
