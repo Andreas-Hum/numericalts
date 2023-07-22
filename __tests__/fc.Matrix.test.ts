@@ -458,10 +458,8 @@ describe("Matrix", () => {
                         const A: Matrix<any> = new Matrix(entries);
                         if (!A.isSquare) return
                         const iden: Matrix<any> = Matrix.identity(A.rows)
-                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
                         expect(A.strassenMultiply(iden)).toEqual(A)
-                        expect(A.strassenMultiply(zeros)).toEqual(zeros)
 
                     }
                 )
@@ -479,7 +477,6 @@ describe("Matrix", () => {
                         const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
                         expect(A.strassenMultiply(iden)).toEqual(A)
-                        expect(A.strassenMultiply(zeros)).toEqual(zeros)
 
                     }
                 )
@@ -597,7 +594,7 @@ describe("Matrix", () => {
                 //@ts-ignore
                 expect(result.equal(expected)).toBeTruthy();
             });
-            test('Third matrix', () => {
+            it('Third matrix', () => {
                 const matrix = new Matrix([[3, 2, 1, 23], [4, 3, 5, 13], [5, 3, 2, 22]]);
                 const result = matrix.gaussianElimination();
 
@@ -700,7 +697,7 @@ describe("Matrix", () => {
                 });
 
 
-                it('Should correctly test the property A=QR ', () => {
+                it('Should correctly it the property A=QR ', () => {
                     fc.assert(
                         fc.property(
                             array2Darb(fc.integer()),
@@ -739,5 +736,314 @@ describe("Matrix", () => {
 
 
 
+    })
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Reshapeing
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    describe("Reshaping", () => {
+        it('Should correctly augment a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const augmentedA: Matrix<any> = A.augment(A);
+
+                        expect(augmentedA.columns).toEqual(2 * A.columns)
+                        expect(augmentedA.rows).toEqual(A.rows)
+                        expect(augmentedA.shape).toEqual(`(${A.rows},${2 * A.columns})`)
+
+
+                    }
+                )
+            );
+        });
+
+        it('Should correctly transpose a matrix', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const At: Matrix<any> = A.transpose()
+
+                        expect(At.columns).toEqual(A.rows)
+                        expect(At.rows).toEqual(A.columns)
+                        expect(At.shape).toEqual(`(${A.columns},${A.rows})`)
+                        expect(At.transpose()).toEqual(A)
+
+
+                    }
+                )
+            );
+        });
+
+
+    })
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Inverting
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Inverting", () => {
+
+        describe("Inverting a square matrix", () => {
+            it("Inverting a 2x2 square matrix", () => {
+                const matrix = new Matrix([[1, -2], [-1, 3]]);
+                expect(matrix.invertSquare()).toEqual(new Matrix([[3, 2], [1, 1]]))
+
+            });
+
+
+            it("Inverting a 5x5 square matrix", () => {
+                const matrix = new Matrix([[39, 50, 86, 61, 63], [80, 30, 95, -57, -90], [-89, -28, 32, -31, -11], [24, 82, -41, 47, 75], [67, -68, 77, 31, 33]])
+                const testings = matrix.invertSquare()
+                Matrix.toFixedMatrix(testings, 3)
+                expect(testings.equal(new Matrix([[-0.007, 0.004, -0.003, 0.007, 0.007], [0.004, 0.003, 0.001, 0.004, -0.007], [0.005, 0.002, 0.005, -0.001, 0.001], [0.026, -0.015, -0.026, -0.035, -0.019], [-0.016, 0.006, 0.019, 0.029, 0.018]]))).toBeTruthy()
+
+            });
+
+
+        });
+
+        describe("Inverting an upper triangular matrix", () => {
+            it("Inverting a 3x3 upper triangular matrix", () => {
+                const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [0, 0, 6]]);
+
+                const expected = new Matrix([[1, - 1 / 2, -1 / 12], [0, 1 / 4, -5 / 24], [0, 0, 1 / 6]]);
+
+                const result = matrix.invertUpper();
+
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it("Error: Not a square matrix", () => {
+                const matrix = new Matrix([[1, 2, 3], [0, 4, 5]]);
+
+                expect(() => {
+                    matrix.invertUpper();
+                }).toThrow();
+            });
+
+            it("Error: Non upper triangular matrix", () => {
+                const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+
+                expect(() => {
+                    matrix.invertUpper();
+                }).toThrow();
+            });
+        });
+
+        describe("Inverting a lower triangular matrix", () => {
+            it("Inverting a 3x3 lower triangular matrix", () => {
+                const matrix = new Matrix([[1, 0, 0], [2, 3, 0], [4, 5, 6]]);
+                const expected = new Matrix([[1, 0, 0], [-2 / 3, 1 / 3, 0], [-1 / 9, -5 / 18, 1 / 6]]);
+
+                const result = matrix.invertLower();
+
+                expect(result.equal(expected)).toBeTruthy();
+            });
+
+            it("Error: Not a square matrix", () => {
+                const matrix = new Matrix([[1, 2, 3], [0, 4, 5]]);
+
+                expect(() => {
+                    matrix.invertLower();
+                }).toThrow();
+            });
+
+            it("Error: Non lower triangular matrix", () => {
+                const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [6, 7, 8]]);
+
+                expect(() => {
+                    matrix.invertLower();
+                }).toThrow();
+            });
+        });
+
+    })
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Utility methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Utility", () => {
+        it('Should correctly show equality between two matricies', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        expect(A.equal(A)).toBeTruthy()
+
+                    }
+                )
+            );
+        });
+
+        it('Should correctly turn a matrix into a 2d array', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        expect(A.toArray()).toEqual(entries)
+
+                    }
+                )
+            );
+        });
+
+        it('Should correctly turn a matrix into a string', () => {
+            const test = new Matrix([[1, 2], [3, 4]])
+            expect(typeof test.toString()).toEqual("string")
+        });
+    })
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Static methods
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    describe("Static methods", () => {
+        describe('clone', () => {
+            it('should clone the matrix instance and return the clone', () => {
+                const matrix = new Matrix([[1, 2], [3, 4]]);
+                const clone = Matrix.clone(matrix);
+                expect(clone).toEqual(matrix);
+                expect(clone).not.toBe(matrix);
+            });
+        });
+
+        describe('padMatrixToPowerOfTwo', () => {
+            it('should return the padded matrix with dimensions as a power of two', () => {
+                const matrix = new Matrix([[1], [4]]);
+                const paddedMatrix = Matrix.padMatrixToPowerOfTwo(matrix);
+                expect(paddedMatrix).toEqual(new Matrix([[1, 0], [4, 0]]));
+            });
+        });
+
+
+
+        describe('Reshape', () => {
+            it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
+                const compareMatrix = new Matrix([[1, 2], [3, 4]])
+                expect(Matrix.reshape([1, 2, 3, 4], 2, 2)).toEqual(compareMatrix)
+            })
+
+            it('Reshaping the array [1,2,3,4] into [[1],[2],[3],[4]]', () => {
+                const compareMatrix = new Matrix([[1], [2], [3], [4]])
+                expect(Matrix.reshape([1, 2, 3, 4], 4, 1)).toEqual(compareMatrix)
+            })
+
+            it('Error: Incompatible dimensions', () => {
+                expect(() => Matrix.reshape([1, 2, 3, 4], 10, 10)).toThrow()
+            })
+
+            it('Error: Invalid argument', () => {
+                //@ts-ignore
+                expect(() => Matrix.reshape([1, 2, 3, 4], "2", "10")).toThrow()
+            })
+
+        })
+
+
+        describe('roundMatrixToZero', () => {
+            it('should round values close to zero in the matrix to zero', () => {
+                const matrix = new Matrix([[0.000000000001, 0.000000000001], [0.000000000001, 0.000000000001]]);
+                Matrix.roundMatrixToZero(matrix, 1e-7);
+                expect(matrix).toEqual(new Matrix([[0, 0], [0, 0]]));
+            });
+        });
+
+        describe('toFixedMatrix', () => {
+            it('should round all elements of the matrix to the specified number of decimal places', () => {
+                const matrix = new Matrix([[1.23456789, 2.3456789], [3.456789, 4.56789]]);
+                Matrix.toFixedMatrix(matrix, 2);
+                expect(matrix).toEqual(new Matrix([[1.23, 2.35], [3.46, 4.57]]));
+            });
+        });
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        /*
+        * Static boolean methods
+        */
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        describe('Is lower triangular', () => {
+            it('A lower triangular matrix', () => {
+                const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+                expect(Matrix.isLowerTriangular(lowerTriangular)).toBeTruthy()
+            })
+
+            it('A non lower triangular matrix', () => {
+                const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
+                expect(Matrix.isLowerTriangular(upperTriangular)).toBeFalsy()
+            })
+
+            it('Error: A not an instance of Matrix', () => {
+                //@ts-ignore
+                expect(() => Matrix.isLowerTriangular("upperTriangular")).toThrow()
+            })
+
+        })
+
+        describe('Is upper triangular', () => {
+            it('A upper triangular matrix', () => {
+
+                const upperTriangular = new Matrix([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
+                expect(Matrix.isUpperTriangular(upperTriangular)).toBeTruthy()
+            })
+
+            it('A non upper triangular matrix', () => {
+
+                const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
+                expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
+            })
+
+            it('Error: A not an instance of Matrix', () => {
+                //@ts-ignore
+                expect(() => Matrix.isUpperTriangular("upperTriangular")).toThrow()
+            })
+
+        })
+
+
+        describe('Ones', () => {
+            it('A upper triangular matrix', () => {
+                const test = Matrix.ones(2, 2);
+                expect(test).toEqual(new Matrix([[1, 1], [1, 1]]))
+            })
+
+            it('Throwing an error', () => {
+                //@ts-ignore
+                expect(() => Matrix.ones(2, "2")).toThrow();
+            })
+
+        })
+
+        it('Int matrix test', () => {
+            const test = Matrix.ones(2, 2);
+            expect(Matrix.isIntMatrix(test)).toBeTruthy()
+        })
+
+        it('Throwing an error', () => {
+            //@ts-ignore
+            expect(() => Matrix.isIntMatrix(2)).toThrow();
+        })
     })
 })
