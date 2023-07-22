@@ -14,7 +14,7 @@
     "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "allowImportingTsExtensions ": true,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "numericjs": [
