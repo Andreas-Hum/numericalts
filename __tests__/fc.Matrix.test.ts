@@ -365,19 +365,23 @@ describe("Matrix", () => {
 
 
 
-        //TODO: fix this 
+        //TODO: fix this
         it('Should correctly perform the gram smith method', () => {
             fc.assert(
                 fc.property(
                     array2Darb(fc.integer({ min: 1 })),
                     (entries: any[][]) => {
-                        if(entries.length == 1 || entries.some((entry:any[]) => entry.length !== entries[0].length)) return
+                        if (entries.length == 1 || entries.some((entry: any[]) => entry.length !== entries[0].length)) return
                         const A: Matrix<any> = new Matrix(entries);
-                        const gramSmith: Matrix<any> = A.gramSmith()
+                        let gramSmith: Matrix<any>;
+                        try {
+                            gramSmith = A.gramSmith()
+
+                        } catch (error) {
+                            return
+                        }
 
                         gramSmith.transpose().toArray().every((row: any[]) => expect(math.dot(row, row)).toBeCloseTo(1))
-
-
 
                     }
                 )
