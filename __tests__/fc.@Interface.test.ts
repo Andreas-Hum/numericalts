@@ -1,5 +1,5 @@
 import fc from 'fast-check';
-import { NumericalNumber, NumericalBigInt, Numerical } from '../src/@interfaces'; // Replace 'your-module' with the actual module path
+import { NumericalNumber, NumericalBigInt, Numerical } from '../src/@interfaces/numerical.ts'; // Replace 'your-module' with the actual module path
 import { math } from '../src/math';
 // Helper function to check equality within a tolerance for numbers
 

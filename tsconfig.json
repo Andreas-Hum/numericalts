@@ -13,6 +13,9 @@
     "strictNullChecks": false,
     "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowImportingTsExtensions ": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "numericjs": [
         "./types/index.d.ts"
