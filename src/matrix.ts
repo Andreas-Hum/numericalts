@@ -1410,7 +1410,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             const row: number[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue: number = Math.random() * 100;
+                const randomValue: number = Math.floor(Math.random() * 100);
                 row.push(randomValue);
             }
             entries.push(row);

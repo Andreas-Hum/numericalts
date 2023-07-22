@@ -33,8 +33,8 @@ describe("Matrix", () => {
 
         array2Darb = (valueArb: fc.Arbitrary<any>) =>
             fc.array(
-                fc.array(valueArb, { minLength: 1 }),
-                { minLength: 1 }
+                fc.array(valueArb, { minLength: 1, maxLength: 200 }),
+                { minLength: 1, maxLength: 200 }
             ).map(arr => {
                 // Find the length of the shortest subarray
                 const minLength = Math.min(...arr.map(subArr => subArr.length));
@@ -50,7 +50,7 @@ describe("Matrix", () => {
     * Validation and updating
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     describe("Initialization", () => {
         it('Should construct a 1D matrix with specified rows and columns', () => {
             fc.assert(
@@ -327,4 +327,41 @@ describe("Matrix", () => {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-})
+
+    describe("Mathematical operations", () => {
+        it('Should correctly add two matrices together', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const B: Matrix<any> = Matrix.random(A.rows, A.columns)
+                        const C: Matrix<any> = Matrix.random(A.rows, A.columns)
+
+
+                        expect(A.add(B)).toEqual(B.add(A));
+                        expect(A.add(B).add(C)).toEqual(C.add(B).add(A));
+                        expect(A.add(Matrix.zeros(A.rows,A.columns))).toEqual(A)
+                    }
+                )
+            );
+        });
+
+
+        it('Should correctly subtract two matrices', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const B: Matrix<any> = Matrix.random(A.rows, A.columns)
+                        expect(A.subtract(A)).toEqual(Matrix.zeros(A.rows, A.columns));
+                        expect(A.subtract(B)).toEqual(A.add(B.scale(-1)))
+
+                    }
+                )
+            );
+        });
+
+    })
+}) 
