@@ -1,3 +1,5 @@
+import { Numerical } from "./numerical"
+
 export { Matrix as MatrixInterface }
 interface Matrix<T> {
     /*
@@ -45,6 +47,12 @@ interface Matrix<T> {
      * @type {string}
      */
     dataType: string
+
+    /**
+     * The numercal class to use for calculations
+     * @type {Numerical<T>}
+     */
+    numerical: Numerical<T>
 
     add(B: Matrix<number>): Matrix<number>
     multiply(B: Matrix<number>): Matrix<number>
