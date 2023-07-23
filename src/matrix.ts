@@ -11,6 +11,11 @@ import { math } from "./math";
 // Utility import
 import { Constants } from "./constants";
 
+//Numerical interface/classes
+import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
+
+
+
 export class Matrix<T> implements MatrixInterface<T> {
 
 
@@ -60,8 +65,12 @@ export class Matrix<T> implements MatrixInterface<T> {
      */
     dataType: string = ""
 
-    //TODO: add numerical<T> here
 
+    /**
+     * The numercal class to use for calculations
+     * @type {Numerical<T>}
+     */
+    numerical: Numerical<T> = undefined
 
 
     /**
@@ -70,12 +79,15 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @param {number} rows - The number of rows in the matrix.
      * @param {number} columns - The number of columns in the matrix.
      */
-    constructor(entries: T[][] | T[], rows?: number, columns?: number) {
+    constructor(entries: T[][] | T[], options?: { rows?: number, columns?: number, numerical?: Numerical<T> }) {
         if (!Array.isArray(entries)) {
             throw new MatrixError("Matrix has to be an array", 801, { entries });
         }
 
         if (this.is1dArray(entries)) {
+            const rows: number | undefined = options.rows;
+            const columns: number | undefined = options.columns;
+
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
@@ -113,6 +125,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             this.columns = numCols;
             this.size = numRows * numCols;
         }
+
 
         this.updateMatrix()
     }
@@ -339,7 +352,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                 submatrixElements[index] = this.mElements[originalIndex];
             }
         }
-        return new Matrix(submatrixElements, numRows, numCols);
+        return new Matrix(submatrixElements, { rows: numRows, columns: numCols });
     }
 
     /**
@@ -404,7 +417,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         for (let i = 0; i < size; i++) {
             resultElements[i] += B.mElements[i]
         }
-        return new Matrix<number>(resultElements, this.rows, this.columns);
+        return new Matrix<number>(resultElements, { rows: this.rows, columns: this.columns });
 
     }
 
@@ -552,7 +565,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
         }
 
-        return new Matrix(result, rows, matrixColumns);
+        return new Matrix(result, { rows, columns: matrixColumns });;
     }
 
 
@@ -648,7 +661,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         // Base case: If matrices are 1x1, perform simple multiplication
         if (this.rows === 1 && this.columns === 1 && B.rows === 1 && B.columns === 1) {
             const resultElement: number = (this.mElements[0] as number) * B.mElements[0];
-            return new Matrix([resultElement], 1, 1);
+            return new Matrix([resultElement], { rows: 1, columns: 1 })
         }
 
         // Pad matrices to the nearest power of two
@@ -684,7 +697,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix<number>(new Array<number>(n * n), n, n);
+        const result = new Matrix<number>(new Array<number>(n * n), { rows: n, columns: n });
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
@@ -716,7 +729,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             resultElements[i] -= B.mElements[i];
         }
 
-        return new Matrix(resultElements, this.rows, this.columns);
+        return new Matrix(resultElements, { rows: this.rows, columns: this.columns });
     }
     //TODO: FROM HERE TYPE
     /**
@@ -848,7 +861,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<number>(Array.from(matrixClone), rows, columns);
+                        return new Matrix<number>(Array.from(matrixClone), { rows, columns });
                     }
                 }
             }
@@ -872,7 +885,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
 
-        matrixClone = new Matrix<number>(Array.from(matrixClone), rows, columns)
+        matrixClone = new Matrix<number>(Array.from(matrixClone), { rows, columns })
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -912,7 +925,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<number>(Array.from(matrixClone), rows, columns);;
+                        return new Matrix<number>(Array.from(matrixClone), { rows, columns });;
                     }
                 }
             }
@@ -944,7 +957,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             lead++;
         }
 
-        matrixClone = new Matrix<number>(Array.from(matrixClone), rows, columns)
+        matrixClone = new Matrix<number>(Array.from(matrixClone), { rows, columns })
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -1321,7 +1334,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
         }
 
-        return new Matrix(paddedMatrix, nextPower, nextPower);
+        return new Matrix(paddedMatrix, { rows: nextPower, columns: nextPower });
     }
 
 
