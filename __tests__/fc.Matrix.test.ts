@@ -65,7 +65,7 @@ describe("Matrix", () => {
                     (entries, rows, columns) => {
                         if (rows * columns !== entries.length) return; // Skip if rows * columns is not equal to array length
 
-                        const matrix = new Matrix(entries, rows, columns);
+                        const matrix = new Matrix(entries, { rows, columns });
                         expect(matrix.rows).toEqual(rows);
                         expect(matrix.columns).toEqual(columns);
                         expect(matrix.size).toEqual(rows * columns);
@@ -99,7 +99,7 @@ describe("Matrix", () => {
                     (entries, rows, columns) => {
                         if (rows * columns !== entries.length) return; // Skip if rows * columns is not equal to array length
 
-                        const matrix = new Matrix(entries, rows, columns);
+                        const matrix = new Matrix(entries, { rows, columns });
                         expect(matrix.rows).toEqual(rows);
                         expect(matrix.columns).toEqual(columns);
                         expect(matrix.size).toEqual(rows * columns);
@@ -200,9 +200,9 @@ describe("Matrix", () => {
             //@ts-ignore
             expect(() => new Matrix([1, 2, 3], "sda", 2312)).toThrow("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative")
             //@ts-ignore
-            expect(() => new Matrix([1, 2, 3], 2, 2)).toThrow("Rows and columns multiplied together has to equal the length of the 1d array")
+            expect(() => new Matrix([1, 2, 3], { rows: 2, columns: 2 })).toThrow("Rows and columns multiplied together has to equal the length of the 1d array")
             //@ts-ignore
-            expect(() => new Matrix([1, "2", 3, 4], 2, 2,)).toThrow("Invalid entries not of the same type")
+            expect(() => new Matrix([1, "2", 3, 4], { rows: 2, columns: 2 })).toThrow("Invalid entries not of the same type")
         });
 
 
@@ -608,8 +608,8 @@ describe("Matrix", () => {
 
             // Test multiplication of a non-square matrix
             it('Non-square Matrix multiplication', () => {
-                const A = new Matrix([1, 2, 3, 4, 5, 6], 2, 3);
-                const B = new Matrix([2, 0, 1, 2, 1, 2], 3, 2);
+                const A = new Matrix([1, 2, 3, 4, 5, 6], { rows: 2, columns: 3 });
+                const B = new Matrix([2, 0, 1, 2, 1, 2], { rows: 3, columns: 2 });
 
                 expect(() => {
                     A.strassenMultiply(B);
@@ -618,14 +618,14 @@ describe("Matrix", () => {
 
             // Test multiplication of a matrix with dimensions not a power of two
             it('Not power of two Matrix multiplication', () => {
-                const A = new Matrix([1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3);
-                const B = new Matrix([9, 8, 7, 6, 5, 4, 3, 2, 1], 3, 3);
+                const A = new Matrix([1, 2, 3, 4, 5, 6, 7, 8, 9], { rows: 3, columns: 3 });
+                const B = new Matrix([9, 8, 7, 6, 5, 4, 3, 2, 1], { rows: 3, columns: 3 });
                 const result = A.strassenMultiply(B);
 
 
                 // Expected result is manually calculated
                 const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
-                expect(result).toEqual(new Matrix(expectedResult, 3, 3));
+                expect(result).toEqual(new Matrix(expectedResult, { rows: 3, columns: 3 }));
             });
         });
 
