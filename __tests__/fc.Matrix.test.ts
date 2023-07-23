@@ -1,7 +1,7 @@
 import { fc } from '@fast-check/jest';
 import { Matrix, math } from '../src';
 
-import { Numerical } from '../src/@interfaces/numerical';
+import { Numerical, NumericalNumber } from '../src/@interfaces/numerical';
 import { FractionalNumberClass } from '../src/@t.classes/classes';
 
 let fractionalRep: Numerical<string>, fractionalStringArb: fc.Arbitrary<string>
@@ -132,7 +132,7 @@ describe("Matrix", () => {
                     array2Darb(classArb),
                     (entries: any[][]) => {
 
-                        const matrix = new Matrix(entries);
+                        const matrix = new Matrix(entries, { numerical: new NumericalNumber() });
                         expect(matrix.rows).toEqual(entries.length);
                         expect(matrix.columns).toEqual(entries[0].length);
                         expect(matrix.size).toEqual(entries.length * entries[0].length);
@@ -378,9 +378,9 @@ describe("Matrix", () => {
                         const C: Matrix<any> = Matrix.random(A.rows, A.columns)
 
 
-                        expect(A.add(B)).toEqual(B.add(A));
-                        expect(A.add(B).add(C)).toEqual(C.add(B).add(A));
-                        expect(A.add(Matrix.zeros(A.rows, A.columns))).toEqual(A)
+                        expect(JSON.stringify(A.add(B))).toEqual(JSON.stringify(B.add(A)));
+                        expect(JSON.stringify(A.add(B).add(C))).toEqual(JSON.stringify(C.add(B).add(A)));
+                        expect(JSON.stringify(A.add(Matrix.zeros(A.rows, A.columns)))).toEqual(JSON.stringify(A))
                     }
                 )
             );
@@ -394,8 +394,8 @@ describe("Matrix", () => {
                     (entries: any[][]) => {
                         const A: Matrix<any> = new Matrix(entries);
                         const B: Matrix<any> = Matrix.random(A.rows, A.columns)
-                        expect(A.subtract(A)).toEqual(Matrix.zeros(A.rows, A.columns));
-                        expect(A.subtract(B)).toEqual(A.add(B.scale(-1)))
+                        expect(JSON.stringify(A.subtract(A))).toEqual(JSON.stringify(Matrix.zeros(A.rows, A.columns)));
+                        expect(JSON.stringify(A.subtract(B))).toEqual(JSON.stringify(A.add(B.scale(-1))))
 
                     }
                 )
@@ -439,8 +439,8 @@ describe("Matrix", () => {
                         const iden: Matrix<any> = Matrix.identity(A.rows)
                         const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
-                        expect(A.multiply(iden)).toEqual(A)
-                        expect(A.multiply(zeros)).toEqual(zeros)
+                        expect(JSON.stringify(A.multiply(iden))).toEqual(JSON.stringify(A))
+                        expect(JSON.stringify(A.multiply(zeros))).toEqual(JSON.stringify(zeros))
 
 
                     }
@@ -456,12 +456,11 @@ describe("Matrix", () => {
                         const A: Matrix<any> = new Matrix(entries);
                         if (!A.isSquare) return
                         const iden: Matrix<any> = Matrix.identity(A.rows)
-                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
-                        expect(A.multiply(A)).toEqual(A.pow(2))
-                        expect(A.pow(0)).toEqual(iden)
-                        expect(A.pow(1)).toEqual(A)
-                        expect(A.pow(3)).toBeTruthy()
+                        expect(JSON.stringify(A.multiply(A))).toEqual(JSON.stringify(A.pow(2)))
+                        expect(JSON.stringify(A.pow(0))).toEqual(JSON.stringify(iden))
+                        expect(JSON.stringify(A.pow(1))).toEqual(JSON.stringify(A))
+                        expect(JSON.stringify(A.pow(3))).toBeTruthy()
 
 
 
@@ -479,8 +478,8 @@ describe("Matrix", () => {
 
                         const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
-                        expect(A.scale(1)).toEqual(A)
-                        expect(A.scale(0)).toEqual(zeros)
+                        expect(JSON.stringify(A.scale(1))).toEqual(JSON.stringify(A))
+                        expect(JSON.stringify(A.scale(0))).toEqual(JSON.stringify(zeros))
 
 
 
@@ -498,7 +497,7 @@ describe("Matrix", () => {
                         if (!A.isSquare) return
                         const iden: Matrix<any> = Matrix.identity(A.rows)
 
-                        expect(A.strassenMultiply(iden)).toEqual(A)
+                        expect(JSON.stringify(A.strassenMultiply(iden))).toEqual(JSON.stringify(A))
 
                     }
                 )
@@ -515,7 +514,7 @@ describe("Matrix", () => {
                         const iden: Matrix<any> = Matrix.identity(A.rows)
                         const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
 
-                        expect(A.strassenMultiply(iden)).toEqual(A)
+                        expect(JSON.stringify(A.strassenMultiply(iden))).toEqual(JSON.stringify(A))
 
                     }
                 )
@@ -531,7 +530,7 @@ describe("Matrix", () => {
 
             matrix.vMultiply(vector);
 
-            expect(matrix.vMultiply(vector)).toEqual(expected);
+            expect(JSON.stringify(matrix.vMultiply(vector))).toEqual(JSON.stringify(expected));
         });
 
         it('should throw an error if the input vector is not an array', () => {
@@ -625,7 +624,7 @@ describe("Matrix", () => {
 
                 // Expected result is manually calculated
                 const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
-                expect(result).toEqual(new Matrix(expectedResult, { rows: 3, columns: 3 }));
+                expect(JSON.stringify(result)).toEqual(JSON.stringify(new Matrix(expectedResult, { rows: 3, columns: 3 })));
             });
         });
 
@@ -740,8 +739,8 @@ describe("Matrix", () => {
                     const { Q, R } = testMatrix.QRDecomposition()
 
 
-                    expect(Q).toEqual(new Matrix([[1, 0], [0, 1]]))
-                    expect(R).toEqual(new Matrix([[1, 1], [0, 1]]))
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([[1, 0], [0, 1]])))
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([[1, 1], [0, 1]])))
                 });
 
                 it('QR decomposition with a 4x4 row matrix [[0,0,1,0],[1,0,0,0],[0,1,1,0],[0,0,0,1]]', () => {
@@ -749,32 +748,32 @@ describe("Matrix", () => {
                     const { Q, R } = testMatrix.QRDecomposition()
 
 
-                    expect(Q).toEqual(new Matrix([
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([
                         [0, 0, 1, 0],
                         [1, 0, 0, 0],
                         [0, 1, 0, 0],
-                        [0, 0, 0, 1]]))
-                    expect(R).toEqual(new Matrix([
+                        [0, 0, 0, 1]])))
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([
                         [1, 0, 0, 0],
                         [0, 1, 1, 0],
                         [0, 0, 1, 0],
-                        [0, 0, 0, 1]]))
+                        [0, 0, 0, 1]])))
                 });
 
                 it('QR decomposition with a 4x3 row matrix [[0,0,1],[1,0,0],[0,1,1],[0,0,0]]', () => {
                     const testMatrix = new Matrix([[0, 0, 1], [1, 0, 0], [0, 1, 1], [0, 0, 0]])
                     const { Q, R } = testMatrix.QRDecomposition()
 
-                    expect(Q).toEqual(new Matrix([
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([
                         [0, 0, 1],
                         [1, 0, 0],
                         [0, 1, 0],
-                        [0, 0, 0]]))
+                        [0, 0, 0]])))
 
-                    expect(R).toEqual(new Matrix([
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([
                         [1, 0, 0],
                         [0, 1, 1],
-                        [0, 0, 1]]))
+                        [0, 0, 1]])))
                 });
 
 
@@ -857,7 +856,7 @@ describe("Matrix", () => {
                         expect(At.columns).toEqual(A.rows)
                         expect(At.rows).toEqual(A.columns)
                         expect(At.shape).toEqual(`(${A.columns},${A.rows})`)
-                        expect(At.transpose()).toEqual(A)
+                        expect(JSON.stringify(At.transpose())).toEqual(JSON.stringify(A))
 
 
                     }
@@ -879,7 +878,7 @@ describe("Matrix", () => {
         describe("Inverting a square matrix", () => {
             it("Inverting a 2x2 square matrix", () => {
                 const matrix = new Matrix([[1, -2], [-1, 3]]);
-                expect(matrix.invertSquare()).toEqual(new Matrix([[3, 2], [1, 1]]))
+                expect(JSON.stringify(matrix.invertSquare())).toEqual(JSON.stringify(new Matrix([[3, 2], [1, 1]])))
 
             });
 
@@ -1005,7 +1004,7 @@ describe("Matrix", () => {
             it('should clone the matrix instance and return the clone', () => {
                 const matrix = new Matrix([[1, 2], [3, 4]]);
                 const clone = Matrix.clone(matrix);
-                expect(clone).toEqual(matrix);
+                expect(JSON.stringify(clone)).toEqual(JSON.stringify(matrix));
                 expect(clone).not.toBe(matrix);
             });
         });
@@ -1014,7 +1013,7 @@ describe("Matrix", () => {
             it('should return the padded matrix with dimensions as a power of two', () => {
                 const matrix = new Matrix([[1], [4]]);
                 const paddedMatrix = Matrix.padMatrixToPowerOfTwo(matrix);
-                expect(paddedMatrix).toEqual(new Matrix([[1, 0], [4, 0]]));
+                expect(JSON.stringify(paddedMatrix)).toEqual(JSON.stringify(new Matrix([[1, 0], [4, 0]])));
             });
         });
 
@@ -1023,12 +1022,12 @@ describe("Matrix", () => {
         describe('Reshape', () => {
             it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
                 const compareMatrix = new Matrix([[1, 2], [3, 4]])
-                expect(Matrix.reshape([1, 2, 3, 4], 2, 2)).toEqual(compareMatrix)
+                expect(JSON.stringify(Matrix.reshape([1, 2, 3, 4], 2, 2))).toEqual(JSON.stringify(compareMatrix))
             })
 
             it('Reshaping the array [1,2,3,4] into [[1],[2],[3],[4]]', () => {
                 const compareMatrix = new Matrix([[1], [2], [3], [4]])
-                expect(Matrix.reshape([1, 2, 3, 4], 4, 1)).toEqual(compareMatrix)
+                expect(JSON.stringify(Matrix.reshape([1, 2, 3, 4], 4, 1))).toEqual(JSON.stringify(compareMatrix))
             })
 
             it('Error: Incompatible dimensions', () => {
@@ -1047,7 +1046,7 @@ describe("Matrix", () => {
             it('should round values close to zero in the matrix to zero', () => {
                 const matrix = new Matrix([[0.000000000001, 0.000000000001], [0.000000000001, 0.000000000001]]);
                 Matrix.roundMatrixToZero(matrix, 1e-7);
-                expect(matrix).toEqual(new Matrix([[0, 0], [0, 0]]));
+                expect(JSON.stringify(matrix)).toEqual(JSON.stringify(new Matrix([[0, 0], [0, 0]])));
             });
         });
 
@@ -1055,7 +1054,7 @@ describe("Matrix", () => {
             it('should round all elements of the matrix to the specified number of decimal places', () => {
                 const matrix = new Matrix([[1.23456789, 2.3456789], [3.456789, 4.56789]]);
                 Matrix.toFixedMatrix(matrix, 2);
-                expect(matrix).toEqual(new Matrix([[1.23, 2.35], [3.46, 4.57]]));
+                expect(JSON.stringify(matrix)).toEqual(JSON.stringify(new Matrix([[1.23, 2.35], [3.46, 4.57]])));
             });
         });
 
@@ -1107,7 +1106,7 @@ describe("Matrix", () => {
         describe('Ones', () => {
             it('A upper triangular matrix', () => {
                 const test = Matrix.ones(2, 2);
-                expect(test).toEqual(new Matrix([[1, 1], [1, 1]]))
+                expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
             })
 
             it('Throwing an error', () => {

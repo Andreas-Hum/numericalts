@@ -3,7 +3,7 @@ import { MatrixInterface } from "./@interfaces/matrix";
 
 
 // Error import
-import { MatrixError } from "./@error.types/index";
+import { MatrixError, NumericalError } from "./@error.types/index";
 
 // Math class  import
 import { math } from "./math";
@@ -76,8 +76,9 @@ export class Matrix<T> implements MatrixInterface<T> {
     /**
      * Constructs a matrix object.
      * @param {T[][] | T[]} entries - The entries of the matrix.
-     * @param {number} rows - The number of rows in the matrix.
-     * @param {number} columns - The number of columns in the matrix.
+     * @param {{ rows?: number, columns?: number, numerical?: Numerical<T> }} options - The options for the matrix class
+     * @param {number} options.rows - The number of rows in the matrix.
+     * @param {number} options.columns - The number of columns in the matrix.
      */
     constructor(entries: T[][] | T[], options?: { rows?: number, columns?: number, numerical?: Numerical<T> }) {
         if (!Array.isArray(entries)) {
@@ -124,6 +125,18 @@ export class Matrix<T> implements MatrixInterface<T> {
             this.rows = numRows;
             this.columns = numCols;
             this.size = numRows * numCols;
+        }
+
+        if (!options || !options.numerical) {
+            if (this.dataType === "number") {
+                this.numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (this.dataType === "bigint") {
+                this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                console.log(entries[0])
+                //TODO: Maybe fix this to throw error instead
+                throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
+            }
         }
 
 
@@ -194,7 +207,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         } else {
             typeName = this.getType(entries[0])
             for (let i = 0; i < entries.length; i++) {
-
                 if (this.getType(entries[i]) !== typeName) {
                     throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
                 }
@@ -697,7 +709,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix<number>(new Array<number>(n * n), { rows: n, columns: n });
+        const result = new Matrix(new Array(n * n), { rows: n, columns: n, numerical: this.numerical });
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
