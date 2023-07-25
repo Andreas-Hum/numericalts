@@ -1,3 +1,5 @@
+import { Numerical } from "./numerical"
+
 export { Matrix as MatrixInterface }
 interface Matrix<T> {
     /*
@@ -46,23 +48,29 @@ interface Matrix<T> {
      */
     dataType: string
 
-    add(B: Matrix<number>): Matrix<number>
-    multiply(B: Matrix<number>): Matrix<number>
-    pow(exp: number): Matrix<number>
-    scale(scalar: number): Matrix<number>
-    subtract(B: Matrix<number>): Matrix<number>
-    vMultiply(vector: number[]): Matrix<number>
-    backSubstitution(b: number[]): number[]
-    forwardSubstitution(b: number[]): number[]
-    gaussianElimination(options: { solve?: boolean }): Matrix<number> | number[]
-    gaussJordan(options: { solve?: boolean }): Matrix<number> | number[]
-    QRDecomposition(): { Q: Matrix<number>, R: Matrix<number> }
-    invertSquare(): Matrix<number>
-    invertUpper(): Matrix<number>
-    invertLower(): Matrix<number>
+    /**
+     * The numercal class to use for calculations
+     * @type {Numerical<T>}
+     */
+    numerical: Numerical<T>
+
+    add(B: Matrix<T>): Matrix<T>
+    multiply(B: Matrix<T>): Matrix<T>
+    pow(exp: number): Matrix<T>
+    scale(scalar: number): Matrix<T>
+    subtract(B: Matrix<T>): Matrix<T>
+    vMultiply(vector: T[]): Matrix<T>
+    backSubstitution(b: T[]): T[]
+    forwardSubstitution(b: T[]): T[]
+    gaussianElimination(options: { solve?: boolean }): Matrix<T> | T[]
+    gaussJordan(options: { solve?: boolean }): Matrix<T> | T[]
+    QRDecomposition(): { Q: Matrix<T>, R: Matrix<T> }
+    invertSquare(): Matrix<T>
+    invertUpper(): Matrix<T>
+    invertLower(): Matrix<T>
     augment(B: Matrix<T>): Matrix<T>
     equal(B: Matrix<T>): boolean
-    gramSmith(): Matrix<number>
+    gramSmith(): Matrix<T>
     print(): void
     toArray(): T[][]
     transpose(): Matrix<T>
