@@ -16,6 +16,8 @@ import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
 
 
 
+
+
 export class Matrix<T>{
 
 
@@ -838,7 +840,7 @@ export class Matrix<T>{
     public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
 
         let lead: number = 0;
-        let matrixClone: Array<T> | Matrix<T> = new Array(...this.mElements); // clone the matrix
+        let matrixClone: T[] | Matrix<T> = [...this.mElements as T[]]; // clone the matrix
 
         let rows: number = this.rows;
         let columns: number = this.columns;
@@ -849,7 +851,7 @@ export class Matrix<T>{
             }
 
             let i: number = r;
-            while (matrixClone[i * columns + lead] === 0) {
+            while (matrixClone[i * columns + lead] === this.numerical.zeroValue) {
                 i++;
 
                 if (rows === i) {
@@ -857,23 +859,23 @@ export class Matrix<T>{
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<T>(Array.from(matrixClone), { rows, columns });
+                        return new Matrix<T>([...matrixClone], { rows, columns });
                     }
                 }
             }
 
             // Swap rows i and r
             //TODO: hehehehehehhehehehheehehehehehehe
-            let tmp: Array<T> = matrixClone.slice(i * columns, (i + 1) * columns);
-            matrixClone.splice(i * columns, 0, ...matrixClone.slice(r * columns, (r + 1) * columns));
-            matrixClone.splice(r * columns, 0, ...tmp);
+            let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
+            matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
+            matrixClone.splice(r * columns, columns, ...tmp);
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of the current column as zero
             for (let i = r + 1; i < rows; i++) {
                 let val = this.numerical.divide(matrixClone[i * columns + lead], matrixClone[r * columns + lead]);
 
                 for (let j = 0; j < columns; j++) {
-                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]));
+                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]))
                 }
             }
 
@@ -881,7 +883,7 @@ export class Matrix<T>{
         }
 
 
-        matrixClone = new Matrix<T>(matrixClone, { rows, columns })
+        matrixClone = new Matrix<T>([...matrixClone], { rows, columns })
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -898,11 +900,11 @@ export class Matrix<T>{
      * This method does not modify the original matrix.
      * @public
       * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns { Matrix<number>  | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array.
+     * @returns { Matrix<T>  | T[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array.
     */ //TODO: lav en type til normale options
-    public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix<number> | number[] {
+    public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
         let lead: number = 0;
-        let matrixClone: Float64Array | Matrix<number> = new Float64Array(this.mElements as number[]); // clone the matrix
+        let matrixClone: Array<T> | Matrix<T> = [...this.mElements as T[]]; // clone the matrix
 
         let rows: number = this.rows;
         let columns: number = this.columns;
@@ -1342,15 +1344,18 @@ export class Matrix<T>{
      * Rounds values close to zero in the given array and modifies the matrix in place
      * @public
      * @static
-     * @param { Matrix<number>} A - Matrix consisting of numbers
-     * @param {number} threshold - The threshold value for rounding to zero. Default is 1e-7.
+     * @param { Matrix<T>} A - Matrix to round
      * @returns {void}
      */
-    public static roundMatrixToZero(A: Matrix<number>, threshold: number = Constants.DELTA): void {
+    public static roundMatrixToZero<T>(A: Matrix<T>, options: { threshold: number, numerical?: Numerical<T> } = { threshold: Constants.DELTA }): void {
         const size: number = A.size;
+
+        if (!options || !options.numerical) {
+            options.numerical = new NumericalNumber() as unknown as Numerical<T>;
+        }
         for (let i = 0; i < size; i++) {
-            if (Math.abs(A.mElements[i]) < threshold || A.mElements[i] === -0) {
-                A.mElements[i] = 0;
+            if (options.numerical.toNumber(math.abs(A.mElements[i])) < Constants.DELTA) {
+                A.mElements[i] = options.numerical.zeroValue;
             }
         }
     }

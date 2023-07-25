@@ -1044,8 +1044,8 @@ describe("Matrix", () => {
 
         describe('roundMatrixToZero', () => {
             it('should round values close to zero in the matrix to zero', () => {
-                const matrix = new Matrix([[0.000000000001, 0.000000000001], [0.000000000001, 0.000000000001]]);
-                Matrix.roundMatrixToZero(matrix, 1e-7);
+                const matrix = new Matrix([[0.0000000000001, 0.0000000000001], [0.0000000000001, 0.0000000000001]]);
+                Matrix.roundMatrixToZero(matrix);
                 expect(JSON.stringify(matrix)).toEqual(JSON.stringify(new Matrix([[0, 0], [0, 0]])));
             });
         });
