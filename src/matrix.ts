@@ -70,7 +70,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * The numercal class to use for calculations
      * @type {Numerical<T>}
      */
-    numerical: Numerical<T> = undefined
+    numerical: Numerical<T>
 
 
     /**
@@ -127,16 +127,18 @@ export class Matrix<T> implements MatrixInterface<T> {
             this.size = numRows * numCols;
         }
 
-        if (!options || !options.numerical) {
+        if (options === undefined || options.numerical === undefined) {
             if (this.dataType === "number") {
                 this.numerical = new NumericalNumber() as unknown as Numerical<T>;
             } else if (this.dataType === "bigint") {
                 this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                console.log(entries[0])
                 //TODO: Maybe fix this to throw error instead
                 throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
             }
+
+
+
         }
 
 
@@ -410,26 +412,21 @@ export class Matrix<T> implements MatrixInterface<T> {
     /**
      * Adds another matrix to this matrix.
      * @public
-     * @param { Matrix<number> } B - The matrix to add.
-     * @returns {Matrix<number>} The resulting matrix.
+     * @param { Matrix<T> } B - The matrix to add.
+     * @returns {Matrix<T>} The resulting matrix.
      */
-    public add(B: Matrix<number>): Matrix<number> {
+    public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
-        //Deprecated
-        // if (B.dataType !== "number" || this.dataType !== "number") {
-        //     throw new MatrixError("Can't add non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        // }
 
-        const resultElements: Array<number> = JSON.parse(JSON.stringify(this.mElements));
+        const resultElements: Array<T> = JSON.parse(JSON.stringify(this.mElements));
         const size: number = this.size;
 
-
         for (let i = 0; i < size; i++) {
-            resultElements[i] += B.mElements[i]
+            resultElements[i] = this.numerical.add(resultElements[i], B.mElements[i])
         }
-        return new Matrix<number>(resultElements, { rows: this.rows, columns: this.columns });
+        return new Matrix(resultElements, { rows: this.rows, columns: this.columns});
 
     }
 

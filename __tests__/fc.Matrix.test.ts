@@ -99,7 +99,7 @@ describe("Matrix", () => {
                     (entries, rows, columns) => {
                         if (rows * columns !== entries.length) return; // Skip if rows * columns is not equal to array length
 
-                        const matrix = new Matrix(entries, { rows, columns });
+                        const matrix = new Matrix(entries, { rows, columns, numerical: new FractionalNumberClass() });
                         expect(matrix.rows).toEqual(rows);
                         expect(matrix.columns).toEqual(columns);
                         expect(matrix.size).toEqual(rows * columns);

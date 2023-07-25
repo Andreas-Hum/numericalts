@@ -54,7 +54,7 @@ interface Matrix<T> {
      */
     numerical: Numerical<T>
 
-    add(B: Matrix<number>): Matrix<number>
+    add(B: Matrix<T>): Matrix<T>
     multiply(B: Matrix<number>): Matrix<number>
     pow(exp: number): Matrix<number>
     scale(scalar: number): Matrix<number>
