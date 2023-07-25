@@ -764,6 +764,7 @@ describe("Matrix", () => {
                     const testMatrix = new Matrix([[0, 0, 1], [1, 0, 0], [0, 1, 1], [0, 0, 0]])
                     const { Q, R } = testMatrix.QRDecomposition()
 
+
                     expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([
                         [0, 0, 1],
                         [1, 0, 0],
@@ -879,6 +880,9 @@ describe("Matrix", () => {
             it("Inverting a 2x2 square matrix", () => {
                 const matrix = new Matrix([[1, -2], [-1, 3]]);
                 expect(JSON.stringify(matrix.invertSquare())).toEqual(JSON.stringify(new Matrix([[3, 2], [1, 1]])))
+                const hehe = new Matrix<string>([["4/1", "2/1", "1/1"], ["5/1", "2/1", "1/1"], ["4/1", "5/1", "5/1"]], { numerical: fractionalRep })
+                const { Q, R } = hehe.QRDecomposition()
+
 
             });
 
@@ -1118,7 +1122,7 @@ describe("Matrix", () => {
 
         it('Int matrix test', () => {
             const test = Matrix.ones(2, 2);
-            expect(Matrix.isIntMatrix(test)).toBeTruthy()
+            expect(Matrix.isIntMatrix(test as Matrix<number>)).toBeTruthy()
         })
 
         it('Throwing an error', () => {
