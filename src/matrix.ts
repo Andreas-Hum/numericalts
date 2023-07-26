@@ -476,13 +476,13 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param {number} startRow - The starting row index of the submatrix.
      * @param {number} startCol - The starting column index of the submatrix.
-     * @param {number} endRow - The ending row index of the submatrix (exclusive).
-     * @param {number} endCol - The ending column index of the submatrix (exclusive).
+     * @param {number} endRow - The ending row index of the submatrix (inclusive).
+     * @param {number} endCol - The ending column index of the submatrix (inclusive).
      * @returns {Matrix<T>} A new Matrix object representing the submatrix.
      *
      * @example
      * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const subMatrix = matrix.getSubMatrix(1, 3, 1, 3);
+     * const subMatrix = matrix.getSubMatrix(1, 2, 1, 2);
      * console.log(subMatrix.toString());
      * // Output:
      *  "5 6"
@@ -509,20 +509,20 @@ export class Matrix<T> implements MatrixInterface<T> {
     /**
     * @public
     * @param {number} startRow - The starting row index of the submatrix.
-    * @param {number} endRow - The ending row index of the submatrix.
     * @param {number} startCol - The starting column index of the submatrix.
-    * @param {number} endCol - The ending column index of the submatrix.
+    * @param {number} endRow - The ending row index of the submatrix (exclusive).
+    * @param {number} endCol - The ending column index of the submatrix (exclusive).
     * @param {Matrix<T>} subMatrix - The elements of the submatrix to be set.
     * 
     * @example
     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    * const subMatrix = new Matrix([[10, 11], [12, 13]]);
+    * const subMatrix = new Matrix([[3, 3], [3, 3]]);
     * matrix.setSubMatrix(1, 3, 1, 3, subMatrix);
     * console.log(matrix.toString());
     * // Output:
     *  "1 2 7"
-    *  "4 5 8"
-    *  "7 8 9"
+    *  "4 3 3"
+    *  "7 3 3"
     */
     public setSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number, subMatrix: Matrix<T>): void {
         if (startRow < 0 || startRow > this.rows || endRow < 0 || endRow > this.rows || startCol < 0 || startCol > this.columns || endCol < 0 || endCol > this.columns) {
@@ -819,7 +819,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const C = Matrix.padMatrixToPowerOfTwo(B);
 
         const n: number = A.rows;
-        const halfN: number = n / 2;
+        const halfN: number = Math.floor(n / 2);
 
         // Create submatrices for A and B
         const A11 = A.getSubMatrix(0, halfN, 0, halfN);
@@ -852,6 +852,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
         result.setSubMatrix(halfN, n - 1, halfN, n - 1, C22);
+
 
 
         return result.getSubMatrix(0, this.rows, 0, B.columns);
