@@ -561,13 +561,25 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param { Matrix<T> } B - The matrix to add.
      * @returns {Matrix<T>} The resulting matrix.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.add(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "6  8"
+     * "10 12"
+     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
      */
     public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
 
-        const resultElements: Array<T> = JSON.parse(JSON.stringify(this.mElements));
+        const resultElements: Array<T> = _.cloneDeep(this.mElements);
         const size: number = this.size;
 
         for (let i = 0; i < size; i++) {
@@ -619,27 +631,31 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-         * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
-         * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
-         *
-         * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
-         * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
-         * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
-         * vectors from the column vector itself.
-         *
-         * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
-         *
-         * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
-         * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
-         *
-         * @public
-         */
+     * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
+     * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
+     *
+     * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
+     * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
+     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
+     * vectors from the column vector itself.
+     *
+     * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
+     *
+     * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
+     * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 1, 1], [0, 1, 0], [0, 0, 1]]);
+     * const resultMatrix = matrix.gramSmith();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1 0 0"
+     * "0 1 0"
+     * "0 0 1"
+     *
+     * @public
+     */
     public gramSmith(): Matrix<T> {
-
-        //Deprecated
-        // if (this.dataType !== "number") {
-        //     throw new MatrixError("Can't perform the gramSmith algorithm on a non numeric matrix", 807, { AType: this.dataType });
-        // }
 
         const orthogonalColumns: T[][] = []
 
@@ -681,21 +697,27 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
-     * Multiplies this matrix with another matrix using the naive algorithm
+     * Multiplies this matrix with another matrix using the naive algorithm.
      * @public
      * @param {Matrix<T>} B - The matrix to multiply with.
      * @returns {Matrix<T>} The resulting matrix.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.multiply(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "19 22"
+     * "43 50"
+     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      */
     public multiply(B: Matrix<T>): Matrix<T> {
         if (this.columns !== B.rows) {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
 
-
-        //Deprecated
-        // if (B.dataType !== "number" || this.dataType !== "number") {
-        //     throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        // }
 
         const rows: number = this.rows;
         const columns: number = this.columns;
@@ -733,9 +755,18 @@ export class Matrix<T> implements MatrixInterface<T> {
     //TODO: fix the negative pow
     /**
      * Raises the matrix to the power of `exp`.
-     * 
+     *
      * @param exp - The exponent to raise the matrix to.
      * @returns { Matrix<T>} The resulting matrix after raising it to the power of `exp`.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const resultMatrix = matrix.pow(2);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "7 10"
+     * "15 22"
+     *
      * @throws {MatrixError} if the matrix is not square.
      */
     public pow(exp: number): Matrix<T> {
@@ -770,10 +801,18 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Scales the matrix and returns a new matrix with the result of the scaling
+     * Scales the matrix and returns a new matrix with the result of the scaling.
      * @public
-     * @param {number} scalar - The scalar to scale the matrix with
-     * @returns { Matrix<T>} The scaled matrix
+     * @param {number} scalar - The scalar to scale the matrix with.
+     * @returns { Matrix<T>} The scaled matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const scaledMatrix = matrix.scale(2);
+     * console.log(scaledMatrix.toString());
+     * // Output:
+     * "2 4"
+     * "6 8"
      */
     public scale(scalar: T): Matrix<T> {
 
@@ -792,11 +831,22 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-       * Performs matrix multiplication using the Strassen's algorithm.
-       * @public
-       * @param { Matrix<T>} B - The matrix to multiply with.
-       * @returns { Matrix<T>} The result of matrix multiplication.
-       */
+     * Performs matrix multiplication using the Strassen's algorithm.
+     * @public
+     * @param { Matrix<T>} B - The matrix to multiply with.
+     * @returns { Matrix<T>} The result of matrix multiplication.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.strassenMultiply(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "19 22"
+     * "43 50"
+     * 
+     * @throws {MatrixError} If the matrices are not square.
+     */
     public strassenMultiply(B: Matrix<T>): Matrix<T> {
 
 
@@ -865,6 +915,17 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param { Matrix<T>} B - The matrix to subtract.
      * @returns { Matrix<T>} The resulting matrix.
+     *
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.subtract(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "-4 -4"
+     * "-4 -4"
+     *
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for subtraction.
      */
     public subtract(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
@@ -880,11 +941,23 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
     }
+
+
     //TODO: FROM HERE TYPE
     /**
      * Performs vector-matrix multiplication by multiplying each element of the matrix by the corresponding element in the input vector.
      * @param {T[]} vector - The input vector.
      * @returns {Matrix<T>} A new matrix resulting from the vector-matrix multiplication.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const vector = [2, 3];
+     * const resultMatrix = matrix.vMultiply(vector);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "2 6"
+     * "6 12"
+     *
      * @throws {MatrixError} If the input vector is not an array or if its length doesn't match the number of columns in the matrix.
      */
     public vMultiply(vector: T[]): Matrix<T> {
@@ -918,9 +991,17 @@ export class Matrix<T> implements MatrixInterface<T> {
      * Performs back-substitution on an upper triangular matrix to solve
      * a system of linear equations.
      * @public
-     * @returns {number[]} Solution to the system of linear equations
+     * @param {T[]} b - The right-hand side of the system of linear equations.
+     * @returns {T[]} Solution to the system of linear equations.
      *
-     * @throws {MatrixError} if the matrix is not upper traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     * @example
+     * const matrix = new Matrix([[1, 2], [0, 1]]);
+     * const b = [8, 5];
+     * const solution = matrix.backSubstitution(b);
+     * console.log(solution);
+     * // Output: [-2, 5]
+     *
+     * @throws {MatrixError} If the matrix is not upper triangular, if b is not an array, or if the matrix contains a zero on the diagonal (unsolvable system).
      */
     public backSubstitution(b: T[]): T[] {
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
@@ -948,12 +1029,20 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Performs forward-substitution on an lower triangular matrix to solve
+     * Performs forward-substitution on a lower triangular matrix to solve
      * a system of linear equations.
      * @public
-     *  
-     * @returns {T[]} Solution to the system of linear equations
-     * @throws {MatrixError} if the matrix is not lowerf traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     * @param {T[]} b - The right-hand side of the system of linear equations.
+     * @returns {T[]} Solution to the system of linear equations.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 0], [2, 3]]);
+     * const b = [4, 5];
+     * const solution = matrix.forwardSubstitution(b);
+     * console.log(solution);
+     * // Output: [4, -1]
+     *
+     * @throws {MatrixError} If the matrix is not lower triangular, if b is not an array, or if the matrix contains a zero on the diagonal (unsolvable system).
      */
     public forwardSubstitution(b: T[]): T[] {
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 816, { matrix: this });

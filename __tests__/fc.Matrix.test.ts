@@ -639,6 +639,11 @@ describe("Matrix", () => {
                 // Expected result is manually calculated
                 const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
                 expect(JSON.stringify(result)).toEqual(JSON.stringify(new Matrix(expectedResult, { rows: 3, columns: 3 })));
+
+                const matrix = new Matrix([[1, 0], [2, 3]]);
+                const b = [4, 5];
+                const solution = matrix.forwardSubstitution(b);
+                console.log(solution);
             });
         });
 
@@ -949,10 +954,6 @@ describe("Matrix", () => {
 
                 expect(result.equal(expected)).toBeTruthy();
 
-                const matrix1 = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     const subMatrix = new Matrix([[10, 11], [12, 13]]);
-     matrix1.setSubMatrix(1, 2, 1, 2, subMatrix);
-     console.log(matrix1.toString());
             });
 
             it("Error: Not a square matrix", () => {
