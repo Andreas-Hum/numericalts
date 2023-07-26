@@ -15,10 +15,10 @@ import { Constants } from "./constants";
 import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
 
 
-//
+//Lodash import
 import _ from 'lodash';
 
-export class Matrix<T>{
+export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
