@@ -240,9 +240,9 @@ describe("Matrix", () => {
                         const matrix: Matrix<any> = new Matrix(entries);
 
                         // Create a random index between 1 and this.rows (inclusive).
-                        const randomIndex = Math.floor(Math.random() * matrix.rows + 1);
+                        const randomIndex = Math.floor(Math.random() * matrix.rows);
 
-                        expect(matrix.getRow(randomIndex)).toEqual(entries[(randomIndex - 1)]);
+                        expect(matrix.getRow(randomIndex)).toEqual(entries[(randomIndex)]);
                     }
                 )
             );
@@ -256,10 +256,10 @@ describe("Matrix", () => {
                     (entries: any[][]) => {
                         const matrix: Matrix<any> = new Matrix(entries);
 
-                        // Create a random index between 1 and this.rows (inclusive).
-                        const randomIndex = Math.floor(Math.random() * matrix.columns + 1);
+                        const randomIndex = Math.floor(Math.random() * matrix.columns);
 
-                        expect(matrix.getColumn(randomIndex)).toEqual(entries.map((entry: any[]) => entry[(randomIndex - 1)]));
+
+                        expect(matrix.getColumn(randomIndex)).toEqual(entries.map((entry: any[]) => entry[randomIndex]));
                     }
                 )
             );
@@ -300,6 +300,36 @@ describe("Matrix", () => {
                 [12, 13, 6],
                 [7, 8, 9],
             ]);
+        });
+
+        describe('setRow', () => {
+            it('sets new values in the specified row', () => {
+                twoByThree.setRow(0, [10, 11, 12]);
+                expect(twoByThree.getRow(0)).toEqual([10, 11, 12]);
+            });
+
+            it('throws an error when the row index is out of bounds', () => {
+                expect(() => twoByThree.setRow(3, [10, 11, 12])).toThrow();
+            });
+
+            it('throws an error when the size of the input array does not match the column size', () => {
+                expect(() => twoByThree.setRow(1, [10, 11, 12, 13])).toThrow();
+            });
+        });
+
+        describe('#setColumn', () => {
+            it('sets new values in the specified column', () => {
+                threeByTwo.setColumn(1, [7, 8, 9]);
+                expect(threeByTwo.getColumn(1)).toEqual([7, 8, 9]);
+            });
+
+            it('throws an error when the column index is out of bounds', () => {
+                expect(() => threeByTwo.setColumn(2, [7, 8, 9])).toThrow();
+            });
+
+            it('throws an error when the size of the input array does not match the row size', () => {
+                expect(() => threeByTwo.setColumn(1, [7, 8, 9, 10])).toThrow();
+            });
         });
         it('Set first element', () => {
             twoByThree.setElement(0, 0, 10);
