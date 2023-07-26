@@ -479,6 +479,14 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @param {number} endRow - The ending row index of the submatrix (exclusive).
      * @param {number} endCol - The ending column index of the submatrix (exclusive).
      * @returns {Matrix<T>} A new Matrix object representing the submatrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const subMatrix = matrix.getSubMatrix(1, 3, 1, 3);
+     * console.log(subMatrix.toString());
+     * // Output:
+     *  "5 6"
+     *  "8 9"
      */
     public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix<T> {
         if (typeof startRow !== "number" || typeof endRow !== "number" || typeof startCol !== "number" || typeof endCol !== "number") {
@@ -501,13 +509,23 @@ export class Matrix<T> implements MatrixInterface<T> {
     /**
     * @public
     * @param {number} startRow - The starting row index of the submatrix.
-      @param {number} endRow - The ending row index of the submatrix.
+    * @param {number} endRow - The ending row index of the submatrix.
     * @param {number} startCol - The starting column index of the submatrix.
     * @param {number} endCol - The ending column index of the submatrix.
     * @param {Matrix<T>} subMatrix - The elements of the submatrix to be set.
+    * 
+    * @example
+    * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    * const subMatrix = new Matrix([[10, 11], [12, 13]]);
+    * matrix.setSubMatrix(1, 3, 1, 3, subMatrix);
+    * console.log(matrix.toString());
+    * // Output:
+    *  "1 2 7"
+    *  "4 5 8"
+    *  "7 8 9"
     */
     public setSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number, subMatrix: Matrix<T>): void {
-        if (startRow < 0 || startRow >= this.rows || endRow < 0 || endRow >= this.rows || startCol < 0 || startCol >= this.columns || endCol < 0 || endCol >= this.columns) {
+        if (startRow < 0 || startRow > this.rows || endRow < 0 || endRow > this.rows || startCol < 0 || startCol > this.columns || endCol < 0 || endCol > this.columns) {
             throw new MatrixError("Invalid submatrix indices", 805);
         }
 
@@ -829,7 +847,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix(new Array(n * n), { rows: n, columns: n, numerical: this.numerical });
+        const result = new Matrix(new Array((n) * (n)), { rows: n, columns: n, numerical: this.numerical });
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);

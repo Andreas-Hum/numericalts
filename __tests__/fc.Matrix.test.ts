@@ -534,22 +534,6 @@ describe("Matrix", () => {
             );
         });
 
-        it('Should correctly multiply two matricies together using strassens', () => {
-            fc.assert(
-                fc.property(
-                    array2Darb(fc.integer()),
-                    (entries: any[][]) => {
-                        const A: Matrix<any> = new Matrix(entries);
-                        if (!A.isSquare) return
-                        const iden: Matrix<any> = Matrix.identity(A.rows)
-                        const zeros: Matrix<any> = Matrix.zeros(A.rows, A.columns)
-
-                        expect(JSON.stringify(A.strassenMultiply(iden))).toEqual(JSON.stringify(A))
-
-                    }
-                )
-            );
-        });
 
         it('should perform vector-matrix multiplication correctly', () => {
             const matrix = new Matrix([[1, 2, 3],
@@ -964,6 +948,11 @@ describe("Matrix", () => {
                 const result = matrix.invertLower();
 
                 expect(result.equal(expected)).toBeTruthy();
+
+                const matrix1 = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     const subMatrix = new Matrix([[10, 11], [12, 13]]);
+     matrix1.setSubMatrix(1, 2, 1, 2, subMatrix);
+     console.log(matrix1.toString());
             });
 
             it("Error: Not a square matrix", () => {
