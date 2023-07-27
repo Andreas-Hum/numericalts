@@ -1070,13 +1070,21 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Converts the matrix to Reduced Row Echelon Form (RREF).
+     * Converts the matrix to Row Echelon Form (REF) using the Gaussian elimination method.
      * This method does not modify the original matrix.
-     * @public
-     * @param {Object} options - The options for the Gauss-Jordan elimination.
-     * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns {Matrix<number> | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. 
-    */ //TODO: lav en type til normale options
+     * @param {Object} options - The options for Gaussian elimination.
+     * @param {boolean} options.solve - Indicates whether to solve the system of equations. Default is false.
+     * @returns {Matrix<number> | number[]} - A new matrix in REF or the solution to the system of equations as an array if `options.solve` is true.
+     *
+     * @example
+     * const matrix = new Matrix([[3, 2, 1], [4, 2, 2], [5, 4, 4]]);
+     * const resultMatrix = matrix.gaussianElimination();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1  4  1"
+     * "0 -6  0"
+     * "0  0 -1"
+     */
     public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
 
         let lead: number = 0;
@@ -1135,12 +1143,23 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
-     * Converts the matrix to Reduced Row Echelon Form (RREF).
+     * Converts the matrix to Reduced Row Echelon Form (RREF) using the Gauss-Jordan elimination method.
      * This method does not modify the original matrix.
-     * @public
-      * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns { Matrix<T>  | T[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array.
-    */ //TODO: lav en type til normale options
+     * @param {Object} options - The options for the Gauss-Jordan elimination.
+     * @param {boolean} options.solve - Indicates whether to solve the system of equations. Default is false.
+     * @returns {Matrix<number> | number[]} - A new matrix in RREF or the solution to the system of equations as an array if `options.solve` is true.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[3, 2, 1], [4, 2, 2], [5, 4, 4]]);
+     * const resultMatrix = matrix.gaussJordan();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1 0 0"
+     * "0 1 0"
+     * "0 0 1"
+     *
+     */
     public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
         let lead: number = 0;
         let matrixClone: Array<T> | Matrix<T> = _.cloneDeep(this.mElements); // clone the matrix
