@@ -640,10 +640,7 @@ describe("Matrix", () => {
                 const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
                 expect(JSON.stringify(result)).toEqual(JSON.stringify(new Matrix(expectedResult, { rows: 3, columns: 3 })));
 
-                const matrix = new Matrix([[1, 0], [2, 3]]);
-                const b = [4, 5];
-                const solution = matrix.forwardSubstitution(b);
-                console.log(solution);
+
             });
         });
 
