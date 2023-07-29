@@ -15,10 +15,28 @@ import { Constants } from "./constants";
 import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
 
 
-//
+//Lodash import
 import _ from 'lodash';
 
-export class Matrix<T>{
+/**
+ * The `Matrix` class represents a mathematical matrix with generic type `T`.
+ * It implements the `MatrixInterface<T>` interface.
+ *
+ * @remarks
+ * This class provides methods for matrix operations such as addition, subtraction, multiplication, etc.
+ *
+ * @example
+ *
+ *   // Create a new instance of Matrix with number type
+ *   const numberMatrix = new Matrix<number>([[1, 2], [3, 4]]);
+ *    // Create a new instance of Matrix with string type
+ *   const stringMatrix = new Matrix<bigint>([[1n, 2n], [3n, 4n]]);
+ *    // Create a new instance of Matrix with a custom type
+ *   const customMatrix = new Matrix<custom type>([c1,c2,c3,c4],{rows:2,columns:4, numerical: "Custom class for calculations"})
+ *
+ * @typeParam T - The type of elements contained in the matrix.
+ */
+export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
@@ -67,7 +85,6 @@ export class Matrix<T>{
      */
     dataType: string = ""
 
-
     /**
      * The numercal class to use for calculations
      * @type {Numerical<T>}
@@ -76,12 +93,25 @@ export class Matrix<T>{
 
 
     /**
-     * Constructs a matrix object.
-     * @param {T[][] | T[]} entries - The entries of the matrix.
-     * @param {{ rows?: number, columns?: number, numerical?: Numerical<T> }} options - The options for the matrix class
-     * @param {number} options.rows - The number of rows in the matrix.
-     * @param {number} options.columns - The number of columns in the matrix.
-     */
+  * Constructs a matrix object.
+  * @param {T[][] | T[]} entries - The entries of the matrix.
+  * @param {{ rows?: number, columns?: number, numerical?: Numerical<T> }} options - The options for the matrix class
+  * @param {number} options.rows - The number of rows in the matrix.
+  * @param {number} options.columns - The number of columns in the matrix.
+  * @param {Numerical<T>} options.numerical - The numerical operations for the matrix.
+  *
+  
+  * @example
+  * // Create a new instance of Matrix with number type and 2 rows and 2 columns
+  *  const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+  *  // Create a new instance of Matrix with bigint type and 2 rows and 2 columns
+  *  const matrix2 = new Matrix<bigint>([BigInt(1), BigInt(2), BigInt(3), BigInt(4)], { rows: 2, columns: 2});
+  *  // Create a new instance of Matrix with a custom type and 2 rows and 2 columns
+  *  const matrix3 = new Matrix<ctype>([c1, c2], [c3, c4], { rows: 2, columns: 2, numerical: "The custom class that implements the Numerical interface goes here" });
+  *
+  * @throws {MatrixError} If the entries are not an array, or if the entries are a 1D array but rows and columns are not defined or not numbers or are 0 or negative, or if the length of the 1D array does not equal rows * columns, or if the entries are a 2D array but not all rows have the same length, or if the matrix has a depth greater than one.
+  * @throws {NumericalError} If the matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.
+ */
     constructor(entries: T[][] | T[], options?: { rows?: number, columns?: number, numerical?: Numerical<T> }) {
         if (!Array.isArray(entries)) {
             throw new MatrixError("Matrix has to be an array", 801, { entries });
@@ -135,7 +165,6 @@ export class Matrix<T>{
             } else if (this.dataType === "bigint") {
                 this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                //TODO: Maybe fix this to throw error instead
                 throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
             }
 
@@ -266,13 +295,18 @@ export class Matrix<T>{
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-    * Gets the value of an element in the matrix.
-    * @public
-   * @param {number} row - The row index of the element starts from zero.
-    * @param {number} column - The row index of the element starts from zero.
-    * @returns {T} The value of the element.
-    * @throws {MatrixError} - If index is out of bounds
-    */
+     * Gets the value of an element in the matrix.
+     * @public
+     * @param {number} row - The row index of the element starts from zero.
+     * @param {number} column - The column index of the element starts from zero.
+     * @returns {T} The value of the element.
+     * @throws {MatrixError} - If index is out of bounds
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const value = matrix.getElement(1, 2);
+     * console.log(value); // Output will be 6
+     */
     public getElement(row: number, column: number): T {
         if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
         const index: number = row * this.columns + column;
@@ -284,18 +318,24 @@ export class Matrix<T>{
     /**
      * Gets a specific row of the matrix.
      * @public
-     * @param {number} rowIndex - The index of the row to retrieve (starting from 1).
+     * @param {number} rowIndex - The index of the row to retrieve (starting from 0).
      * @returns {T[]} An array representing the specified row of the matrix.
      * @throws {MatrixError} If the rowIndex is out of bounds.
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const row = matrix.getRow(2);
+     * console.log(row); // Output will be [7, 8, 9]
      */
     public getRow(rowIndex: number): T[] {
         if (typeof rowIndex !== "number")
             throw new MatrixError("Invalid argument", 606, { rowIndex });
-        if (rowIndex <= 0 || rowIndex > this.rows)
+
+        if (rowIndex < 0 || rowIndex >= this.rows)
             throw new MatrixError("Row index out of bounds", 800, { rowIndex });
 
         const row: T[] = [];
-        const startIndex: number = (rowIndex - 1) * this.columns;
+        const startIndex: number = rowIndex * this.columns;
         const endIndex: number = startIndex + this.columns;
 
         for (let i = startIndex; i < endIndex; i++) {
@@ -308,19 +348,24 @@ export class Matrix<T>{
     /**
      * Gets a specific column of the matrix.
      * @public
-     * @param {number} columnIndex - The index of the column to retrieve (starting from 1).
+     * @param {number} columnIndex - The index of the column to retrieve.
      * @returns {T[]} An array representing the specified column of the matrix.
      * @throws {MatrixError} If the columnIndex is out of bounds.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const column = matrix.getColumn(1);
+     * console.log(column); // Output will be [2, 5, 8]
      */
     public getColumn(columnIndex: number): T[] {
         if (typeof columnIndex !== "number")
             throw new MatrixError("Invalid argument", 606, { columnIndex });
-        if (columnIndex <= 0 || columnIndex > this.columns)
+        if (columnIndex < 0 || columnIndex > this.columns)
             throw new MatrixError("Column index out of bounds", 800, { columnIndex });
 
         const column: T[] = [];
-        const startIndex: number = columnIndex - 1;
-        const endIndex: number = this.rows * this.columns + (columnIndex - 1);
+        const startIndex: number = columnIndex;
+        const endIndex: number = this.rows * this.columns + (columnIndex);
 
         for (let i = startIndex; i < endIndex; i += this.columns) {
             column.push(this.mElements[i]);
@@ -328,14 +373,20 @@ export class Matrix<T>{
 
         return column;
     }
+
     /**
      * Sets the value of an element in the matrix.
      * @public
      * @param {number} row - The row index of the element starts from zero.
-     * @param {number} column - The row index of the element starts from zero.
+     * @param {number} column - The column index of the element starts from zero.
      * @param {T} value - The value to set.
      * @returns {void}
      * @throws {MatrixError} - If the value is an invalid element or index is out of bounds
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * matrix.setElement(0, 1, 10);
+     * console.log(matrix.getElement(0, 1)); // Output will be 10
      */
     public setElement(row: number, column: number, value: T): void {
         if (typeof value !== this.dataType || typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { value, row, column })
@@ -345,13 +396,97 @@ export class Matrix<T>{
     }
 
     /**
+     * Sets a specific row of the matrix.
+     * @public
+     * @param {number} rowIndex - The index of the row to set .
+     * @param {T[]} values - An array comprising the values to set.
+     * @throws {MatrixError} If the rowIndex is out of bounds or the size of the input array does not match the column size of the matrix.
+     * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * matrix.setRow(1, [3, 2, 1]);
+     * console.log(matrix.toString());
+     * // Output:
+     *  "1 2 7"
+     *  "3 2 1"
+     *  "7 8 9"
+     */
+    public setRow(rowIndex: number, values: T[]): void {
+        if (typeof rowIndex !== "number")
+            throw new MatrixError("Invalid argument", 606, { rowIndex });
+
+
+        if (rowIndex < 0 || rowIndex >= this.rows)
+            throw new MatrixError("Row index out of bounds", 800, { rowIndex });
+
+        if (values.length !== this.columns)
+            throw new MatrixError("Input array size does not match the column size of the matrix", 801, { rowDataSize: values.length });
+
+        const startIndex: number = rowIndex * this.columns
+        const endIndex: number = startIndex + this.columns;
+
+        for (let i = startIndex, j = 0; i < endIndex; i++, j++) {
+            this.mElements[i] = values[j];
+        }
+    }
+
+    /**
+      * Sets a specific column of the matrix.
+      * @public
+      * @param {number} columnIndex - The index of the column to set .
+      * @param {T[]} values - An array comprising the values to set.
+      * @throws {MatrixError} If the columnIndex is out of bounds or the size of the input array does not match the row size of the matrix.
+      * @returns {void}
+      *
+      * @example
+      * 
+      * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+      * matrix.setColumn(2, [7, 8, 9]);
+      * console.log(matrix.toString());
+      * // Output:
+      *  "1 2 7"
+      *  "4 5 8"
+      *  "7 8 9"
+      */
+    public setColumn(columnIndex: number, values: T[]): void {
+        if (typeof columnIndex !== "number")
+            throw new MatrixError("Invalid argument", 606, { columnIndex });
+
+
+
+        if (columnIndex < 0 || columnIndex >= this.columns)
+            throw new MatrixError("Column index out of bounds", 800, { columnIndex });
+
+        if (values.length !== this.rows)
+            throw new MatrixError("Input array size does not match the row size of the matrix", 801, { columnDataSize: values.length });
+
+        const startIndex: number = columnIndex;
+        const endIndex: number = this.rows * this.columns + columnIndex;
+
+        for (let i = startIndex, j = 0; i < endIndex; i += this.columns, j++) {
+            this.mElements[i] = values[j];
+        }
+    }
+
+
+    /**
      * Retrieves a submatrix from the current matrix.
      * @public
      * @param {number} startRow - The starting row index of the submatrix.
      * @param {number} startCol - The starting column index of the submatrix.
-     * @param {number} endRow - The ending row index of the submatrix (exclusive).
-     * @param {number} endCol - The ending column index of the submatrix (exclusive).
+     * @param {number} endRow - The ending row index of the submatrix (inclusive).
+     * @param {number} endCol - The ending column index of the submatrix (inclusive).
      * @returns {Matrix<T>} A new Matrix object representing the submatrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const subMatrix = matrix.getSubMatrix(1, 2, 1, 2);
+     * console.log(subMatrix.toString());
+     * // Output:
+     *  "5 6"
+     *  "8 9"
      */
     public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix<T> {
         if (typeof startRow !== "number" || typeof endRow !== "number" || typeof startCol !== "number" || typeof endCol !== "number") {
@@ -374,13 +509,23 @@ export class Matrix<T>{
     /**
     * @public
     * @param {number} startRow - The starting row index of the submatrix.
-      @param {number} endRow - The ending row index of the submatrix.
     * @param {number} startCol - The starting column index of the submatrix.
-    * @param {number} endCol - The ending column index of the submatrix.
+    * @param {number} endRow - The ending row index of the submatrix (exclusive).
+    * @param {number} endCol - The ending column index of the submatrix (exclusive).
     * @param {Matrix<T>} subMatrix - The elements of the submatrix to be set.
+    * 
+    * @example
+    * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    * const subMatrix = new Matrix([[3, 3], [3, 3]]);
+    * matrix.setSubMatrix(1, 3, 1, 3, subMatrix);
+    * console.log(matrix.toString());
+    * // Output:
+    *  "1 2 7"
+    *  "4 3 3"
+    *  "7 3 3"
     */
     public setSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number, subMatrix: Matrix<T>): void {
-        if (startRow < 0 || startRow >= this.rows || endRow < 0 || endRow >= this.rows || startCol < 0 || startCol >= this.columns || endCol < 0 || endCol >= this.columns) {
+        if (startRow < 0 || startRow > this.rows || endRow < 0 || endRow > this.rows || startCol < 0 || startCol > this.columns || endCol < 0 || endCol > this.columns) {
             throw new MatrixError("Invalid submatrix indices", 805);
         }
 
@@ -416,13 +561,25 @@ export class Matrix<T>{
      * @public
      * @param { Matrix<T> } B - The matrix to add.
      * @returns {Matrix<T>} The resulting matrix.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.add(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "6  8"
+     * "10 12"
+     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
      */
     public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
 
 
-        const resultElements: Array<T> = JSON.parse(JSON.stringify(this.mElements));
+        const resultElements: Array<T> = _.cloneDeep(this.mElements);
         const size: number = this.size;
 
         for (let i = 0; i < size; i++) {
@@ -474,41 +631,45 @@ export class Matrix<T>{
 
 
     /**
-         * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
-         * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
-         *
-         * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
-         * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
-         * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
-         * vectors from the column vector itself.
-         *
-         * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
-         *
-         * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
-         * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
-         *
-         * @public
-         */
+     * Performs the Gram-Schmidt process for the columns of the given matrix. The process is an algorithm
+     * to orthonormalize a set of vectors in an inner product space, generally Euclidean n-space.
+     *
+     * The method takes the columns (considered as vectors) of the current matrix instance and generates an orthogonal
+     * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
+     * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
+     * vectors from the column vector itself.
+     *
+     * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
+     *
+     * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
+     * constant - `DELTA`). In this case, this means that the provided set is not linearly independent.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 1, 1], [0, 1, 0], [0, 0, 1]]);
+     * const resultMatrix = matrix.gramSmith();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1 0 0"
+     * "0 1 0"
+     * "0 0 1"
+     *
+     * @public
+     */
     public gramSmith(): Matrix<T> {
-
-        //Deprecated
-        // if (this.dataType !== "number") {
-        //     throw new MatrixError("Can't perform the gramSmith algorithm on a non numeric matrix", 807, { AType: this.dataType });
-        // }
 
         const orthogonalColumns: T[][] = []
 
-        orthogonalColumns.push((this as Matrix<T>).getColumn(1));
+        orthogonalColumns.push((this as Matrix<T>).getColumn(0));
 
         const columns: number = this.columns;
 
 
         for (let i = 1; i < columns; i++) {
-            let orthogonalProjection: T[] = _.cloneDeep([...(this as Matrix<T>).getColumn(i + 1)]); // Initialize orthogonalProjection as a copy of the current column
+            let orthogonalProjection: T[] = _.cloneDeep([...(this as Matrix<T>).getColumn(i)]); // Initialize orthogonalProjection as a copy of the current column
 
             for (let j = 0; j < i; j++) {
                 let u: T[] = orthogonalColumns[j]
-                let v: T[] = (this as Matrix<T>).getColumn(i + 1)
+                let v: T[] = (this as Matrix<T>).getColumn(i)
                 if (this.numerical === undefined) {
                     console.log(v)
                     console.log(u)
@@ -536,21 +697,27 @@ export class Matrix<T>{
     }
 
     /**
-     * Multiplies this matrix with another matrix using the naive algorithm
+     * Multiplies this matrix with another matrix using the naive algorithm.
      * @public
      * @param {Matrix<T>} B - The matrix to multiply with.
      * @returns {Matrix<T>} The resulting matrix.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.multiply(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "19 22"
+     * "43 50"
+     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      */
     public multiply(B: Matrix<T>): Matrix<T> {
         if (this.columns !== B.rows) {
             throw new MatrixError("Invalid matrix dimensions for multiplication", 807, { rows: B.rows, columns: this.columns });
         }
 
-
-        //Deprecated
-        // if (B.dataType !== "number" || this.dataType !== "number") {
-        //     throw new MatrixError("Can't multiply non numeric matricies", 807, { AType: this.dataType, BType: B.dataType });
-        // }
 
         const rows: number = this.rows;
         const columns: number = this.columns;
@@ -588,9 +755,18 @@ export class Matrix<T>{
     //TODO: fix the negative pow
     /**
      * Raises the matrix to the power of `exp`.
-     * 
+     *
      * @param exp - The exponent to raise the matrix to.
      * @returns { Matrix<T>} The resulting matrix after raising it to the power of `exp`.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const resultMatrix = matrix.pow(2);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "7 10"
+     * "15 22"
+     *
      * @throws {MatrixError} if the matrix is not square.
      */
     public pow(exp: number): Matrix<T> {
@@ -625,10 +801,18 @@ export class Matrix<T>{
 
 
     /**
-     * Scales the matrix and returns a new matrix with the result of the scaling
+     * Scales the matrix and returns a new matrix with the result of the scaling.
      * @public
-     * @param {number} scalar - The scalar to scale the matrix with
-     * @returns { Matrix<T>} The scaled matrix
+     * @param {number} scalar - The scalar to scale the matrix with.
+     * @returns { Matrix<T>} The scaled matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const scaledMatrix = matrix.scale(2);
+     * console.log(scaledMatrix.toString());
+     * // Output:
+     * "2 4"
+     * "6 8"
      */
     public scale(scalar: T): Matrix<T> {
 
@@ -647,11 +831,22 @@ export class Matrix<T>{
 
 
     /**
-       * Performs matrix multiplication using the Strassen's algorithm.
-       * @public
-       * @param { Matrix<T>} B - The matrix to multiply with.
-       * @returns { Matrix<T>} The result of matrix multiplication.
-       */
+     * Performs matrix multiplication using the Strassen's algorithm.
+     * @public
+     * @param { Matrix<T>} B - The matrix to multiply with.
+     * @returns { Matrix<T>} The result of matrix multiplication.
+     * 
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.strassenMultiply(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "19 22"
+     * "43 50"
+     * 
+     * @throws {MatrixError} If the matrices are not square.
+     */
     public strassenMultiply(B: Matrix<T>): Matrix<T> {
 
 
@@ -674,7 +869,7 @@ export class Matrix<T>{
         const C = Matrix.padMatrixToPowerOfTwo(B);
 
         const n: number = A.rows;
-        const halfN: number = n / 2;
+        const halfN: number = Math.floor(n / 2);
 
         // Create submatrices for A and B
         const A11 = A.getSubMatrix(0, halfN, 0, halfN);
@@ -702,11 +897,12 @@ export class Matrix<T>{
         const C22 = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix(new Array(n * n), { rows: n, columns: n, numerical: this.numerical });
+        const result = new Matrix(new Array((n) * (n)), { rows: n, columns: n, numerical: this.numerical });
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
         result.setSubMatrix(halfN, n - 1, halfN, n - 1, C22);
+
 
 
         return result.getSubMatrix(0, this.rows, 0, B.columns);
@@ -719,6 +915,17 @@ export class Matrix<T>{
      * @public
      * @param { Matrix<T>} B - The matrix to subtract.
      * @returns { Matrix<T>} The resulting matrix.
+     *
+     * @example
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.subtract(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "-4 -4"
+     * "-4 -4"
+     *
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for subtraction.
      */
     public subtract(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for subtraction", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns })
@@ -734,11 +941,23 @@ export class Matrix<T>{
 
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
     }
+
+
     //TODO: FROM HERE TYPE
     /**
      * Performs vector-matrix multiplication by multiplying each element of the matrix by the corresponding element in the input vector.
      * @param {T[]} vector - The input vector.
      * @returns {Matrix<T>} A new matrix resulting from the vector-matrix multiplication.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const vector = [2, 3];
+     * const resultMatrix = matrix.vMultiply(vector);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "2 6"
+     * "6 12"
+     *
      * @throws {MatrixError} If the input vector is not an array or if its length doesn't match the number of columns in the matrix.
      */
     public vMultiply(vector: T[]): Matrix<T> {
@@ -772,9 +991,17 @@ export class Matrix<T>{
      * Performs back-substitution on an upper triangular matrix to solve
      * a system of linear equations.
      * @public
-     * @returns {number[]} Solution to the system of linear equations
+     * @param {T[]} b - The right-hand side of the system of linear equations.
+     * @returns {T[]} Solution to the system of linear equations.
      *
-     * @throws {MatrixError} if the matrix is not upper traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     * @example
+     * const matrix = new Matrix([[1, 2], [0, 1]]);
+     * const b = [8, 5];
+     * const solution = matrix.backSubstitution(b);
+     * console.log(solution);
+     * // Output: [-2, 5]
+     *
+     * @throws {MatrixError} If the matrix is not upper triangular, if b is not an array, or if the matrix contains a zero on the diagonal (unsolvable system).
      */
     public backSubstitution(b: T[]): T[] {
         if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
@@ -802,12 +1029,20 @@ export class Matrix<T>{
 
 
     /**
-     * Performs forward-substitution on an lower triangular matrix to solve
+     * Performs forward-substitution on a lower triangular matrix to solve
      * a system of linear equations.
      * @public
-     *  
-     * @returns {T[]} Solution to the system of linear equations
-     * @throws {MatrixError} if the matrix is not lowerf traiangluar, if b is not an array or if the matrix contains a zero on the diagonal (unsolvable system)
+     * @param {T[]} b - The right-hand side of the system of linear equations.
+     * @returns {T[]} Solution to the system of linear equations.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 0], [2, 3]]);
+     * const b = [4, 5];
+     * const solution = matrix.forwardSubstitution(b);
+     * console.log(solution);
+     * // Output: [4, -1]
+     *
+     * @throws {MatrixError} If the matrix is not lower triangular, if b is not an array, or if the matrix contains a zero on the diagonal (unsolvable system).
      */
     public forwardSubstitution(b: T[]): T[] {
         if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 816, { matrix: this });
@@ -835,13 +1070,21 @@ export class Matrix<T>{
 
 
     /**
-     * Converts the matrix to Reduced Row Echelon Form (RREF).
+     * Converts the matrix to Row Echelon Form (REF) using the Gaussian elimination method.
      * This method does not modify the original matrix.
-     * @public
-     * @param {Object} options - The options for the Gauss-Jordan elimination.
-     * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns {Matrix<number> | number[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array. 
-    */ //TODO: lav en type til normale options
+     * @param {Object} options - The options for Gaussian elimination.
+     * @param {boolean} options.solve - Indicates whether to solve the system of equations. Default is false.
+     * @returns {Matrix<number> | number[]} - A new matrix in REF or the solution to the system of equations as an array if `options.solve` is true.
+     *
+     * @example
+     * const matrix = new Matrix([[3, 2, 1], [4, 2, 2], [5, 4, 4]]);
+     * const resultMatrix = matrix.gaussianElimination();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1  4  1"
+     * "0 -6  0"
+     * "0  0 -1"
+     */
     public gaussianElimination(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
 
         let lead: number = 0;
@@ -892,7 +1135,7 @@ export class Matrix<T>{
 
 
         if (options.solve) {
-            const augmentedColumn: T[] = matrixClone.getColumn(columns)
+            const augmentedColumn: T[] = matrixClone.getColumn(columns - 1)
             return matrixClone.getSubMatrix(0, rows, 0, columns - 1).backSubstitution(augmentedColumn)
         }
 
@@ -900,12 +1143,23 @@ export class Matrix<T>{
     }
 
     /**
-     * Converts the matrix to Reduced Row Echelon Form (RREF).
+     * Converts the matrix to Reduced Row Echelon Form (RREF) using the Gauss-Jordan elimination method.
      * This method does not modify the original matrix.
-     * @public
-      * @param {boolean} options.solve - Indicates whether to solve the system of equations after performing Gauss-Jordan elimination. Default is false.
-     * @returns { Matrix<T>  | T[]} A new matrix that is the REF of the original matrix if `options.solve` is false. If `options.solve` is true, it returns the solution to the system of equations as an array.
-    */ //TODO: lav en type til normale options
+     * @param {Object} options - The options for the Gauss-Jordan elimination.
+     * @param {boolean} options.solve - Indicates whether to solve the system of equations. Default is false.
+     * @returns {Matrix<number> | number[]} - A new matrix in RREF or the solution to the system of equations as an array if `options.solve` is true.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[3, 2, 1], [4, 2, 2], [5, 4, 4]]);
+     * const resultMatrix = matrix.gaussJordan();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * "1 0 0"
+     * "0 1 0"
+     * "0 0 1"
+     *
+     */
     public gaussJordan(options: { solve?: boolean } = { solve: false }): Matrix<T> | T[] {
         let lead: number = 0;
         let matrixClone: Array<T> | Matrix<T> = _.cloneDeep(this.mElements); // clone the matrix
@@ -933,7 +1187,6 @@ export class Matrix<T>{
             }
 
             // Swap rows i and r
-            // TODO: heheheheheheheheheheasdiashduhasdhlsdahadhjhjiasdjasdjioajadjda
             let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
             matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
             matrixClone.splice(r * columns, columns, ...tmp);
@@ -964,7 +1217,7 @@ export class Matrix<T>{
 
 
         if (options.solve) {
-            return matrixClone.getColumn(columns);
+            return matrixClone.getColumn(columns - 1);
         }
 
         return matrixClone;
@@ -974,7 +1227,26 @@ export class Matrix<T>{
 
     /**
      * Performs QR decomposition on the matrix.
+     * This method does not modify the original matrix.
      * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[12, -51, 4], [6, 167, -68], [-4, 24, -41]]);
+     * const result = matrix.QRDecomposition();
+     * console.log(`Q Matrix:\n ${result.Q.toString()}`);
+     * console.log(`R Matrix:\n ${result.R.toString()}`);
+     * // Output:
+     * // Q Matrix: 
+     * // " 0.86 -0.39  0.33"
+     * // " 0.43  0.90 -0.03"
+     * // "-0.29  0.17 -0.94"
+     *
+     * // R Matrix: 
+     * // "14.00 21.00  -14.00"
+     * // "0.00  175.00 -70.00"
+     * // "0.00  0.00    35.00"
+     *
      */
     public QRDecomposition(): { Q: Matrix<T>, R: Matrix<T> } {
         const Q: Matrix<T> = this.gramSmith();
@@ -997,6 +1269,17 @@ export class Matrix<T>{
      * @param {Matrix<T>} B  - The matrix to be augmented with.
      * @returns {Matrix<T>} A new matrix that is the result of augmenting the current matrix with the provided matrix.
      * @throws {MatrixError} If the argument is not an instance of Matrix, or if the current matrix and the provided matrix do not have the same number of rows.
+     *
+     * @example
+     * 
+     * const matrixA = new Matrix([[1, 2], [3, 4]]);
+     * const matrixB = new Matrix([[5, 6], [7, 8]]);
+     * const resultMatrix = matrixA.augment(matrixB);
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * // "1 2 5 6"
+     * // "3 4 7 8"
+     *
      */
     public augment(B: Matrix<T>): Matrix<T> {
         if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
@@ -1012,6 +1295,17 @@ export class Matrix<T>{
      * Transposes a matrix.
      * @public
      * @returns {Matrix<T>} The transposed matrix.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+     * const resultMatrix = matrix.transpose();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * // "1 4"
+     * // "2 5"
+     * // "3 6"
+     *
      */
     public transpose(): Matrix<T> {
 
@@ -1050,10 +1344,20 @@ export class Matrix<T>{
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-    Inverts a square matrix.
-    @returns { Matrix<T>} The inverse of the square matrix.
-    @throws {MatrixError} If the matrix is not square.
-    */
+     * Inverts a square matrix.
+     * @returns { Matrix<T>} The inverse of the square matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[4, 7], [2, 6]]);
+     * const resultMatrix = matrix.invertSquare();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * // " 0.6 -0.7"
+     * // "-0.2  0.4"
+     *
+     */
     public invertSquare(): Matrix<T> {
         if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { isSquare: this.isSquare });
         const squareIdentity: Matrix<T> = Matrix.identity(this.rows, this.numerical)
@@ -1065,71 +1369,68 @@ export class Matrix<T>{
 
     /**
      * Inverts an upper triangular matrix.
-     *
-     * This function computes the inverse of an upper triangular matrix. If the matrix
-     * is not square (meaning, the number of rows doesn't match the number of columns),
-     * an error is thrown. To perform this inversion, an identity matrix is created
-     * first. Then the function applies back substitution on each element in the
-     * identity matrix, storing the results in a separate array. These results are
-     * transposed, reversed, and returned
-     * 
      * @returns { Matrix<number>} The inverted upper triangular matrix.
-     *
      * @throws {MatrixError} If the original matrix is not square or an upper triangular matrix, an error is thrown.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2], [0, 1]]);
+     * const resultMatrix = matrix.invertUpper();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * // "1 -2"
+     * // "0  1"
+     *
      */
     public invertUpper(): Matrix<T> {
-        //TODO: Psudo inverse
-        if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
-        if (!Matrix.isUpperTriangular(this)) throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
-
+        if (!this.isSquare)
+            throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
+        if (!Matrix.isUpperTriangular(this))
+            throw new MatrixError("Matrix is not upper triangular", 815, { matrix: this });
 
         const identityMatrix: Matrix<T> = Matrix.identity(this.rows, this.numerical);
         let invertedMatrixElements: T[][] = [];
 
         for (let i = this.rows - 1; i >= 0; i--) {
-            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(this.rows - i));
+            invertedMatrixElements[i] = this.backSubstitution(identityMatrix.getRow(this.rows - i - 1));
         }
 
         invertedMatrixElements.reverse()
-
-
         return new Matrix<T>(invertedMatrixElements, { numerical: this.numerical }).transpose();
     }
 
     /**
      * Inverts a lower triangular matrix.
-     *
-     * This function computes the inverse of an upper lower matrix. If the matrix
-     * is not square (meaning, the number of rows doesn't match the number of columns),
-     * an error is thrown. To perform this inversion, an identity matrix is created
-     * first. Then the function applies foward substitution on each element in the
-     * identity matrix, storing the results in a separate array. These results are
-     * transposed, reversed, and returned.
-     * 
      * @returns { Matrix<T>} The inverted lower triangular matrix.
-     *
      * @throws {MatrixError} If the original matrix is not square or a lower triangular matrix , an error is thrown.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 0], [2, 1]]);
+     * const resultMatrix = matrix.invertLower();
+     * console.log(resultMatrix.toString());
+     * // Output:
+     * // " 1 0"
+     * // "-2 1"
+     *
      */
     public invertLower(): Matrix<T> {
-        //TODO: Psudo inverse
-        if (!this.isSquare) throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
-        if (!Matrix.isLowerTriangular(this)) throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
-
+        if (!this.isSquare)
+            throw new MatrixError("Can't use this method for inverting a non square matrix, see the inverse method instead", 812, { matrix: this });
+        if (!Matrix.isLowerTriangular(this))
+            throw new MatrixError("Matrix is not lower triangular", 815, { matrix: this });
 
         const identityMatrix: Matrix<T> = Matrix.identity(this.rows, this.numerical);
         let invertedMatrixElements: T[][] = [];
 
         for (let i = 0; i < this.rows; i++) {
-            invertedMatrixElements[i] = this.forwardSubstitution(identityMatrix.getRow(i + 1));
+            invertedMatrixElements[i] = this.forwardSubstitution(identityMatrix.getRow(i));
         }
 
-        // invertedMatrixElements.reverse()
-
+        // invertedMatrixElements.reverse() is removed
 
         return new Matrix<T>(invertedMatrixElements, { numerical: this.numerical }).transpose();
     }
-
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1141,10 +1442,19 @@ export class Matrix<T>{
 
 
     /**
-     * Checks if the current matrix is equal to another matrix.
-     * @param {Matrix<T>} B - The matrix to compare with.
-     * @returns {boolean} 'true' if the matrices are equal, 'false' otherwise.
-     */
+    * Checks if the current matrix is equal to another matrix.
+    * @param {Matrix<T>} B - The matrix to compare with.
+    * @returns {boolean} 'true' if the matrices are equal, 'false' otherwise.
+    *
+    * @example
+    * 
+    * const matrixA = new Matrix([[1, 2], [3, 4]]);
+    * const matrixB = new Matrix([[1, 2], [3, 4]]);
+    * const isEqual = matrixA.equal(matrixB);
+    * console.log(isEqual);
+    * // Output: true
+    *
+    */
     public equal(B: Matrix<T>): boolean {
         if (B.dataType !== this.dataType || B.shape !== this.shape) return false;
         if (B.dataType === "number") { //TODO: Check the equal
@@ -1158,6 +1468,15 @@ export class Matrix<T>{
      * Prints the matrix in a formatted way.
      * @public
      * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+     * matrix.print();
+     * // Output:
+     * // "1  2  3"
+     * // "4  5  6"
+     *
      */
     public print(): void {
         const shape: number[] = [this.rows, this.columns];
@@ -1192,10 +1511,18 @@ export class Matrix<T>{
 
 
     /**
-     * Converts the matrix to a 2D array.
-     * @public
-     * @returns {TexImageSource[][]} The matrix as a 2D array.
-     */
+ * Converts the matrix to a 2D array.
+ * @public
+ * @returns {TexImageSource[][]} The matrix as a 2D array.
+ *
+ * @example
+ * 
+ * const matrix = new Matrix([[1, 2], [3, 4]]);
+ * const matrixArray = matrix.toArray();
+ * console.log(matrixArray);
+ * // Output: [[1, 2], [3, 4]]
+ *
+ */
     public toArray(): T[][] {
         const array: T[][] = [];
 
@@ -1218,6 +1545,16 @@ export class Matrix<T>{
      * Converts the matrix to a printable string
      * @public
      * @returns {string} The printable matrix in a nice format
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const matrixString = matrix.toString();
+     * console.log(matrixString);
+     * // Output:
+     * // "1  2"
+     * // "3  4"
+     *
      */
     public toString(): string {
         const shape: number[] = [this.rows, this.columns];
@@ -1272,6 +1609,16 @@ export class Matrix<T>{
      * @param {number} newColumns - The number of columns in the reshaped matrix.
      * @returns {Matrix<any>} The reshaped matrix.
      * @throws {MatrixError} - If the length of the array is not equal to newRows * newColumns.
+     *
+     * @example
+     * 
+     * const array = [1, 2, 3, 4];
+     * const reshapedMatrix = Matrix.reshape(array, 2, 2);
+     * console.log(reshapedMatrix.toString());
+     * // Output:
+     * // "1  2"
+     * // "3  4"
+     *
      */
     public static reshape<T>(array: T[], newRows: number, newColumns: number, numerical?: Numerical<T>): Matrix<T> {
         if (array.length !== newRows * newColumns) throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
@@ -1299,11 +1646,21 @@ export class Matrix<T>{
 
 
     /**
-    * Clones the matrix instance and returns the clone
-    * @public
-    * @static
-    * @returns {Matrix<T>} The cloned matrix
-    */
+     * Clones the matrix instance and returns the clone
+     * @public
+     * @static
+     * @returns {Matrix<T>} The cloned matrix
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const clonedMatrix = Matrix.clone(matrix);
+     * console.log(clonedMatrix.toString());
+     * // Output:
+     * // "1  2"
+     * // "3  4"
+     *
+     */
     public static clone<T>(A: Matrix<T>): Matrix<T> {
 
         return new Matrix<T>(_.cloneDeep(A.toArray()), { numerical: A.numerical })
@@ -1317,6 +1674,18 @@ export class Matrix<T>{
      * @static
      * @param {Matrix<T>} A - The matrix to pad
      * @returns {Matrix<T>} The padded matrix with dimensions as a power of two.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+     * const paddedMatrix = Matrix.padMatrixToPowerOfTwo(matrix);
+     * console.log(paddedMatrix.toString());
+     * // Output:
+     * // "1  2  3  0"
+     * // "4  5  6  0"
+     * // "0  0  0  0"
+     * // "0  0  0  0"
+     *
      */
     public static padMatrixToPowerOfTwo<T>(A: Matrix<T>): Matrix<T> {
 
@@ -1346,8 +1715,18 @@ export class Matrix<T>{
      * Rounds values close to zero in the given array and modifies the matrix in place
      * @public
      * @static
-     * @param { Matrix<T>} A - Matrix to round
+     * @param {Matrix<T>} A - Matrix to round
      * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[0.001, 1], [2, 0.0001]]);
+     * Matrix.roundMatrixToZero(matrix);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "0  1"
+     * // "2  0"
+     *
      */
     public static roundMatrixToZero<T>(A: Matrix<T>, threshold: number = Constants.DELTA): void {
         const size: number = A.size;
@@ -1368,6 +1747,16 @@ export class Matrix<T>{
      * @param {number} digits - The number of decimal places to round to.
      * @param {number} base - The base to use for rounding. Defaults to 10 if not provided.
      * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1.2345, 2.3456], [3.4567, 4.5678]]);
+     * Matrix.toFixedMatrix(matrix, 2);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "1.23  2.35"
+     * // "3.46  4.57"
+     *
      */
     public static toFixedMatrix(A: Matrix<number>, digits: number, base: number = 10): void {
         A.mElements = A.mElements.map((entry: number) => math.toFixedNumber(entry, digits, base))
@@ -1388,6 +1777,16 @@ export class Matrix<T>{
      * @param {number} dimension - The dimension of the identity matrix.
      * @returns {Matrix} The identity matrix.
      * @throws {MatrixError} - If the dimension is less than or equal to 0.
+     *
+     * @example
+     * 
+     * const identityMatrix = Matrix.identity(3);
+     * console.log(identityMatrix.toString());
+     * // Output:
+     * // "1  0  0"
+     * // "0  1  0"
+     * // "0  0  1"
+     *
      */
     public static identity<T>(dimension: number, numerical?: Numerical<T>): Matrix<T> {
         if (dimension <= 0 || typeof dimension !== "number") throw new MatrixError("Invalid argument", 606, { dimension });
@@ -1421,6 +1820,15 @@ export class Matrix<T>{
      * @param {number} columns - The number of columns in the matrix.
      * @returns {Matrix} - The matrix filled with ones.
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     *
+     * @example
+     * 
+     * const onesMatrix = Matrix.ones(2, 2);
+     * console.log(onesMatrix.toString());
+     * // Output:
+     * // "1  1"
+     * // "1  1"
+     *
      */
     public static ones<T>(rows: number, columns: number, numerical?: Numerical<T>): Matrix<T> {
         if (!numerical) {
@@ -1440,6 +1848,15 @@ export class Matrix<T>{
      * @param {number} columns - The number of columns in the matrix
      * @returns {Matrix} The randomized matrix
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     *
+     * @example
+     * 
+     * const randomMatrix = Matrix.random(2, 2);
+     * console.log(randomMatrix.toString());
+     * // Output: (will vary due to randomness)
+     * // "45  78"
+     * // "12  67"
+     *
      */
     public static random<T>(rows: number, columns: number, numerical?: Numerical<T>): Matrix<T> {
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
@@ -1471,6 +1888,15 @@ export class Matrix<T>{
      * @param {number} columns - The number of columns in the matrix.
      * @returns {Matrix} - The matrix filled with zero elements.
      * @throws {MatrixError} - If the rows and or columns is less than or equal to 0.
+     *
+     * @example
+     * 
+     * const zerosMatrix = Matrix.zeros(2, 2);
+     * console.log(zerosMatrix.toString());
+     * // Output:
+     * // "0  0"
+     * // "0  0"
+     *
      */
     public static zeros<T>(rows: number, columns: number, numerical?: Numerical<T>): Matrix<T> {
         if (!numerical) {
@@ -1496,6 +1922,15 @@ export class Matrix<T>{
      * @param A - The matrix to check.
      * @returns True if all elements in the matrix are integers, false otherwise.
      * @throws {MatrixError} If the argument is not an instance of Matrix.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * console.log(Matrix.isIntMatrix(matrix)); // Output: true
+     *
+     * const nonIntMatrix = new Matrix([[1.5, 2.7], [3.1, 4.6]]);
+     * console.log(Matrix.isIntMatrix(nonIntMatrix)); // Output: false
+     *
      */
     public static isIntMatrix(A: Matrix<number>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
@@ -1505,13 +1940,22 @@ export class Matrix<T>{
 
 
     /**
-    * This method checks if the matrix is lower triangular.
-    * A matrix is said to be lower triangular if all its entries above the main diagonal are zero.
-    * @public
-    * @static
-    * @param {Matrix} A - The matrix to check
-    * @return {Boolean} - Returns true if the matrix is lower triangular, false otherwise.
-    */
+     * This method checks if the matrix is lower triangular.
+     * A matrix is said to be lower triangular if all its entries above the main diagonal are zero.
+     * @public
+     * @static
+     * @param {Matrix} A - The matrix to check
+     * @return {Boolean} - Returns true if the matrix is lower triangular, false otherwise.
+     *
+     * @example
+     * 
+     * const lowerTriangularMatrix = new Matrix([[1, 0, 0], [2, 3, 0], [4, 5, 6]]);
+     * console.log(Matrix.isLowerTriangular(lowerTriangularMatrix)); // Output: true
+     *
+     * const nonLowerTriangularMatrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * console.log(Matrix.isLowerTriangular(nonLowerTriangularMatrix)); // Output: false
+     *
+     */
     public static isLowerTriangular<T>(A: Matrix<T>): Boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         const columns: number = A.columns;
@@ -1526,14 +1970,21 @@ export class Matrix<T>{
     }
 
     /**
-
-    /**
      * This method checks if the given matrix is upper triangular.
      * A matrix is said to be upper triangular if all its entries below the main diagonal are zero.
      * @public
      * @static
      * @param {Matrix} A - The matrix to check
      * @return {Boolean}  Returns true if the matrix is upper triangular, false otherwise.
+     *
+     * @example
+     * 
+     * const upperTriangularMatrix = new Matrix([[1, 2, 3], [0, 4, 5], [0, 0, 6]]);
+     * console.log(Matrix.isUpperTriangular(upperTriangularMatrix)); // Output: true
+     *
+     * const nonUpperTriangularMatrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * console.log(Matrix.isUpperTriangular(nonUpperTriangularMatrix)); // Output: false
+     *
      */
     public static isUpperTriangular<T>(A: Matrix<T>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });

@@ -1,7 +1,9 @@
 import { Numerical } from "./numerical"
 
-export { Matrix as MatrixInterface }
-interface Matrix<T> {
+import { Matrix } from "../matrix"
+
+
+export interface MatrixInterface<T> {
     /*
     * The shape of the matrix.
     * @type {string}
@@ -57,7 +59,7 @@ interface Matrix<T> {
     add(B: Matrix<T>): Matrix<T>
     multiply(B: Matrix<T>): Matrix<T>
     pow(exp: number): Matrix<T>
-    scale(scalar: number): Matrix<T>
+    scale(scalar: T): Matrix<T>
     subtract(B: Matrix<T>): Matrix<T>
     vMultiply(vector: T[]): Matrix<T>
     backSubstitution(b: T[]): T[]
