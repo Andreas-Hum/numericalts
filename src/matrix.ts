@@ -1099,7 +1099,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
 
             let i: number = r;
-            while (matrixClone[i * columns + lead] === this.numerical.zeroValue) {
+            while ((matrixClone as T[])[i * columns + lead] === this.numerical.zeroValue) {
                 i++;
 
                 if (rows === i) {
@@ -1107,22 +1107,22 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<T>([...matrixClone], { rows, columns });
+                        return new Matrix<T>([...matrixClone as T[]], { rows, columns });
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
-            matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
-            matrixClone.splice(r * columns, columns, ...tmp);
+            let tmp: T[] = (matrixClone as T[]).slice(i * columns, (i + 1) * columns);
+            (matrixClone as T[]).splice(i * columns, columns, ...(matrixClone as T[]).slice(r * columns, (r + 1) * columns));
+            (matrixClone as T[]).splice(r * columns, columns, ...tmp);
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of the current column as zero
             for (let i = r + 1; i < rows; i++) {
-                let val = this.numerical.divide(matrixClone[i * columns + lead], matrixClone[r * columns + lead]);
+                let val = this.numerical.divide((matrixClone as T[])[i * columns + lead], (matrixClone as T[])[r * columns + lead]);
 
                 for (let j = 0; j < columns; j++) {
-                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]))
+                    (matrixClone as T[])[i * columns + j] = this.numerical.subtract((matrixClone as T[])[i * columns + j], this.numerical.multiply(val, (matrixClone as T[])[r * columns + j]))
                 }
             }
 
@@ -1130,7 +1130,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
 
-        matrixClone = new Matrix<T>([...matrixClone], { rows, columns, numerical: this.numerical });
+        matrixClone = new Matrix<T>([...(matrixClone as T[])], { rows, columns, numerical: this.numerical });
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -1173,7 +1173,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
 
             let i: number = r;
-            while (matrixClone[i * columns + lead] === this.numerical.zeroValue) {
+            while ((matrixClone as T[])[i * columns + lead] === this.numerical.zeroValue) {
                 i++;
 
                 if (rows === i) {
@@ -1181,38 +1181,38 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<T>(matrixClone, { rows, columns });;
+                        return new Matrix<T>((matrixClone as T[]), { rows, columns });;
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
-            matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
-            matrixClone.splice(r * columns, columns, ...tmp);
+            let tmp: T[] = (matrixClone as T[]).slice(i * columns, (i + 1) * columns);
+            (matrixClone as T[]).splice(i * columns, columns, ...(matrixClone as T[]).slice(r * columns, (r + 1) * columns));
+            (matrixClone as T[]).splice(r * columns, columns, ...tmp);
 
-            let val: T = matrixClone[r * columns + lead];
+            let val: T = (matrixClone as T[])[r * columns + lead];
 
             // Scale row r to make the leading coefficient = 1
             for (let j = 0; j < columns; j++) {
-                matrixClone[r * columns + j] = this.numerical.divide(matrixClone[r * columns + j], val)
+                (matrixClone as T[])[r * columns + j] = this.numerical.divide((matrixClone as T[])[r * columns + j], val)
             }
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of current column as zero
             for (let i = 0; i < rows; i++) {
                 if (i === r) continue;
 
-                val = matrixClone[i * columns + lead];
+                val = (matrixClone as T[])[i * columns + lead];
 
                 for (let j = 0; j < columns; j++) {
-                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]))
+                    (matrixClone as T[])[i * columns + j] = this.numerical.subtract((matrixClone as T[])[i * columns + j], this.numerical.multiply(val, (matrixClone as T[])[r * columns + j]))
                 }
             }
 
             lead++;
         }
 
-        matrixClone = new Matrix<T>(matrixClone, { rows, columns, numerical: this.numerical })
+        matrixClone = new Matrix<T>((matrixClone as T[]), { rows, columns, numerical: this.numerical })
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -1226,7 +1226,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Performs QR decomposition on the matrix.
+     * Performs QR decomposition on the matrix. 
      * This method does not modify the original matrix.
      * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
      *
@@ -1255,6 +1255,94 @@ export class Matrix<T> implements MatrixInterface<T> {
         Matrix.roundMatrixToZero(R)
         return { Q: Q, R: R };
     }
+
+    /**
+     * Performs LU decomposition on the matrix.
+     * This method does not modify the original matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     * @returns { { L: Matrix, U: Matrix } } An object containing the L and U matrices.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
+     * const result = matrix.LUDecomposition();
+     * console.log(`L Matrix:\n ${result.L.toString()}`);
+     * console.log(`U Matrix:\n ${result.U.toString()}`);
+     * // Output:
+     * // L Matrix: 
+     * // "1 0.00 0.00"
+     * // "2 1.00 0.00"
+     * // "0.29 0.33 1.00"
+     *
+     * // U Matrix: 
+     * // "7.00 8.00 9.00"
+     * // "0.00 0.67 1.33"
+     * // "0.00 0.00 -0.00"
+     *
+     */
+    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T> } {
+        if (!this.isSquare) {
+            throw new MatrixError("LU decomposition only supports square matrices.", -1);
+        }
+
+        const n = this.rows;
+        const L = Matrix.zeros(n, n, this.numerical);
+        const U = Matrix.zeros(n, n, this.numerical);
+
+        for (let i = 0; i < n; i++) {
+            // Calculate U matrix
+            for (let j = i; j < n; j++) {
+                let sum = this.numerical.zeroValue;
+                for (let k = 0; k < i; k++) {
+                    sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), U.getElement(k, j)));
+                }
+                U.setElement(i, j, this.numerical.subtract(this.getElement(i, j), sum));
+            }
+
+            // Calculate L matrix
+            for (let j = i; j < n; j++) {
+                if (i === j) {
+                    L.setElement(i, i, this.numerical.oneValue);
+                } else {
+                    let sum = this.numerical.zeroValue;
+                    for (let k = 0; k < i; k++) {
+                        sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(j, k), U.getElement(k, i)));
+                    }
+                    const value = this.numerical.divide(this.getElement(j, i), U.getElement(i, i));
+                    L.setElement(j, i, value);
+                }
+            }
+        }
+
+        return { L, U };
+    }
+
+    public choleskyDecomposition(): Matrix<T> {
+        if (!this.isSquare) {
+            throw new Error("Cholesky decomposition can only be applied to square matrices.");
+        }
+
+        const n = this.rows;
+        const L = Matrix.zeros<T>(n, n, this.numerical);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j <= i; j++) {
+                let sum = this.numerical.zeroValue;
+                for (let k = 0; k < j; k++) {
+                    sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
+                }
+
+                if (i === j) {
+                    L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
+                } else {
+                    L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
+                }
+            }
+        }
+
+        return L;
+    }
+
 
 
 
