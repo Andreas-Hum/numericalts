@@ -867,70 +867,43 @@ describe("Matrix", () => {
 
         });
 
-        describe('LUP decomposition', () => {
-            // it('LU decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
-            //     const testMatrix = new Matrix([[1, 1], [0, 1]]);
-            //     const { L, U, P } = testMatrix.LUPDecomposition();
 
-            //     // Replace the expected results with the actual expected results
-            //     expect(JSON.stringify(P)).toEqual(JSON.stringify(new Matrix([[1, 0], [0, 1]])));
-            //     expect(JSON.stringify(L)).toEqual(JSON.stringify(new Matrix([[1, 0], [0, 1]])));
-            //     expect(JSON.stringify(U)).toEqual(JSON.stringify(new Matrix([[1, 1], [0, 1]])));
-            // });
+        describe('LU decomposition', () => {
 
-            // it('LU decomposition with a 3x3 row matrix [[1,2,3],[4,5,6],[7,8,9]]', () => {
-            //     const testMatrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-            //     const { L, U, P } = testMatrix.LUPDecomposition();
+            it('Should correctly hit the property PA=LU', () => {
+                fc.assert(
+                    fc.property(
+                        array2Darb(fc.integer()),
+                        (entries: any[][]) => {
+                            const A: Matrix<any> = new Matrix(entries);
+                            if (!A.isSquare) return;
+                            let luDecomp: { L: Matrix<any>, U: Matrix<any>, P: Matrix<any> };
+                            try {
+                                luDecomp = A.LUDecomposition();
+                            } catch (error) {
+                                return;
+                            }
+                            let TMatrix: Matrix<any> = luDecomp.P.multiply(A);
+                            Matrix.toFixedMatrix(TMatrix, 4);
 
-            //     // Replace the expected results with the actual expected results
-            //     expect(JSON.stringify(P)).toEqual(JSON.stringify(new Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])));
-            //     expect(JSON.stringify(L)).toEqual(JSON.stringify(new Matrix([[1, 0, 0], [4, 1, 0], [7, 2, 1]])));
-            //     expect(JSON.stringify(U)).toEqual(JSON.stringify(new Matrix([[1, 2, 3], [0, -3, -6], [0, 0, 0]])));
+                            expect(TMatrix.equal(luDecomp.L.multiply(luDecomp.U), 1e-2)).toBeTruthy();
+                        }
+                    )
+                );
+            });
 
-            // });
+            it('Error: LUP decomposition only supports square matrices.', () => {
+                const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
 
-            // it('Should correctly hit the property PA=LU', () => {
-            //     fc.assert(
-            //         fc.property(
-            //             array2Darb(fc.integer()),
-            //             (entries: any[][]) => {
-            //                 const A: Matrix<any> = new Matrix(entries);
-            //                 if (!A.isSquare) return;
-            //                 let luDecomp: { L: Matrix<any>, U: Matrix<any>, P: Matrix<any> };
-            //                 try {
-            //                     luDecomp = A.LUPDecomposition();
-            //                 } catch (error) {
-            //                     return;
-            //                 }
-            //                 let TMatrix: Matrix<any> = luDecomp.P.multiply(A);
-            //                 Matrix.toFixedMatrix(TMatrix, 0);
-            //                 expect(TMatrix.equal(luDecomp.L.multiply(luDecomp.U), 1e-4)).toBeTruthy();
-            //             }
-            //         )
-            //     );
-            // });
-
-            // it('Error: LU decomposition only supports square matrices.', () => {
-            //     const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
-
-            //     expect(() => testMatrix.LUDecomposition()).toThrow();
+                expect(() => testMatrix.LUDecomposition()).toThrow();
 
 
-            // });
+            });
 
 
             it('Error: LUP decomposition only supports square matrices.', () => {
                 const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
-                let t = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]])
 
-
-
-                let pt = t.LUPDecomposition()
-
-                console.log(pt.L.toString())
-                console.log(pt.U.toString())
-                console.log(pt.P.toString())
-   
                 expect(() => testMatrix.LUDecomposition()).toThrow();
             });
 
@@ -1000,7 +973,7 @@ describe("Matrix", () => {
                             }
                             let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
                             Matrix.toFixedMatrix(TMatrix, 0)
-                            expect(TMatrix.equal(A,1e-2)).toBeTruthy()
+                            expect(TMatrix.equal(A, 1e-2)).toBeTruthy()
                         }
                     )
                 );
@@ -1008,7 +981,7 @@ describe("Matrix", () => {
 
             it('Error: Non linear independent columns', () => {
                 const testMatrix = new Matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]])
-           
+
                 expect(() => testMatrix.QRDecomposition()).toThrow()
 
             });

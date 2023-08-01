@@ -658,45 +658,37 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     }
 
+    /**
+     * Computes the condition number of this matrix.
+     * @public
+     * @returns {number} The condition number of the matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const conditionNumber = matrix.conditionNumber();
+     * console.log(conditionNumber);
+     * // Output: 14.933034373659268
+     */
+    public conditionNumber(): number {
+        // Ensure the matrix is square
+        if (!this.isSquare) {
+            throw new MatrixError("Matrix must be square to compute its condition number.", -1);
+        }
 
-    // /**
-    //  * Adds another matrix to this matrix. is async and faster
-    //  * @public
-    //  * @param {Matrix} B - The matrix to add.
-    //  * @returns {Matrix} The resulting matrix.
-    //  */
-    // public async addasync(B: Matrix): Promise<Matrix> {
-    //     if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
-    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+        // Compute the norm of the matrix
+        const normA = this.norm();
 
-    //     const resultElements: Float32Array = new Float32Array(this.mElements);
-    //     const size: number = this.size;
+        // Compute the inverse of the matrix
+        const inverseA = this.invertSquare();
 
-    //     // Calculate the chunk size based on the number of available processors
-    //     const numProcessors: number = os.cpus().length;
-    //     const chunkSize: number = Math.ceil(size / numProcessors);
+        // Compute the norm of the inverse matrix
+        const normInverseA = inverseA.norm();
 
-    //     const promises: any[] = [];
+        // Compute the condition number
+        const conditionNumber = this.numerical.multiply(this.numerical.fromNumber(normA), this.numerical.fromNumber(normInverseA));
 
-    //     for (let i = 0; i < numProcessors; i++) {
-    //         const start: number = i * chunkSize;
-    //         const end: number = Math.min(start + chunkSize, size);
-
-    //         promises.push(
-    //             new Promise<void>((resolve) => {
-    //                 // Perform addition in parallel for the chunk
-    //                 for (let j = start; j < end; j++) {
-    //                     resultElements[j] += B.mElements[j];
-    //                 }
-    //                 resolve();
-    //             })
-    //         );
-    //     }
-
-    //     // Wait for all promises to resolve
-    //     await Promise.all(promises);
-    //     return new Matrix(resultElements, this.rows, this.columns);
-    // }
+        return this.numerical.toNumber(conditionNumber);
+    }
 
 
     /**
@@ -818,6 +810,25 @@ export class Matrix<T> implements MatrixInterface<T> {
         return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
     }
 
+    /**
+     * Computes the Frobenius norm of this matrix.
+     * @public
+     * @returns {number} The Frobenius norm of the matrix.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const norm = matrix.norm();
+     * console.log(norm);
+     * // Output: 5.477225575051661
+     */
+    public norm(): number {
+        let norm = this.numerical.zeroValue;
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                norm = this.numerical.add(norm, this.numerical.multiply(this.getElement(i, j), this.getElement(i, j)));
+            }
+        }
+        return this.numerical.toNumber(math.sqrt(norm, this.numerical));
+    }
 
     //TODO: fix the negative pow
     /**
@@ -867,6 +878,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
+
     /**
      * Scales the matrix and returns a new matrix with the result of the scaling.
      * @public
@@ -893,9 +905,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: T) => this.numerical.multiply(entry, scalar))
         return scaledMatrix;
     }
-
-
-
 
     /**
      * Performs matrix multiplication using the Strassen's algorithm.
@@ -1291,66 +1300,6 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-    /**
-        * Performs LU decomposition on the matrix.
-        * This method does not modify the original matrix.
-        * @throws {MatrixError} If the matrix is not square.
-        * @returns { { L: Matrix, U: Matrix } } An object containing the L and U matrices.
-        *
-        * @example
-        * 
-        * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
-        * const result = matrix.LUDecomposition();
-        * console.log(`L Matrix:\n ${result.L.toString()}`);
-        * console.log(`U Matrix:\n ${result.U.toString()}`);
-        * // Output:
-        * // L Matrix: 
-        * // "1 0.00 0.00"
-        * // "2 1.00 0.00"
-        * // "0.29 0.33 1.00"
-        *
-        * // U Matrix: 
-        * // "7.00 8.00 9.00"
-        * // "0.00 0.67 1.33"
-        * // "0.00 0.00 -0.00"
-        *
-        */
-    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T> } {
-        if (!this.isSquare) {
-            throw new MatrixError("LU decomposition only supports square matrices.", -1);
-        }
-
-        const n = this.rows;
-        const L = Matrix.zeros(n, n, this.numerical);
-        const U = Matrix.zeros(n, n, this.numerical);
-
-        for (let i = 0; i < n; i++) {
-            // Calculate U matrix
-            for (let j = i; j < n; j++) {
-                let sum = this.numerical.zeroValue;
-                for (let k = 0; k < i; k++) {
-                    sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), U.getElement(k, j)));
-                }
-                U.setElement(i, j, this.numerical.subtract(this.getElement(i, j), sum));
-            }
-
-            // Calculate L matrix
-            for (let j = i; j < n; j++) {
-                if (i === j) {
-                    L.setElement(i, i, this.numerical.oneValue);
-                } else {
-                    let sum = this.numerical.zeroValue;
-                    for (let k = 0; k < i; k++) {
-                        sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(j, k), U.getElement(k, i)));
-                    }
-                    const value = this.numerical.divide(this.getElement(j, i), U.getElement(i, i));
-                    L.setElement(j, i, value);
-                }
-            }
-        }
-
-        return { L, U };
-    }
 
     /**
      * Performs LUP decomposition on the matrix.
@@ -1382,7 +1331,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * // "1.00 0.00 0.00"
      *
      */
-    public LUPDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } {
+    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } {
         if (!this.isSquare) {
             throw new MatrixError("LU decomposition only supports square matrices.", -1);
         }
@@ -1598,6 +1547,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const inverse: Matrix<T> = augmented.gaussJordan() as Matrix<T>
         return inverse.getSubMatrix(0, this.rows, this.columns, inverse.columns)
     }
+
 
 
     /**

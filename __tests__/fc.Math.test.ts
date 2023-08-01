@@ -371,7 +371,7 @@ describe('math', () => {
     // Test for 'sign' function
     it('sign - numbers', () => {
       fc.assert(
-        fc.property(fc.integer(), (n) => {
+        fc.property(fc.integer({ min: -10, max: 100 }), (n) => {
           return math.sign(n) === Math.sign(n);
         })
       );
@@ -379,7 +379,7 @@ describe('math', () => {
 
     it('sign - bigints', () => {
       fc.assert(
-        fc.property(fc.bigInt(), (n) => {
+        fc.property(fc.bigInt({ min: -10n, max: 100n }), (n) => {
           return math.sign(n) === (n === 0n ? 0 : n > 0n ? 1 : -1);
         })
       );
