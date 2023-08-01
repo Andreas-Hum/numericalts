@@ -185,6 +185,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
         Retrieves the name of the interface or class of a given value.
+        @private
         @template {T} T - The type of the value.
         @param {T} value - The value to retrieve the interface or class name from.
         @returns {string} The name of the interface or class. 
@@ -196,6 +197,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
         Retrieves the type of a given value.
+        @private
         @template T - The type of the value.
         @param value - The value to retrieve the type from.
         @returns The type of the value.
@@ -213,6 +215,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
     Checks if the given entries are a one-dimensional array of a specific type.
+    @private
     @template {T} T - The type of the array elements.
     @param {any} entries - The entries to check.
     @returns 'true' if the entries are a one-dimensional array of type T, 'false' otherwise. 
@@ -360,7 +363,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     public getColumn(columnIndex: number): T[] {
         if (typeof columnIndex !== "number")
             throw new MatrixError("Invalid argument", 606, { columnIndex });
-        if (columnIndex < 0 || columnIndex > this.columns)
+        if (columnIndex < 0 || columnIndex >= this.columns)
             throw new MatrixError("Column index out of bounds", 800, { columnIndex });
 
         const column: T[] = [];
@@ -470,6 +473,72 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
     }
 
+    /**
+     * Swaps two rows of the matrix.
+     * @public
+     * @param {number} row1 - The index of the first row to swap.
+     * @param {number} row2 - The index of the second row to swap.
+     * @throws {MatrixError} If either row index is out of bounds.
+     * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * matrix.swapRows(0, 1);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "3 4"
+     * // "1 2"
+     */
+    public swapRows(row1: number, row2: number): void {
+        if (row1 < 0 || row1 >= this.rows || row2 < 0 || row2 >= this.rows) {
+            throw new MatrixError('Row index out of bounds', 800, { row1, row2, rows: this.rows });
+        }
+
+        for (let col = 0; col < this.columns; col++) {
+            const index1 = row1 * this.columns + col;
+            const index2 = row2 * this.columns + col;
+            const temp = this.mElements[index1];
+            this.mElements[index1] = this.mElements[index2];
+            this.mElements[index2] = temp;
+        }
+    }
+
+    /**
+     * Swaps two columns of the matrix.
+     * @public
+     * @param {number} col1 - The index of the first column to swap.
+     * @param {number} col2 - The index of the second column to swap.
+     * @throws {MatrixError} If the matrix has less than two columns or either column index is out of bounds.
+     * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * matrix.swapColumns(0, 1);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "2 1"
+     * // "4 3"
+     */
+    public swapColumns(col1: number, col2: number): void {
+        if (this.columns < 2) {
+            throw new MatrixError('Matrix must have at least two columns to swap.', 800, { cols: this.columns });
+        }
+
+        if (col1 < 0 || col1 >= this.columns || col2 < 0 || col2 >= this.columns) {
+            throw new MatrixError('Column index out of bounds', 800, { col1, col2, cols: this.columns });
+        }
+
+        for (let row = 0; row < this.rows; row++) {
+            const index1 = row * this.columns + col1;
+            const index2 = row * this.columns + col2;
+            const temp = this.mElements[index1];
+            this.mElements[index1] = this.mElements[index2];
+            this.mElements[index2] = temp;
+        }
+    }
+
 
     /**
      * Retrieves a submatrix from the current matrix.
@@ -561,7 +630,8 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param { Matrix<T> } B - The matrix to add.
      * @returns {Matrix<T>} The resulting matrix.
-     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
      * @example
      * const matrixA = new Matrix([[1, 2], [3, 4]]);
      * const matrixB = new Matrix([[5, 6], [7, 8]]);
@@ -571,8 +641,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "6  8"
      * "10 12"
      * 
-     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
-     * @throws {MatrixError} If the argument is not an instance of Matrix.
+
      */
     public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
@@ -638,7 +707,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
      * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
      * vectors from the column vector itself.
-     *
+     * @public
      * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
      *
      * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
@@ -653,7 +722,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "0 1 0"
      * "0 0 1"
      *
-     * @public
      */
     public gramSmith(): Matrix<T> {
 
@@ -701,7 +769,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param {Matrix<T>} B - The matrix to multiply with.
      * @returns {Matrix<T>} The resulting matrix.
-     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      * @example
      * const matrixA = new Matrix([[1, 2], [3, 4]]);
      * const matrixB = new Matrix([[5, 6], [7, 8]]);
@@ -711,7 +779,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "19 22"
      * "43 50"
      * 
-     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      */
     public multiply(B: Matrix<T>): Matrix<T> {
         if (this.columns !== B.rows) {
@@ -1222,64 +1289,30 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return matrixClone;
     }
-
-
-
     /**
-     * Performs QR decomposition on the matrix. 
-     * This method does not modify the original matrix.
-     * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
-     *
-     * @example
-     * 
-     * const matrix = new Matrix([[12, -51, 4], [6, 167, -68], [-4, 24, -41]]);
-     * const result = matrix.QRDecomposition();
-     * console.log(`Q Matrix:\n ${result.Q.toString()}`);
-     * console.log(`R Matrix:\n ${result.R.toString()}`);
-     * // Output:
-     * // Q Matrix: 
-     * // " 0.86 -0.39  0.33"
-     * // " 0.43  0.90 -0.03"
-     * // "-0.29  0.17 -0.94"
-     *
-     * // R Matrix: 
-     * // "14.00 21.00  -14.00"
-     * // "0.00  175.00 -70.00"
-     * // "0.00  0.00    35.00"
-     *
-     */
-    public QRDecomposition(): { Q: Matrix<T>, R: Matrix<T> } {
-        const Q: Matrix<T> = this.gramSmith();
-        const QT: Matrix<T> = Q.transpose();
-        const R: Matrix<T> = QT.multiply(this as Matrix<T>);
-        Matrix.roundMatrixToZero(R)
-        return { Q: Q, R: R };
-    }
-
-    /**
-     * Performs LU decomposition on the matrix.
-     * This method does not modify the original matrix.
-     * @throws {MatrixError} If the matrix is not square.
-     * @returns { { L: Matrix, U: Matrix } } An object containing the L and U matrices.
-     *
-     * @example
-     * 
-     * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
-     * const result = matrix.LUDecomposition();
-     * console.log(`L Matrix:\n ${result.L.toString()}`);
-     * console.log(`U Matrix:\n ${result.U.toString()}`);
-     * // Output:
-     * // L Matrix: 
-     * // "1 0.00 0.00"
-     * // "2 1.00 0.00"
-     * // "0.29 0.33 1.00"
-     *
-     * // U Matrix: 
-     * // "7.00 8.00 9.00"
-     * // "0.00 0.67 1.33"
-     * // "0.00 0.00 -0.00"
-     *
-     */
+        * Performs LU decomposition on the matrix.
+        * This method does not modify the original matrix.
+        * @throws {MatrixError} If the matrix is not square.
+        * @returns { { L: Matrix, U: Matrix } } An object containing the L and U matrices.
+        *
+        * @example
+        * 
+        * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
+        * const result = matrix.LUDecomposition();
+        * console.log(`L Matrix:\n ${result.L.toString()}`);
+        * console.log(`U Matrix:\n ${result.U.toString()}`);
+        * // Output:
+        * // L Matrix: 
+        * // "1 0.00 0.00"
+        * // "2 1.00 0.00"
+        * // "0.29 0.33 1.00"
+        *
+        * // U Matrix: 
+        * // "7.00 8.00 9.00"
+        * // "0.00 0.67 1.33"
+        * // "0.00 0.00 -0.00"
+        *
+        */
     public LUDecomposition(): { L: Matrix<T>, U: Matrix<T> } {
         if (!this.isSquare) {
             throw new MatrixError("LU decomposition only supports square matrices.", -1);
@@ -1316,6 +1349,40 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return { L, U };
     }
+
+
+    /**
+     * Performs QR decomposition on the matrix. 
+     * This method does not modify the original matrix.
+     * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[12, -51, 4], [6, 167, -68], [-4, 24, -41]]);
+     * const result = matrix.QRDecomposition();
+     * console.log(`Q Matrix:\n ${result.Q.toString()}`);
+     * console.log(`R Matrix:\n ${result.R.toString()}`);
+     * // Output:
+     * // Q Matrix: 
+     * // " 0.86 -0.39  0.33"
+     * // " 0.43  0.90 -0.03"
+     * // "-0.29  0.17 -0.94"
+     *
+     * // R Matrix: 
+     * // "14.00 21.00  -14.00"
+     * // "0.00  175.00 -70.00"
+     * // "0.00  0.00    35.00"
+     *
+     */
+    public QRDecomposition(): { Q: Matrix<T>, R: Matrix<T> } {
+        const Q: Matrix<T> = this.gramSmith();
+        const QT: Matrix<T> = Q.transpose();
+        const R: Matrix<T> = QT.multiply(this as Matrix<T>);
+        Matrix.roundMatrixToZero(R)
+        return { Q: Q, R: R };
+    }
+
+
 
     public choleskyDecomposition(): Matrix<T> {
         if (!this.isSquare) {
@@ -1532,6 +1599,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     /**
     * Checks if the current matrix is equal to another matrix.
     * @param {Matrix<T>} B - The matrix to compare with.
+    * @param {number} threshold - Threshold for the method to return true defaults to 1e-12
     * @returns {boolean} 'true' if the matrices are equal, 'false' otherwise.
     *
     * @example
@@ -1543,10 +1611,10 @@ export class Matrix<T> implements MatrixInterface<T> {
     * // Output: true
     *
     */
-    public equal(B: Matrix<T>): boolean {
+    public equal(B: Matrix<T>, threshold: number = Constants.DELTA): boolean {
         if (B.dataType !== this.dataType || B.shape !== this.shape) return false;
         if (B.dataType === "number") { //TODO: Check the equal
-            return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index]))
+            return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index], threshold))
         }
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }

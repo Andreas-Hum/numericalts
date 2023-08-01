@@ -331,6 +331,63 @@ describe("Matrix", () => {
                 expect(() => threeByTwo.setColumn(1, [7, 8, 9, 10])).toThrow();
             });
         });
+
+
+        it('swapRows should swap rows correctly', () => {
+            fc.assert(
+                fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
+                    if (entries.length === 1) return
+                    const matrix = new Matrix<any>(entries);
+                    const [row1, row2] = entries;
+                    matrix.swapRows(0, 1);
+                    expect(matrix.getRow(0)).toEqual(row2);
+                    expect(matrix.getRow(1)).toEqual(row1);
+                })
+            );
+        });
+
+        it('swapColumns should swap columns correctly', () => {
+            fc.assert(
+                fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
+                    const matrix = new Matrix(entries);
+                    if (matrix.columns < 2) return
+                    const col1 = entries.map((row) => row[0]);
+                    const col2 = entries.map((row) => row[1]);
+
+
+                    matrix.swapColumns(0, 1);
+                    expect(matrix.getColumn(0)).toEqual(col2);
+                    expect(matrix.getColumn(1)).toEqual(col1);
+                })
+            );
+        });
+
+        it('throws an error if the first row index is out of bounds', () => {
+            expect(() => twoByThree.swapRows(-1, 1)).toThrow();
+            expect(() => twoByThree.swapRows(2, 1)).toThrow();
+        });
+
+        it('throws an error if the second row index is out of bounds', () => {
+            expect(() => twoByThree.swapRows(0, -1)).toThrow();
+            expect(() => twoByThree.swapRows(0, 2)).toThrow();
+        });
+
+        it('throws an error if the matrix has less than two columns', () => {
+            const singleColumnMatrix = new Matrix([[1], [2]]);
+            expect(() => singleColumnMatrix.swapColumns(0, 1)).toThrow();
+        });
+
+        it('throws an error if the first column index is out of bounds', () => {
+            expect(() => twoByThree.swapColumns(-1, 1)).toThrow();
+            expect(() => twoByThree.swapColumns(4, 1)).toThrow();
+        });
+
+        it('throws an error if the second column index is out of bounds', () => {
+            expect(() => twoByThree.swapColumns(0, -1)).toThrow();
+            expect(() => twoByThree.swapColumns(0, 4)).toThrow();
+        });
+
+
         it('Set first element', () => {
             twoByThree.setElement(0, 0, 10);
             threeByTwo.setElement(0, 0, 10);
@@ -749,14 +806,18 @@ describe("Matrix", () => {
                 expect(result).toEqual([2, 3, -1]);
             });
 
-            describe('QR decomposition', () => {
-                it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
+
+            describe('LU decomposition', () => {
+                it('LU decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
                     const testMatrix = new Matrix([[1, 1], [0, 1]])
                     const { Q, R } = testMatrix.QRDecomposition()
 
 
                     expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([[1, 0], [0, 1]])))
                     expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([[1, 1], [0, 1]])))
+
+
+
                 });
 
                 it('QR decomposition with a 4x4 row matrix [[0,0,1,0],[1,0,0,0],[0,1,1,0],[0,0,0,1]]', () => {
@@ -809,7 +870,89 @@ describe("Matrix", () => {
                                     return
                                 }
                                 let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
-                                expect(TMatrix).toBeTruthy()
+                                expect(TMatrix.equal(A, 1e-3)).toBeTruthy()
+                            }
+                        )
+                    );
+                });
+
+                it('Error: Non linear independent columns', () => {
+                    const testMatrix = new Matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]])
+                    expect(() => testMatrix.QRDecomposition()).toThrow()
+
+                });
+
+
+
+
+
+
+            });
+
+
+            describe('QR decomposition', () => {
+                it('QR decomposition with a 2x2 row matrix [[1,1],[0,1]]', () => {
+                    const testMatrix = new Matrix([[1, 1], [0, 1]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([[1, 0], [0, 1]])))
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([[1, 1], [0, 1]])))
+
+
+                });
+
+                it('QR decomposition with a 4x4 row matrix [[0,0,1,0],[1,0,0,0],[0,1,1,0],[0,0,0,1]]', () => {
+                    const testMatrix = new Matrix([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 1, 0], [0, 0, 0, 1]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([
+                        [0, 0, 1, 0],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0],
+                        [0, 0, 0, 1]])))
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([
+                        [1, 0, 0, 0],
+                        [0, 1, 1, 0],
+                        [0, 0, 1, 0],
+                        [0, 0, 0, 1]])))
+                });
+
+                it('QR decomposition with a 4x3 row matrix [[0,0,1],[1,0,0],[0,1,1],[0,0,0]]', () => {
+                    const testMatrix = new Matrix([[0, 0, 1], [1, 0, 0], [0, 1, 1], [0, 0, 0]])
+                    const { Q, R } = testMatrix.QRDecomposition()
+
+
+                    expect(JSON.stringify(Q)).toEqual(JSON.stringify(new Matrix([
+                        [0, 0, 1],
+                        [1, 0, 0],
+                        [0, 1, 0],
+                        [0, 0, 0]])))
+
+                    expect(JSON.stringify(R)).toEqual(JSON.stringify(new Matrix([
+                        [1, 0, 0],
+                        [0, 1, 1],
+                        [0, 0, 1]])))
+                });
+
+
+                it('Should correctly it the property A=QR ', () => {
+                    fc.assert(
+                        fc.property(
+                            array2Darb(fc.integer()),
+                            (entries: any[][]) => {
+                                const A: Matrix<any> = new Matrix(entries);
+                                if (!A.isSquare) return
+                                let gramSmith: { Q: Matrix<any>, R: Matrix<any> };
+                                try {
+                                    gramSmith = A.QRDecomposition()
+
+                                } catch (error) {
+                                    return
+                                }
+                                let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
+                                expect(TMatrix.equal(A, 1e-3)).toBeTruthy()
                             }
                         )
                     );
