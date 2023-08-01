@@ -152,6 +152,8 @@ describe("Matrix", () => {
                             expect(matrix.isWide).toBeFalsy()
                             expect(matrix.isSquare).toBeTruthy()
                         }
+
+                        expect(matrix.equal(matrix)).toBeTruthy()
                     }
                 )
             );
@@ -638,7 +640,6 @@ describe("Matrix", () => {
                         expect(JSON.stringify(A.scale(0))).toEqual(JSON.stringify(zeros))
 
 
-
                     }
                 )
             );
@@ -925,9 +926,8 @@ describe("Matrix", () => {
             });
 
 
-            it('Error: LU decomposition only supports square matrices.', () => {
-                const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
-
+            it('Error: LU decomposition singular.', () => {
+                const testMatrix = new Matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]);
                 expect(() => testMatrix.LUDecomposition()).toThrow();
             });
 
@@ -1196,6 +1196,23 @@ describe("Matrix", () => {
             expect(typeof test.toString()).toEqual("string")
         });
     })
+
+    it('should print the matrix to the console', () => {
+        // Arrange
+        const matrix = new Matrix([[1, 2], [3, 4]]);
+        const logSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+
+        // Act
+        matrix.print();
+
+        // Assert
+        expect(logSpy).toHaveBeenCalledTimes(2);
+        expect(logSpy).toHaveBeenNthCalledWith(1, '1  ', '2  ');
+        expect(logSpy).toHaveBeenNthCalledWith(2, '3  ', '4  ');
+
+        // Clean up
+        logSpy.mockRestore();
+    });
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,6 @@ import { math } from "../math"
 
 export class FractionalNumberClass implements Numerical<string> {
     // Custom mapping for fractions as strings
-    private customMapping: Record<string, number> = {};
 
     zeroValue: string = "0/1";
     oneValue: string = "1/1";
@@ -55,6 +54,7 @@ export class FractionalNumberClass implements Numerical<string> {
         const [xNum, xDenom] = x.split('/').map(Number);
         const [yNum, yDenom] = y.split('/').map(Number);
 
+        
         // Check for division by zero
         if (yNum === 0) {
             throw new Error("Division by zero is not allowed.");

@@ -730,11 +730,6 @@ export class Matrix<T> implements MatrixInterface<T> {
             for (let j = 0; j < i; j++) {
                 let u: T[] = orthogonalColumns[j]
                 let v: T[] = (this as Matrix<T>).getColumn(i)
-                if (this.numerical === undefined) {
-                    console.log(v)
-                    console.log(u)
-
-                }
                 let uv: T = math.dot(u, v, this.numerical)
                 let uu: T = math.dot(u, u, this.numerical)
                 let scalar: T = this.numerical.divide(uv, uu);
@@ -1411,31 +1406,31 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
 
-    public choleskyDecomposition(): Matrix<T> {
-        if (!this.isSquare) {
-            throw new Error("Cholesky decomposition can only be applied to square matrices.");
-        }
+    // public choleskyDecomposition(): Matrix<T> {
+    //     if (!this.isSquare) {
+    //         throw new Error("Cholesky decomposition can only be applied to square matrices.");
+    //     }
 
-        const n = this.rows;
-        const L = Matrix.zeros<T>(n, n, this.numerical);
+    //     const n = this.rows;
+    //     const L = Matrix.zeros<T>(n, n, this.numerical);
 
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j <= i; j++) {
-                let sum = this.numerical.zeroValue;
-                for (let k = 0; k < j; k++) {
-                    sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
-                }
+    //     for (let i = 0; i < n; i++) {
+    //         for (let j = 0; j <= i; j++) {
+    //             let sum = this.numerical.zeroValue;
+    //             for (let k = 0; k < j; k++) {
+    //                 sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
+    //             }
 
-                if (i === j) {
-                    L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
-                } else {
-                    L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
-                }
-            }
-        }
+    //             if (i === j) {
+    //                 L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
+    //             } else {
+    //                 L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
+    //             }
+    //         }
+    //     }
 
-        return L;
-    }
+    //     return L;
+    // }
 
 
 
@@ -1624,6 +1619,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
 
+    //TODO:make this better
     /**
     * Checks if the current matrix is equal to another matrix.
     * @param {Matrix<T>} B - The matrix to compare with.
@@ -1650,7 +1646,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
      * Prints the matrix in a formatted way.
-     * @public
+     * @public 
      * @returns {void}
      *
      * @example
