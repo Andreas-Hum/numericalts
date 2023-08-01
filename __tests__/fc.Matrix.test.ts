@@ -580,6 +580,30 @@ describe("Matrix", () => {
             );
         });
 
+        it('should compute the condition number of a square matrix', () => {
+            fc.assert(
+                fc.property(array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        // Arrange
+                        const matrix = new Matrix(entries);
+
+                        if (!matrix.isSquare) return
+
+                        // Act
+                        const conditionNumber = matrix.conditionNumber();
+
+                        // Assert
+                        expect(conditionNumber).toBeGreaterThanOrEqual(0);
+                    })
+            );
+        });
+
+        it('should throw an error if the matrix is not square', () => {
+
+            expect(() => twoByThree.conditionNumber()).toThrowError("Matrix must be square to compute its condition number.");
+
+        });
+
         it('Should correctly raise a square matrix to the power x ', () => {
             fc.assert(
                 fc.property(
@@ -892,7 +916,7 @@ describe("Matrix", () => {
                 );
             });
 
-            it('Error: LUP decomposition only supports square matrices.', () => {
+            it('Error: LU decomposition only supports square matrices.', () => {
                 const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
 
                 expect(() => testMatrix.LUDecomposition()).toThrow();
@@ -901,7 +925,7 @@ describe("Matrix", () => {
             });
 
 
-            it('Error: LUP decomposition only supports square matrices.', () => {
+            it('Error: LU decomposition only supports square matrices.', () => {
                 const testMatrix = new Matrix([[1, 1, 1, 4], [1, 1, 1, 4], [1, 1, 1, 4]]);
 
                 expect(() => testMatrix.LUDecomposition()).toThrow();
