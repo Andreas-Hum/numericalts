@@ -165,7 +165,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             } else if (this.dataType === "bigint") {
                 this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
+                throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numerical implementation was provided.", 901);
             }
 
         } else {
@@ -1289,6 +1289,8 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return matrixClone;
     }
+
+
     /**
         * Performs LU decomposition on the matrix.
         * This method does not modify the original matrix.
@@ -1349,6 +1351,82 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return { L, U };
     }
+
+    /**
+     * Performs LUP decomposition on the matrix.
+     * This method does not modify the original matrix.
+     * @throws {MatrixError} If the matrix is not square or is singular.
+     * @returns { { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } } An object containing the L, U, and P matrices.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
+     * const result = matrix.LUPDecomposition();
+     * console.log(`L Matrix:\n ${result.L.toString()}`);
+     * console.log(`U Matrix:\n ${result.U.toString()}`);
+     * console.log(`P Matrix:\n ${result.P.toString()}`);
+    * // Output:
+     * // L Matrix:
+     * // " 1.00 0.00 0.00"
+     * // "-0.50 1.00 0.00"
+     * // " 0.50 -0.71 1.00"
+     *
+     * // U Matrix: 
+     * // "4.00 3.00 -1.00"
+     * // "0.00 3.50  0.50"
+     * // "0.00 0.00  3.86"
+     *
+     * // P Matrix: 
+     * // "0.00 1.00 0.00"
+     * // "0.00 0.00 1.00"
+     * // "1.00 0.00 0.00"
+     *
+     */
+    public LUPDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } {
+        if (!this.isSquare) {
+            throw new MatrixError("LU decomposition only supports square matrices.", -1);
+        }
+
+        const n = this.rows;
+        const L = Matrix.zeros(n, n, this.numerical);
+        const U = Matrix.clone(this);
+        const P = Matrix.identity(n, this.numerical);
+
+        for (let i = 0; i < n; i++) {
+            let max = this.numerical.zeroValue;
+            let kmax = 0;
+            for (let k = i; k < n; k++) {
+                if (math.abs(U.getElement(k, i), this.numerical) > max) {
+                    max = math.abs(U.getElement(k, i), this.numerical);
+                    kmax = k;
+                }
+            }
+            if (max === this.numerical.zeroValue) {
+                throw new MatrixError("Matrix is singular. LU decomposition cannot be performed.", -1);
+            }
+
+            U.swapRows(i, kmax);
+            P.swapRows(i, kmax);
+            L.swapRows(i, kmax);
+
+            for (let j = i + 1; j < n; j++) {
+                const value = this.numerical.divide(U.getElement(j, i), U.getElement(i, i));
+                L.setElement(j, i, value);
+                for (let k = i; k < n; k++) {
+                    const newValue = this.numerical.subtract(U.getElement(j, k), this.numerical.multiply(L.getElement(j, i), U.getElement(i, k)));
+                    U.setElement(j, k, newValue);
+                }
+            }
+        }
+
+        // Fill the diagonal of L with 1s
+        for (let i = 0; i < n; i++) {
+            L.setElement(i, i, this.numerical.oneValue);
+        }
+
+        return { L, U, P };
+    }
+
 
 
     /**
