@@ -1,6 +1,6 @@
 {
   "name": "numericalts",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "numerical.ts is a comprehensive TypeScript library for linear algebra and various mathematical operations, including vector and matrix operations, eigenvalue calculations, optimization algorithms, parsing mathematical statements, complex numbers, and more.",
   "author": "Andreas Hummelmose <andreas@hummelmose.com> (https://github.com/Andreas-Hum)",
   "homepage": "https://andreas-hum.github.io/numericalts/",
