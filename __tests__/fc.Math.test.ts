@@ -70,6 +70,50 @@ describe('math', () => {
 
   })
 
+
+
+  describe('prod', () => {
+    it('Should calculate the product of a number array', () => {
+      expect(math.prod([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(3628800)
+      expect(math.prod([5, 6, 7, 8, 9, 10])).toEqual(151200)
+
+
+    });
+
+    it('Should calculate the product of a bigint array', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt(), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = vector1.reduce((acc, val) => acc * val, 1n);
+            const actual: bigint = math.prod(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+    });
+
+    it("Should calculate the product a fractionalStringArb array", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+          const dotProductResult: string = math.prod(vector, fractionalRep);
+
+
+          const expected: string = vector.reduce((acc, val) => fractionalRep.multiply(acc, val), fractionalRep.oneValue);
+          expect(fractionalRep.toIntegral(dotProductResult)).toBe(fractionalRep.toIntegral(expected));
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.prod([])).toThrow("array length can't be 0.");
+      //@ts-ignore
+      expect(() => math.prod(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
+
   describe('Normalize', () => {
     it('should calculate the normalization correctly for a integer vector', () => {
       fc.property(
@@ -101,8 +145,7 @@ describe('math', () => {
       );
     });
 
-
-    it("should calculate the dot product correctly when given the stringClass", () => {
+    it("should calculate the normilization stringClass", () => {
       fc.assert(
         fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
 

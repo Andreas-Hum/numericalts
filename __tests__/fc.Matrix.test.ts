@@ -271,7 +271,7 @@ describe("Matrix", () => {
         });
 
         it('Should correctly get the main diagonal of the matrix', () => {
-        
+
             fc.assert(
                 fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
                     const matrix = new Matrix(entries);
@@ -283,7 +283,7 @@ describe("Matrix", () => {
                         expect(diag).toEqual([matrix.mElements[0]])
                     } else {
                         const expectedRes: any[] = []
-                        const min:number = Math.min(matrix.rows,matrix.columns)
+                        const min: number = Math.min(matrix.rows, matrix.columns)
                         for (let i = 0; i < min; i++) {
                             expectedRes.push(matrix.getElement(i, i))
                         }
@@ -654,6 +654,30 @@ describe("Matrix", () => {
             );
         });
 
+        it('should compute the determinant of a square matrix', () => {
+            // fc.assert(
+            //     fc.property(array2Darb(fc.integer()),
+            //         (entries: any[][]) => {
+            //             // Arrange
+            //             const matrix = new Matrix(entries);
+
+            //             if (!matrix.isSquare) return
+
+            //             // Act
+            //             const conditionNumber = matrix.cond();
+
+            //             // Assert
+            //             expect(conditionNumber).toBeGreaterThanOrEqual(0);
+            //         })
+            // );
+        });
+
+
+        it('should throw an error if the matrix is not square', () => {
+
+            expect(() => twoByThree.det()).toThrowError("Matrix must be square to compute its determinant.");
+
+        });
         it('Should correctly scale a matrix ', () => {
             fc.assert(
                 fc.property(

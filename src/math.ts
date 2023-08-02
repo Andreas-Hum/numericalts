@@ -185,6 +185,74 @@ export namespace math {
 
 
 
+    /**
+  * Computes the product of a number array.
+  *
+  * @param {number[]} array - The array of numbers.
+  * @returns {number} The product of all numbers in the array.
+  *
+  * @example
+  *    prod([3, 4]);  // Returns 12
+  */
+    export function prod(array: number[]): number;
+
+    /**
+     * Computes the product of a bigint array.
+     *
+     * @param {bigint[]} array - The array of bigints.
+     * @returns {bigint} The product of all bigints in the array.
+     *
+     * @example
+     *    prod([3n, 4n]);  // Returns 12n
+     */
+    export function prod(array: bigint[]): bigint;
+
+    /**
+     * Computes the product of an array of numeric type T.
+     *
+     * @template T - The numeric type of the elements in the array. T is inferred and doesn't need to be supplied manually.
+     *
+     * @param {T[]} array - The array of elements.
+     * @param {Numerical<T>} numerical - (optional) An instance of Numerical interface for the numeric type T. 
+     *    - If not provided, it defaults to NumericalNumber if the array is of type number[],
+     *      or to NumericalBigInt if the array is of type bigint[].
+     *    - If array is neither number[] nor bigint[], a Numerical<T> instance must be provided.
+     * 
+     * @throws {NumericalError} If the array's type is neither number[] nor bigint[], and no Numerical<T> instance was provided.
+     *
+     * @returns {T} The product of all elements in the array.
+     *
+     * @example
+     *
+     *    prod([3, 4]);                  // Returns 12
+     *    prod([3n, 4n]);                // Returns 12n
+     *    prod([3, 4], new Numerical()); // Where Numerical() is an implementation for type T.
+     *
+     */
+    export function prod<T>(array: T[], numerical?: Numerical<T>): T
+
+    export function prod<T>(array: T[], numerical?: Numerical<T>): T {
+        if (array.length === 0) {
+            throw new Error("array length can't be 0.")
+        }
+
+        if (!numerical) {
+            if (typeof array[0] === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof array[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError("The array is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
+            }
+        }
+
+        if (array.length === 1) return array[0]
+        return array.reduce((acc: T, cur: T) => numerical.multiply(acc, cur), numerical.oneValue);
+    }
+
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * floor, ceil, trunc and abs

@@ -719,10 +719,12 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.numerical.toIntegral(conditionNumber);
     }
 
+
+
     public det(): number {
 
         if (!this.isSquare) {
-            throw new MatrixError("Matrix must be square to compute its condition number.", -1);
+            throw new MatrixError("Matrix must be square to compute its determinant.", -1);
         }
 
         //Base case
@@ -731,6 +733,13 @@ export class Matrix<T> implements MatrixInterface<T> {
             const secondDiag: T = this.numerical.multiply(this.mElements[1], this.mElements[2]);
             return this.numerical.toIntegral(this.numerical.subtract(firstDiag, secondDiag))
         }
+
+
+        const { L, U, P } = this.LUDecomposition()
+
+        const det: T = math.prod(U.diag(), this.numerical)
+        return this.numerical.toIntegral(det)
+
     }
 
 
