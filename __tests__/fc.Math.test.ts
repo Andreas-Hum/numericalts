@@ -59,6 +59,8 @@ describe('math', () => {
           expect(dotProductResult).toBe(expectedDotProduct);
         })
       )
+     
+      expect(() => fractionalRep.divide("1/1","0/1")).toThrow()
     });
 
     it("Should correctly throw errors", () => {
