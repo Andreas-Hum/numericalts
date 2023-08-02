@@ -655,21 +655,11 @@ describe("Matrix", () => {
         });
 
         it('should compute the determinant of a square matrix', () => {
-            // fc.assert(
-            //     fc.property(array2Darb(fc.integer()),
-            //         (entries: any[][]) => {
-            //             // Arrange
-            //             const matrix = new Matrix(entries);
+            expect(new Matrix([[1, 2], [3, 4]]).det()).toEqual(-2)
+            expect(new Matrix([[1, 2, 3], [4, 5, 6], [6, 7, 8]]).det()).toEqual(0)
+            expect(new Matrix([[1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]]).det()).toBeCloseTo(-376)
+            expect(new Matrix([[1, 2, 3, 4], [5, 6, 7, 8], [3, 2, 3, 2], [3, 1, 7, 8]]).det()).toBeCloseTo(-24)
 
-            //             if (!matrix.isSquare) return
-
-            //             // Act
-            //             const conditionNumber = matrix.cond();
-
-            //             // Assert
-            //             expect(conditionNumber).toBeGreaterThanOrEqual(0);
-            //         })
-            // );
         });
 
 
@@ -678,6 +668,14 @@ describe("Matrix", () => {
             expect(() => twoByThree.det()).toThrowError("Matrix must be square to compute its determinant.");
 
         });
+
+
+        it('should return 0 if matrix is singular', () => {
+
+            expect(new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]]).det()).toEqual(0);
+
+        });
+
         it('Should correctly scale a matrix ', () => {
             fc.assert(
                 fc.property(

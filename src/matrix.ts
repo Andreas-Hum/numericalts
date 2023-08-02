@@ -720,7 +720,18 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-
+    /**
+     * Computes the determinant of this matrix.
+     * @public
+     * @returns {number} The determinant of the matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     * @throws {MatrixError} If the matrix is singular and LU decomposition cannot be performed.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const determinant = matrix.det();
+     * console.log(determinant);
+     * // Output: -2
+     */
     public det(): number {
 
         if (!this.isSquare) {
@@ -735,10 +746,26 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
 
-        const { L, U, P } = this.LUDecomposition()
 
-        const det: T = math.prod(U.diag(), this.numerical)
-        return this.numerical.toIntegral(det)
+        try {
+
+            let { L, U, P, permutationCount } = this.LUDecomposition();
+            const det: T = math.prod(U.diag(), this.numerical);
+
+
+            let numb: number = this.numerical.toIntegral(det);
+            if (math.abs(numb) < Constants.DELTA) return 0
+            // If permutationCount is odd, multiply det with -1
+            if (permutationCount % 2) {
+                numb *= -1;
+            }
+
+            return numb
+        } catch (error: any) {
+            if (error.message === "Matrix is singular. LU decomposition cannot be performed.") return 0;
+        }
+
+
 
     }
 
@@ -1378,7 +1405,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * // "1.00 0.00 0.00"
      *
      */
-    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } {
+    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T>, permutationCount: number } {
         if (!this.isSquare) {
             throw new MatrixError("LU decomposition only supports square matrices.", -1);
         }
@@ -1387,6 +1414,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const L = Matrix.zeros(n, n, this.numerical);
         const U = Matrix.clone(this);
         const P = Matrix.identity(n, this.numerical);
+        let permutationCount = 0; // Initialize the row exchange count
 
         for (let i = 0; i < n; i++) {
             let max = this.numerical.zeroValue;
@@ -1400,7 +1428,10 @@ export class Matrix<T> implements MatrixInterface<T> {
             if (max === this.numerical.zeroValue) {
                 throw new MatrixError("Matrix is singular. LU decomposition cannot be performed.", -1);
             }
-
+            // For each row swapping, increment permutation count
+            if (i !== kmax) {
+                permutationCount++;
+            }
             U.swapRows(i, kmax);
             P.swapRows(i, kmax);
             L.swapRows(i, kmax);
@@ -1420,8 +1451,9 @@ export class Matrix<T> implements MatrixInterface<T> {
             L.setElement(i, i, this.numerical.oneValue);
         }
 
-        return { L, U, P };
+        return { L, U, P, permutationCount };
     }
+
 
 
 
