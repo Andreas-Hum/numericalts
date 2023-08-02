@@ -18,7 +18,6 @@ The library leverages the power of generic types to enable flexible usage with d
 Please note that numerical.ts is currently a work in progress
 ## Features (Planned)
 
-- Vector operations: Addition, subtraction, dot product, cross product, and more.
 - Matrix operations: Addition, subtraction, multiplication, transpose, determinant calculation, and more.
 - Eigenvalue and eigenvector calculations.
 - Singular value decomposition (SVD).
