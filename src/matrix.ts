@@ -188,7 +188,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         @private
         @template {T} T - The type of the value.
         @param {T} value - The value to retrieve the interface or class name from.
-        @returns {string} The name of the interface or class. 
+        @returns {string} The name of the interface or class.
     */
     private getInterfaceName<T>(value: T): string {
         //@ts-ignore
@@ -315,6 +315,35 @@ export class Matrix<T> implements MatrixInterface<T> {
         const index: number = row * this.columns + column;
         if (index > this.size || index < 0) throw new MatrixError("Index out of bounds", 800, { row, column });
         return this.mElements[index];
+    }
+
+
+    /**
+     * Returns the diagonal elements of the matrix.
+     * @public
+     * @param {number} k - The offset from the main diagonal. Default is 0 which represents the main diagonal.
+     * @returns {T[]} An array of the diagonal elements.
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const diag = matrix.diag();
+     * console.log(diag); // Output will be [1, 5, 9]
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const diag = matrix.diag(1);
+     * console.log(diag); // Output will be [2, 6]
+     */
+    public diag(k: number = 0): T[] {
+        if (this.mElements.length === 0) return []
+        if (this.mElements.length === 1 || this.columns === 1 || this.rows === 1) return [this.mElements[0]]
+        const diagEle: T[] = []
+        const min: number = Math.min(this.columns, this.rows)
+        for (let i = 0; i < min; i++) {
+            diagEle.push(this.getElement(i, i + k))
+        }
+
+        return diagEle
     }
 
 

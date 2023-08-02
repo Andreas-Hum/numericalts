@@ -270,6 +270,32 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correctly get the main diagonal of the matrix', () => {
+        
+            fc.assert(
+                fc.property(array2Darb(fc.integer()), (entries: any[][]) => {
+                    const matrix = new Matrix(entries);
+                    const diag = matrix.diag()
+
+                    if (matrix.mElements.length === 0) {
+                        expect(diag).toEqual([])
+                    } else if (matrix.mElements.length === 1 || matrix.columns === 1 || matrix.rows === 1) {
+                        expect(diag).toEqual([matrix.mElements[0]])
+                    } else {
+                        const expectedRes: any[] = []
+                        const min:number = Math.min(matrix.rows,matrix.columns)
+                        for (let i = 0; i < min; i++) {
+                            expectedRes.push(matrix.getElement(i, i))
+                        }
+
+                        expect(diag).toEqual(expectedRes)
+                    }
+
+
+                })
+            );
+        });
+
         it('Should correctly get a row of a matrix', () => {
             fc.assert(
                 fc.property(
