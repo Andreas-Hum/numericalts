@@ -4,7 +4,7 @@ import { Matrix } from "../matrix"
 
 
 export interface MatrixInterface<T> {
-    /*
+    /** 
     * The shape of the matrix.
     * @type {string}
     */

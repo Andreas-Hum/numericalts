@@ -12,8 +12,8 @@ import { math } from "./math";
 import { Constants } from "./constants";
 
 //Numerical interface/classes
-import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
-
+import { Numerical } from "./@interfaces";
+import { NumericalNumber, NumericalBigInt } from "./@numerical.classes";
 
 //Lodash import
 import _ from 'lodash';
@@ -165,7 +165,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             } else if (this.dataType === "bigint") {
                 this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
             } else {
-                throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.", 901);
+                throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numerical implementation was provided.", 901);
             }
 
         } else {
@@ -185,9 +185,10 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
         Retrieves the name of the interface or class of a given value.
+        @private
         @template {T} T - The type of the value.
         @param {T} value - The value to retrieve the interface or class name from.
-        @returns {string} The name of the interface or class. 
+        @returns {string} The name of the interface or class.
     */
     private getInterfaceName<T>(value: T): string {
         //@ts-ignore
@@ -196,6 +197,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
         Retrieves the type of a given value.
+        @private
         @template T - The type of the value.
         @param value - The value to retrieve the type from.
         @returns The type of the value.
@@ -213,6 +215,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
     Checks if the given entries are a one-dimensional array of a specific type.
+    @private
     @template {T} T - The type of the array elements.
     @param {any} entries - The entries to check.
     @returns 'true' if the entries are a one-dimensional array of type T, 'false' otherwise. 
@@ -316,6 +319,35 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
+     * Returns the diagonal elements of the matrix.
+     * @public
+     * @param {number} k - The offset from the main diagonal. Default is 0 which represents the main diagonal.
+     * @returns {T[]} An array of the diagonal elements.
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const diag = matrix.diag();
+     * console.log(diag); // Output will be [1, 5, 9]
+     * 
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const diag = matrix.diag(1);
+     * console.log(diag); // Output will be [2, 6]
+     */
+    public diag(k: number = 0): T[] {
+        if (this.mElements.length === 0) return []
+        if (this.mElements.length === 1 || this.columns === 1 || this.rows === 1) return [this.mElements[0]]
+        const diagEle: T[] = []
+        const min: number = Math.min(this.columns, this.rows)
+        for (let i = 0; i < min; i++) {
+            diagEle.push(this.getElement(i, i + k))
+        }
+
+        return diagEle
+    }
+
+
+    /**
      * Gets a specific row of the matrix.
      * @public
      * @param {number} rowIndex - The index of the row to retrieve (starting from 0).
@@ -360,7 +392,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     public getColumn(columnIndex: number): T[] {
         if (typeof columnIndex !== "number")
             throw new MatrixError("Invalid argument", 606, { columnIndex });
-        if (columnIndex < 0 || columnIndex > this.columns)
+        if (columnIndex < 0 || columnIndex >= this.columns)
             throw new MatrixError("Column index out of bounds", 800, { columnIndex });
 
         const column: T[] = [];
@@ -470,6 +502,72 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
     }
 
+    /**
+     * Swaps two rows of the matrix.
+     * @public
+     * @param {number} row1 - The index of the first row to swap.
+     * @param {number} row2 - The index of the second row to swap.
+     * @throws {MatrixError} If either row index is out of bounds.
+     * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * matrix.swapRows(0, 1);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "3 4"
+     * // "1 2"
+     */
+    public swapRows(row1: number, row2: number): void {
+        if (row1 < 0 || row1 >= this.rows || row2 < 0 || row2 >= this.rows) {
+            throw new MatrixError('Row index out of bounds', 800, { row1, row2, rows: this.rows });
+        }
+
+        for (let col = 0; col < this.columns; col++) {
+            const index1 = row1 * this.columns + col;
+            const index2 = row2 * this.columns + col;
+            const temp = this.mElements[index1];
+            this.mElements[index1] = this.mElements[index2];
+            this.mElements[index2] = temp;
+        }
+    }
+
+    /**
+     * Swaps two columns of the matrix.
+     * @public
+     * @param {number} col1 - The index of the first column to swap.
+     * @param {number} col2 - The index of the second column to swap.
+     * @throws {MatrixError} If the matrix has less than two columns or either column index is out of bounds.
+     * @returns {void}
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * matrix.swapColumns(0, 1);
+     * console.log(matrix.toString());
+     * // Output:
+     * // "2 1"
+     * // "4 3"
+     */
+    public swapColumns(col1: number, col2: number): void {
+        if (this.columns < 2) {
+            throw new MatrixError('Matrix must have at least two columns to swap.', 800, { cols: this.columns });
+        }
+
+        if (col1 < 0 || col1 >= this.columns || col2 < 0 || col2 >= this.columns) {
+            throw new MatrixError('Column index out of bounds', 800, { col1, col2, cols: this.columns });
+        }
+
+        for (let row = 0; row < this.rows; row++) {
+            const index1 = row * this.columns + col1;
+            const index2 = row * this.columns + col2;
+            const temp = this.mElements[index1];
+            this.mElements[index1] = this.mElements[index2];
+            this.mElements[index2] = temp;
+        }
+    }
+
 
     /**
      * Retrieves a submatrix from the current matrix.
@@ -561,7 +659,8 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param { Matrix<T> } B - The matrix to add.
      * @returns {Matrix<T>} The resulting matrix.
-     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
      * @example
      * const matrixA = new Matrix([[1, 2], [3, 4]]);
      * const matrixB = new Matrix([[5, 6], [7, 8]]);
@@ -571,8 +670,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "6  8"
      * "10 12"
      * 
-     * @throws {MatrixError} If the dimensions of the two matrices are not the same.
-     * @throws {MatrixError} If the argument is not an instance of Matrix.
+
      */
     public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
@@ -589,45 +687,87 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     }
 
+    /**
+     * Computes the condition number of this matrix.
+     * @public
+     * @returns {number} The condition number of the matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const conditionNumber = matrix.conditionNumber();
+     * console.log(conditionNumber);
+     * // Output: 14.933034373659268
+     */
+    public cond(): number {
+        // Ensure the matrix is square
+        if (!this.isSquare) {
+            throw new MatrixError("Matrix must be square to compute its condition number.", -1);
+        }
 
-    // /**
-    //  * Adds another matrix to this matrix. is async and faster
-    //  * @public
-    //  * @param {Matrix} B - The matrix to add.
-    //  * @returns {Matrix} The resulting matrix.
-    //  */
-    // public async addasync(B: Matrix): Promise<Matrix> {
-    //     if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
-    //     if (!(B instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { B });
+        // Compute the norm of the matrix
+        const normA = this.norm();
 
-    //     const resultElements: Float32Array = new Float32Array(this.mElements);
-    //     const size: number = this.size;
+        // Compute the inverse of the matrix
+        const inverseA = this.invertSquare();
 
-    //     // Calculate the chunk size based on the number of available processors
-    //     const numProcessors: number = os.cpus().length;
-    //     const chunkSize: number = Math.ceil(size / numProcessors);
+        // Compute the norm of the inverse matrix
+        const normInverseA = inverseA.norm();
 
-    //     const promises: any[] = [];
+        // Compute the condition number
+        const conditionNumber = this.numerical.multiply(this.numerical.fromIntegral(normA), this.numerical.fromIntegral(normInverseA));
 
-    //     for (let i = 0; i < numProcessors; i++) {
-    //         const start: number = i * chunkSize;
-    //         const end: number = Math.min(start + chunkSize, size);
+        return this.numerical.toIntegral(conditionNumber);
+    }
 
-    //         promises.push(
-    //             new Promise<void>((resolve) => {
-    //                 // Perform addition in parallel for the chunk
-    //                 for (let j = start; j < end; j++) {
-    //                     resultElements[j] += B.mElements[j];
-    //                 }
-    //                 resolve();
-    //             })
-    //         );
-    //     }
 
-    //     // Wait for all promises to resolve
-    //     await Promise.all(promises);
-    //     return new Matrix(resultElements, this.rows, this.columns);
-    // }
+    /**
+     * Computes the determinant of this matrix.
+     * @public
+     * @returns {number} The determinant of the matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     * @throws {MatrixError} If the matrix is singular and LU decomposition cannot be performed.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const determinant = matrix.det();
+     * console.log(determinant);
+     * // Output: -2
+     */
+    public det(): number {
+
+        if (!this.isSquare) {
+            throw new MatrixError("Matrix must be square to compute its determinant.", -1);
+        }
+
+        //Base case
+        if (this.rows === 2) {
+            const firstDiag: T = this.numerical.multiply(this.mElements[0], this.mElements[3]);
+            const secondDiag: T = this.numerical.multiply(this.mElements[1], this.mElements[2]);
+            return this.numerical.toIntegral(this.numerical.subtract(firstDiag, secondDiag))
+        }
+
+
+
+        try {
+
+            let { L, U, P, permutationCount } = this.LUDecomposition();
+            const det: T = math.prod(U.diag(), this.numerical);
+
+
+            let numb: number = this.numerical.toIntegral(det);
+            if (math.abs(numb) < Constants.DELTA) return 0
+            // If permutationCount is odd, multiply det with -1
+            if (permutationCount % 2) {
+                numb *= -1;
+            }
+
+            return numb
+        } catch (error: any) {
+            if (error.message === "Matrix is singular. LU decomposition cannot be performed.") return 0;
+        }
+
+
+
+    }
 
 
     /**
@@ -638,7 +778,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * set of vectors that spans the same column space as the original set. The set of orthonormal vectors is computed
      * sequentially by subtracting the projections of a matrix column vector onto the previously computed orthogonal
      * vectors from the column vector itself.
-     *
+     * @public
      * @returns {Matrix<T>} A new Matrix instance constructed using the orthonormal vectors as columns.
      *
      * @throws {MatrixError} If any column obtained during the process is nearly zero (having euclidean norm lesser than a small
@@ -653,7 +793,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "0 1 0"
      * "0 0 1"
      *
-     * @public
      */
     public gramSmith(): Matrix<T> {
 
@@ -670,11 +809,6 @@ export class Matrix<T> implements MatrixInterface<T> {
             for (let j = 0; j < i; j++) {
                 let u: T[] = orthogonalColumns[j]
                 let v: T[] = (this as Matrix<T>).getColumn(i)
-                if (this.numerical === undefined) {
-                    console.log(v)
-                    console.log(u)
-
-                }
                 let uv: T = math.dot(u, v, this.numerical)
                 let uu: T = math.dot(u, u, this.numerical)
                 let scalar: T = this.numerical.divide(uv, uu);
@@ -684,7 +818,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                 orthogonalProjection = orthogonalProjection.map((entry: T, index: number) => this.numerical.subtract(entry, projectionOf_I_onto_J[index]))
 
             }
-            if ((this.numerical.toNumber(this.numerical.sqrt(orthogonalProjection.map((x: T) => this.numerical.multiply(x, x)).reduce((acc: T, x: T) => this.numerical.add(acc, x))))) < Constants.DELTA) {
+            if ((this.numerical.toIntegral(this.numerical.sqrt(orthogonalProjection.map((x: T) => this.numerical.multiply(x, x)).reduce((acc: T, x: T) => this.numerical.add(acc, x))))) < Constants.DELTA) {
                 throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
             }
             orthogonalColumns.push(orthogonalProjection)
@@ -701,7 +835,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @public
      * @param {Matrix<T>} B - The matrix to multiply with.
      * @returns {Matrix<T>} The resulting matrix.
-     * 
+     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      * @example
      * const matrixA = new Matrix([[1, 2], [3, 4]]);
      * const matrixB = new Matrix([[5, 6], [7, 8]]);
@@ -711,7 +845,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      * "19 22"
      * "43 50"
      * 
-     * @throws {MatrixError} If the dimensions of the two matrices are not compatible for multiplication.
      */
     public multiply(B: Matrix<T>): Matrix<T> {
         if (this.columns !== B.rows) {
@@ -751,6 +884,25 @@ export class Matrix<T> implements MatrixInterface<T> {
         return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
     }
 
+    /**
+     * Computes the Frobenius norm of this matrix.
+     * @public
+     * @returns {number} The Frobenius norm of the matrix.
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const norm = matrix.norm();
+     * console.log(norm);
+     * // Output: 5.477225575051661
+     */
+    public norm(): number {
+        let norm = this.numerical.zeroValue;
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                norm = this.numerical.add(norm, this.numerical.multiply(this.getElement(i, j), this.getElement(i, j)));
+            }
+        }
+        return this.numerical.toIntegral(math.sqrt(norm, this.numerical));
+    }
 
     //TODO: fix the negative pow
     /**
@@ -800,6 +952,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
+
     /**
      * Scales the matrix and returns a new matrix with the result of the scaling.
      * @public
@@ -826,9 +979,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         scaledMatrix.mElements = scaledMatrix.mElements.map((entry: T) => this.numerical.multiply(entry, scalar))
         return scaledMatrix;
     }
-
-
-
 
     /**
      * Performs matrix multiplication using the Strassen's algorithm.
@@ -1099,7 +1249,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
 
             let i: number = r;
-            while (matrixClone[i * columns + lead] === this.numerical.zeroValue) {
+            while ((matrixClone as T[])[i * columns + lead] === this.numerical.zeroValue) {
                 i++;
 
                 if (rows === i) {
@@ -1107,22 +1257,22 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<T>([...matrixClone], { rows, columns });
+                        return new Matrix<T>([...matrixClone as T[]], { rows, columns });
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
-            matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
-            matrixClone.splice(r * columns, columns, ...tmp);
+            let tmp: T[] = (matrixClone as T[]).slice(i * columns, (i + 1) * columns);
+            (matrixClone as T[]).splice(i * columns, columns, ...(matrixClone as T[]).slice(r * columns, (r + 1) * columns));
+            (matrixClone as T[]).splice(r * columns, columns, ...tmp);
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of the current column as zero
             for (let i = r + 1; i < rows; i++) {
-                let val = this.numerical.divide(matrixClone[i * columns + lead], matrixClone[r * columns + lead]);
+                let val = this.numerical.divide((matrixClone as T[])[i * columns + lead], (matrixClone as T[])[r * columns + lead]);
 
                 for (let j = 0; j < columns; j++) {
-                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]))
+                    (matrixClone as T[])[i * columns + j] = this.numerical.subtract((matrixClone as T[])[i * columns + j], this.numerical.multiply(val, (matrixClone as T[])[r * columns + j]))
                 }
             }
 
@@ -1130,7 +1280,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
 
-        matrixClone = new Matrix<T>([...matrixClone], { rows, columns, numerical: this.numerical });
+        matrixClone = new Matrix<T>([...(matrixClone as T[])], { rows, columns, numerical: this.numerical });
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -1173,7 +1323,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
 
             let i: number = r;
-            while (matrixClone[i * columns + lead] === this.numerical.zeroValue) {
+            while ((matrixClone as T[])[i * columns + lead] === this.numerical.zeroValue) {
                 i++;
 
                 if (rows === i) {
@@ -1181,38 +1331,38 @@ export class Matrix<T> implements MatrixInterface<T> {
                     lead++;
 
                     if (columns === lead) {
-                        return new Matrix<T>(matrixClone, { rows, columns });;
+                        return new Matrix<T>((matrixClone as T[]), { rows, columns });;
                     }
                 }
             }
 
             // Swap rows i and r
-            let tmp: T[] = matrixClone.slice(i * columns, (i + 1) * columns);
-            matrixClone.splice(i * columns, columns, ...matrixClone.slice(r * columns, (r + 1) * columns));
-            matrixClone.splice(r * columns, columns, ...tmp);
+            let tmp: T[] = (matrixClone as T[]).slice(i * columns, (i + 1) * columns);
+            (matrixClone as T[]).splice(i * columns, columns, ...(matrixClone as T[]).slice(r * columns, (r + 1) * columns));
+            (matrixClone as T[]).splice(r * columns, columns, ...tmp);
 
-            let val: T = matrixClone[r * columns + lead];
+            let val: T = (matrixClone as T[])[r * columns + lead];
 
             // Scale row r to make the leading coefficient = 1
             for (let j = 0; j < columns; j++) {
-                matrixClone[r * columns + j] = this.numerical.divide(matrixClone[r * columns + j], val)
+                (matrixClone as T[])[r * columns + j] = this.numerical.divide((matrixClone as T[])[r * columns + j], val)
             }
 
             // Subtract multiples of row r from the other rows to make the rest of the entries of current column as zero
             for (let i = 0; i < rows; i++) {
                 if (i === r) continue;
 
-                val = matrixClone[i * columns + lead];
+                val = (matrixClone as T[])[i * columns + lead];
 
                 for (let j = 0; j < columns; j++) {
-                    matrixClone[i * columns + j] = this.numerical.subtract(matrixClone[i * columns + j], this.numerical.multiply(val, matrixClone[r * columns + j]))
+                    (matrixClone as T[])[i * columns + j] = this.numerical.subtract((matrixClone as T[])[i * columns + j], this.numerical.multiply(val, (matrixClone as T[])[r * columns + j]))
                 }
             }
 
             lead++;
         }
 
-        matrixClone = new Matrix<T>(matrixClone, { rows, columns, numerical: this.numerical })
+        matrixClone = new Matrix<T>((matrixClone as T[]), { rows, columns, numerical: this.numerical })
         Matrix.roundMatrixToZero(matrixClone)
 
 
@@ -1226,7 +1376,89 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Performs QR decomposition on the matrix.
+     * Performs LUP decomposition on the matrix.
+     * This method does not modify the original matrix.
+     * @throws {MatrixError} If the matrix is not square or is singular.
+     * @returns { { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } } An object containing the L, U, and P matrices.
+     *
+     * @example
+     * 
+     * const matrix = new Matrix([[2, -1, 3], [4, 3, -1], [-2, 2, 1]]);
+     * const result = matrix.LUPDecomposition();
+     * console.log(`L Matrix:\n ${result.L.toString()}`);
+     * console.log(`U Matrix:\n ${result.U.toString()}`);
+     * console.log(`P Matrix:\n ${result.P.toString()}`);
+    * // Output:
+     * // L Matrix:
+     * // " 1.00 0.00 0.00"
+     * // "-0.50 1.00 0.00"
+     * // " 0.50 -0.71 1.00"
+     *
+     * // U Matrix: 
+     * // "4.00 3.00 -1.00"
+     * // "0.00 3.50  0.50"
+     * // "0.00 0.00  3.86"
+     *
+     * // P Matrix: 
+     * // "0.00 1.00 0.00"
+     * // "0.00 0.00 1.00"
+     * // "1.00 0.00 0.00"
+     *
+     */
+    public LUDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T>, permutationCount: number } {
+        if (!this.isSquare) {
+            throw new MatrixError("LU decomposition only supports square matrices.", -1);
+        }
+
+        const n = this.rows;
+        const L = Matrix.zeros(n, n, this.numerical);
+        const U = Matrix.clone(this);
+        const P = Matrix.identity(n, this.numerical);
+        let permutationCount = 0; // Initialize the row exchange count
+
+        for (let i = 0; i < n; i++) {
+            let max = this.numerical.zeroValue;
+            let kmax = 0;
+            for (let k = i; k < n; k++) {
+                if (math.abs(U.getElement(k, i), this.numerical) > max) {
+                    max = math.abs(U.getElement(k, i), this.numerical);
+                    kmax = k;
+                }
+            }
+            if (max === this.numerical.zeroValue) {
+                throw new MatrixError("Matrix is singular. LU decomposition cannot be performed.", -1);
+            }
+            // For each row swapping, increment permutation count
+            if (i !== kmax) {
+                permutationCount++;
+            }
+            U.swapRows(i, kmax);
+            P.swapRows(i, kmax);
+            L.swapRows(i, kmax);
+
+            for (let j = i + 1; j < n; j++) {
+                const value = this.numerical.divide(U.getElement(j, i), U.getElement(i, i));
+                L.setElement(j, i, value);
+                for (let k = i; k < n; k++) {
+                    const newValue = this.numerical.subtract(U.getElement(j, k), this.numerical.multiply(L.getElement(j, i), U.getElement(i, k)));
+                    U.setElement(j, k, newValue);
+                }
+            }
+        }
+
+        // Fill the diagonal of L with 1s
+        for (let i = 0; i < n; i++) {
+            L.setElement(i, i, this.numerical.oneValue);
+        }
+
+        return { L, U, P, permutationCount };
+    }
+
+
+
+
+    /**
+     * Performs QR decomposition on the matrix. 
      * This method does not modify the original matrix.
      * @returns { { Q: Matrix, R: Matrix } } An object containing the Q and R matrices.
      *
@@ -1255,6 +1487,35 @@ export class Matrix<T> implements MatrixInterface<T> {
         Matrix.roundMatrixToZero(R)
         return { Q: Q, R: R };
     }
+
+
+
+    // public choleskyDecomposition(): Matrix<T> {
+    //     if (!this.isSquare) {
+    //         throw new Error("Cholesky decomposition can only be applied to square matrices.");
+    //     }
+
+    //     const n = this.rows;
+    //     const L = Matrix.zeros<T>(n, n, this.numerical);
+
+    //     for (let i = 0; i < n; i++) {
+    //         for (let j = 0; j <= i; j++) {
+    //             let sum = this.numerical.zeroValue;
+    //             for (let k = 0; k < j; k++) {
+    //                 sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
+    //             }
+
+    //             if (i === j) {
+    //                 L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
+    //             } else {
+    //                 L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
+    //             }
+    //         }
+    //     }
+
+    //     return L;
+    // }
+
 
 
 
@@ -1367,6 +1628,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
+
     /**
      * Inverts an upper triangular matrix.
      * @returns { Matrix<number>} The inverted upper triangular matrix.
@@ -1441,9 +1703,11 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
 
+    //TODO:make this better
     /**
     * Checks if the current matrix is equal to another matrix.
     * @param {Matrix<T>} B - The matrix to compare with.
+    * @param {number} threshold - Threshold for the method to return true defaults to 1e-12
     * @returns {boolean} 'true' if the matrices are equal, 'false' otherwise.
     *
     * @example
@@ -1455,10 +1719,10 @@ export class Matrix<T> implements MatrixInterface<T> {
     * // Output: true
     *
     */
-    public equal(B: Matrix<T>): boolean {
+    public equal(B: Matrix<T>, threshold: number = Constants.DELTA): boolean {
         if (B.dataType !== this.dataType || B.shape !== this.shape) return false;
         if (B.dataType === "number") { //TODO: Check the equal
-            return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index]))
+            return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index], threshold))
         }
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
@@ -1466,7 +1730,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
      * Prints the matrix in a formatted way.
-     * @public
+     * @public 
      * @returns {void}
      *
      * @example
@@ -1732,7 +1996,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const size: number = A.size;
 
         for (let i = 0; i < size; i++) {
-            if (A.numerical.toNumber(math.abs(A.mElements[i], A.numerical)) < threshold) {
+            if (A.numerical.toIntegral(math.abs(A.mElements[i], A.numerical)) < threshold) {
                 A.mElements[i] = A.numerical.zeroValue;
             }
         }
@@ -1870,7 +2134,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             const row: T[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue: T = numerical.fromNumber(Math.floor(Math.random() * 100));
+                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 100));
                 row.push(randomValue);
             }
             entries.push(row);
