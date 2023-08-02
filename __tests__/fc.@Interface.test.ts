@@ -1,7 +1,8 @@
 import fc from 'fast-check';
-import { NumericalNumber, NumericalBigInt, Numerical } from '../src/@interfaces/numerical'; // Replace 'your-module' with the actual module path
+import { Numerical } from '../src/@interfaces/numerical'; // Replace 'your-module' with the actual module path
 import { math } from '../src/math';
 // Helper function to check equality within a tolerance for numbers
+import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
 
 
 describe('Numerical interface', () => {
@@ -58,16 +59,16 @@ describe('Numerical interface', () => {
         );
     });
 
-    // Test conversion functions 'fromNumber' and 'toNumber'
+    // Test conversion functions 'fromIntegral ' and 'toIntegral'
     test('Conversion functions - number to bigint and vice versa', () => {
         fc.assert(
             fc.property(fc.integer(), (num) => {
                 const numericalNumber: Numerical<number> = new NumericalNumber();
                 const numericalBigInt: Numerical<bigint> = new NumericalBigInt();
 
-                const bigintFromNumber = numericalBigInt.fromNumber(num);
-                const numberFromBigint = numericalBigInt.toNumber(bigintFromNumber);
-                numericalNumber.toNumber(2)
+                const bigintfromIntegral = numericalBigInt.fromIntegral(num);
+                const numberFromBigint = numericalBigInt.toIntegral(bigintfromIntegral);
+                numericalNumber.toIntegral(2)
                 expect(numberFromBigint).toBe(num);
             })
         );

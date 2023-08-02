@@ -91,12 +91,12 @@ export class FractionalNumberClass implements Numerical<string> {
         return `${simplifiedNum}/${simplifiedDenom}`;
     }
 
-    fromNumber(n: number): string {
+    fromIntegral(n: number): string {
         // Convert the number to a fraction with denominator 1
         return `${n}/1`;
     }
 
-    toNumber(n: string): number {
+    toIntegral(n: string): number {
         // Convert the fraction to a numeric value
         const [num, denom] = n.split('/').map(Number);
         return num / denom;

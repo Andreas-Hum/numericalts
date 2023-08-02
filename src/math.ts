@@ -1,7 +1,8 @@
 import { Constants } from "./constants";
-import { Numerical, NumericalNumber, NumericalBigInt } from "./@interfaces/numerical";
+import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
 
+import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
 
 
 export namespace math {
@@ -244,7 +245,7 @@ export namespace math {
         }
         const sign: number = numerical.signOperator(x);
 
-        return sign === -1 ? numerical.multiply(x, numerical.fromNumber(-1)) : x;
+        return sign === -1 ? numerical.multiply(x, numerical.fromIntegral(-1)) : x;
     }
 
 

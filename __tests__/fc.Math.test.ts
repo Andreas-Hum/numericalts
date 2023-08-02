@@ -2,7 +2,7 @@ import { NumericalError } from './../src/@error.types/numerical.error';
 import { Numerical } from '../src/@interfaces/numerical';
 import { fc } from '@fast-check/jest';
 import { math } from '../src';
-import { FractionalNumberClass } from '../src/@t.classes/classes';
+import { FractionalNumberClass } from '../src/@numerical.classes';
 
 
 

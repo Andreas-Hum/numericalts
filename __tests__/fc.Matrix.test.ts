@@ -1,8 +1,9 @@
 import { fc } from '@fast-check/jest';
 import { Matrix, math } from '../src';
 
-import { Numerical, NumericalNumber } from '../src/@interfaces/numerical';
-import { FractionalNumberClass } from '../src/@t.classes/classes';
+import { Numerical } from '../src/@interfaces/numerical';
+import { FractionalNumberClass } from '../src/@numerical.classes';
+import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
 
 let fractionalRep: Numerical<string>, fractionalStringArb: fc.Arbitrary<string>
 // Define your custom class (Replace ClassA, ClassB, and ClassC with your actual classes)
@@ -592,7 +593,7 @@ describe("Matrix", () => {
                         if (!matrix.isSquare) return
 
                         // Act
-                        const conditionNumber = matrix.conditionNumber();
+                        const conditionNumber = matrix.cond();
 
                         // Assert
                         expect(conditionNumber).toBeGreaterThanOrEqual(0);
@@ -602,7 +603,7 @@ describe("Matrix", () => {
 
         it('should throw an error if the matrix is not square', () => {
 
-            expect(() => twoByThree.conditionNumber()).toThrowError("Matrix must be square to compute its condition number.");
+            expect(() => twoByThree.cond()).toThrowError("Matrix must be square to compute its condition number.");
 
         });
 

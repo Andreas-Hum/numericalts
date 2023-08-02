@@ -12,8 +12,8 @@ import { math } from "./math";
 import { Constants } from "./constants";
 
 //Numerical interface/classes
-import { Numerical, NumericalBigInt, NumericalNumber } from "./@interfaces";
-
+import { Numerical } from "./@interfaces";
+import { NumericalNumber, NumericalBigInt } from "./@numerical.classes";
 
 //Lodash import
 import _ from 'lodash';
@@ -669,7 +669,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(conditionNumber);
      * // Output: 14.933034373659268
      */
-    public conditionNumber(): number {
+    public cond(): number {
         // Ensure the matrix is square
         if (!this.isSquare) {
             throw new MatrixError("Matrix must be square to compute its condition number.", -1);
@@ -685,9 +685,23 @@ export class Matrix<T> implements MatrixInterface<T> {
         const normInverseA = inverseA.norm();
 
         // Compute the condition number
-        const conditionNumber = this.numerical.multiply(this.numerical.fromNumber(normA), this.numerical.fromNumber(normInverseA));
+        const conditionNumber = this.numerical.multiply(this.numerical.fromIntegral(normA), this.numerical.fromIntegral(normInverseA));
 
-        return this.numerical.toNumber(conditionNumber);
+        return this.numerical.toIntegral(conditionNumber);
+    }
+
+    public det(): number {
+
+        if (!this.isSquare) {
+            throw new MatrixError("Matrix must be square to compute its condition number.", -1);
+        }
+
+        //Base case
+        if (this.rows === 2) {
+            const firstDiag: T = this.numerical.multiply(this.mElements[0], this.mElements[3]);
+            const secondDiag: T = this.numerical.multiply(this.mElements[1], this.mElements[2]);
+            return this.numerical.toIntegral(this.numerical.subtract(firstDiag, secondDiag))
+        }
     }
 
 
@@ -739,7 +753,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                 orthogonalProjection = orthogonalProjection.map((entry: T, index: number) => this.numerical.subtract(entry, projectionOf_I_onto_J[index]))
 
             }
-            if ((this.numerical.toNumber(this.numerical.sqrt(orthogonalProjection.map((x: T) => this.numerical.multiply(x, x)).reduce((acc: T, x: T) => this.numerical.add(acc, x))))) < Constants.DELTA) {
+            if ((this.numerical.toIntegral(this.numerical.sqrt(orthogonalProjection.map((x: T) => this.numerical.multiply(x, x)).reduce((acc: T, x: T) => this.numerical.add(acc, x))))) < Constants.DELTA) {
                 throw new MatrixError("Cannot normalize a nearly-zero column. The given columns are not linearly independent.", 704);
             }
             orthogonalColumns.push(orthogonalProjection)
@@ -822,7 +836,7 @@ export class Matrix<T> implements MatrixInterface<T> {
                 norm = this.numerical.add(norm, this.numerical.multiply(this.getElement(i, j), this.getElement(i, j)));
             }
         }
-        return this.numerical.toNumber(math.sqrt(norm, this.numerical));
+        return this.numerical.toIntegral(math.sqrt(norm, this.numerical));
     }
 
     //TODO: fix the negative pow
@@ -1912,7 +1926,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const size: number = A.size;
 
         for (let i = 0; i < size; i++) {
-            if (A.numerical.toNumber(math.abs(A.mElements[i], A.numerical)) < threshold) {
+            if (A.numerical.toIntegral(math.abs(A.mElements[i], A.numerical)) < threshold) {
                 A.mElements[i] = A.numerical.zeroValue;
             }
         }
@@ -2050,7 +2064,7 @@ export class Matrix<T> implements MatrixInterface<T> {
             const row: T[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue: T = numerical.fromNumber(Math.floor(Math.random() * 100));
+                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 100));
                 row.push(randomValue);
             }
             entries.push(row);
