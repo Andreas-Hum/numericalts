@@ -14,11 +14,16 @@ export class NumericalBigInt implements Numerical<bigint> {
     fromIntegral (n: number): bigint {
         return BigInt(n);
     }
-    signOperator(x: bigint): number {
-        return x >= BigInt(0) ? 1 : -1;
-    }
-     
+
     toIntegral (n: bigint): number {
         return Number(n);
+    }
+
+    toString(n: bigint): string {
+        return `${n}`
+    }
+
+    signOperator(x: bigint): number {
+        return x >= BigInt(0) ? 1 : -1;
     }
 }

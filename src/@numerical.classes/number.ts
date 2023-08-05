@@ -14,12 +14,17 @@ export class NumericalNumber implements Numerical<number> {
         return n;
     }
 
+    toIntegral(n: number): number {
+        return n;
+    }
+
+    toString(n: number): string {
+        return `${n}`
+    }
 
     signOperator(x: number): number {
         return Math.sign(x);
     }
 
-    toIntegral(n: number): number {
-        return n;
-    }
+
 }

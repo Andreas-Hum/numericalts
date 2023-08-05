@@ -65,6 +65,61 @@ const { Q, R } = A.QRDecomposition();
 console.log(Q.toArray()); // [[-0.31622776601683794, -0.9486832980505138], [-0.9486832980505138, 0.31622776601683794]]
 console.log(R.toArray()); // [[-3.1622776601683795, -4.427188724235731], [0, 0.6324555320336759]]
 ```
+
+### Example of a Custom Numerical Class
+This section demonstrates how to create a custom class that implements the `Numerical` interface and how to use it with the `Matrix` class.
+```ts
+// Import The Matrix class and the Numerical interface
+import { Matrix, Numerical} from 'numericalts';
+
+// Skeleton for a custom Complex class
+class Complex implements Numerical<Complex>{
+zeroValue: new Complex(0,0);
+oneValue: new Complex(1,0);
+
+constructor(realValue: number, imagValue: number){/*Logic here*/}
+public zeroValue(): Complex {/*Logic here*/}
+public oneValue(): Complex {/*Logic here*/}
+public add(x: Complex, y: Complex): Complex {/*Logic here*/}
+public subtract(x: Complex, y: Complex): Complex {/*Logic here*/}
+public multiply(x: Complex, y: Complex): Complex {/*Logic here*/}
+public divide(x: Complex, y: Complex): Complex {/*Logic here*/}
+public sqrt(x: Complex): Complex {/*Logic here*/}
+public fromIntegral(n: number): Complex {/*Logic here*/}
+public toIntegral(x: Complex): number {/*Logic here*/}
+public toString(x:Complex):string {/*Logic here*/}
+public signOperator(x: Complex): number {/*Logic here*/}
+
+
+}
+
+
+// Now that the custom class has been implemented just use the Matrix class as normal
+
+const c1: Complex = new Complex(1, 1);
+const c2: Complex = new Complex(2, 2);
+const c3: Complex = new Complex(3, 3);
+const c4: Complex = new Complex(4, 4);
+
+const complexMatrix: Matrix<Complex> = new Matrix<Complex>([[c1, c2], [c3, c4]], {numerical: new Complex(0, 0)});
+
+// Matrix multiplication
+const A: Matrix<Complex> = complexMatrix.multiply(complexMatrix);
+console.log(C.toString());
+/*
+ *  "14i 20i"
+ *  "30i 44i"
+ */
+
+// Matrix addition
+const B: Matrix<Complex> = complexMatrix.add(complexMatrix);
+console.log(B.toString());
+/*
+ *  "2+2i 4+4i"
+ *  "6+6i 8+8i"
+ */
+```
+
 ### Number Manipulation
 
 ```ts

@@ -102,6 +102,10 @@ export class FractionalNumberClass implements Numerical<string> {
         return num / denom;
     }
 
+    toString(n: string): string {
+        return n
+    }
+
     signOperator(x: string): number {
         // Compare `x` with `zeroValue`
         const [num, denom] = x.split('/').map(Number);

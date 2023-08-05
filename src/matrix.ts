@@ -1376,7 +1376,7 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
-     * Performs LUP decomposition on the matrix.
+     * Performs LUP decomposition on the matrix with partial pivoting.
      * This method does not modify the original matrix.
      * @throws {MatrixError} If the matrix is not square or is singular.
      * @returns { { L: Matrix<T>, U: Matrix<T>, P: Matrix<T> } } An object containing the L, U, and P matrices.
@@ -1752,7 +1752,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const colMaxes: number[] = [];
         for (let i = 0; i < shape[1]; i++) {
             //@ts-ignore
-            colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => n.toString().length)));
+            colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => this.numerical.toString(n).length)));
         }
 
         this.toArray().forEach(row => {
@@ -1760,10 +1760,9 @@ export class Matrix<T> implements MatrixInterface<T> {
                 ...row.map((val, j) => {
                     return (
                         //@ts-ignore
-                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        new Array(colMaxes[j] - this.numerical.toString(val.toString()).length + 1).join(" ") +
                         //@ts-ignore
-
-                        val.toString() +
+                        this.numerical.toString(val.toString()) +
                         "  "
                     );
                 })

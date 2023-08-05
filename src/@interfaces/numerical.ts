@@ -1,6 +1,3 @@
-import { math } from "../math"
-
-
 
 export interface Numerical<T> {
     zeroValue: T;
@@ -11,7 +8,8 @@ export interface Numerical<T> {
     divide(x: T, y: T): T;
     sqrt(x: T): T;
     fromIntegral(n: number): T;
-    toIntegral(n: T): number
+    toIntegral(n: T): number;
+    toString(n:T): string;
     signOperator(x: T): number;
 }
 
