@@ -1829,7 +1829,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const colMaxes: number[] = [];
         for (let i = 0; i < shape[1]; i++) {
             //@ts-ignore
-            colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => n.toString().length)));
+            colMaxes.push(Math.max(...col((this as Matrix<T>).toArray(), i).map(n => this.numerical.toString(n).length)));
         }
 
         let output: string = "";
@@ -1838,10 +1838,10 @@ export class Matrix<T> implements MatrixInterface<T> {
                 .map((val, j) => {
                     return (
                         //@ts-ignore
-                        new Array(colMaxes[j] - val.toString().length + 1).join(" ") +
+                        new Array(colMaxes[j] - this.numerical.toString(val).length + 1).join(" ") +
                         //@ts-ignore
 
-                        val.toString() +
+                        this.numerical.toString(val) +
                         "  "
                     );
                 })
