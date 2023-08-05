@@ -19,3 +19,7 @@
 ## 2023-29-07, version 0.6.0
 
 - LUP decomposition added along with a few utility methods.
+
+## 2023-05-08, version 0.6.1
+
+- Updated readme and fixed two small bugs
