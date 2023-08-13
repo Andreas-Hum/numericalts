@@ -1779,7 +1779,7 @@ export class Matrix<T> implements MatrixInterface<T> {
  * @returns {TexImageSource[][]} The matrix as a 2D array.
  *
  * @example
- * 
+ *
  * const matrix = new Matrix([[1, 2], [3, 4]]);
  * const matrixArray = matrix.toArray();
  * console.log(matrixArray);
