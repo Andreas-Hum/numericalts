@@ -316,7 +316,6 @@ describe("Matrix", () => {
         it('Should correctly get a column of a matrix', () => {
             new NumericalBigInt().toString(new Matrix([[1n, 2n], [3n, 4n]]).mElements[0])
             new FractionalNumberClass().toString(new Matrix([["1/2", "1/2"], ["1/2", "1/2"]], { numerical: new FractionalNumberClass() }).mElements[0])
-            console.log(twoByThree.toString())
             fc.assert(
                 fc.property(
                     array2Darb(fc.integer()),
