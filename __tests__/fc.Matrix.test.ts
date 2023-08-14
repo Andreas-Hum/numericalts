@@ -1264,6 +1264,20 @@ describe("Matrix", () => {
             expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).adjugate()).toThrow()
         });
 
+        it('Should correctly calculate the cofactor of an element', () => {
+            const t = new Matrix([[1, 4, 7], [3, 0, 5], [-1, 9, 11]])
+
+
+            expect(t.cofactor(1, 2)).toEqual(-13)
+
+            expect(() => t.cofactor(12312, 123213)).toThrow()
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).cofactor(1, 2)).toThrow()
+            //@ts-ignore
+            expect(() => t.cofactor("12312", 123213)).toThrow()
+
+        });
+
+
         it('Should correctly calculate the cofactor matrix', () => {
             const t = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]])
             const t2 = new Matrix([[-4, 7], [-11, 9]])

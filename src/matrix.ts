@@ -1805,6 +1805,30 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
+
+    /**
+    * Computes the cofactor of an element given a row and column
+    *
+    * @throws {MatrixError} If the matrix is not square.
+    * @returns {Matrix<T>} The cofactor matrix
+    *
+    * @example
+    * const matrix = new Matrix([[1, 4, 7], [3, 0, 5], [-1, 9, 11]]);
+    * const cofactor = matrix.cofactor(1,2);
+    * console.log(cofactorMatrix.toArray());
+    * // Output: -13
+    */
+    public cofactor(row: number, column: number): T {
+        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid argument", 606, { row, column });
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        if (row > this.rows || column > this.columns) throw new MatrixError("Index out of bounds", 800, { row, column });
+
+        const minorMatrix: Matrix<T> = this.removeRow(row).removeColumn(column)
+        const det: number = minorMatrix.det()
+        const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, row + column))
+        return cofactor;
+    }
+
     /**
      * Computes the cofactor matrix.
      *
