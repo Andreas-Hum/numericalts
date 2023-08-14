@@ -17,7 +17,7 @@ export class Fraction {
             this.denominator = parseFloat(split[1])
 
             if (Number.isNaN(this.numerator) || Number.isNaN(this.denominator)) throw new Error("Invalid arguments");
-
+            if (this.denominator === 0) throw new Error("Denominator cant be 0")
         } else if (typeof a === 'number' && typeof b === 'number') {
             this.numerator = a;
             this.denominator = b;
