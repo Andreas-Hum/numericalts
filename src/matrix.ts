@@ -468,14 +468,36 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(newMatrix.toArray());
      * // Output: [[1, 2], [5, 6]]
      */
-    public removeRow(rowNum: number) {
+    public removeRow(rowNum: number): Matrix<T> {
         if (typeof rowNum !== "number") throw new MatrixError("Invalid arugment", 606, { rowNum })
         if (rowNum > this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
         const arr: T[][] = _.cloneDeep(this.toArray())
         arr.splice(rowNum, 1)
-        console.log(arr)
-        // return new Matrix<T>(_.cloneDeep(this.toArray()).splice(rowNum, 1), { numerical: this.numerical })
+        return new Matrix<T>(arr, { numerical: this.numerical })
     }
+
+    /**
+ * Removes a row from the matrix and returns a new matrix with the row removed.
+ *
+ * @param {number} rowNum - The index of the row to remove.
+ * @returns {Matrix<T>} A new matrix with the specified row removed.
+ *
+ * @throws {MatrixError} If the rowNum argument is not a number.
+ * @throws {MatrixError} If the rowNum argument is greater than the number of rows in the matrix.
+ *
+ * @example
+ * const matrix = new Matrix<number>([[1, 2], [3, 4], [5, 6]]);
+ * const newMatrix = matrix.removeRow(1);
+ * console.log(newMatrix.toArray());
+ * // Output: [[1, 2], [5, 6]]
+ */
+    public removeColumn(columnNum: number): Matrix<T> {
+        if (typeof columnNum !== "number") throw new MatrixError("Invalid arugment", 606, { columnNum })
+        if (columnNum > this.rows) throw new MatrixError("Index out of bounds", 800, { columnNum });
+
+        return this.transpose().removeRow(columnNum).transpose()
+    }
+
 
     /**
      * Sets the value of an element in the matrix.

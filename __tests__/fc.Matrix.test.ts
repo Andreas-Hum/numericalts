@@ -371,20 +371,36 @@ describe("Matrix", () => {
         describe('Remove row', () => {
             it('sets new values in the specified row', () => {
                 const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-                t.removeRow(1)
+                expect(t.removeRow(0).toArray()).toEqual([[4, 5, 6], [7, 8, 9]])
+                expect(t.removeRow(1).toArray()).toEqual([[1, 2, 3], [7, 8, 9]])
+                expect(t.removeRow(2).toArray()).toEqual([[1, 2, 3], [4, 5, 6]])
             });
 
             it('throws an error when the row index is out of bounds', () => {
-                expect(() => twoByThree.setRow(3, [10, 11, 12])).toThrow();
+                expect(() => twoByThree.removeRow(10)).toThrow();
             });
 
-            it('throws an error when the size of the input array does not match the column size', () => {
-                expect(() => twoByThree.setRow(1, [10, 11, 12, 13])).toThrow();
-            });
-
-            it('throws an error when the size of the input array does not match the column size', () => {
+            it('Error invalid arguemnt', () => {
                 //@ts-ignore
-                expect(() => twoByThree.setRow("1", [10, 11, 12, 13])).toThrow();
+                expect(() => twoByThree.removeRow("1231232131212")).toThrow();
+            });
+        });
+
+        describe('Remove column', () => {
+            it('sets new values in the specified row', () => {
+                const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                expect(t.removeColumn(0).toArray()).toEqual([[2, 3], [5, 6], [8, 9]])
+                expect(t.removeColumn(1).toArray()).toEqual([[1, 3], [4, 6], [7, 9]])
+                expect(t.removeColumn(2).toArray()).toEqual([[1, 2], [4, 5], [7, 8]])
+            });
+
+            it('throws an error when the row index is out of bounds', () => {
+                expect(() => twoByThree.removeColumn(10)).toThrow();
+            });
+
+            it('Error invalid arguemnt', () => {
+                //@ts-ignore
+                expect(() => twoByThree.removeColumn("1231232131212")).toThrow();
             });
         });
 
