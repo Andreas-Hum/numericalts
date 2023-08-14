@@ -335,15 +335,26 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(diag); // Output will be [2, 6]
      */
     public diag(k: number = 0): T[] {
-        if (this.mElements.length === 0) return []
-        if (this.mElements.length === 1 || this.columns === 1 || this.rows === 1) return [this.mElements[0]]
-        const diagEle: T[] = []
-        const min: number = Math.min(this.columns, this.rows)
-        for (let i = 0; i < min; i++) {
-            diagEle.push(this.getElement(i, i + k))
+        if (this.mElements.length === 0) return [];
+        if (this.mElements.length === 1 || this.columns === 1 || this.rows === 1) return [this.mElements[0]];
+
+        const diagEle: T[] = [];
+        const min: number = Math.min(this.columns, this.rows);
+        const maxK: number = Math.abs(k);
+
+        if (k >= 0) {
+            for (let i = 0; i < min - k; i++) {
+                diagEle.push(this.getElement(i, i + k));
+            }
+
+        } else {
+            for (let i = 0; i < min + k; i++) {
+                diagEle.push(this.getElement(i + maxK, i));
+            }
         }
 
-        return diagEle
+
+        return diagEle;
     }
 
 
@@ -1727,7 +1738,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
-
     /**
      * Returns the maximum value in the matrix.
      * @public
@@ -1789,19 +1799,19 @@ export class Matrix<T> implements MatrixInterface<T> {
     * // Output: 2
     */
     public rank(): number {
-    const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
-    Matrix.roundMatrixToZero(rankMatrix)
+        const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
+        Matrix.roundMatrixToZero(rankMatrix)
 
-    let rank: number = 0;
+        let rank: number = 0;
 
-    for (let i = 0; i < this.rows; i++) {
-        if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
-            rank++
+        for (let i = 0; i < this.rows; i++) {
+            if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
+                rank++
+            }
         }
-    }
 
-    return rank;
-}
+        return rank;
+    }
 
     /**
      * Calculates the trace of the matrix.
@@ -2295,7 +2305,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      */
     public static isIntMatrix(A: Matrix<number>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
-
         return A.mElements.every((entry: number) => Number.isInteger(entry));
     }
 
@@ -2358,6 +2367,38 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
         }
         return true;
+    }
+
+
+    public static isEmpty<T>(A: Matrix<T>): boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        return A.mElements.findIndex((val: T) => val !== A.numerical.zeroValue) === -1
+    }
+
+    public static isDiagonal<T>(A: Matrix<T>): boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        const mainDiag: T[] = A.diag()
+        if (mainDiag.filter((val: T) => val !== A.numerical.zeroValue).length === 0) return false;
+        for (let i = 1; i < A.rows; i++) {
+            const posDiag: T[] = A.diag(i)
+            const negDiag: T[] = A.diag(i * (-1))
+            if (posDiag.findIndex((val: T) => val !== A.numerical.zeroValue) !== -1) return false;
+            if (negDiag.findIndex((val: T) => val !== A.numerical.zeroValue) !== -1) return false;
+
+        }
+        return true
+    }
+
+    public static isSymmetric<T>(A: Matrix<T>): boolean {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        if (!A.isSquare) return false
+        return A.equal(A.transpose())
+    }
+
+    public static isIdentity<T>(A: Matrix<T>) {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        if (!A.isSquare) return false
+
     }
 
 

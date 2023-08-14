@@ -1271,8 +1271,6 @@ describe("Matrix", () => {
 
 
         it('Should calculate the rank og a matrix', () => {
-
-
             fc.assert(
                 fc.property(
                     array2Darb(fc.integer()),
@@ -1411,6 +1409,18 @@ describe("Matrix", () => {
             });
         });
 
+        describe('Ones', () => {
+            it('A upper triangular matrix', () => {
+                const test = Matrix.ones(2, 2);
+                expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
+            })
+
+            it('Throwing an error', () => {
+                //@ts-ignore
+                expect(() => Matrix.ones(2, "2")).toThrow();
+            })
+
+        })
         /////////////////////////////////////////////////////////////////////////////////////////////////
         /*
         * Static boolean methods
@@ -1455,19 +1465,68 @@ describe("Matrix", () => {
 
         })
 
-
-        describe('Ones', () => {
-            it('A upper triangular matrix', () => {
-                const test = Matrix.ones(2, 2);
-                expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
+        describe('Is empty', () => {
+            it('An empty matrix', () => {
+                const empty = new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+                expect(Matrix.isEmpty(empty)).toBeTruthy()
             })
 
-            it('Throwing an error', () => {
-                //@ts-ignore
-                expect(() => Matrix.ones(2, "2")).toThrow();
+            it('A non empty matrix', () => {
+                const nonEmpty = new Matrix([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
+                expect(Matrix.isEmpty(nonEmpty)).toBeFalsy()
             })
 
         })
+
+        describe('Is diagonal', () => {
+            it('A diagonal matrix', () => {
+                const diag = new Matrix([[1, 0, 0], [0, 5, 0], [0, 0, 9]])
+                const diag2 = new Matrix([[1, 0, 0], [0, 0, 0], [0, 0, 0]])
+                const diagRec = new Matrix([[1, 0, 0], [0, 2, 0]])
+
+
+                expect(Matrix.isDiagonal(diag)).toBeTruthy()
+                expect(Matrix.isDiagonal(diag2)).toBeTruthy()
+                expect(Matrix.isDiagonal(diagRec)).toBeTruthy()
+
+            })
+
+            it('A non diagonal matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                const nonDiag2 = new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+                expect(Matrix.isDiagonal(nonDiag)).toBeFalsy()
+                expect(Matrix.isDiagonal(nonDiag2)).toBeFalsy()
+
+            })
+
+
+        })
+
+        describe('Is symmetric', () => {
+            it('A symmetric matrix', () => {
+                const sym = new Matrix([[1, 7, 3], [7, 4, 5], [3, 5, 1]])
+                const sym2 = new Matrix([[1, 7, 3], [7, 4, 5], [3, 5, 1]]).scale(2)
+                expect(Matrix.isSymmetric(sym)).toBeTruthy()
+                expect(Matrix.isSymmetric(sym2)).toBeTruthy()
+                expect(Matrix.isSymmetric(sym.add(sym2))).toBeTruthy()
+            })
+
+            it('A non symmetric matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+                expect(Matrix.isSymmetric(nonDiag)).toBeFalsy()
+
+            })
+
+
+        })
+
+
+
+
+
+
 
         it('Int matrix test', () => {
             const test = Matrix.ones(2, 2);
