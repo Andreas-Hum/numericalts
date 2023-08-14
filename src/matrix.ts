@@ -1775,21 +1775,33 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-
+    /**
+    * Calculates the rank of the matrix.
+    * The rank of a matrix is defined as the maximum number of linearly independent rows or columns.
+    * @public
+    * @returns { number } The rank of the matrix.
+    *
+    * @example
+        *
+    * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    * const rank = matrix.rank();
+    * console.log(rank);
+    * // Output: 2
+    */
     public rank(): number {
-        const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
-        Matrix.roundMatrixToZero(rankMatrix)
+    const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
+    Matrix.roundMatrixToZero(rankMatrix)
 
-        let rank: number = 0;
+    let rank: number = 0;
 
-        for (let i = 0; i < this.rows; i++) {
-            if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
-                rank++
-            }
+    for (let i = 0; i < this.rows; i++) {
+        if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
+            rank++
         }
-
-        return rank;
     }
+
+    return rank;
+}
 
     /**
      * Calculates the trace of the matrix.
