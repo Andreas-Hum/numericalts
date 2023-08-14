@@ -2093,6 +2093,26 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
+     * Sets all elements of the matrix to null values.
+     *
+     * @template T - The type of elements in the matrix.
+     *
+     * @param {Matrix<T>} A - The matrix to nullify.
+     *
+     * @throws {MatrixError} If the argument is not an instance of Matrix.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+     * Matrix.null(matrix);
+     * console.log(matrix.toArray());
+     * // Output: [[0, 0], [0, 0]]
+     */
+    public static nullify<T>(A: Matrix<T>): void {
+        if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
+        A.mElements = new Array(A.size).fill(A.numerical.zeroValue)
+    }
+
+    /**
      * Method used to pad the matrix dimensions to the nearest power of two.
      * @public
      * @static

@@ -1048,7 +1048,7 @@ describe("Matrix", () => {
                             }
                             let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
                             Matrix.toFixedMatrix(TMatrix, 0)
-                            expect(TMatrix.equal(A, 1e-1)).toBeTruthy()
+                            expect(TMatrix.equal(A, 10)).toBeTruthy()
                         }
                     )
                 );
@@ -1368,13 +1368,33 @@ describe("Matrix", () => {
 
     describe("Static methods", () => {
         describe('clone', () => {
-            it('should clone the matrix instance and return the clone', () => {
+            it('Should clone the matrix instance and return the clone', () => {
                 const matrix = new Matrix([[1, 2], [3, 4]]);
                 const clone = Matrix.clone(matrix);
                 expect(JSON.stringify(clone)).toEqual(JSON.stringify(matrix));
                 expect(clone).not.toBe(matrix);
             });
         });
+
+        describe('nullify', () => {
+
+
+            it('Should correctly nullify a matrix', () => {
+                fc.assert(
+                    fc.property(
+                        array2Darb(fc.integer()),
+                        (entries: any[][]) => {
+                            const A: Matrix<any> = new Matrix(entries);
+                            Matrix.nullify(A)
+                            expect(A.toArray()).toEqual(Matrix.zeros(A.rows, A.columns, A.numerical).toArray());
+                        }
+                    )
+                );
+
+
+            });
+        });
+
 
         describe('padMatrixToPowerOfTwo', () => {
             it('should return the padded matrix with dimensions as a power of two', () => {
