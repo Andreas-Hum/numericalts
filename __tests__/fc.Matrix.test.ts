@@ -1251,6 +1251,19 @@ describe("Matrix", () => {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     describe("Utility", () => {
+
+        it('Should correctly calculatre the cofactor matrix', () => {
+            const t = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]])
+            const t2 = new Matrix([[-4, 7], [-11, 9]])
+            const t3 = new Matrix([[5, 9, 2], [1, 8, 5], [3, 6, 4]])
+
+            expect(t.cofactorMatrix().toArray()).toEqual([[24, 5, -4], [-12, 3, 2], [-2, -5, 4]])
+            expect(t2.cofactorMatrix().toArray()).toEqual([[9, 11], [-7, -4]])
+            expect(t3.cofactorMatrix().toArray()).toEqual([[2, 11, -18], [-24, 14, -3], [29, -23, 31]])
+
+            expect(new Matrix([[-4, 7], [-11, 9],[1,2]]).cofactorMatrix()).toThrow()
+        });
+
         it('Should correctly show equality between two matricies', () => {
 
             fc.assert(

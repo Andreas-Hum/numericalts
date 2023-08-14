@@ -477,20 +477,20 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
- * Removes a row from the matrix and returns a new matrix with the row removed.
- *
- * @param {number} rowNum - The index of the row to remove.
- * @returns {Matrix<T>} A new matrix with the specified row removed.
- *
- * @throws {MatrixError} If the rowNum argument is not a number.
- * @throws {MatrixError} If the rowNum argument is greater than the number of rows in the matrix.
- *
- * @example
- * const matrix = new Matrix<number>([[1, 2], [3, 4], [5, 6]]);
- * const newMatrix = matrix.removeRow(1);
- * console.log(newMatrix.toArray());
- * // Output: [[1, 2], [5, 6]]
- */
+     * Removes a row from the matrix and returns a new matrix with the row removed.
+     *
+     * @param {number} rowNum - The index of the row to remove.
+     * @returns {Matrix<T>} A new matrix with the specified row removed.
+     *
+     * @throws {MatrixError} If the rowNum argument is not a number.
+     * @throws {MatrixError} If the rowNum argument is greater than the number of rows in the matrix.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4], [5, 6]]);
+     * const newMatrix = matrix.removeRow(1);
+     * console.log(newMatrix.toArray());
+     * // Output: [[1, 2], [5, 6]]
+     */
     public removeColumn(columnNum: number): Matrix<T> {
         if (typeof columnNum !== "number") throw new MatrixError("Invalid arugment", 606, { columnNum })
         if (columnNum > this.rows) throw new MatrixError("Index out of bounds", 800, { columnNum });
@@ -1790,9 +1790,20 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-    public cofactor() {
+    public cofactorMatrix(): Matrix<T> {
         if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
         const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.rows; j++) {
+                const minorMatrix: Matrix<T> = this.removeRow(i).removeColumn(j)
+                const det: number = minorMatrix.det()
+                const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, i + j))
+                cofactorMatrix.setElement(i, j, cofactor)
+            }
+        }
+
+        return cofactorMatrix;
 
     }
 
