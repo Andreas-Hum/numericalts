@@ -36,7 +36,7 @@ export class Fraction {
      * const fraction = Fraction.fromIntegral(1.75);
      * console.log(fraction.numerator, fraction.denominator); // Output: 7 4
      */
-    public fromIntegral(numberValue: number): Fraction {
+    static fromIntegral(numberValue: number): Fraction {
         let numerator: number;
         let denominator: number;
 
@@ -69,8 +69,8 @@ export class Fraction {
      * const integral = fraction.toIntergral();
      * console.log(integral); // Output: 2.5
      */
-    public toIntergral(): number {
-        return this.numerator / this.denominator;
+    static toIntergral(fraction: Fraction): number {
+        return fraction.numerator / fraction.denominator;
     }
 
 

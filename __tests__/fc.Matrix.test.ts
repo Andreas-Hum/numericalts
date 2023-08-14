@@ -1228,6 +1228,66 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should calculate the min and max of a matrix', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+
+                        const flat: any[] = entries.flat()
+                        let max: any = flat[0]
+                        for (let i = 1; i < flat.length; i++) {
+                            if (max < flat[i]) {
+                                max = flat[i]
+                            }
+                        }
+                        expect(max).toEqual(A.max())
+
+                    }
+                )
+            );
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+
+                        const flat: any[] = entries.flat()
+                        let min: any = flat[0]
+                        for (let i = 1; i < flat.length; i++) {
+                            if (min > flat[i]) {
+                                min = flat[i]
+                            }
+                        }
+                        expect(min).toEqual(A.min())
+
+                    }
+                )
+            );
+        });
+
+        it('Should calculate the trace of a matrix', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return;
+                        const B: Matrix<any> = new Matrix(entries).scale(2)
+                        expect(A.add(B).trace()).toEqual(A.trace() + B.trace())
+                        expect(A.trace()).toEqual(A.transpose().trace())
+
+                    }
+                )
+            );
+
+
+        });
+
         it('Should correctly turn a matrix into a 2d array', () => {
 
             fc.assert(

@@ -58,4 +58,27 @@ describe('Fraction Class', () => {
             );
         });
     });
+
+    describe('toIntergral method', () => {
+        test('Should convert an integral number to a fraction', () => {
+            fc.assert(
+                fc.property(fc.integer(), (number) => {
+                    const fraction: Fraction = Fraction.fromIntegral(number);
+                    expect(Fraction.toIntergral(fraction)).toEqual(number)
+                })
+            );
+        });
+
+        test('Should convert a decimal number to a simplified fraction', () => {
+            fc.assert(
+                fc.property(fc.float({ noNaN: true, noDefaultInfinity: true }), (number) => {
+                    if (!Number.isInteger(number)) {
+                        const fraction: Fraction = Fraction.fromIntegral(number);
+                        expect(Fraction.toIntergral(fraction)).toBeCloseTo(number, 6);
+
+                    }
+                })
+            );
+        });
+    });
 });
