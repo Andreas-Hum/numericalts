@@ -1729,6 +1729,75 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
+     * Returns the maximum value in the matrix.
+     * @public
+     * @returns {T} The maximum value.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+     * const max = matrix.max();
+     * console.log(max);
+     * // Output: 6
+     */
+    public max(): T {
+        let max: T = this.mElements[0];
+        for (let i = 1; i < this.size; i++) {
+            let cur: T = this.mElements[i];
+            if (this.numerical.toIntegral(max) < this.numerical.toIntegral(cur)) {
+                max = cur;
+            }
+        }
+        return max;
+    }
+
+    /**
+     * Returns the minimum value in the matrix.
+     * @public
+     * @returns {T} The minimum value.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6]]);
+     * const max = matrix.max();
+     * console.log(max);
+     * // Output: 1
+     */
+    public min(): T {
+        let min: T = this.mElements[0];
+        for (let i = 1; i < this.size; i++) {
+            let cur: T = this.mElements[i];
+            if (this.numerical.toIntegral(min) > this.numerical.toIntegral(cur)) {
+                min = cur;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Calculates the trace of the matrix.
+     * Throws an error if the matrix is not square.
+     * @public
+     * @returns {T} The trace value.
+     * @throws {MatrixError} If the matrix is not square.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const trace = matrix.trace();
+     * console.log(trace);
+     * // Output: 15
+     */
+    public trace(): T {
+        if (!this.isSquare) throw new MatrixError("Trace is not defined for non-square matrix", -1);
+        const diag: T[] = this.diag();
+        const sum: T = diag.reduce((acc: T, cur: T) => this.numerical.add(acc, cur), this.numerical.zeroValue);
+        return sum;
+    }
+
+
+
+    /**
      * Prints the matrix in a formatted way.
      * @public 
      * @returns {void}
@@ -1774,18 +1843,18 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     /**
- * Converts the matrix to a 2D array.
- * @public
- * @returns {TexImageSource[][]} The matrix as a 2D array.
- *
- * @example
- *
- * const matrix = new Matrix([[1, 2], [3, 4]]);
- * const matrixArray = matrix.toArray();
- * console.log(matrixArray);
- * // Output: [[1, 2], [3, 4]]
- *
- */
+     * Converts the matrix to a 2D array.
+     * @public
+     * @returns {TexImageSource[][]} The matrix as a 2D array.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const matrixArray = matrix.toArray();
+     * console.log(matrixArray);
+     * // Output: [[1, 2], [3, 4]]
+     *
+     */
     public toArray(): T[][] {
         const array: T[][] = [];
 
