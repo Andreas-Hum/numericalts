@@ -368,6 +368,27 @@ describe("Matrix", () => {
             ]);
         });
 
+        describe('Remove row', () => {
+            it('sets new values in the specified row', () => {
+                const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                t.removeRow(1)
+            });
+
+            it('throws an error when the row index is out of bounds', () => {
+                expect(() => twoByThree.setRow(3, [10, 11, 12])).toThrow();
+            });
+
+            it('throws an error when the size of the input array does not match the column size', () => {
+                expect(() => twoByThree.setRow(1, [10, 11, 12, 13])).toThrow();
+            });
+
+            it('throws an error when the size of the input array does not match the column size', () => {
+                //@ts-ignore
+                expect(() => twoByThree.setRow("1", [10, 11, 12, 13])).toThrow();
+            });
+        });
+
+
         describe('setRow', () => {
             it('sets new values in the specified row', () => {
                 twoByThree.setRow(0, [10, 11, 12]);

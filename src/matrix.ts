@@ -418,6 +418,66 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
+    * Retrieves a submatrix from the current matrix.
+    * @public
+    * @param {number} startRow - The starting row index of the submatrix.
+    * @param {number} startCol - The starting column index of the submatrix.
+    * @param {number} endRow - The ending row index of the submatrix (inclusive).
+    * @param {number} endCol - The ending column index of the submatrix (inclusive).
+    * @returns {Matrix<T>} A new Matrix object representing the submatrix.
+    *
+    * @example
+    * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    * const subMatrix = matrix.getSubMatrix(1, 2, 1, 2);
+    * console.log(subMatrix.toString());
+    * // Output:
+    *  "5 6"
+    *  "8 9"
+    */
+    public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix<T> {
+        if (typeof startRow !== "number" || typeof endRow !== "number" || typeof startCol !== "number" || typeof endCol !== "number") {
+            throw new MatrixError("Invalid arugment", 606, { startRow, endRow, startCol, endCol })
+        }
+
+        const numRows: number = endRow - startRow;
+        const numCols: number = endCol - startCol;
+        const submatrixElements: Array<T> = new Array<T>(numRows * numCols);
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCols; j++) {
+                const index: number = i * numCols + j;
+                const originalIndex: number = (startRow + i) * this.columns + (startCol + j);
+                submatrixElements[index] = this.mElements[originalIndex];
+            }
+        }
+        return new Matrix(submatrixElements, { rows: numRows, columns: numCols, numerical: this.numerical });
+    }
+
+
+    /**
+     * Removes a row from the matrix and returns a new matrix with the row removed.
+     *
+     * @param {number} rowNum - The index of the row to remove.
+     * @returns {Matrix<T>} A new matrix with the specified row removed.
+     *
+     * @throws {MatrixError} If the rowNum argument is not a number.
+     * @throws {MatrixError} If the rowNum argument is greater than the number of rows in the matrix.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4], [5, 6]]);
+     * const newMatrix = matrix.removeRow(1);
+     * console.log(newMatrix.toArray());
+     * // Output: [[1, 2], [5, 6]]
+     */
+    public removeRow(rowNum: number) {
+        if (typeof rowNum !== "number") throw new MatrixError("Invalid arugment", 606, { rowNum })
+        if (rowNum > this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
+        const arr: T[][] = _.cloneDeep(this.toArray())
+        arr.splice(rowNum, 1)
+        console.log(arr)
+        // return new Matrix<T>(_.cloneDeep(this.toArray()).splice(rowNum, 1), { numerical: this.numerical })
+    }
+
+    /**
      * Sets the value of an element in the matrix.
      * @public
      * @param {number} row - The row index of the element starts from zero.
@@ -580,40 +640,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-    /**
-     * Retrieves a submatrix from the current matrix.
-     * @public
-     * @param {number} startRow - The starting row index of the submatrix.
-     * @param {number} startCol - The starting column index of the submatrix.
-     * @param {number} endRow - The ending row index of the submatrix (inclusive).
-     * @param {number} endCol - The ending column index of the submatrix (inclusive).
-     * @returns {Matrix<T>} A new Matrix object representing the submatrix.
-     *
-     * @example
-     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const subMatrix = matrix.getSubMatrix(1, 2, 1, 2);
-     * console.log(subMatrix.toString());
-     * // Output:
-     *  "5 6"
-     *  "8 9"
-     */
-    public getSubMatrix(startRow: number, endRow: number, startCol: number, endCol: number): Matrix<T> {
-        if (typeof startRow !== "number" || typeof endRow !== "number" || typeof startCol !== "number" || typeof endCol !== "number") {
-            throw new MatrixError("Invalid arugment", 606, { startRow, endRow, startCol, endCol })
-        }
 
-        const numRows: number = endRow - startRow;
-        const numCols: number = endCol - startCol;
-        const submatrixElements: Array<T> = new Array<T>(numRows * numCols);
-        for (let i = 0; i < numRows; i++) {
-            for (let j = 0; j < numCols; j++) {
-                const index: number = i * numCols + j;
-                const originalIndex: number = (startRow + i) * this.columns + (startCol + j);
-                submatrixElements[index] = this.mElements[originalIndex];
-            }
-        }
-        return new Matrix(submatrixElements, { rows: numRows, columns: numCols, numerical: this.numerical });
-    }
 
     /**
     * @public
@@ -1738,6 +1765,13 @@ export class Matrix<T> implements MatrixInterface<T> {
             return (this.mElements as number[]).every((entry: number, index: number) => math.equal(entry, (B.mElements as number[])[index], threshold))
         }
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
+    }
+
+
+    public cofactor() {
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
+
     }
 
     /**
