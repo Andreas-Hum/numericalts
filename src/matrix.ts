@@ -2370,11 +2370,39 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
+    /**
+     * Checks if the given matrix is empty.
+     * @public
+     * @template T - The type of elements in the matrix.
+     * @param {Matrix<T>} A - The matrix to check.
+     * @returns {boolean} - True if the matrix is empty, false otherwise.
+     * @throws {MatrixError} - If the argument is not an instance of Matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const empty = Matrix.isEmpty(matrix);
+     * console.log(empty);
+     * // Output: false
+     */
     public static isEmpty<T>(A: Matrix<T>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         return A.mElements.findIndex((val: T) => val !== A.numerical.zeroValue) === -1
     }
 
+    /**
+     * Checks if the given matrix is diagonal.
+     * @public
+     * @template T - The type of elements in the matrix.
+     * @param {Matrix<T>} A - The matrix to check.
+     * @returns {boolean} - True if the matrix is diagonal, false otherwise.
+     * @throws {MatrixError} - If the argument is not an instance of Matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 0], [0, 2]]);
+     * const diagonal = Matrix.isDiagonal(matrix);
+     * console.log(diagonal);
+     * // Output: true
+     */
     public static isDiagonal<T>(A: Matrix<T>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         const mainDiag: T[] = A.diag()
@@ -2389,13 +2417,42 @@ export class Matrix<T> implements MatrixInterface<T> {
         return true
     }
 
+    /**
+     * Checks if the given matrix is symmetric.
+     * @public
+     * @template T - The type of elements in the matrix.
+     * @param {Matrix<T>} A - The matrix to check.
+     * @returns {boolean} - True if the matrix is symmetric, false otherwise.
+     * @throws {MatrixError} - If the argument is not an instance of Matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [2, 3]]);
+     * const symmetric = Matrix.isSymmetric(matrix);
+     * console.log(symmetric);
+     * // Output: true
+     */
     public static isSymmetric<T>(A: Matrix<T>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         if (!A.isSquare) return false
         return A.equal(A.transpose())
     }
 
-    public static isIdentity<T>(A: Matrix<T>) {
+
+    /**
+     * Checks if the given matrix is an identity matrix.
+     * @public
+     * @template T - The type of elements in the matrix.
+     * @param {Matrix<T>} A - The matrix to check.
+     * @returns {boolean} - True if the matrix is an identity matrix, false otherwise.
+     * @throws {MatrixError} - If the argument is not an instance of Matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 0], [0, 1]]);
+     * const identity = Matrix.isIdentity(matrix);
+     * console.log(identity);
+     * // Output: true
+     */
+    public static isIdentity<T>(A: Matrix<T>): boolean {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         if (!A.isSquare) return false
         return A.equal(Matrix.identity(A.rows, A.numerical))
