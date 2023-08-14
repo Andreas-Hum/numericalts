@@ -59,8 +59,8 @@ describe('math', () => {
           expect(dotProductResult).toBe(expectedDotProduct);
         })
       )
-     
-      expect(() => fractionalRep.divide("1/1","0/1")).toThrow()
+
+      expect(() => fractionalRep.divide("1/1", "0/1")).toThrow()
     });
 
     it("Should correctly throw errors", () => {
@@ -76,9 +76,16 @@ describe('math', () => {
 
   describe('prod', () => {
     it('Should calculate the product of a number array', () => {
-      expect(math.prod([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(3628800)
-      expect(math.prod([5, 6, 7, 8, 9, 10])).toEqual(151200)
-
+      fc.assert(
+        fc.property(
+          fc.array(fc.integer(), { minLength: 1 }),
+          (vector1: number[]) => {
+            const expected: number = vector1.reduce((acc, val) => acc * val, 1);
+            const actual: number = math.prod(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
 
     });
 
@@ -115,6 +122,53 @@ describe('math', () => {
 
   })
 
+
+
+  describe('sum', () => {
+    it('Should calculate the sum of a number array', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.integer(), { minLength: 1 }),
+          (vector1: number[]) => {
+            const expected: number = vector1.reduce((acc, val) => acc + val, 0);
+            const actual: number = math.sum(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+
+    });
+
+    it('Should calculate the sum of a bigint array', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt(), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = vector1.reduce((acc, val) => acc + val, 0n);
+            const actual: bigint = math.sum(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+    });
+
+    it("Should calculate the sum a fractionalStringArb array", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+          const expected: string = vector.reduce((acc, val) => fractionalRep.add(acc, val), fractionalRep.zeroValue);
+          const dotProductResult: string = math.sum(vector, fractionalRep);
+          expect(fractionalRep.toIntegral(dotProductResult)).toBeCloseTo(fractionalRep.toIntegral(expected));
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.sum([])).toThrow("array length can't be 0.");
+      //@ts-ignore
+      expect(() => math.sum(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
 
   describe('Normalize', () => {
     it('should calculate the normalization correctly for a integer vector', () => {

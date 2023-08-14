@@ -1103,6 +1103,10 @@ export class Matrix<T> implements MatrixInterface<T> {
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
     }
 
+    public sum() {
+
+    }
+
 
     //TODO: FROM HERE TYPE
     /**

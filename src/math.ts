@@ -186,14 +186,14 @@ export namespace math {
 
 
     /**
-  * Computes the product of a number array.
-  *
-  * @param {number[]} array - The array of numbers.
-  * @returns {number} The product of all numbers in the array.
-  *
-  * @example
-  *    prod([3, 4]);  // Returns 12
-  */
+     * Computes the product of a number array.
+     *
+     * @param {number[]} array - The array of numbers.
+     * @returns {number} The product of all numbers in the array.
+     *
+     * @example
+     *    prod([3, 4]);  // Returns 12
+     */
     export function prod(array: number[]): number;
 
     /**
@@ -250,6 +250,74 @@ export namespace math {
         return array.reduce((acc: T, cur: T) => numerical.multiply(acc, cur), numerical.oneValue);
     }
 
+    /**
+     * Computes the sum of a number array.
+     *
+     * @param {number[]} array - The array of numbers.
+     * @returns {number} The sum of all numbers in the array.
+     *
+     * @throws {Error} If the array length is 0.
+     *
+     * @example
+     * sum([1, 2, 3]);  // Returns 6
+     */
+    export function sum(array: number[]): number;
+
+    /**
+     * Computes the sum of a bigint array.
+     *
+     * @param {bigint[]} array - The array of bigints.
+     * @returns {bigint} The sum of all bigints in the array.
+     *
+     * @throws {Error} If the array length is 0.
+     *
+     * @example
+     * sum([1n, 2n, 3n]);  // Returns 6n
+     */
+    export function sum(array: bigint[]): bigint;
+
+    /**
+     * Computes the sum of an array of type T using the provided numerical implementation.
+     *
+     * @template T - The type of elements in the array.
+     *
+     * @param {T[]} array - The array of elements.
+     * @param {Numerical<T>} [numerical] - (Optional) An instance of the Numerical interface for type T.
+     *                                    If not provided, a default numerical implementation will be used based on the type of the array elements.
+     *                                    If the array is neither number[] nor bigint[], a numerical instance must be provided.
+     *
+     * @throws {Error} If the array length is 0.
+     * @throws {NumericalError} If the array type is not number[] or bigint[] and no numerical implementation is provided.
+     *
+     * @returns {T} The sum of all elements in the array.
+     *
+     * @example
+     * sum([1, 2, 3]);                            // Returns 6
+     * sum([1n, 2n, 3n]);                          // Returns 6n
+     * sum([1, 2, 3], new NumericalNumber());      // Returns 6 using NumericalNumber implementation
+     * sum([1n, 2n, 3n], new NumericalBigInt());   // Returns 6n using NumericalBigInt implementation
+     */
+    export function sum<T>(array: T[], numerical?: Numerical<T>): T
+
+    export function sum<T>(array: T[], numerical?: Numerical<T>): T {
+        if (array.length === 0) {
+            throw new Error("array length can't be 0.")
+        }
+
+        if (!numerical) {
+            if (typeof array[0] === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof array[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError("The array is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
+            }
+        }
+
+        if (array.length === 1) return array[0]
+        return array.reduce((acc: T, cur: T) => numerical.add(acc, cur), numerical.zeroValue);
+
+    }
 
 
 
