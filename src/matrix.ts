@@ -1103,9 +1103,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
     }
 
-    public sum() {
 
-    }
 
 
     //TODO: FROM HERE TYPE
@@ -1815,6 +1813,21 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
         return rank;
+    }
+
+    /**
+     * Computes the sum of the elements in the matrix.
+     *
+     * @returns {T} The sum of the elements in the matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const sum = matrix.sum();
+     * console.log(sum);
+     * // Output: 10
+     */
+    public sum(): T {
+        return math.sum(this.mElements, this.numerical)
     }
 
     /**

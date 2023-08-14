@@ -1270,7 +1270,7 @@ describe("Matrix", () => {
         });
 
 
-        it('Should calculate the rank og a matrix', () => {
+        it('Should calculate the rank of a matrix', () => {
             fc.assert(
                 fc.property(
                     array2Darb(fc.integer()),
@@ -1286,6 +1286,22 @@ describe("Matrix", () => {
 
 
         });
+
+        it('Should calculate the sum of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const expected: number = A.mElements.reduce((acc, cur) => acc + cur, 0)
+                        expect(expected).toEqual(A.sum())
+                    }
+                )
+            );
+
+
+        });
+
 
         it('Should calculate the trace of a matrix', () => {
 
