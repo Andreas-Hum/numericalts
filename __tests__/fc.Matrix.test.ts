@@ -1269,6 +1269,26 @@ describe("Matrix", () => {
             );
         });
 
+
+        it('Should calculate the rank og a matrix', () => {
+
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return;
+                        const B: Matrix<any> = new Matrix(entries).scale(2)
+                        expect(A.rank()).toBeLessThanOrEqual(Math.min(A.rows, A.columns))
+                        expect(A.multiply(B).rank()).toBeLessThanOrEqual(Math.min(A.rank(), B.rank()))
+                    }
+                )
+            );
+
+
+        });
+
         it('Should calculate the trace of a matrix', () => {
 
             fc.assert(

@@ -1774,6 +1774,23 @@ export class Matrix<T> implements MatrixInterface<T> {
         return min;
     }
 
+
+
+    public rank(): number {
+        const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
+        Matrix.roundMatrixToZero(rankMatrix)
+
+        let rank: number = 0;
+
+        for (let i = 0; i < this.rows; i++) {
+            if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
+                rank++
+            }
+        }
+
+        return rank;
+    }
+
     /**
      * Calculates the trace of the matrix.
      * Throws an error if the matrix is not square.
