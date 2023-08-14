@@ -2398,7 +2398,7 @@ export class Matrix<T> implements MatrixInterface<T> {
     public static isIdentity<T>(A: Matrix<T>) {
         if (!(A instanceof Matrix)) throw new MatrixError("Argument is not an instance of Matrix", 804, { A });
         if (!A.isSquare) return false
-
+        return A.equal(Matrix.identity(A.rows, A.numerical))
     }
 
 

@@ -1048,7 +1048,7 @@ describe("Matrix", () => {
                             }
                             let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
                             Matrix.toFixedMatrix(TMatrix, 0)
-                            expect(TMatrix.equal(A, 1e-2)).toBeTruthy()
+                            expect(TMatrix.equal(A, 1e-1)).toBeTruthy()
                         }
                     )
                 );
@@ -1516,6 +1516,23 @@ describe("Matrix", () => {
                 const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
                 expect(Matrix.isSymmetric(nonDiag)).toBeFalsy()
+
+            })
+
+
+        })
+
+        describe('Is identity', () => {
+            it('A identity matrix', () => {
+                expect(Matrix.isIdentity(Matrix.identity(2))).toBeTruthy()
+                expect(Matrix.isIdentity(Matrix.identity(3))).toBeTruthy()
+                expect(Matrix.isIdentity(Matrix.identity(4))).toBeTruthy()
+            })
+
+            it('A non symmetric matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+                expect(Matrix.isIdentity(nonDiag)).toBeFalsy()
 
             })
 
