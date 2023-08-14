@@ -477,19 +477,19 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
-     * Removes a row from the matrix and returns a new matrix with the row removed.
+     * Removes a column from the matrix and returns a new matrix with the column removed.
      *
-     * @param {number} rowNum - The index of the row to remove.
-     * @returns {Matrix<T>} A new matrix with the specified row removed.
+     * @param {number} rowNum - The index of the column to remove.
+     * @returns {Matrix<T>} A new matrix with the specified column removed.
      *
-     * @throws {MatrixError} If the rowNum argument is not a number.
-     * @throws {MatrixError} If the rowNum argument is greater than the number of rows in the matrix.
+     * @throws {MatrixError} If the columnNum argument is not a number.
+     * @throws {MatrixError} If the columnNum argument is greater than the number of columns in the matrix.
      *
      * @example
-     * const matrix = new Matrix<number>([[1, 2], [3, 4], [5, 6]]);
-     * const newMatrix = matrix.removeRow(1);
+     * const matrix = new Matrix<number>([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const newMatrix = matrix.removeColumn(1);
      * console.log(newMatrix.toArray());
-     * // Output: [[1, 2], [5, 6]]
+     * // Output: [[1, 3], [4, 6], [7, 9]]
      */
     public removeColumn(columnNum: number): Matrix<T> {
         if (typeof columnNum !== "number") throw new MatrixError("Invalid arugment", 606, { columnNum })
@@ -1763,6 +1763,22 @@ export class Matrix<T> implements MatrixInterface<T> {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Computes the adjugate of the matrix.
+     *
+     * @throws {MatrixError} If the matrix is not square.
+     * @returns {Matrix<T>} The adjugate matrix
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+     * const adjugateMatrix = matrix.adjugate();
+     * console.log(adjugateMatrix.toArray());
+     * // Output: Array representation of adjugate matrix
+     */
+    public adjugate(): Matrix<T> {
+        if (!this.isSquare) throw new MatrixError("adjugate is not defined for non-square matrix", -1);
+        return this.cofactorMatrix().transpose()
+    }
 
 
     //TODO:make this better
@@ -1789,7 +1805,18 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
-
+    /**
+     * Computes the cofactor matrix.
+     *
+     * @throws {MatrixError} If the matrix is not square.
+     * @returns {Matrix<T>} The cofactor matrix
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]]);
+     * const cofactorMatrix = matrix.cofactorMatrix();
+     * console.log(cofactorMatrix.toArray());
+     * // Output: [[24, 5, -4], [-12, 3, 2], [-2, -5, 4]]
+     */
     public cofactorMatrix(): Matrix<T> {
         if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
         const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
@@ -1804,7 +1831,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
         return cofactorMatrix;
-
     }
 
     /**

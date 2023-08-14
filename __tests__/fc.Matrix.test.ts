@@ -1252,7 +1252,19 @@ describe("Matrix", () => {
 
     describe("Utility", () => {
 
-        it('Should correctly calculatre the cofactor matrix', () => {
+        it('Should correctly calculate the adjugate of a matrix', () => {
+            const t = new Matrix([[-3, 2, -5], [-1, 0, -2], [3, -4, 1]])
+            const t2 = new Matrix([[5, 4], [4, 11]])
+            const t3 = new Matrix([[3, 1, -1], [2, -2, 0], [1, 2, -1]])
+
+            expect(t.adjugate().toArray()).toEqual([[-8, 18, -4], [-5, 12, -1], [4, -6, 2]])
+            expect(t2.adjugate().toArray()).toEqual([[11, -4], [-4, 5]])
+            expect(t3.adjugate().toArray()).toEqual([[2, -1, -2], [2, -2, -2], [6, -5, -8]])
+
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).adjugate()).toThrow()
+        });
+
+        it('Should correctly calculate the cofactor matrix', () => {
             const t = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]])
             const t2 = new Matrix([[-4, 7], [-11, 9]])
             const t3 = new Matrix([[5, 9, 2], [1, 8, 5], [3, 6, 4]])
@@ -1261,7 +1273,7 @@ describe("Matrix", () => {
             expect(t2.cofactorMatrix().toArray()).toEqual([[9, 11], [-7, -4]])
             expect(t3.cofactorMatrix().toArray()).toEqual([[2, 11, -18], [-24, 14, -3], [29, -23, 31]])
 
-            expect(new Matrix([[-4, 7], [-11, 9],[1,2]]).cofactorMatrix()).toThrow()
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).cofactorMatrix()).toThrow()
         });
 
         it('Should correctly show equality between two matricies', () => {
