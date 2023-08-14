@@ -1387,6 +1387,12 @@ describe("Matrix", () => {
 
 
         describe('Reshape', () => {
+
+            it('Reshaping the matrix [[1,2,3],[4,5,6]] into [[1,2],[3,4],[5,6]] ', () => {
+                const compareMatrix = new Matrix([[1, 2, 3], [4, 5, 6]])
+                expect(Matrix.reshape(compareMatrix, 3, 2).toArray()).toEqual([[1, 2], [3, 4], [5, 6]])
+            })
+
             it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
                 const compareMatrix = new Matrix([[1, 2], [3, 4]])
                 expect(JSON.stringify(Matrix.reshape([1, 2, 3, 4], 2, 2))).toEqual(JSON.stringify(compareMatrix))

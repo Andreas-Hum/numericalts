@@ -1986,7 +1986,27 @@ export class Matrix<T> implements MatrixInterface<T> {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+    /**
+       * Reshapes a matrix into a new matrix with the specified number of rows and columns.
+       * @public
+       * @static
+       * @param {Matrix<any>} array - The matrix to reshape
+       * @param {number} newRows - The number of rows in the reshaped matrix.
+       * @param {number} newColumns - The number of columns in the reshaped matrix.
+       * @returns {Matrix<any>} The reshaped matrix.
+       * @throws {MatrixError} - If the length of the array is not equal to newRows * newColumns.
+       *
+       * @example
+       * 
+       * const array = [1, 2, 3, 4];
+       * const reshapedMatrix = Matrix.reshape(array, 2, 2);
+       * console.log(reshapedMatrix.toString());
+       * // Output:
+       * // "1  2"
+       * // "3  4"
+       *
+       */
+    public static reshape<T>(array: Matrix<T>, newRows: number, newColumns: number): Matrix<T>
 
     /**
      * Reshapes a 1D array into a matrix with the specified number of rows and columns.
@@ -2008,16 +2028,24 @@ export class Matrix<T> implements MatrixInterface<T> {
      * // "3  4"
      *
      */
-    public static reshape<T>(array: T[], newRows: number, newColumns: number, numerical?: Numerical<T>): Matrix<T> {
-        if (array.length !== newRows * newColumns) throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
-        if (!Array.isArray(array) || typeof newRows !== "number" || typeof newColumns !== "number") throw new MatrixError("Invalid argument", 606, { array, newRows, newColumns });
+    public static reshape<T>(array: T[], newRows: number, newColumns: number, numerical?: Numerical<T>): Matrix<T>
+
+    public static reshape<T>(array: T[] | Matrix<T>, newRows: number, newColumns: number, numerical?: Numerical<T>): Matrix<T> {
+        let reshapes: T[] = []
+        if (array instanceof Matrix) {
+            reshapes = array.mElements;
+        } else {
+            reshapes = array
+        }
+        if (reshapes.length !== newRows * newColumns) throw new MatrixError("Invalid reshape dimensions", 806, { newRows, newColumns });
+        if (!Array.isArray(reshapes) || typeof newRows !== "number" || typeof newColumns !== "number") throw new MatrixError("Invalid argument", 606, { reshapes, newRows, newColumns });
 
 
         const newEntries: T[][] = [];
         let rowIndex: number = 0;
         let colIndex: number = 0;
 
-        for (let i = 0; i < array.length; i++) {
+        for (let i = 0; i < reshapes.length; i++) {
             if (colIndex === newColumns) {
                 rowIndex++;
                 colIndex = 0;
@@ -2025,11 +2053,19 @@ export class Matrix<T> implements MatrixInterface<T> {
 
             if (!newEntries[rowIndex]) newEntries[rowIndex] = [];
 
-            newEntries[rowIndex][colIndex] = array[i];
+            newEntries[rowIndex][colIndex] = reshapes[i];
             colIndex++;
         }
 
-        return new Matrix<T>(newEntries, { numerical });
+        if (array instanceof Matrix) {
+
+        } else {
+            if (numerical) {
+
+            }
+        }
+
+        return new Matrix<T>(newEntries, { numerical: array instanceof Matrix ? array.numerical : numerical })
     }
 
 

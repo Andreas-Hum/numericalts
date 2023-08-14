@@ -469,6 +469,7 @@ describe('math', () => {
 
     // Test for 'sign' function
     it('sign - numbers', () => {
+      math.sign(0)
       fc.assert(
         fc.property(fc.integer({ min: -10, max: 100 }), (n) => {
           return math.sign(n) === Math.sign(n);
