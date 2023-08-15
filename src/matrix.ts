@@ -798,13 +798,13 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
         // Compute the norm of the matrix
-        const normA = this.norm();
+        const normA = this.numerical.fromIntegral(this.norm());
 
         // Compute the inverse of the matrix
         const inverseA = this.invertSquare();
 
         // Compute the norm of the inverse matrix
-        const normInverseA = inverseA.norm();
+        const normInverseA = this.numerical.fromIntegral(inverseA.norm());
 
         // Compute the condition number
         const conditionNumber = this.numerical.multiply(normA, normInverseA);
@@ -1056,10 +1056,10 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(norm);
      * // Output: 5.477225575051661
      */
-    public norm(): T {
+    public norm(): number {
         const squareArr: T[] = this.mElements.map((val: T) => this.numerical.multiply(val, val))
         const sqrt: T = this.numerical.sqrt(math.sum(squareArr, this.numerical))
-        return sqrt
+        return this.numerical.toIntegral(sqrt)
     }
 
     /**
@@ -1073,10 +1073,10 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(infNorm);
      * // Output: 11
      */
-    public infNorm(): T {
+    public infNorm(): number {
         const absMatrix: T[][] = this.abs().toArray()
         const rowOneNormArr: T[] = absMatrix.map((val: T[]) => math.sum(val, this.numerical))
-        return math.max(rowOneNormArr, this.numerical)
+        return this.numerical.toIntegral(math.max(rowOneNormArr, this.numerical))
     }
 
     /**
@@ -1090,16 +1090,17 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(manhattanNorm);
      * // Output: 12
      */
-    public manhattanNorm(): T {
+    public manhattanNorm(): number {
         const absMatrix: T[][] = this.abs().transpose().toArray()
         const columnOneNormArr: T[] = absMatrix.map((val: T[]) => math.sum(val, this.numerical))
-        return math.max(columnOneNormArr, this.numerical)
+        return this.numerical.toIntegral(math.max(columnOneNormArr, this.numerical))
     }
 
 
-    // public pNorm(p: T): T {
-
-    // }
+    public pNorm(p: number): number {
+        const sum: T = this.abs().map((val: T) => math.pow(val, p, this.numerical)).sum()
+        return this.numerical.toIntegral(math.pow(sum, 1 / p, this.numerical))
+    }
 
 
     // function matrixPNorm(matrix: number[][], p: number): number {

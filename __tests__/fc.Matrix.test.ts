@@ -700,6 +700,15 @@ describe("Matrix", () => {
         })
 
 
+        it('Should correctly calculate the pnorm of a matrix', () => {
+            const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+            expect(t.pNorm(1)).toEqual(45)
+            expect(t.pNorm(2)).toBeCloseTo(16.84810335261421, 1)
+
+
+
+        })
+
         it('should compute the condition number of a square matrix', () => {
             fc.assert(
                 fc.property(array2Darb(fc.integer()),
