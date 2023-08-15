@@ -1103,22 +1103,6 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
 
-    // function matrixPNorm(matrix: number[][], p: number): number {
-    //     // Flatten the matrix into a 1D array
-    //     const flattenedMatrix = matrix.flat();
-
-    //     // Calculate the absolute values of the matrix elements raised to the power of p
-    //     const poweredElements = flattenedMatrix.map(element => Math.abs(element) ** p);
-
-    //     // Calculate the sum of the powered elements
-    //     const sumOfPoweredElements = poweredElements.reduce((sum, element) => sum + element, 0);
-
-    //     // Calculate the p-th root of the sum
-    //     const pNorm = sumOfPoweredElements ** (1 / p);
-
-    //     return pNorm;
-    //   }
-
 
     //TODO: fix the negative pow
     /**
@@ -1138,8 +1122,6 @@ export class Matrix<T> implements MatrixInterface<T> {
      * @throws {MatrixError} if the matrix is not square.
      */
     public pow(exp: number): Matrix<T> {
-
-
 
         if (!this.isSquare) {
             throw new MatrixError("Can't multiply a non-square matrix with itself.", 810, { A: this.isSquare });

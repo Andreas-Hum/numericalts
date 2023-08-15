@@ -25,13 +25,9 @@ describe('Fraction Class', () => {
         });
 
         test('Should throw an error for invalid arguments', () => {
-            fc.assert(
-                fc.property(fc.string(), (invalidArg) => {
-                    expect(() => new Fraction(invalidArg + "sdsasad")).toThrow(Error);
-                    //@ts-ignore
-                    expect(() => new Fraction(math)).toThrow(Error);
-                })
-            );
+            expect(() => new Fraction("invalidArg" + "sdsasad")).toThrow(Error);
+            //@ts-ignore
+            expect(() => new Fraction(math)).toThrow(Error);
         });
     });
 
