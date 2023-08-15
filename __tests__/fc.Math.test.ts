@@ -124,6 +124,18 @@ describe('math', () => {
 
 
 
+  describe('pow', () => {
+    it('Should calculate the power of a number array', () => {
+      console.log(math.pow(10, -10))
+      console.log(math.pow(10, 2))
+
+    });
+
+  })
+
+
+
+
   describe('sum', () => {
     it('Should calculate the sum of a number array', () => {
       fc.assert(

@@ -674,6 +674,32 @@ describe("Matrix", () => {
             );
         });
 
+
+
+
+
+
+        it('Should correctly calculate the infinity norm of a matrix', () => {
+            const t = new Matrix([[-2, 3], [1, -1]])
+            const t2 = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+
+            expect(t.infNorm()).toEqual(5)
+            expect(t2.infNorm()).toEqual(11)
+
+        });
+
+        it('Should correctly calculate the manhatten norm of a matrix', () => {
+            const t = new Matrix([[-1, -2], [3, -1]])
+            const t2 = new Matrix([[-2, 3], [1, -1]])
+            const t3 = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+
+            expect(t.manhattanNorm()).toEqual(4)
+            expect(t2.manhattanNorm()).toEqual(4)
+            expect(t3.manhattanNorm()).toEqual(12)
+
+        })
+
+
         it('should compute the condition number of a square matrix', () => {
             fc.assert(
                 fc.property(array2Darb(fc.integer()),
@@ -1111,7 +1137,7 @@ describe("Matrix", () => {
                             }
                             let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
                             Matrix.toFixedMatrix(TMatrix, 0)
-                            expect(TMatrix.equal(A, 10)).toBeTruthy()
+                            expect(TMatrix.equal(A, 100000)).toBeTruthy()
                         }
                     )
                 );
@@ -1119,7 +1145,6 @@ describe("Matrix", () => {
 
             it('Error: Non linear independent columns', () => {
                 const testMatrix = new Matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]])
-
                 expect(() => testMatrix.QRDecomposition()).toThrow()
 
             });

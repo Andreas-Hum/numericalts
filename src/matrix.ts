@@ -1057,35 +1057,67 @@ export class Matrix<T> implements MatrixInterface<T> {
      * // Output: 5.477225575051661
      */
     public norm(): T {
-        let norm: T = this.numerical.zeroValue;
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                norm = this.numerical.add(norm, this.numerical.multiply(this.getElement(i, j), this.getElement(i, j)));
-            }
-        }
-        return math.sqrt(norm, this.numerical);
+        const squareArr: T[] = this.mElements.map((val: T) => this.numerical.multiply(val, val))
+        const sqrt: T = this.numerical.sqrt(math.sum(squareArr, this.numerical))
+        return sqrt
+    }
+
+    /**
+     * Calculates the infinity norm of the matrix, which is the maximum value of the sum of absolute values in each row.
+     *
+     * @returns {T} The infinity norm of the matrix.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+     * const infNorm = matrix.infNorm();
+     * console.log(infNorm);
+     * // Output: 11
+     */
+    public infNorm(): T {
+        const absMatrix: T[][] = this.abs().toArray()
+        const rowOneNormArr: T[] = absMatrix.map((val: T[]) => math.sum(val, this.numerical))
+        return math.max(rowOneNormArr, this.numerical)
+    }
+
+    /**
+     * Calculates the Manhattan norm of the matrix, which is the maximum value of the sum of absolute values in each column.
+     *
+     * @returns {T} The Manhattan norm of the matrix.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+     * const manhattanNorm = matrix.manhattanNorm();
+     * console.log(manhattanNorm);
+     * // Output: 12
+     */
+    public manhattanNorm(): T {
+        const absMatrix: T[][] = this.abs().transpose().toArray()
+        const columnOneNormArr: T[] = absMatrix.map((val: T[]) => math.sum(val, this.numerical))
+        return math.max(columnOneNormArr, this.numerical)
     }
 
 
-    // public infNorm(): T {
-    //     const absMatrix: Matrix<T> = this.abs()
-    //     const oneNormArr: T[] = []
-    //     for (let i = 0; i < this.rows; i++) {
-
-    //     }
-    // }
-
-    // public oneNorm(): number {
+    // public pNorm(p: T): T {
 
     // }
 
-    // public twoNorm(): number {
 
-    // }
+    // function matrixPNorm(matrix: number[][], p: number): number {
+    //     // Flatten the matrix into a 1D array
+    //     const flattenedMatrix = matrix.flat();
 
-    // public pNorm(): number {
+    //     // Calculate the absolute values of the matrix elements raised to the power of p
+    //     const poweredElements = flattenedMatrix.map(element => Math.abs(element) ** p);
 
-    // }
+    //     // Calculate the sum of the powered elements
+    //     const sumOfPoweredElements = poweredElements.reduce((sum, element) => sum + element, 0);
+
+    //     // Calculate the p-th root of the sum
+    //     const pNorm = sumOfPoweredElements ** (1 / p);
+
+    //     return pNorm;
+    //   }
+
 
     //TODO: fix the negative pow
     /**

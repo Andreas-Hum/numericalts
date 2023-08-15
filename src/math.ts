@@ -330,6 +330,53 @@ export namespace math {
         return array.reduce((acc: T, cur: T) => numerical.multiply(acc, cur), numerical.oneValue);
     }
 
+
+    export function pow<T>(
+        base: T,
+        exponent: number,
+        numerical?: Numerical<T>
+    ): T {
+        if (!numerical) {
+            if (typeof base === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof base === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError(
+                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
+                    901
+                );
+            }
+        }
+
+        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), exponent))
+    }
+
+
+    export function nthRoot<T>(
+        base: T,
+        root: number,
+        numerical?: Numerical<T>
+    ): T {
+        if (!numerical) {
+            if (typeof base === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof base === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError(
+                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
+                    901
+                );
+            }
+        }
+
+        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), 1 / root))
+    }
+
+
+
+
     /**
      * Computes the sum of a number array.
      *
