@@ -1304,6 +1304,20 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correcly use map', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()), // 2D array of integers
+                    (entries: any[][]) => {
+                        const A: Matrix<number> = new Matrix(entries);
+                        const B: Matrix<number> = A.map((value) => value * 2);
+                        expect(JSON.stringify(B.map((value) => value / 2))).toEqual(JSON.stringify(A));
+                    }
+                )
+            );
+
+        });
+
         it('Should calculate the min and max of a matrix', () => {
 
             fc.assert(

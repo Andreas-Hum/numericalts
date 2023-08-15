@@ -18,6 +18,7 @@ import { NumericalNumber, NumericalBigInt } from "./@numerical.classes";
 //Lodash import
 import _ from 'lodash';
 
+
 /**
  * The `Matrix` class represents a mathematical matrix with generic type `T`.
  * It implements the `MatrixInterface<T>` interface.
@@ -1805,7 +1806,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
-
     /**
     * Computes the cofactor of an element given a row and column
     *
@@ -1855,6 +1855,28 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
 
         return cofactorMatrix;
+    }
+
+    /**
+     * Applies a callback function to each element in the matrix and returns a new matrix with the result.
+     *
+     * @param {Function} callbackFn - A function to execute for each element in the matrix.
+     *                               It takes three arguments: the current element being processed,
+     *                               the index of the current element, and the matrix.mElements on which map() was called.
+     *                               Its return value is added as a single element in the new mElement.
+     * @returns {Matrix<T>} A new matrix with the callback function applied to each element.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+     * const mappedMatrix = matrix.map((element) => {
+     *     return element * 2;
+     * });
+     * console.log(mappedMatrix.toArray());
+     * // Output: [[2, 4], [6, 8]]
+     */
+    public map(callbackFn: (value: T, index: number, array: T[]) => T): Matrix<T> {
+        const clone: T[] = _.cloneDeep(this.mElements)
+        return Matrix.reshape(clone.map(callbackFn), this.rows, this.columns, this.numerical)
     }
 
     /**
