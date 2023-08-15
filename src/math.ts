@@ -108,7 +108,87 @@ export namespace math {
         return sum;
     }
 
+    /**
+     * Returns the maximum value from an array of numbers.
+     *
+     * @param {number[]} arr - The array of numbers.
+     * @returns {number} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0.
+     *
+     * @example
+     * const numbers = [1, 3, 2, 5, 4];
+     * const maxNumber = max(numbers);
+     * console.log(maxNumber);
+     * // Output: 5
+     */
+    export function max(arr: number[]): number;
 
+    /**
+     * Returns the maximum value from an array of bigints.
+     *
+     * @param {bigint[]} arr - The array of bigints.
+     * @returns {bigint} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0.
+     *
+     * @example
+     * const bigints = [BigInt(1), BigInt(3), BigInt(2), BigInt(5), BigInt(4)];
+     * const maxBigInt = max(bigints);
+     * console.log(maxBigInt);
+     * // Output: 5n
+     */
+    export function max(arr: bigint[]): bigint;
+
+    /**
+     * Returns the maximum value from an array using a custom numerical implementation.
+     *
+     * @template T - The type of the elements in the array.
+     * @param {T[]} arr - The array of elements.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0 or if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const array = [1, 3, 2, 5, 4];
+     * const maxElement = max(array, new NumericalNumber());
+     * console.log(maxElement);
+     * // Output: 5
+     */
+    export function max<T>(arr: T[], numerical?: Numerical<T>): T
+
+    export function max<T>(arr: T[], numerical?: Numerical<T>): T {
+        if (arr.length === 0) {
+            throw new Error("array length can't be 0.")
+        }
+        if (!numerical) {
+            if (typeof arr[0] === "number") {
+
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+                return Math.max(...arr as number[]) as T
+            } else if (typeof arr[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+                let max: bigint = arr[0]
+                for (let i = 1; i < arr.length; i++) {
+                    if (max < (arr[i] as bigint)) {
+                        (max as bigint) = (arr[i] as bigint)
+                    }
+                }
+                return max as T
+            } else {
+                throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
+            }
+        }
+
+        let max: T = arr[0]
+        for (let i = 1; i < arr.length; i++) {
+            if (numerical.toIntegral(max) < numerical.toIntegral(arr[i])) {
+                max = arr[i]
+            }
+        }
+        return max;
+    }
 
     /**
     * Normalizes a vector of numbers.
@@ -613,6 +693,8 @@ export namespace math {
 
         return (n & (n - 1)) === 0;
     }
+
+
 
     /**
      * Method used to find the next power of two for a given number.

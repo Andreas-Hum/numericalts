@@ -1068,8 +1068,11 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     // public infNorm(): T {
-    //     let norm: T[] = []
-    //     for (let i = 0; i < this.row; )
+    //     const absMatrix: Matrix<T> = this.abs()
+    //     const oneNormArr: T[] = []
+    //     for (let i = 0; i < this.rows; i++) {
+
+    //     }
     // }
 
     // public oneNorm(): number {

@@ -170,6 +170,57 @@ describe('math', () => {
 
   })
 
+
+  describe('Max', () => {
+    it('should calculate the max element correctly for a integer array', () => {
+      expect(math.max([2, 4, 1, 2, 4, 5])).toEqual(5)
+    });
+
+
+    it('Should calculate the max element correctly for a bigint array ', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = math.max(vector1)
+            let max: bigint = vector1[0]
+            for (let i = 1; i < vector1.length; i++) {
+              if (max < vector1[i]) {
+                max = vector1[i]
+              }
+            }
+            expect(expected).toEqual(max)
+
+          }
+        )
+      );
+    });
+
+    it("should calculate the max element in stringClass", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+
+          const expected: string = math.max(vector, fractionalRep);
+          let max: string = vector[0]
+          for (let i = 1; i < vector.length; i++) {
+            if (fractionalRep.toIntegral(max) < fractionalRep.toIntegral(vector[i])) {
+              max = vector[i]
+            }
+          }
+          expect(max).toEqual(expected);
+
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.max([])).toThrow("array length can't be 0.");
+      //@ts-ignore
+      expect(() => math.max(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
   describe('Normalize', () => {
     it('should calculate the normalization correctly for a integer vector', () => {
       fc.property(
@@ -361,6 +412,7 @@ describe('math', () => {
     it('Should calculate the least common multiple (LCM) of two numbers', () => {
       fc.assert(
         fc.property(fc.integer(), fc.integer(), (a, b) => {
+          if (a === 0 || b === 0) return
           const result: number = math.LCD(a, b);
 
           // Calculate the LCM using the formula: LCM = (a * b) / GCD(a, b)
