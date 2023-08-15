@@ -748,6 +748,24 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     }
 
+
+    /**
+     * Computes the adjugate of the matrix.
+     *
+     * @throws {MatrixError} If the matrix is not square.
+     * @returns {Matrix<T>} The adjugate matrix
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+     * const adjugateMatrix = matrix.adjugate();
+     * console.log(adjugateMatrix.toArray());
+     * // Output: Array representation of adjugate matrix
+     */
+    public adjugate(): Matrix<T> {
+        if (!this.isSquare) throw new MatrixError("adjugate is not defined for non-square matrix", -1);
+        return this.cofactorMatrix().transpose()
+    }
+
     /**
      * Computes the condition number of this matrix.
      * @public
@@ -779,6 +797,58 @@ export class Matrix<T> implements MatrixInterface<T> {
 
         return this.numerical.toIntegral(conditionNumber);
     }
+
+    /**
+    * Computes the cofactor of an element given a row and column
+    *
+    * @throws {MatrixError} If the matrix is not square.
+    * @returns {Matrix<T>} The cofactor matrix
+    *
+    * @example
+    * const matrix = new Matrix([[1, 4, 7], [3, 0, 5], [-1, 9, 11]]);
+    * const cofactor = matrix.cofactor(1,2);
+    * console.log(cofactorMatrix.toArray());
+    * // Output: -13
+    */
+    public cofactor(row: number, column: number): T {
+        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid argument", 606, { row, column });
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        if (row > this.rows || column > this.columns) throw new MatrixError("Index out of bounds", 800, { row, column });
+
+        const minorMatrix: Matrix<T> = this.removeRow(row).removeColumn(column)
+        const det: number = minorMatrix.det()
+        const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, row + column))
+        return cofactor;
+    }
+
+    /**
+     * Computes the cofactor matrix.
+     *
+     * @throws {MatrixError} If the matrix is not square.
+     * @returns {Matrix<T>} The cofactor matrix
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]]);
+     * const cofactorMatrix = matrix.cofactorMatrix();
+     * console.log(cofactorMatrix.toArray());
+     * // Output: [[24, 5, -4], [-12, 3, 2], [-2, -5, 4]]
+     */
+    public cofactorMatrix(): Matrix<T> {
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.rows; j++) {
+                const minorMatrix: Matrix<T> = this.removeRow(i).removeColumn(j)
+                const det: number = minorMatrix.det()
+                const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, i + j))
+                cofactorMatrix.setElement(i, j, cofactor)
+            }
+        }
+
+        return cofactorMatrix;
+    }
+
 
 
     /**
@@ -1012,6 +1082,48 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
     }
 
+    /**
+        * Calculates the rank of the matrix.
+        * The rank of a matrix is defined as the maximum number of linearly independent rows or columns.
+        * @public
+        * @returns { number } The rank of the matrix.
+        *
+        * @example
+            *
+        * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+        * const rank = matrix.rank();
+        * console.log(rank);
+        * // Output: 2
+        */
+    public rank(): number {
+        const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
+        Matrix.roundMatrixToZero(rankMatrix)
+
+        let rank: number = 0;
+
+        for (let i = 0; i < this.rows; i++) {
+            if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
+                rank++
+            }
+        }
+
+        return rank;
+    }
+
+    /**
+     * Computes the sum of the elements in the matrix.
+     *
+     * @returns {T} The sum of the elements in the matrix.
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const sum = matrix.sum();
+     * console.log(sum);
+     * // Output: 10
+     */
+    public sum(): T {
+        return math.sum(this.mElements, this.numerical)
+    }
 
 
     /**
@@ -1153,6 +1265,26 @@ export class Matrix<T> implements MatrixInterface<T> {
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
     }
 
+    /**
+     * Calculates the trace of the matrix.
+     * Throws an error if the matrix is not square.
+     * @public
+     * @returns {T} The trace value.
+     * @throws {MatrixError} If the matrix is not square.
+     *
+     * @example
+     *
+     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const trace = matrix.trace();
+     * console.log(trace);
+     * // Output: 15
+     */
+    public trace(): T {
+        if (!this.isSquare) throw new MatrixError("Trace is not defined for non-square matrix", -1);
+        const diag: T[] = this.diag();
+        const sum: T = diag.reduce((acc: T, cur: T) => this.numerical.add(acc, cur), this.numerical.zeroValue);
+        return sum;
+    }
 
 
 
@@ -1764,22 +1896,6 @@ export class Matrix<T> implements MatrixInterface<T> {
     */
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Computes the adjugate of the matrix.
-     *
-     * @throws {MatrixError} If the matrix is not square.
-     * @returns {Matrix<T>} The adjugate matrix
-     *
-     * @example
-     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
-     * const adjugateMatrix = matrix.adjugate();
-     * console.log(adjugateMatrix.toArray());
-     * // Output: Array representation of adjugate matrix
-     */
-    public adjugate(): Matrix<T> {
-        if (!this.isSquare) throw new MatrixError("adjugate is not defined for non-square matrix", -1);
-        return this.cofactorMatrix().transpose()
-    }
 
 
     //TODO:make this better
@@ -1806,56 +1922,6 @@ export class Matrix<T> implements MatrixInterface<T> {
         return this.mElements.every((entry: T, index: number) => entry === B.mElements[index])
     }
 
-    /**
-    * Computes the cofactor of an element given a row and column
-    *
-    * @throws {MatrixError} If the matrix is not square.
-    * @returns {Matrix<T>} The cofactor matrix
-    *
-    * @example
-    * const matrix = new Matrix([[1, 4, 7], [3, 0, 5], [-1, 9, 11]]);
-    * const cofactor = matrix.cofactor(1,2);
-    * console.log(cofactorMatrix.toArray());
-    * // Output: -13
-    */
-    public cofactor(row: number, column: number): T {
-        if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid argument", 606, { row, column });
-        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
-        if (row > this.rows || column > this.columns) throw new MatrixError("Index out of bounds", 800, { row, column });
-
-        const minorMatrix: Matrix<T> = this.removeRow(row).removeColumn(column)
-        const det: number = minorMatrix.det()
-        const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, row + column))
-        return cofactor;
-    }
-
-    /**
-     * Computes the cofactor matrix.
-     *
-     * @throws {MatrixError} If the matrix is not square.
-     * @returns {Matrix<T>} The cofactor matrix
-     *
-     * @example
-     * const matrix = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]]);
-     * const cofactorMatrix = matrix.cofactorMatrix();
-     * console.log(cofactorMatrix.toArray());
-     * // Output: [[24, 5, -4], [-12, 3, 2], [-2, -5, 4]]
-     */
-    public cofactorMatrix(): Matrix<T> {
-        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
-        const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
-
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.rows; j++) {
-                const minorMatrix: Matrix<T> = this.removeRow(i).removeColumn(j)
-                const det: number = minorMatrix.det()
-                const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, i + j))
-                cofactorMatrix.setElement(i, j, cofactor)
-            }
-        }
-
-        return cofactorMatrix;
-    }
 
     /**
      * Applies a callback function to each element in the matrix and returns a new matrix with the result.
@@ -1923,71 +1989,6 @@ export class Matrix<T> implements MatrixInterface<T> {
             }
         }
         return min;
-    }
-
-
-    /**
-    * Calculates the rank of the matrix.
-    * The rank of a matrix is defined as the maximum number of linearly independent rows or columns.
-    * @public
-    * @returns { number } The rank of the matrix.
-    *
-    * @example
-        *
-    * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    * const rank = matrix.rank();
-    * console.log(rank);
-    * // Output: 2
-    */
-    public rank(): number {
-        const rankMatrix: Matrix<T> = (this.gaussianElimination() as Matrix<T>)
-        Matrix.roundMatrixToZero(rankMatrix)
-
-        let rank: number = 0;
-
-        for (let i = 0; i < this.rows; i++) {
-            if (rankMatrix.getRow(i).findIndex((val: T) => val !== this.numerical.zeroValue) !== -1) {
-                rank++
-            }
-        }
-
-        return rank;
-    }
-
-    /**
-     * Computes the sum of the elements in the matrix.
-     *
-     * @returns {T} The sum of the elements in the matrix.
-     *
-     * @example
-     * const matrix = new Matrix([[1, 2], [3, 4]]);
-     * const sum = matrix.sum();
-     * console.log(sum);
-     * // Output: 10
-     */
-    public sum(): T {
-        return math.sum(this.mElements, this.numerical)
-    }
-
-    /**
-     * Calculates the trace of the matrix.
-     * Throws an error if the matrix is not square.
-     * @public
-     * @returns {T} The trace value.
-     * @throws {MatrixError} If the matrix is not square.
-     *
-     * @example
-     *
-     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const trace = matrix.trace();
-     * console.log(trace);
-     * // Output: 15
-     */
-    public trace(): T {
-        if (!this.isSquare) throw new MatrixError("Trace is not defined for non-square matrix", -1);
-        const diag: T[] = this.diag();
-        const sum: T = diag.reduce((acc: T, cur: T) => this.numerical.add(acc, cur), this.numerical.zeroValue);
-        return sum;
     }
 
 
