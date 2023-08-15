@@ -730,8 +730,7 @@ export class Matrix<T> implements MatrixInterface<T> {
      * // Output:
      * "6  8"
      * "10 12"
-     * 
-
+     *
      */
     public add(B: Matrix<T>): Matrix<T> {
         if (this.shape !== B.shape) throw new MatrixError("Invalid matrix dimensions for addition", 805, { ARows: this.rows, AColumns: this.columns, BRows: B.rows, BColumns: B.columns });
@@ -746,6 +745,21 @@ export class Matrix<T> implements MatrixInterface<T> {
         }
         return new Matrix(resultElements, { rows: this.rows, columns: this.columns, numerical: this.numerical });
 
+    }
+
+    /**
+     * Returns a new matrix where each element is the absolute value of the corresponding element in the original matrix.
+     *
+     * @returns {Matrix<T>} A new matrix with absolute values of the elements.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[-2, 4], [-6, 8]]);
+     * const absoluteMatrix = matrix.abs();
+     * console.log(absoluteMatrix.toArray());
+     * // Output: [[2, 4], [6, 8]]
+     */
+    public abs(): Matrix<T> {
+        return this.map((val: T) => math.abs(val, this.numerical))
     }
 
 
@@ -793,7 +807,7 @@ export class Matrix<T> implements MatrixInterface<T> {
         const normInverseA = inverseA.norm();
 
         // Compute the condition number
-        const conditionNumber = this.numerical.multiply(this.numerical.fromIntegral(normA), this.numerical.fromIntegral(normInverseA));
+        const conditionNumber = this.numerical.multiply(normA, normInverseA);
 
         return this.numerical.toIntegral(conditionNumber);
     }
@@ -1016,6 +1030,23 @@ export class Matrix<T> implements MatrixInterface<T> {
     }
 
     /**
+     * Calculates the  arithmetic mean value of all elements in the matrix.
+     *
+     * @returns {T} The mean value of the elements.
+     *
+     * @example
+     * const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+     * const mean = matrix.mean();
+     * console.log(mean);
+     * // Output: 2.5
+     */
+    public mean(): T {
+        return this.numerical.divide(this.sum(), this.numerical.fromIntegral(this.size))
+    }
+
+
+    //TODO: change name 
+    /**
      * Computes the Frobenius norm of this matrix.
      * @public
      * @returns {number} The Frobenius norm of the matrix.
@@ -1025,15 +1056,33 @@ export class Matrix<T> implements MatrixInterface<T> {
      * console.log(norm);
      * // Output: 5.477225575051661
      */
-    public norm(): number {
-        let norm = this.numerical.zeroValue;
+    public norm(): T {
+        let norm: T = this.numerical.zeroValue;
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.columns; j++) {
                 norm = this.numerical.add(norm, this.numerical.multiply(this.getElement(i, j), this.getElement(i, j)));
             }
         }
-        return this.numerical.toIntegral(math.sqrt(norm, this.numerical));
+        return math.sqrt(norm, this.numerical);
     }
+
+
+    // public infNorm(): T {
+    //     let norm: T[] = []
+    //     for (let i = 0; i < this.row; )
+    // }
+
+    // public oneNorm(): number {
+
+    // }
+
+    // public twoNorm(): number {
+
+    // }
+
+    // public pNorm(): number {
+
+    // }
 
     //TODO: fix the negative pow
     /**

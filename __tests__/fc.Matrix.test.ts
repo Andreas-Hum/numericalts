@@ -586,6 +586,17 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correctly return the abs matrix', () => {
+            const t = new Matrix([[-1, -2], [-3, -4]])
+            const t2 = new Matrix([[-1, 2], [-3, 4]])
+
+            expect(t.abs().toArray()).toEqual([[1, 2], [3, 4]])
+            expect(t2.abs().toArray()).toEqual([[1, 2], [3, 4]])
+
+        });
+
+
+
 
         it('Should correctly subtract two matrices', () => {
             fc.assert(
@@ -643,6 +654,21 @@ describe("Matrix", () => {
                         expect(JSON.stringify(A.multiply(zeros))).toEqual(JSON.stringify(zeros))
 
 
+                    }
+                )
+            );
+        });
+
+
+        it('Should correctly calculate the mean of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const sum: number = A.mElements.reduce((acc, val) => acc + val, 0)
+                        const expected: number = sum / A.size
+                        expect(expected).toBeCloseTo(A.mean())
                     }
                 )
             );
