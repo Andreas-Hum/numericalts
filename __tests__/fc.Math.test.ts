@@ -125,10 +125,27 @@ describe('math', () => {
 
 
   describe('pow', () => {
-    it('Should calculate the power of a number array', () => {
-      console.log(math.pow(10, -10))
-      console.log(math.pow(10, 2))
+    it('Should calculate the power of a number ', () => {
+      fc.assert(
+        fc.property(fc.integer(), (vector) => {
+          expect(vector * vector).toBeCloseTo(math.pow(vector, 2));
+        })
+      )
 
+    });
+
+    it('Should calculate the power of a bigint ', () => {
+      fc.assert(
+        fc.property(fc.bigInt({ min: -100000n, max: 1000000n }), (vector) => {
+          expect((math.pow(vector, 2) - vector * vector) < 1000n).toBeTruthy();
+        })
+      )
+
+    });
+
+    it("Should correctly throw errors", () => {
+      //@ts-ignore
+      expect(() => math.pow(["vector1"])).toThrowError(NumericalError);
     });
 
   })
@@ -291,6 +308,23 @@ describe('math', () => {
     });
 
   })
+
+  describe('nthroot', () => {
+    it('should calculate nthRoot of a number', () => {
+      expect(math.nthRoot(2, 2)).toBeCloseTo(Math.SQRT2)
+    });
+
+    it('should calculate nthRoot of a bigint', () => {
+      expect(math.nthRoot(4n, 2)).toEqual(2n)
+    });
+
+    it("Should correctly throw errors", () => {
+      //@ts-ignore
+      expect(() => math.nthRoot(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
 
 
   describe('Abs', () => {

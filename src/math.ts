@@ -263,6 +263,68 @@ export namespace math {
         return vector.map((entry: T) => numerical.multiply(entry, scalar));
     }
 
+    /**
+     * Calculates the nth root of a number.
+     *
+     * @param {number} base - The base number.
+     * @param {number} root - The root to calculate.
+     * @returns {number} The result of calculating the nth root.
+     *
+     * @example
+     * const result = nthRoot(27, 3);
+     * console.log(result);
+     * // Output: 3
+     */
+    export function nthRoot(base: number, root: number): number;
+
+    /**
+     * Calculates the nth root of a bigint.
+     *
+     * @param {bigint} base - The base bigint.
+     * @param {number} root - The root to calculate.
+     * @returns {bigint} The result of calculating the nth root.
+     *
+     * @example
+     * const result = nthRoot(BigInt(27), 3);
+     * console.log(result);
+     * // Output: 3n
+     */
+    export function nthRoot(base: bigint, root: number): bigint;
+
+    /**
+     * Calculates the nth root of a value using a custom numerical implementation.
+     *
+     * @template T - The type of the base value.
+     * @param {T} base - The base value.
+     * @param {number} root - The root to calculate.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The result of calculating the nth root.
+     *
+     * @throws {NumericalError} Throws an error if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const result = nthRoot(27, 3, new NumericalNumber());
+     * console.log(result);
+     * // Output: 3
+     */
+    export function nthRoot<T>(base: T, root: number, numerical?: Numerical<T>): T {
+        if (!numerical) {
+            if (typeof base === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof base === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError(
+                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
+                    901
+                );
+            }
+        }
+
+        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), 1 / root))
+    }
+
+
 
 
     /**
@@ -331,11 +393,53 @@ export namespace math {
     }
 
 
-    export function pow<T>(
-        base: T,
-        exponent: number,
-        numerical?: Numerical<T>
-    ): T {
+    /**
+     * Calculates the power of a number to the specified exponent.
+     *
+     * @param {number} base - The base number.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @returns {number} The result of raising the base to the exponent.
+     *
+     * @example
+     * const result = pow(2, 3);
+     * console.log(result);
+     * // Output: 8
+     */
+    export function pow(base: number, exponent: number): number;
+
+    /**
+     * Calculates the power of a bigint to the specified exponent.
+     *
+     * @param {bigint} base - The base bigint.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @returns {bigint} The result of raising the base to the exponent.
+     *
+     * @example
+     * const result = pow(BigInt(2), 3);
+     * console.log(result);
+     * // Output: 8n
+     */
+    export function pow(base: bigint, exponent: number): bigint;
+
+    /**
+     * Calculates the power of a value to the specified exponent using a custom numerical implementation.
+     *
+     * @template T - The type of the base value.
+     * @param {T} base - The base value.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The result of raising the base to the exponent.
+     *
+     * @throws {NumericalError} Throws an error if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const result = pow(2, 3, new NumericalNumber());
+     * console.log(result);
+     * // Output: 8
+     */
+    export function pow<T>(base: T, exponent: number, numerical?: Numerical<T>): T
+
+    export function pow<T>(base: T, exponent: number, numerical?: Numerical<T>): T {
         if (!numerical) {
             if (typeof base === "number") {
                 numerical = new NumericalNumber() as unknown as Numerical<T>;
@@ -352,27 +456,6 @@ export namespace math {
         return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), exponent))
     }
 
-
-    export function nthRoot<T>(
-        base: T,
-        root: number,
-        numerical?: Numerical<T>
-    ): T {
-        if (!numerical) {
-            if (typeof base === "number") {
-                numerical = new NumericalNumber() as unknown as Numerical<T>;
-            } else if (typeof base === "bigint") {
-                numerical = new NumericalBigInt() as unknown as Numerical<T>;
-            } else {
-                throw new NumericalError(
-                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
-                    901
-                );
-            }
-        }
-
-        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), 1 / root))
-    }
 
 
 
