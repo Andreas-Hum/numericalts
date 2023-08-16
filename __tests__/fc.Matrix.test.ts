@@ -774,6 +774,16 @@ describe("Matrix", () => {
 
         });
 
+
+        it('Fourier', () => {
+
+            new Matrix([[1, 2], [3, 4]]).fourier()
+
+            expect(() => new Matrix([[1, 2, 2], [3, 4, 2]]).fourier()).toThrow()
+            expect(() => new Matrix([[1n, 2n], [3n, 4n]]).fourier()).toThrow()
+
+        });
+
         it('Should correctly scale a matrix ', () => {
             fc.assert(
                 fc.property(

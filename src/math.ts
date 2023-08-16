@@ -1,4 +1,4 @@
-import type { ComplexNumber } from './complex';
+import { ComplexNumber, ComplexNumerical } from './complex';
 import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
@@ -1017,6 +1017,7 @@ export namespace math {
      *   ]
      */
     export function fft(sequence: number[]): ComplexNumber[] {
+        const numerical: ComplexNumerical = new ComplexNumerical()
         const N = sequence.length;
 
         // Base case: if the sequence has only one element, return it as the FFT coefficient
@@ -1041,18 +1042,12 @@ export namespace math {
             const angle = (2 * Math.PI * k) / N;
             const twiddle = { real: Math.cos(angle), imaginary: -Math.sin(angle) };
 
-            const evenTerm = multiplyComplexNumbers(evenCoefficients[k], twiddle);
-            const oddTerm = multiplyComplexNumbers(oddCoefficients[k], twiddle);
+            const evenTerm = numerical.multiply(evenCoefficients[k], twiddle);
+            const oddTerm = numerical.multiply(oddCoefficients[k], twiddle);
 
-            fftResult[k] = {
-                real: evenTerm.real + oddTerm.real,
-                imaginary: evenTerm.imaginary + oddTerm.imaginary,
-            };
+            fftResult[k] = numerical.add(evenTerm, oddTerm)
+            fftResult[k + N / 2] = numerical.subtract(evenTerm, oddTerm)
 
-            fftResult[k + N / 2] = {
-                real: evenTerm.real - oddTerm.real,
-                imaginary: evenTerm.imaginary - oddTerm.imaginary,
-            };
         }
 
         return fftResult;
@@ -1156,22 +1151,6 @@ export namespace math {
         }
 
         return numerical.sqrt(x);
-    }
-
-
-    //!Temporary methods 
-
-    /**
-   * Multiplies two complex numbers.
-   *
-   * @param {ComplexNumber} a - The first complex number.
-   * @param {ComplexNumber} b - The second complex number.
-   * @returns {ComplexNumber} The product of the two complex numbers.
-   */
-    function multiplyComplexNumbers(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
-        const real = a.real * b.real - a.imaginary * b.imaginary;
-        const imaginary = a.real * b.imaginary + a.imaginary * b.real;
-        return { real, imaginary };
     }
 
 }

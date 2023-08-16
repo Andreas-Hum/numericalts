@@ -17,6 +17,7 @@ import { NumericalNumber, NumericalBigInt } from "./@numerical.classes";
 
 //Lodash import
 import _ from 'lodash';
+import { ComplexNumber, ComplexNumerical } from "./complex";
 
 
 /**
@@ -37,7 +38,7 @@ import _ from 'lodash';
  *
  * @typeParam T - The type of elements contained in the matrix.
  */
-export class Matrix<T> implements MatrixInterface<T> {
+export class Matrix<T> implements MatrixInterface<T, any> {
 
 
     /**
@@ -88,9 +89,9 @@ export class Matrix<T> implements MatrixInterface<T> {
 
     /**
      * The numercal class to use for calculations
-     * @type {Numerical<T>}
+     * @type {Numerical<any>}
      */
-    numerical: Numerical<T>
+    numerical: Numerical<any>
 
 
     /**
@@ -913,6 +914,43 @@ export class Matrix<T> implements MatrixInterface<T> {
 
 
     }
+
+
+    /**
+     * Calculates the Fourier transform of a matrix.
+     *
+     * @param {object} option - The options for the Fourier transform.
+     * @param {"dft" | "fft"} [option.method="fft"] - The method to use for the Fourier transform ("dft" or "fft"). Default is "fft".
+     * @param {"row" | "column"} [option.sequence="row"] - The sequence in which the Fourier transform is applied ("row" or "column"). Default is "row".
+     * @returns {Matrix<ComplexNumber>} The Fourier transformed matrix.
+     *
+     * @throws {MatrixError} Throws an error if the matrix data type is not "number" or if the input sequences are not a power of two (only for "dft" method).
+     *
+     * @example
+     * const matrix = new Matrix([[1, 2], [3, 4]]);
+     * const result = matrix.fourier({ method: "fft", sequence: "row" });
+     * console.log(result.toString());
+     * // Output
+     * "3 + 0i  -1 + 0i"
+     * "7 + 0i  -1 + 0i"
+     */
+    public fourier(option: { method: "dft" | "fft", sequence: "row" | "column" } = { method: "fft", sequence: "row" }): Matrix<ComplexNumber> {
+        if (this.dataType !== "number") {
+            throw new MatrixError("At this moment fourier is only defined for number Matrices", -1);
+        }
+
+        if (option.method === "fft" && !math.isPowerOfTwo(this.size / this[`${option.sequence}s`])) {
+            throw new MatrixError("FFT expects the input sequences to be a power of two", -1);
+        }
+
+        const sequenceArray: T[][] = option.sequence === "row" ? this.toArray() : this.transpose().toArray();
+        const fourierArray: ComplexNumber[][] = option.method === "fft" ? sequenceArray.map((val: T[]) => math.fft(val as number[])) : sequenceArray.map((val: T[]) => math.dft(val as number[]));
+
+        return option.sequence === "row"
+            ? new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new ComplexNumerical() })
+            : new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new ComplexNumerical() }).transpose();
+    }
+
 
 
     /**

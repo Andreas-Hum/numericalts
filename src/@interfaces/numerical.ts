@@ -1,16 +1,16 @@
 
-export interface Numerical<T> {
-    zeroValue: T;
-    oneValue: T;
-    add(x: T, y: T): T;
-    subtract(x: T, y: T): T;
-    multiply(x: T, y: T): T;
-    divide(x: T, y: T): T;
-    sqrt(x: T): T;
-    fromIntegral(n: number): T;
-    toIntegral(n: T): number;
-    toString(n:T): string;
-    signOperator(x: T): number;
+export interface Numerical<C> {
+    zeroValue: C;
+    oneValue: C;
+    add(x: C, y: C): C;
+    subtract(x: C, y: C): C;
+    multiply(x: C, y: C): C;
+    divide(x: C, y: C): C;
+    sqrt(x: C): C;
+    fromIntegral(n: number): C;
+    toIntegral(n: C): number;
+    toString(n:C): string;
+    signOperator(x: C): number;
 }
 
 
