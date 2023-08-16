@@ -13,11 +13,11 @@ import { Constants } from "./constants";
 
 //Numerical interface/classes
 import { Numerical } from "./@interfaces";
-import { NumericalNumber, NumericalBigInt } from "./@numerical.classes";
+import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "./@numerical.classes";
+import { ComplexNumber, } from "./complex";
 
 //Lodash import
 import _ from 'lodash';
-import { ComplexNumber, ComplexNumerical } from "./complex";
 
 
 /**
@@ -25,14 +25,14 @@ import { ComplexNumber, ComplexNumerical } from "./complex";
  * It implements the `MatrixInterface<T>` interface.
  *
  * @remarks
- * This class provides methods for matrix operations such as addition, subtraction, multiplication, etc.
+ * This class provides methods for matrix operations such as  addition, subtraction, multiplication, etc.
  *
  * @example
  *
  *   // Create a new instance of Matrix with number type
- *   const numberMatrix = new Matrix<number>([[1, 2], [3, 4]]);
+ *   const numberMatrix: Matrix<number> = new Matrix<number>([[1, 2], [3, 4]]);
  *    // Create a new instance of Matrix with string type
- *   const stringMatrix = new Matrix<bigint>([[1n, 2n], [3n, 4n]]);
+ *   const stringMatrix: Matrix<bigint> = new Matrix<bigint>([[1n, 2n], [3n, 4n]]);
  *    // Create a new instance of Matrix with a custom type
  *   const customMatrix = new Matrix<custom type>([c1,c2,c3,c4],{rows:2,columns:4, numerical: "Custom class for calculations"})
  *

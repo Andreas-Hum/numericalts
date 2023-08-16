@@ -663,8 +663,6 @@ describe('math', () => {
   })
 
 
-
-
   describe('ComplexNumerical', () => {
     let complexNumerical: ComplexNumerical;
 
