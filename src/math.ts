@@ -1,14 +1,11 @@
+import type { ComplexNumber } from './complex';
 import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
 
 import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
 
-
 export namespace math {
-
-
-
 
 
     /**
@@ -107,6 +104,8 @@ export namespace math {
         }
         return sum;
     }
+
+
 
     /**
      * Returns the maximum value from an array of numbers.
@@ -951,6 +950,114 @@ export namespace math {
             return -1;
         }
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Signal processing
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Calculates the Discrete Fourier Transform (DFT) of a sequence.
+     * @remark This is only defined for sequences of numbers at the moment 
+     * @param {number[]} sequence - The input sequence for which to calculate the DFT.
+     * @returns {ComplexNumber[]} An array of complex numbers representing the DFT coefficients.
+     *
+     * @example
+     * const sequence = [1, 2, 3, 2, 1];
+     * const result = dft(sequence);
+     * console.log(result);
+     * // Output:
+     *  [
+     *      { real: 9, imaginary: 0 },
+     *      { real: -2.118033988749895, imaginary: -1.538841768587627 },
+     *      { real: 0.11803398874989479, imaginary: 0.36327126400268017 },
+     *      { real: 0.11803398874989524, imaginary: -0.3632712640026805 },
+     *      { real: -2.118033988749895, imaginary: 1.5388417685876252 }
+     *   ]
+     */
+    export function dft(sequence: number[]): ComplexNumber[] {
+        const N = sequence.length;
+        const dftResult: ComplexNumber[] = [];
+
+        for (let k = 0; k < N; k++) {
+            let real = 0;
+            let imaginary = 0;
+
+            for (let n = 0; n < N; n++) {
+                const angle = (2 * Math.PI * k * n) / N;
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+
+                real += sequence[n] * cos;
+                imaginary -= sequence[n] * sin;
+            }
+
+            dftResult.push({ real, imaginary });
+        }
+
+        return dftResult;
+    }
+
+    /**
+     * Calculates the Fast Fourier Transform (FFT) of a sequence.
+     * @remark This is only defined for sequences of numbers at the moment it is a basic implementation and i plan on improving it in the future
+     * @param {number[]} sequence - The input sequence for which to calculate the FFT.
+     * @returns {ComplexNumber[]} An array of complex numbers representing the FFT coefficients.
+     *
+     * @example
+     * const sequence = [1, 2, 3, 2];
+     * const result = fft(sequence);
+     * console.log(result);
+     * // Output:
+     *   [
+     *      { real: 8, imaginary: 0 },
+     *      { real: -1.2246467991473532e-16, imaginary: 2 },
+     *      { real: 0, imaginary: 0 },
+     *      { real: -1.2246467991473532e-16, imaginary: 2 }
+     *   ]
+     */
+    export function fft(sequence: number[]): ComplexNumber[] {
+        const N = sequence.length;
+
+        // Base case: if the sequence has only one element, return it as the FFT coefficient
+        if (N === 1) {
+            return [{ real: sequence[0], imaginary: 0 }];
+        }
+
+        if (!isPowerOfTwo(N)) {
+            throw new Error('Size of input must be a power of 2')
+        }
+        // Split the sequence into even and odd indices
+        const even = sequence.filter((_, index) => index % 2 === 0);
+        const odd = sequence.filter((_, index) => index % 2 !== 0);
+
+        // Recursively calculate the FFT for the even and odd sequences
+        const evenCoefficients = fft(even);
+        const oddCoefficients = fft(odd);
+
+        // Combine the even and odd coefficients using the butterfly operation
+        const fftResult: ComplexNumber[] = [];
+        for (let k = 0; k < N / 2; k++) {
+            const angle = (2 * Math.PI * k) / N;
+            const twiddle = { real: Math.cos(angle), imaginary: -Math.sin(angle) };
+
+            const evenTerm = multiplyComplexNumbers(evenCoefficients[k], twiddle);
+            const oddTerm = multiplyComplexNumbers(oddCoefficients[k], twiddle);
+
+            fftResult[k] = {
+                real: evenTerm.real + oddTerm.real,
+                imaginary: evenTerm.imaginary + oddTerm.imaginary,
+            };
+
+            fftResult[k + N / 2] = {
+                real: evenTerm.real - oddTerm.real,
+                imaginary: evenTerm.imaginary - oddTerm.imaginary,
+            };
+        }
+
+        return fftResult;
+    }
+
 
 
 
@@ -1049,6 +1156,22 @@ export namespace math {
         }
 
         return numerical.sqrt(x);
+    }
+
+
+    //!Temporary methods 
+
+    /**
+   * Multiplies two complex numbers.
+   *
+   * @param {ComplexNumber} a - The first complex number.
+   * @param {ComplexNumber} b - The second complex number.
+   * @returns {ComplexNumber} The product of the two complex numbers.
+   */
+    function multiplyComplexNumbers(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
+        const real = a.real * b.real - a.imaginary * b.imaginary;
+        const imaginary = a.real * b.imaginary + a.imaginary * b.real;
+        return { real, imaginary };
     }
 
 }

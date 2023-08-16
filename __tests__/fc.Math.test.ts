@@ -74,6 +74,22 @@ describe('math', () => {
 
 
 
+  //TODO: real tests
+  describe('DFT', () => {
+    it('should correctly compute the DFT', () => {
+      math.dft([1, 2, 3])
+    });
+  });
+
+
+  describe('FFT', () => {
+    it('should correctly compute the FFT', () => {
+      math.fft([1, 2, 3, 4])
+      expect(()=> math.fft([1,2,3])).toThrow()
+    });
+  });
+
+
   describe('prod', () => {
     it('Should calculate the product of a number array', () => {
       fc.assert(

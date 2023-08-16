@@ -704,9 +704,6 @@ describe("Matrix", () => {
             const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
             expect(t.pNorm(1)).toEqual(45)
             expect(t.pNorm(2)).toBeCloseTo(16.84810335261421, 1)
-            console.log(new Matrix([[1,2],[3,4]]).pNorm(2))
-
-
 
         })
 
