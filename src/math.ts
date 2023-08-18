@@ -1,9 +1,9 @@
-import { ComplexNumber, ComplexNumerical } from './complex';
+import { ComplexNumber, } from './complex';
 import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
 
-import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
+import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "../src/@numerical.classes";
 
 export namespace math {
 

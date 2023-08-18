@@ -3,7 +3,7 @@ import { Numerical } from '../src/@interfaces/numerical';
 import { fc } from '@fast-check/jest';
 import { math } from '../src';
 import { FractionalNumberClass } from '../src/@numerical.classes';
-import { ComplexNumerical } from '../src/complex';
+import { ComplexNumerical } from '../src/@numerical.classes';
 
 
 

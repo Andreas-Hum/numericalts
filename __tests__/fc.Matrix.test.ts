@@ -294,6 +294,13 @@ describe("Matrix", () => {
 
                 })
             );
+
+            expect(twoByThree.diag(1)).toEqual([2, 6])
+            expect(twoByThree.diag(-1)).toEqual([4])
+            expect(threeByTwo.diag(1)).toEqual([4])
+            expect(threeByTwo.diag(-1)).toEqual([2, 6])
+
+
         });
 
         it('Should correctly get a row of a matrix', () => {

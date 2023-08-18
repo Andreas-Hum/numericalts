@@ -22,10 +22,13 @@ import _ from 'lodash';
 
 /**
  * The `Matrix` class represents a mathematical matrix with generic type `T`.
- * It implements the `MatrixInterface<T>` interface.
+ * It implements the `MatrixInterface<T, any>` interface.
  *
+ * @typeParam T - The type of elements contained in the matrix.
+ * @typeParam any - The type of of the Numerical implementation
+ * 
  * @remarks
- * This class provides methods for matrix operations such as  addition, subtraction, multiplication, etc.
+ * This class provides methods for matrix operations such as  addition, subtraction, multiplication, solving systems, etc.
  *
  * @example
  *
@@ -34,9 +37,8 @@ import _ from 'lodash';
  *    // Create a new instance of Matrix with string type
  *   const stringMatrix: Matrix<bigint> = new Matrix<bigint>([[1n, 2n], [3n, 4n]]);
  *    // Create a new instance of Matrix with a custom type
- *   const customMatrix = new Matrix<custom type>([c1,c2,c3,c4],{rows:2,columns:4, numerical: "Custom class for calculations"})
+ *   const customMatrix: Matrix<custom type> = new Matrix<custom type>([c1,c2,c3,c4],{rows:2,columns:4, numerical: "Custom class for calculations"})
  *
- * @typeParam T - The type of elements contained in the matrix.
  */
 export class Matrix<T> implements MatrixInterface<T, any> {
 
@@ -46,41 +48,49 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     * @type {string}
     */
     shape: string = "0"
+
     /**
      * Indicates whether the matrix is square.
      * @type {boolean}
      */
     isSquare: boolean = false
+
     /**
      * Indicates whether the matrix is tall (more rows than columns).
      * @type {boolean}
      */
     isTall: boolean = false
+
     /**
      * Indicates whether the matrix is wide (more columns than rows).
      * @type {boolean}
      */
     isWide: boolean = false
+
     /**
      * The number of rows in the matrix.
      * @type {number}
      */
     rows: number = Infinity
+
     /**
      * The number of columns in the matrix.
      * @type {number}
      */
     columns: number = Infinity
+
     /**
      * The total number of elements in the matrix.
      * @type {number}
      */
     size: number = Infinity
+
     /**
      * The elements of the matrix.
      * @type {Array<T>}
      */
     mElements: Array<T> = []
+
     /**
      * The data type of the matrix elements.
      * @type {string}
@@ -97,19 +107,22 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     /**
   * Constructs a matrix object.
   * @param {T[][] | T[]} entries - The entries of the matrix.
-  * @param {{ rows?: number, columns?: number, numerical?: Numerical<T> }} options - The options for the matrix class
+  * @param {{ rows?: number, columns?: number, numerical?: Numerical<any> }} options - The options for the matrix class
   * @param {number} options.rows - The number of rows in the matrix.
   * @param {number} options.columns - The number of columns in the matrix.
-  * @param {Numerical<T>} options.numerical - The numerical operations for the matrix.
+  * @param {Numerical<any>} options.numerical - The Numerical class that controls the operations for the matrix.
+  * @remark - A Numerical class argument is not needed if the datatype is number or bigint
   *
-  
+  *
   * @example
   * // Create a new instance of Matrix with number type and 2 rows and 2 columns
-  *  const matrix = new Matrix<number>([[1, 2], [3, 4]]);
+  *  const matrix: Matrix<number> = new Matrix([[1, 2], [3, 4]]);
+  *
   *  // Create a new instance of Matrix with bigint type and 2 rows and 2 columns
-  *  const matrix2 = new Matrix<bigint>([BigInt(1), BigInt(2), BigInt(3), BigInt(4)], { rows: 2, columns: 2});
+  *  const matrix2: Matrix<bigint> = new Matrix([BigInt(1), BigInt(2), BigInt(3), BigInt(4)], { rows: 2, columns: 2});
+  *
   *  // Create a new instance of Matrix with a custom type and 2 rows and 2 columns
-  *  const matrix3 = new Matrix<ctype>([c1, c2], [c3, c4], { rows: 2, columns: 2, numerical: "The custom class that implements the Numerical interface goes here" });
+  *  const matrix3: Matrix<ctype> = new Matrix([c1, c2], [c3, c4], { rows: 2, columns: 2, numerical: "The custom class that implements the Numerical interface goes here" });
   *
   * @throws {MatrixError} If the entries are not an array, or if the entries are a 1D array but rows and columns are not defined or not numbers or are 0 or negative, or if the length of the 1D array does not equal rows * columns, or if the entries are a 2D array but not all rows have the same length, or if the matrix has a depth greater than one.
   * @throws {NumericalError} If the matrix datatype is neither a number nor a bigint and no appropriate Numeric implementation was provided.
@@ -302,15 +315,16 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     /**
      * Gets the value of an element in the matrix.
      * @public
-     * @param {number} row - The row index of the element starts from zero.
-     * @param {number} column - The column index of the element starts from zero.
+     * @param {number} row - The row index of the element zero indexed.
+     * @param {number} column - The column index of the element zero indexed.
      * @returns {T} The value of the element.
-     * @throws {MatrixError} - If index is out of bounds
      * 
      * @example
-     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const value = matrix.getElement(1, 2);
-     * console.log(value); // Output will be 6
+     * const matrix: Matrix<number> = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const value: number = matrix.getElement(1, 2);
+     * console.log(value);
+     * // Output: 6
+     * @throws {MatrixError} - If index is out of bounds
      */
     public getElement(row: number, column: number): T {
         if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid arugment", 606, { row, column })
@@ -327,33 +341,84 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      * @returns {T[]} An array of the diagonal elements.
      * 
      * @example
-     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const diag = matrix.diag();
-     * console.log(diag); // Output will be [1, 5, 9]
-     * 
-     * @example
-     * const matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const diag = matrix.diag(1);
-     * console.log(diag); // Output will be [2, 6]
+     * const matrix: Matrix<number> = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+     * const mainDiag: number[] = matrix.diag();
+     * const fistDiag: number[] = matrix.diag(1);
+     * console.log(mainDiag); 
+     * // Output: [1, 5, 9]
+     * console.log(fistDiag);
+     * // Output: [2,6]
      */
     public diag(k: number = 0): T[] {
         if (this.mElements.length === 0) return [];
         if (this.mElements.length === 1 || this.columns === 1 || this.rows === 1) return [this.mElements[0]];
-
         const diagEle: T[] = [];
-        const min: number = Math.min(this.columns, this.rows);
-        const maxK: number = Math.abs(k);
 
-        if (k >= 0) {
-            for (let i = 0; i < min - k; i++) {
-                diagEle.push(this.getElement(i, i + k));
-            }
 
-        } else {
-            for (let i = 0; i < min + k; i++) {
-                diagEle.push(this.getElement(i + maxK, i));
+        if (this.isSquare) {
+            if (Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.rows - 1}, min(k) =  ${1 - this.rows}`, -1)
+            const min: number = Math.min(this.columns, this.rows);
+            const maxK: number = Math.abs(k);
+
+            if (k >= 0) {
+                for (let i = 0; i < min - k; i++) {
+                    diagEle.push(this.getElement(i, i + k));
+                }
+
+            } else {
+                for (let i = 0; i < min + k; i++) {
+                    diagEle.push(this.getElement(i + maxK, i));
+                }
             }
         }
+        else if (this.isWide) {
+            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, -1)
+
+            const maxK: number = Math.abs(k);
+
+            if (k === 0) {
+
+                for (let i = 0; i < this.rows; i++) {
+                    diagEle.push(this.getElement(i, i + k));
+                }
+
+            } else if (k > 0) {
+                for (let i = 0; i < this.columns - k; i++) {
+                    diagEle.push(this.getElement(i, i + k));
+                }
+            } else {
+                for (let i = 0; i < this.rows + k; i++) {
+                    diagEle.push(this.getElement(i + maxK, i));
+                }
+            }
+        }
+
+        else if (this.isTall) {
+            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, -1)
+
+            const maxK: number = Math.abs(k);
+
+            if (k === 0) {
+
+                for (let i = 0; i < this.columns; i++) {
+                    diagEle.push(this.getElement(i, i + k));
+                }
+
+            } else if (k > 0) {
+                for (let i = 0; i < this.columns - k; i++) {
+                    diagEle.push(this.getElement(i, i + k));
+                }
+            } else {
+                for (let i = 0; i < this.rows + k; i++) {
+                    diagEle.push(this.getElement(i + maxK, i));
+                }
+            }
+        }
+
+
+
+
+
 
 
         return diagEle;
