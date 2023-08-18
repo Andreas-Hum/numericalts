@@ -1125,33 +1125,71 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         const rows: number = this.rows;
         const columns: number = this.columns;
         const matrixColumns: number = B.columns;
-        const multipliersA: T[] = _.cloneDeep(this.mElements);
-        const multipliersB: T[] = B.transpose().mElements;
 
-        const result: T[] = new Array<T>(rows * matrixColumns);
 
-        const unrollingFactor: number = Math.min(columns, 16);
 
-        for (let i = 0; i < rows; i++) {
-            const rowOffsetA: number = i * columns;
-            const rowOffsetResult: number = i * matrixColumns;
+        if (this.dataType === "number" || this.dataType === "bigint") {
+            const multipliersA: Float32Array = Float32Array.from(_.cloneDeep(this.mElements) as number[])
+            const multipliersB: Float32Array = Float32Array.from(B.transpose().mElements as number[]);
 
-            for (let j = 0; j < matrixColumns; j++) {
-                let sum: T = this.numerical.zeroValue;
-                const colOffsetB: number = j * unrollingFactor;
+            const result: Float32Array = new Float32Array(rows * matrixColumns);
 
-                for (let k = 0; k < columns; k += unrollingFactor) {
-                    const limit: number = Math.min(k + unrollingFactor, columns);
+            const unrollingFactor: number = Math.min(columns, 16);
 
-                    for (let u = k; u < limit; u++) {
-                        sum = this.numerical.add(sum, this.numerical.multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
+            for (let i = 0; i < rows; i++) {
+                const rowOffsetA: number = i * columns;
+                const rowOffsetResult: number = i * matrixColumns;
+
+                for (let j = 0; j < matrixColumns; j++) {
+                    let sum: number = 0;
+                    const colOffsetB: number = j * unrollingFactor;
+
+                    for (let k = 0; k < columns; k += unrollingFactor) {
+                        const limit: number = Math.min(k + unrollingFactor, columns);
+
+                        for (let u = k; u < limit; u++) {
+                            sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
+                        }
                     }
+                    result[rowOffsetResult + j] = sum;
                 }
-                result[rowOffsetResult + j] = sum;
             }
+            return new Matrix(Array.from(result), { rows, columns: matrixColumns, numerical: this.numerical });;
+
+        } else {
+            const add: (x: any, y: any) => any = this.numerical.add
+            const multiply: (x: any, y: any) => any = this.numerical.multiply
+
+            const multipliersA: T[] = _.cloneDeep(this.mElements);
+            const multipliersB: T[] = B.transpose().mElements;
+
+            const result: T[] = new Array<T>(rows * matrixColumns);
+
+            const unrollingFactor: number = Math.min(columns, 16);
+
+            for (let i = 0; i < rows; i++) {
+                const rowOffsetA: number = i * columns;
+                const rowOffsetResult: number = i * matrixColumns;
+
+                for (let j = 0; j < matrixColumns; j++) {
+                    let sum: T = this.numerical.zeroValue;
+                    const colOffsetB: number = j * unrollingFactor;
+
+                    for (let k = 0; k < columns; k += unrollingFactor) {
+                        const limit: number = Math.min(k + unrollingFactor, columns);
+
+                        for (let u = k; u < limit; u++) {
+                            sum = add(sum, multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
+                        }
+                    }
+                    result[rowOffsetResult + j] = sum;
+                }
+            }
+            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
+
+
         }
 
-        return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
     }
 
     /**
@@ -2679,7 +2717,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const row: T[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 10000));
+                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 10));
                 row.push(randomValue);
             }
             entries.push(row);
