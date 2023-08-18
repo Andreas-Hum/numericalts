@@ -133,8 +133,8 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         if (this.is1dArray(entries)) {
-            const rows: number | undefined = options.rows;
-            const columns: number | undefined = options.columns;
+            const rows: number | undefined = options!.rows;
+            const columns: number | undefined = options!.columns;
 
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
@@ -976,7 +976,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const secondDiag: T = this.numerical.multiply(this.mElements[1], this.mElements[2]);
             return this.numerical.toIntegral(this.numerical.subtract(firstDiag, secondDiag))
         }
-
+        let numb: number
 
 
         try {
@@ -984,18 +984,20 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             let { L, U, P, permutationCount } = this.LUDecomposition();
             const det: T = math.prod(U.diag(), this.numerical);
 
-            let numb: number = this.numerical.toIntegral(det);
+            numb = this.numerical.toIntegral(det);
             if (math.abs(numb) < Constants.DELTA) return 0
             // If permutationCount is odd, multiply det with -1
             if (permutationCount % 2) {
                 numb *= -1;
             }
 
-            return numb
         } catch (error: any) {
             if (error.message === "Matrix is singular. LU decomposition cannot be performed.") return 0;
         }
 
+
+        //@ts-ignore
+        return numb
 
 
     }
@@ -2643,7 +2645,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix<T>(new Array(rows).fill(numerical.zeroValue).map(() => new Array(columns).fill(numerical.oneValue)), { numerical })
+        return new Matrix<T>(new Array(rows).fill(numerical.zeroValue).map(() => new Array(columns).fill(numerical!.oneValue)), { numerical })
     }
 
 
@@ -2710,7 +2712,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             numerical = new NumericalNumber() as unknown as Numerical<T>;
         }
         if (rows <= 0 || columns <= 0 || typeof rows !== "number" || typeof columns !== "number") throw new MatrixError("Invalid argument", 606, { rows, columns });
-        return new Matrix<T>(new Array(rows).fill(numerical.zeroValue).map(() => new Array(columns).fill(numerical.zeroValue)), { numerical })
+        return new Matrix<T>(new Array(rows).fill(numerical.zeroValue).map(() => new Array(columns).fill(numerical!.zeroValue)), { numerical })
     }
 
 

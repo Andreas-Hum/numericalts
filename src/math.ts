@@ -253,13 +253,13 @@ export namespace math {
                 throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
             }
         }
-        let squaredValues: T[] = vector.map((value: T) => numerical.multiply(value, value));
-        let sumOfSquares: T = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
+        let squaredValues: T[] = vector.map((value: T) => numerical!.multiply(value, value));
+        let sumOfSquares: T = squaredValues.reduce((acc: T, value: T) => numerical!.add(acc, value), numerical.zeroValue);
         if (sumOfSquares === numerical.zeroValue) {
             throw new Error("Can't normalize a zero vector")
         }
         let scalar: T = numerical.divide(numerical.oneValue, numerical.sqrt(sumOfSquares));
-        return vector.map((entry: T) => numerical.multiply(entry, scalar));
+        return vector.map((entry: T) => numerical!.multiply(entry, scalar));
     }
 
     /**
@@ -388,7 +388,7 @@ export namespace math {
         }
 
         if (array.length === 1) return array[0]
-        return array.reduce((acc: T, cur: T) => numerical.multiply(acc, cur), numerical.oneValue);
+        return array.reduce((acc: T, cur: T) => numerical!.multiply(acc, cur), numerical.oneValue);
     }
 
 
@@ -524,7 +524,7 @@ export namespace math {
         }
 
         if (array.length === 1) return array[0]
-        return array.reduce((acc: T, cur: T) => numerical.add(acc, cur), numerical.zeroValue);
+        return array.reduce((acc: T, cur: T) => numerical!.add(acc, cur), numerical.zeroValue);
 
     }
 
