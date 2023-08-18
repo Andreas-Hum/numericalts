@@ -1251,7 +1251,6 @@ describe("Matrix", () => {
                 const hehe = new Matrix<string>([["4/1", "2/1", "1/1"], ["5/1", "2/1", "1/1"], ["4/1", "5/1", "5/1"]], { numerical: fractionalRep })
                 const { Q, R } = hehe.QRDecomposition()
 
-
             });
 
 

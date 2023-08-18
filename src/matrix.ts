@@ -1129,10 +1129,10 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
 
         if (this.dataType === "number" || this.dataType === "bigint") {
-            const multipliersA: Float32Array = Float32Array.from(_.cloneDeep(this.mElements) as number[])
-            const multipliersB: Float32Array = Float32Array.from(B.transpose().mElements as number[]);
+            const multipliersA: number[] | bigint[] = _.cloneDeep(this.mElements) as number[] | bigint[]
+            const multipliersB: number[] | bigint[] = B.transpose().mElements as number[] | bigint[];
 
-            const result: Float32Array = new Float32Array(rows * matrixColumns);
+            const result: number[] | bigint[] = new Array(rows * matrixColumns);
 
             const unrollingFactor: number = Math.min(columns, 16);
 
@@ -1148,17 +1148,17 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                         const limit: number = Math.min(k + unrollingFactor, columns);
 
                         for (let u = k; u < limit; u++) {
+                            //@ts-ignore
                             sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
                         }
                     }
                     result[rowOffsetResult + j] = sum;
                 }
             }
-            return new Matrix(Array.from(result), { rows, columns: matrixColumns, numerical: this.numerical });;
+            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
 
         } else {
-            const add: (x: any, y: any) => any = this.numerical.add
-            const multiply: (x: any, y: any) => any = this.numerical.multiply
+
 
             const multipliersA: T[] = _.cloneDeep(this.mElements);
             const multipliersB: T[] = B.transpose().mElements;
@@ -1179,7 +1179,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                         const limit: number = Math.min(k + unrollingFactor, columns);
 
                         for (let u = k; u < limit; u++) {
-                            sum = add(sum, multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
+                            sum = this.numerical.add(sum, this.numerical.multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
                         }
                     }
                     result[rowOffsetResult + j] = sum;

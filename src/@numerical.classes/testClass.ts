@@ -54,7 +54,7 @@ export class FractionalNumberClass implements Numerical<string> {
         const [xNum, xDenom] = x.split('/').map(Number);
         const [yNum, yDenom] = y.split('/').map(Number);
 
-        
+
         // Check for division by zero
         if (yNum === 0) {
             throw new Error("Division by zero is not allowed.");
@@ -116,7 +116,7 @@ export class FractionalNumberClass implements Numerical<string> {
         return 1; // value > 0
     }
 
-    private gcd(a: number, b: number): number {
+    gcd(a: number, b: number): number {
         return math.GCD(a, b)
     }
 }
