@@ -57,7 +57,7 @@ const D: Matrix<number> = A.pow(2);
 console.log(D.toArray()); // [[7, 10], [15, 22]]
 
 // Matrix multiplication using Strassen's algorithm
-const E = A.strassenMultiply(B);
+const E: Matrix<number> = A.strassenMultiply(B);
 console.log(E.toArray()); // [[19, 22], [43, 50]]
 
 // QR decomposition
@@ -89,8 +89,6 @@ public fromIntegral(n: number): Complex {/*Logic here*/}
 public toIntegral(x: Complex): number {/*Logic here*/}
 public toString(x:Complex):string {/*Logic here*/}
 public signOperator(x: Complex): number {/*Logic here*/}
-
-
 }
 
 

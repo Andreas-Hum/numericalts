@@ -1,8 +1,12 @@
-import { Numerical } from './@interfaces/numerical';
-import { math } from "./math"
+import { math } from "../math"
 
+
+//? work in progress
 
 export class Fraction {
+
+
+
     numerator: number;
     denominator: number;
 
@@ -17,7 +21,7 @@ export class Fraction {
             this.denominator = parseFloat(split[1])
 
             if (Number.isNaN(this.numerator) || Number.isNaN(this.denominator)) throw new Error("Invalid arguments");
-
+            if (this.denominator === 0) throw new Error("Denominator cant be 0")
         } else if (typeof a === 'number' && typeof b === 'number') {
             this.numerator = a;
             this.denominator = b;
@@ -36,7 +40,7 @@ export class Fraction {
      * const fraction = Fraction.fromIntegral(1.75);
      * console.log(fraction.numerator, fraction.denominator); // Output: 7 4
      */
-    public fromIntegral(numberValue: number): Fraction {
+    static fromIntegral(numberValue: number): Fraction {
         let numerator: number;
         let denominator: number;
 
@@ -69,8 +73,8 @@ export class Fraction {
      * const integral = fraction.toIntergral();
      * console.log(integral); // Output: 2.5
      */
-    public toIntergral(): number {
-        return this.numerator / this.denominator;
+    static toIntergral(fraction: Fraction): number {
+        return fraction.numerator / fraction.denominator;
     }
 
 

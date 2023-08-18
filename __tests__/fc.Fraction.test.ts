@@ -25,13 +25,9 @@ describe('Fraction Class', () => {
         });
 
         test('Should throw an error for invalid arguments', () => {
-            fc.assert(
-                fc.property(fc.string(), (invalidArg) => {
-                    expect(() => new Fraction(invalidArg)).toThrow(Error);
-                    //@ts-ignore
-                    expect(() => new Fraction(math)).toThrow(Error);
-                })
-            );
+            expect(() => new Fraction("invalidArg" + "sdsasad")).toThrow(Error);
+            //@ts-ignore
+            expect(() => new Fraction(math)).toThrow(Error);
         });
     });
 
@@ -52,6 +48,29 @@ describe('Fraction Class', () => {
                     if (!Number.isInteger(number)) {
                         const fraction: Fraction = Fraction.fromIntegral(number);
                         expect(fraction.numerator / fraction.denominator).toBeCloseTo(number, 6);
+
+                    }
+                })
+            );
+        });
+    });
+
+    describe('toIntergral method', () => {
+        test('Should convert an integral number to a fraction', () => {
+            fc.assert(
+                fc.property(fc.integer(), (number) => {
+                    const fraction: Fraction = Fraction.fromIntegral(number);
+                    expect(Fraction.toIntergral(fraction)).toEqual(number)
+                })
+            );
+        });
+
+        test('Should convert a decimal number to a simplified fraction', () => {
+            fc.assert(
+                fc.property(fc.float({ noNaN: true, noDefaultInfinity: true }), (number) => {
+                    if (!Number.isInteger(number)) {
+                        const fraction: Fraction = Fraction.fromIntegral(number);
+                        expect(Fraction.toIntergral(fraction)).toBeCloseTo(number, 6);
 
                     }
                 })

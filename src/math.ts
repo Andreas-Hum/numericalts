@@ -1,14 +1,11 @@
+import { ComplexNumber, } from './complex';
 import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
 
-import { NumericalNumber, NumericalBigInt } from "../src/@numerical.classes";
-
+import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "../src/@numerical.classes";
 
 export namespace math {
-
-
-
 
 
     /**
@@ -111,6 +108,88 @@ export namespace math {
 
 
     /**
+     * Returns the maximum value from an array of numbers.
+     *
+     * @param {number[]} arr - The array of numbers.
+     * @returns {number} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0.
+     *
+     * @example
+     * const numbers = [1, 3, 2, 5, 4];
+     * const maxNumber = max(numbers);
+     * console.log(maxNumber);
+     * // Output: 5
+     */
+    export function max(arr: number[]): number;
+
+    /**
+     * Returns the maximum value from an array of bigints.
+     *
+     * @param {bigint[]} arr - The array of bigints.
+     * @returns {bigint} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0.
+     *
+     * @example
+     * const bigints = [BigInt(1), BigInt(3), BigInt(2), BigInt(5), BigInt(4)];
+     * const maxBigInt = max(bigints);
+     * console.log(maxBigInt);
+     * // Output: 5n
+     */
+    export function max(arr: bigint[]): bigint;
+
+    /**
+     * Returns the maximum value from an array using a custom numerical implementation.
+     *
+     * @template T - The type of the elements in the array.
+     * @param {T[]} arr - The array of elements.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The maximum value from the array.
+     *
+     * @throws {Error} Throws an error if the array length is 0 or if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const array = [1, 3, 2, 5, 4];
+     * const maxElement = max(array, new NumericalNumber());
+     * console.log(maxElement);
+     * // Output: 5
+     */
+    export function max<T>(arr: T[], numerical?: Numerical<T>): T
+
+    export function max<T>(arr: T[], numerical?: Numerical<T>): T {
+        if (arr.length === 0) {
+            throw new Error("array length can't be 0.")
+        }
+        if (!numerical) {
+            if (typeof arr[0] === "number") {
+
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+                return Math.max(...arr as number[]) as T
+            } else if (typeof arr[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+                let max: bigint = arr[0]
+                for (let i = 1; i < arr.length; i++) {
+                    if (max < (arr[i] as bigint)) {
+                        (max as bigint) = (arr[i] as bigint)
+                    }
+                }
+                return max as T
+            } else {
+                throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
+            }
+        }
+
+        let max: T = arr[0]
+        for (let i = 1; i < arr.length; i++) {
+            if (numerical.toIntegral(max) < numerical.toIntegral(arr[i])) {
+                max = arr[i]
+            }
+        }
+        return max;
+    }
+
+    /**
     * Normalizes a vector of numbers.
     *
     * @param {number[]} vector - The vector of numbers to be normalized.
@@ -174,8 +253,8 @@ export namespace math {
                 throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
             }
         }
-        let squaredValues = vector.map((value: T) => numerical.multiply(value, value));
-        let sumOfSquares = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
+        let squaredValues: T[] = vector.map((value: T) => numerical.multiply(value, value));
+        let sumOfSquares: T = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
         if (sumOfSquares === numerical.zeroValue) {
             throw new Error("Can't normalize a zero vector")
         }
@@ -183,17 +262,79 @@ export namespace math {
         return vector.map((entry: T) => numerical.multiply(entry, scalar));
     }
 
+    /**
+     * Calculates the nth root of a number.
+     *
+     * @param {number} base - The base number.
+     * @param {number} root - The root to calculate.
+     * @returns {number} The result of calculating the nth root.
+     *
+     * @example
+     * const result = nthRoot(27, 3);
+     * console.log(result);
+     * // Output: 3
+     */
+    export function nthRoot(base: number, root: number): number;
+
+    /**
+     * Calculates the nth root of a bigint.
+     *
+     * @param {bigint} base - The base bigint.
+     * @param {number} root - The root to calculate.
+     * @returns {bigint} The result of calculating the nth root.
+     *
+     * @example
+     * const result = nthRoot(BigInt(27), 3);
+     * console.log(result);
+     * // Output: 3n
+     */
+    export function nthRoot(base: bigint, root: number): bigint;
+
+    /**
+     * Calculates the nth root of a value using a custom numerical implementation.
+     *
+     * @template T - The type of the base value.
+     * @param {T} base - The base value.
+     * @param {number} root - The root to calculate.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The result of calculating the nth root.
+     *
+     * @throws {NumericalError} Throws an error if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const result = nthRoot(27, 3, new NumericalNumber());
+     * console.log(result);
+     * // Output: 3
+     */
+    export function nthRoot<T>(base: T, root: number, numerical?: Numerical<T>): T {
+        if (!numerical) {
+            if (typeof base === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof base === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError(
+                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
+                    901
+                );
+            }
+        }
+
+        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), 1 / root))
+    }
+
+
 
 
     /**
-  * Computes the product of a number array.
-  *
-  * @param {number[]} array - The array of numbers.
-  * @returns {number} The product of all numbers in the array.
-  *
-  * @example
-  *    prod([3, 4]);  // Returns 12
-  */
+     * Computes the product of a number array.
+     *
+     * @param {number[]} array - The array of numbers.
+     * @returns {number} The product of all numbers in the array.
+     *
+     * @example
+     *    prod([3, 4]);  // Returns 12
+     */
     export function prod(array: number[]): number;
 
     /**
@@ -250,6 +391,142 @@ export namespace math {
         return array.reduce((acc: T, cur: T) => numerical.multiply(acc, cur), numerical.oneValue);
     }
 
+
+    /**
+     * Calculates the power of a number to the specified exponent.
+     *
+     * @param {number} base - The base number.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @returns {number} The result of raising the base to the exponent.
+     *
+     * @example
+     * const result = pow(2, 3);
+     * console.log(result);
+     * // Output: 8
+     */
+    export function pow(base: number, exponent: number): number;
+
+    /**
+     * Calculates the power of a bigint to the specified exponent.
+     *
+     * @param {bigint} base - The base bigint.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @returns {bigint} The result of raising the base to the exponent.
+     *
+     * @example
+     * const result = pow(BigInt(2), 3);
+     * console.log(result);
+     * // Output: 8n
+     */
+    export function pow(base: bigint, exponent: number): bigint;
+
+    /**
+     * Calculates the power of a value to the specified exponent using a custom numerical implementation.
+     *
+     * @template T - The type of the base value.
+     * @param {T} base - The base value.
+     * @param {number} exponent - The exponent to raise the base to.
+     * @param {Numerical<T>} [numerical] - The numerical implementation to use.
+     * @returns {T} The result of raising the base to the exponent.
+     *
+     * @throws {NumericalError} Throws an error if no appropriate numerical implementation is provided.
+     *
+     * @example
+     * const result = pow(2, 3, new NumericalNumber());
+     * console.log(result);
+     * // Output: 8
+     */
+    export function pow<T>(base: T, exponent: number, numerical?: Numerical<T>): T
+
+    export function pow<T>(base: T, exponent: number, numerical?: Numerical<T>): T {
+        if (!numerical) {
+            if (typeof base === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof base === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError(
+                    "The base is neither a number nor a bigint array and no appropriate Numeric implementation was provided.",
+                    901
+                );
+            }
+        }
+
+        return numerical.fromIntegral(Math.pow(numerical.toIntegral(base), exponent))
+    }
+
+
+
+
+
+    /**
+     * Computes the sum of a number array.
+     *
+     * @param {number[]} array - The array of numbers.
+     * @returns {number} The sum of all numbers in the array.
+     *
+     * @throws {Error} If the array length is 0.
+     *
+     * @example
+     * sum([1, 2, 3]);  // Returns 6
+     */
+    export function sum(array: number[]): number;
+
+    /**
+     * Computes the sum of a bigint array.
+     *
+     * @param {bigint[]} array - The array of bigints.
+     * @returns {bigint} The sum of all bigints in the array.
+     *
+     * @throws {Error} If the array length is 0.
+     *
+     * @example
+     * sum([1n, 2n, 3n]);  // Returns 6n
+     */
+    export function sum(array: bigint[]): bigint;
+
+    /**
+     * Computes the sum of an array of type T using the provided numerical implementation.
+     *
+     * @template T - The type of elements in the array.
+     *
+     * @param {T[]} array - The array of elements.
+     * @param {Numerical<T>} [numerical] - (Optional) An instance of the Numerical interface for type T.
+     *                                    If not provided, a default numerical implementation will be used based on the type of the array elements.
+     *                                    If the array is neither number[] nor bigint[], a numerical instance must be provided.
+     *
+     * @throws {Error} If the array length is 0.
+     * @throws {NumericalError} If the array type is not number[] or bigint[] and no numerical implementation is provided.
+     *
+     * @returns {T} The sum of all elements in the array.
+     *
+     * @example
+     * sum([1, 2, 3]);                            // Returns 6
+     * sum([1n, 2n, 3n]);                          // Returns 6n
+     * sum([1, 2, 3], new NumericalNumber());      // Returns 6 using NumericalNumber implementation
+     * sum([1n, 2n, 3n], new NumericalBigInt());   // Returns 6n using NumericalBigInt implementation
+     */
+    export function sum<T>(array: T[], numerical?: Numerical<T>): T
+
+    export function sum<T>(array: T[], numerical?: Numerical<T>): T {
+        if (array.length === 0) {
+            throw new Error("array length can't be 0.")
+        }
+
+        if (!numerical) {
+            if (typeof array[0] === "number") {
+                numerical = new NumericalNumber() as unknown as Numerical<T>;
+            } else if (typeof array[0] === "bigint") {
+                numerical = new NumericalBigInt() as unknown as Numerical<T>;
+            } else {
+                throw new NumericalError("The array is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
+            }
+        }
+
+        if (array.length === 1) return array[0]
+        return array.reduce((acc: T, cur: T) => numerical.add(acc, cur), numerical.zeroValue);
+
+    }
 
 
 
@@ -433,7 +710,7 @@ export namespace math {
      *    toFixedNumber(2.71828, 3, 2); // Returns 2.75
      */
     export function toFixedNumber(num: number, digits: number, base: number = 10): number {
-        const pow = Math.pow(base, digits);
+        const pow: number = Math.pow(base, digits);
         return Math.round(num * pow) / pow;
     }
 
@@ -546,6 +823,8 @@ export namespace math {
         return (n & (n - 1)) === 0;
     }
 
+
+
     /**
      * Method used to find the next power of two for a given number.
      * @public
@@ -583,7 +862,7 @@ export namespace math {
      *    nextPowerOfTwo(15n);   // Returns 16n
      */
     export function nextPowerOfTwo(n: number | bigint): number | bigint {
-        let count = 0;
+        let count: number = 0;
 
         if (typeof n === 'bigint') {
             if (n > 0n && (n & (n - 1n)) === 0n) {
@@ -671,6 +950,109 @@ export namespace math {
             return -1;
         }
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * Signal processing
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Calculates the Discrete Fourier Transform (DFT) of a sequence.
+     * @remark This is only defined for sequences of numbers at the moment 
+     * @param {number[]} sequence - The input sequence for which to calculate the DFT.
+     * @returns {ComplexNumber[]} An array of complex numbers representing the DFT coefficients.
+     *
+     * @example
+     * const sequence = [1, 2, 3, 2, 1];
+     * const result = dft(sequence);
+     * console.log(result);
+     * // Output:
+     *  [
+     *      { real: 9, imaginary: 0 },
+     *      { real: -2.118033988749895, imaginary: -1.538841768587627 },
+     *      { real: 0.11803398874989479, imaginary: 0.36327126400268017 },
+     *      { real: 0.11803398874989524, imaginary: -0.3632712640026805 },
+     *      { real: -2.118033988749895, imaginary: 1.5388417685876252 }
+     *   ]
+     */
+    export function dft(sequence: number[]): ComplexNumber[] {
+        const N: number = sequence.length;
+        const dftResult: ComplexNumber[] = [];
+
+        for (let k = 0; k < N; k++) {
+            let real: number = 0;
+            let imaginary: number = 0;
+
+            for (let n = 0; n < N; n++) {
+                const angle: number = (2 * Math.PI * k * n) / N;
+                const cos: number = Math.cos(angle);
+                const sin: number = Math.sin(angle);
+
+                real += sequence[n] * cos;
+                imaginary -= sequence[n] * sin;
+            }
+
+            dftResult.push({ real, imaginary });
+        }
+
+        return dftResult;
+    }
+
+    /**
+     * Calculates the Fast Fourier Transform (FFT) of a sequence.
+     * @remark This is only defined for sequences of numbers at the moment it is a basic implementation and i plan on improving it in the future
+     * @param {number[]} sequence - The input sequence for which to calculate the FFT.
+     * @returns {ComplexNumber[]} An array of complex numbers representing the FFT coefficients.
+     *
+     * @example
+     * const sequence = [1, 2, 3, 2];
+     * const result = fft(sequence);
+     * console.log(result);
+     * // Output:
+     *   [
+     *      { real: 8, imaginary: 0 },
+     *      { real: -1.2246467991473532e-16, imaginary: 2 },
+     *      { real: 0, imaginary: 0 },
+     *      { real: -1.2246467991473532e-16, imaginary: 2 }
+     *   ]
+     */
+    export function fft(sequence: number[]): ComplexNumber[] {
+        const numerical: ComplexNumerical = new ComplexNumerical()
+        const N = sequence.length;
+
+        // Base case: if the sequence has only one element, return it as the FFT coefficient
+        if (N === 1) {
+            return [{ real: sequence[0], imaginary: 0 }];
+        }
+
+        if (!isPowerOfTwo(N)) {
+            throw new Error('Size of input must be a power of 2')
+        }
+        // Split the sequence into even and odd indices
+        const even: number[] = sequence.filter((_, index) => index % 2 === 0);
+        const odd: number[] = sequence.filter((_, index) => index % 2 !== 0);
+
+        // Recursively calculate the FFT for the even and odd sequences
+        const evenCoefficients: ComplexNumber[] = fft(even);
+        const oddCoefficients: ComplexNumber[] = fft(odd);
+
+        // Combine the even and odd coefficients using the butterfly operation
+        const fftResult: ComplexNumber[] = [];
+        for (let k = 0; k < N / 2; k++) {
+            const angle: number = (2 * Math.PI * k) / N;
+            const twiddle: ComplexNumber = { real: Math.cos(angle), imaginary: -Math.sin(angle) };
+
+            const evenTerm: ComplexNumber = numerical.multiply(evenCoefficients[k], twiddle);
+            const oddTerm: ComplexNumber = numerical.multiply(oddCoefficients[k], twiddle);
+
+            fftResult[k] = numerical.add(evenTerm, oddTerm)
+            fftResult[k + N / 2] = numerical.subtract(evenTerm, oddTerm)
+
+        }
+
+        return fftResult;
+    }
+
 
 
 

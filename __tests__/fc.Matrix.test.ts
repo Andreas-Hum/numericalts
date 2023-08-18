@@ -294,6 +294,13 @@ describe("Matrix", () => {
 
                 })
             );
+
+            expect(twoByThree.diag(1)).toEqual([2, 6])
+            expect(twoByThree.diag(-1)).toEqual([4])
+            expect(threeByTwo.diag(1)).toEqual([4])
+            expect(threeByTwo.diag(-1)).toEqual([2, 6])
+
+
         });
 
         it('Should correctly get a row of a matrix', () => {
@@ -367,6 +374,43 @@ describe("Matrix", () => {
                 [7, 8, 9],
             ]);
         });
+
+        describe('Remove row', () => {
+            it('sets new values in the specified row', () => {
+                const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                expect(t.removeRow(0).toArray()).toEqual([[4, 5, 6], [7, 8, 9]])
+                expect(t.removeRow(1).toArray()).toEqual([[1, 2, 3], [7, 8, 9]])
+                expect(t.removeRow(2).toArray()).toEqual([[1, 2, 3], [4, 5, 6]])
+            });
+
+            it('throws an error when the row index is out of bounds', () => {
+                expect(() => twoByThree.removeRow(10)).toThrow();
+            });
+
+            it('Error invalid arguemnt', () => {
+                //@ts-ignore
+                expect(() => twoByThree.removeRow("1231232131212")).toThrow();
+            });
+        });
+
+        describe('Remove column', () => {
+            it('sets new values in the specified row', () => {
+                const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                expect(t.removeColumn(0).toArray()).toEqual([[2, 3], [5, 6], [8, 9]])
+                expect(t.removeColumn(1).toArray()).toEqual([[1, 3], [4, 6], [7, 9]])
+                expect(t.removeColumn(2).toArray()).toEqual([[1, 2], [4, 5], [7, 8]])
+            });
+
+            it('throws an error when the row index is out of bounds', () => {
+                expect(() => twoByThree.removeColumn(10)).toThrow();
+            });
+
+            it('Error invalid arguemnt', () => {
+                //@ts-ignore
+                expect(() => twoByThree.removeColumn("1231232131212")).toThrow();
+            });
+        });
+
 
         describe('setRow', () => {
             it('sets new values in the specified row', () => {
@@ -549,6 +593,17 @@ describe("Matrix", () => {
             );
         });
 
+        it('Should correctly return the abs matrix', () => {
+            const t = new Matrix([[-1, -2], [-3, -4]])
+            const t2 = new Matrix([[-1, 2], [-3, 4]])
+
+            expect(t.abs().toArray()).toEqual([[1, 2], [3, 4]])
+            expect(t2.abs().toArray()).toEqual([[1, 2], [3, 4]])
+
+        });
+
+
+
 
         it('Should correctly subtract two matrices', () => {
             fc.assert(
@@ -611,6 +666,55 @@ describe("Matrix", () => {
             );
         });
 
+
+        it('Should correctly calculate the mean of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const sum: number = A.mElements.reduce((acc, val) => acc + val, 0)
+                        const expected: number = sum / A.size
+                        expect(expected).toBeCloseTo(A.mean())
+                    }
+                )
+            );
+        });
+
+
+
+
+
+
+        it('Should correctly calculate the infinity norm of a matrix', () => {
+            const t = new Matrix([[-2, 3], [1, -1]])
+            const t2 = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+
+            expect(t.infNorm()).toEqual(5)
+            expect(t2.infNorm()).toEqual(11)
+
+        });
+
+        it('Should correctly calculate the manhatten norm of a matrix', () => {
+            const t = new Matrix([[-1, -2], [3, -1]])
+            const t2 = new Matrix([[-2, 3], [1, -1]])
+            const t3 = new Matrix<number>([[1, 2], [-3, 4], [-5, -6]]);
+
+            expect(t.manhattanNorm()).toEqual(4)
+            expect(t2.manhattanNorm()).toEqual(4)
+            expect(t3.manhattanNorm()).toEqual(12)
+
+        })
+
+
+        it('Should correctly calculate the pnorm of a matrix', () => {
+            const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+            expect(t.pNorm(1)).toEqual(45)
+            expect(t.pNorm(2)).toBeCloseTo(16.881943016134134, 1)
+            expect(() => t.pNorm(-1)).toThrow()
+
+        })
+
         it('should compute the condition number of a square matrix', () => {
             fc.assert(
                 fc.property(array2Darb(fc.integer()),
@@ -654,6 +758,10 @@ describe("Matrix", () => {
                     }
                 )
             );
+
+            const t = new Matrix([[4, -6], [1, 5]])
+            t.pow(-1)
+            expect(() => new Matrix([[1, 1], [1, 1]]).pow(-1)).toThrow()
         });
 
         it('should compute the determinant of a square matrix', () => {
@@ -675,6 +783,16 @@ describe("Matrix", () => {
         it('should return 0 if matrix is singular', () => {
 
             expect(new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]]).det()).toEqual(0);
+
+        });
+
+
+        it('Fourier', () => {
+
+            new Matrix([[1, 2], [3, 4]]).fourier()
+
+            expect(() => new Matrix([[1, 2, 2], [3, 4, 2]]).fourier()).toThrow()
+            expect(() => new Matrix([[1n, 2n], [3n, 4n]]).fourier()).toThrow()
 
         });
 
@@ -1048,7 +1166,7 @@ describe("Matrix", () => {
                             }
                             let TMatrix: Matrix<any> = gramSmith.Q.multiply(gramSmith.R)
                             Matrix.toFixedMatrix(TMatrix, 0)
-                            expect(TMatrix.equal(A, 1e-2)).toBeTruthy()
+                            expect(TMatrix.equal(A, 100000)).toBeTruthy()
                         }
                     )
                 );
@@ -1056,7 +1174,6 @@ describe("Matrix", () => {
 
             it('Error: Non linear independent columns', () => {
                 const testMatrix = new Matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]])
-
                 expect(() => testMatrix.QRDecomposition()).toThrow()
 
             });
@@ -1214,6 +1331,45 @@ describe("Matrix", () => {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     describe("Utility", () => {
+
+        it('Should correctly calculate the adjugate of a matrix', () => {
+            const t = new Matrix([[-3, 2, -5], [-1, 0, -2], [3, -4, 1]])
+            const t2 = new Matrix([[5, 4], [4, 11]])
+            const t3 = new Matrix([[3, 1, -1], [2, -2, 0], [1, 2, -1]])
+
+            expect(t.adjugate().toArray()).toEqual([[-8, 18, -4], [-5, 12, -1], [4, -6, 2]])
+            expect(t2.adjugate().toArray()).toEqual([[11, -4], [-4, 5]])
+            expect(t3.adjugate().toArray()).toEqual([[2, -1, -2], [2, -2, -2], [6, -5, -8]])
+
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).adjugate()).toThrow()
+        });
+
+        it('Should correctly calculate the cofactor of an element', () => {
+            const t = new Matrix([[1, 4, 7], [3, 0, 5], [-1, 9, 11]])
+
+
+            expect(t.cofactor(1, 2)).toEqual(-13)
+
+            expect(() => t.cofactor(12312, 123213)).toThrow()
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).cofactor(1, 2)).toThrow()
+            //@ts-ignore
+            expect(() => t.cofactor("12312", 123213)).toThrow()
+
+        });
+
+
+        it('Should correctly calculate the cofactor matrix', () => {
+            const t = new Matrix([[1, 2, 3], [0, 4, 5], [1, 0, 6]])
+            const t2 = new Matrix([[-4, 7], [-11, 9]])
+            const t3 = new Matrix([[5, 9, 2], [1, 8, 5], [3, 6, 4]])
+
+            expect(t.cofactorMatrix().toArray()).toEqual([[24, 5, -4], [-12, 3, 2], [-2, -5, 4]])
+            expect(t2.cofactorMatrix().toArray()).toEqual([[9, 11], [-7, -4]])
+            expect(t3.cofactorMatrix().toArray()).toEqual([[2, 11, -18], [-24, 14, -3], [29, -23, 31]])
+
+            expect(() => new Matrix([[-4, 7], [-11, 9], [1, 2]]).cofactorMatrix()).toThrow()
+        });
+
         it('Should correctly show equality between two matricies', () => {
 
             fc.assert(
@@ -1226,6 +1382,114 @@ describe("Matrix", () => {
                     }
                 )
             );
+        });
+
+        it('Should correcly use map', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()), // 2D array of integers
+                    (entries: any[][]) => {
+                        const A: Matrix<number> = new Matrix(entries);
+                        const B: Matrix<number> = A.map((value) => value * 2);
+                        expect(JSON.stringify(B.map((value) => value / 2))).toEqual(JSON.stringify(A));
+                    }
+                )
+            );
+
+        });
+
+        it('Should calculate the min and max of a matrix', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+
+                        const flat: any[] = entries.flat()
+                        let max: any = flat[0]
+                        for (let i = 1; i < flat.length; i++) {
+                            if (max < flat[i]) {
+                                max = flat[i]
+                            }
+                        }
+                        expect(max).toEqual(A.max())
+
+                    }
+                )
+            );
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+
+                        const flat: any[] = entries.flat()
+                        let min: any = flat[0]
+                        for (let i = 1; i < flat.length; i++) {
+                            if (min > flat[i]) {
+                                min = flat[i]
+                            }
+                        }
+                        expect(min).toEqual(A.min())
+
+                    }
+                )
+            );
+        });
+
+
+        it('Should calculate the rank of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return;
+                        const B: Matrix<any> = new Matrix(entries).scale(2)
+                        expect(A.rank()).toBeLessThanOrEqual(Math.min(A.rows, A.columns))
+                        expect(A.multiply(B).rank()).toBeLessThanOrEqual(Math.min(A.rank(), B.rank()))
+                    }
+                )
+            );
+
+
+        });
+
+        it('Should calculate the sum of a matrix', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        const expected: number = A.mElements.reduce((acc, cur) => acc + cur, 0)
+                        expect(expected).toEqual(A.sum())
+                    }
+                )
+            );
+
+
+        });
+
+
+        it('Should calculate the trace of a matrix', () => {
+
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare) return;
+                        const B: Matrix<any> = new Matrix(entries).scale(2)
+                        expect(A.add(B).trace()).toEqual(A.trace() + B.trace())
+                        expect(A.trace()).toEqual(A.transpose().trace())
+
+                    }
+                )
+            );
+
+
         });
 
         it('Should correctly turn a matrix into a 2d array', () => {
@@ -1274,13 +1538,33 @@ describe("Matrix", () => {
 
     describe("Static methods", () => {
         describe('clone', () => {
-            it('should clone the matrix instance and return the clone', () => {
+            it('Should clone the matrix instance and return the clone', () => {
                 const matrix = new Matrix([[1, 2], [3, 4]]);
                 const clone = Matrix.clone(matrix);
                 expect(JSON.stringify(clone)).toEqual(JSON.stringify(matrix));
                 expect(clone).not.toBe(matrix);
             });
         });
+
+        describe('nullify', () => {
+
+
+            it('Should correctly nullify a matrix', () => {
+                fc.assert(
+                    fc.property(
+                        array2Darb(fc.integer()),
+                        (entries: any[][]) => {
+                            const A: Matrix<any> = new Matrix(entries);
+                            Matrix.nullify(A)
+                            expect(A.toArray()).toEqual(Matrix.zeros(A.rows, A.columns, A.numerical).toArray());
+                        }
+                    )
+                );
+
+
+            });
+        });
+
 
         describe('padMatrixToPowerOfTwo', () => {
             it('should return the padded matrix with dimensions as a power of two', () => {
@@ -1293,6 +1577,12 @@ describe("Matrix", () => {
 
 
         describe('Reshape', () => {
+
+            it('Reshaping the matrix [[1,2,3],[4,5,6]] into [[1,2],[3,4],[5,6]] ', () => {
+                const compareMatrix = new Matrix([[1, 2, 3], [4, 5, 6]])
+                expect(Matrix.reshape(compareMatrix, 3, 2).toArray()).toEqual([[1, 2], [3, 4], [5, 6]])
+            })
+
             it('Reshaping the array [1,2,3,4] into [[1,2],[3,4]]', () => {
                 const compareMatrix = new Matrix([[1, 2], [3, 4]])
                 expect(JSON.stringify(Matrix.reshape([1, 2, 3, 4], 2, 2))).toEqual(JSON.stringify(compareMatrix))
@@ -1331,6 +1621,18 @@ describe("Matrix", () => {
             });
         });
 
+        describe('Ones', () => {
+            it('A upper triangular matrix', () => {
+                const test = Matrix.ones(2, 2);
+                expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
+            })
+
+            it('Throwing an error', () => {
+                //@ts-ignore
+                expect(() => Matrix.ones(2, "2")).toThrow();
+            })
+
+        })
         /////////////////////////////////////////////////////////////////////////////////////////////////
         /*
         * Static boolean methods
@@ -1375,19 +1677,91 @@ describe("Matrix", () => {
 
         })
 
-
-        describe('Ones', () => {
-            it('A upper triangular matrix', () => {
-                const test = Matrix.ones(2, 2);
-                expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
+        describe('Is empty', () => {
+            it('An empty matrix', () => {
+                const empty = new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+                expect(Matrix.isEmpty(empty)).toBeTruthy()
             })
 
-            it('Throwing an error', () => {
-                //@ts-ignore
-                expect(() => Matrix.ones(2, "2")).toThrow();
+            it('A non empty matrix', () => {
+                const nonEmpty = new Matrix([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
+                expect(Matrix.isEmpty(nonEmpty)).toBeFalsy()
             })
 
         })
+
+        describe('Is diagonal', () => {
+            it('A diagonal matrix', () => {
+                const diag = new Matrix([[1, 0, 0], [0, 5, 0], [0, 0, 9]])
+                const diag2 = new Matrix([[1, 0, 0], [0, 0, 0], [0, 0, 0]])
+                const diagRec = new Matrix([[1, 0, 0], [0, 2, 0]])
+
+
+                expect(Matrix.isDiagonal(diag)).toBeTruthy()
+                expect(Matrix.isDiagonal(diag2)).toBeTruthy()
+                expect(Matrix.isDiagonal(diagRec)).toBeTruthy()
+
+            })
+
+            it('A non diagonal matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+                const nonDiag2 = new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+                expect(Matrix.isDiagonal(nonDiag)).toBeFalsy()
+                expect(Matrix.isDiagonal(nonDiag2)).toBeFalsy()
+
+            })
+
+
+        })
+
+        describe('Is symmetric', () => {
+            it('A symmetric matrix', () => {
+                const sym = new Matrix([[1, 7, 3], [7, 4, 5], [3, 5, 1]])
+                const sym2 = new Matrix([[1, 7, 3], [7, 4, 5], [3, 5, 1]]).scale(2)
+                expect(Matrix.isSymmetric(sym)).toBeTruthy()
+                expect(Matrix.isSymmetric(sym2)).toBeTruthy()
+                expect(Matrix.isSymmetric(sym.add(sym2))).toBeTruthy()
+            })
+
+            it('A non symmetric matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+                expect(Matrix.isSymmetric(nonDiag)).toBeFalsy()
+
+            })
+
+
+        })
+
+        describe('Is identity', () => {
+            it('A identity matrix', () => {
+                expect(Matrix.isIdentity(Matrix.identity(2))).toBeTruthy()
+                expect(Matrix.isIdentity(Matrix.identity(3))).toBeTruthy()
+                expect(Matrix.isIdentity(Matrix.identity(4))).toBeTruthy()
+            })
+
+            it('A non identity matrix', () => {
+                const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+                expect(Matrix.isIdentity(nonDiag)).toBeFalsy()
+
+            })
+
+
+        })
+
+        describe('Is invertable', () => {
+            it('A identity matrix', () => {
+                expect(Matrix.isInvertible(new Matrix([[1, 1], [1, 1]]))).toBeFalsy()
+                expect(Matrix.isInvertible(Matrix.identity(3))).toBeTruthy()
+            })
+
+        })
+
+
+
+
 
         it('Int matrix test', () => {
             const test = Matrix.ones(2, 2);

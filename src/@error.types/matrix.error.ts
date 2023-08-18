@@ -34,6 +34,10 @@ export class MatrixError extends Error {
         // 814: Unsolvabe system
         // 815: Back substitution error - matrix is not upper triangular
         // 816: Forward substitution error - matrix is not lower triangular
+        // 817: Non square matrix error, exept for det
+        // 818: Matrix not Power of two error
+        // 819: non invertible matrix
+        // 820: Singular matrix
 
         //
 

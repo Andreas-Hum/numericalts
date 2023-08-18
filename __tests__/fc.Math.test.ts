@@ -3,6 +3,7 @@ import { Numerical } from '../src/@interfaces/numerical';
 import { fc } from '@fast-check/jest';
 import { math } from '../src';
 import { FractionalNumberClass } from '../src/@numerical.classes';
+import { ComplexNumerical } from '../src/@numerical.classes';
 
 
 
@@ -59,8 +60,8 @@ describe('math', () => {
           expect(dotProductResult).toBe(expectedDotProduct);
         })
       )
-     
-      expect(() => fractionalRep.divide("1/1","0/1")).toThrow()
+
+      expect(() => fractionalRep.divide("1/1", "0/1")).toThrow()
     });
 
     it("Should correctly throw errors", () => {
@@ -74,11 +75,34 @@ describe('math', () => {
 
 
 
+  //TODO: real tests
+  describe('DFT', () => {
+    it('should correctly compute the DFT', () => {
+      math.dft([1, 2, 3])
+    });
+  });
+
+
+  describe('FFT', () => {
+    it('should correctly compute the FFT', () => {
+      math.fft([1, 2, 3, 4])
+      expect(() => math.fft([1, 2, 3])).toThrow()
+    });
+  });
+
+
   describe('prod', () => {
     it('Should calculate the product of a number array', () => {
-      expect(math.prod([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(3628800)
-      expect(math.prod([5, 6, 7, 8, 9, 10])).toEqual(151200)
-
+      fc.assert(
+        fc.property(
+          fc.array(fc.integer(), { minLength: 1 }),
+          (vector1: number[]) => {
+            const expected: number = vector1.reduce((acc, val) => acc * val, 1);
+            const actual: number = math.prod(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
 
     });
 
@@ -115,6 +139,133 @@ describe('math', () => {
 
   })
 
+
+
+  describe('pow', () => {
+    it('Should calculate the power of a number ', () => {
+      fc.assert(
+        fc.property(fc.integer(), (vector) => {
+          expect(vector * vector).toBeCloseTo(math.pow(vector, 2));
+        })
+      )
+
+    });
+
+    it('Should calculate the power of a bigint ', () => {
+      fc.assert(
+        fc.property(fc.bigInt({ min: -100000n, max: 1000000n }), (vector) => {
+          expect((math.pow(vector, 2) - vector * vector) < 1000n).toBeTruthy();
+        })
+      )
+
+    });
+
+    it("Should correctly throw errors", () => {
+      //@ts-ignore
+      expect(() => math.pow(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
+
+
+
+  describe('sum', () => {
+    it('Should calculate the sum of a number array', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.integer(), { minLength: 1 }),
+          (vector1: number[]) => {
+            const expected: number = vector1.reduce((acc, val) => acc + val, 0);
+            const actual: number = math.sum(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+
+    });
+
+    it('Should calculate the sum of a bigint array', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt(), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = vector1.reduce((acc, val) => acc + val, 0n);
+            const actual: bigint = math.sum(vector1);
+            expect(actual).toEqual(expected);
+          }
+        )
+      );
+    });
+
+    it("Should calculate the sum a fractionalStringArb array", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+          const expected: string = vector.reduce((acc, val) => fractionalRep.add(acc, val), fractionalRep.zeroValue);
+          const dotProductResult: string = math.sum(vector, fractionalRep);
+          expect(fractionalRep.toIntegral(dotProductResult)).toBeCloseTo(fractionalRep.toIntegral(expected));
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.sum([])).toThrow("array length can't be 0.");
+      //@ts-ignore
+      expect(() => math.sum(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
+
+  describe('Max', () => {
+    it('should calculate the max element correctly for a integer array', () => {
+      expect(math.max([2, 4, 1, 2, 4, 5])).toEqual(5)
+    });
+
+
+    it('Should calculate the max element correctly for a bigint array ', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+          (vector1: bigint[]) => {
+            const expected: bigint = math.max(vector1)
+            let max: bigint = vector1[0]
+            for (let i = 1; i < vector1.length; i++) {
+              if (max < vector1[i]) {
+                max = vector1[i]
+              }
+            }
+            expect(expected).toEqual(max)
+
+          }
+        )
+      );
+    });
+
+    it("should calculate the max element in stringClass", () => {
+      fc.assert(
+        fc.property(fc.array(fractionalStringArb, { minLength: 1 }), (vector) => {
+
+          const expected: string = math.max(vector, fractionalRep);
+          let max: string = vector[0]
+          for (let i = 1; i < vector.length; i++) {
+            if (fractionalRep.toIntegral(max) < fractionalRep.toIntegral(vector[i])) {
+              max = vector[i]
+            }
+          }
+          expect(max).toEqual(expected);
+
+        })
+      )
+    });
+
+    it("Should correctly throw errors", () => {
+      expect(() => math.max([])).toThrow("array length can't be 0.");
+      //@ts-ignore
+      expect(() => math.max(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
 
   describe('Normalize', () => {
     it('should calculate the normalization correctly for a integer vector', () => {
@@ -174,6 +325,23 @@ describe('math', () => {
     });
 
   })
+
+  describe('nthroot', () => {
+    it('should calculate nthRoot of a number', () => {
+      expect(math.nthRoot(2, 2)).toBeCloseTo(Math.SQRT2)
+    });
+
+    it('should calculate nthRoot of a bigint', () => {
+      expect(math.nthRoot(4n, 2)).toEqual(2n)
+    });
+
+    it("Should correctly throw errors", () => {
+      //@ts-ignore
+      expect(() => math.nthRoot(["vector1"])).toThrowError(NumericalError);
+    });
+
+  })
+
 
 
   describe('Abs', () => {
@@ -307,6 +475,7 @@ describe('math', () => {
     it('Should calculate the least common multiple (LCM) of two numbers', () => {
       fc.assert(
         fc.property(fc.integer(), fc.integer(), (a, b) => {
+          if (a === 0 || b === 0) return
           const result: number = math.LCD(a, b);
 
           // Calculate the LCM using the formula: LCM = (a * b) / GCD(a, b)
@@ -415,6 +584,7 @@ describe('math', () => {
 
     // Test for 'sign' function
     it('sign - numbers', () => {
+      math.sign(0)
       fc.assert(
         fc.property(fc.integer({ min: -10, max: 100 }), (n) => {
           return math.sign(n) === Math.sign(n);
@@ -493,5 +663,65 @@ describe('math', () => {
   })
 
 
+  describe('ComplexNumerical', () => {
+    let complexNumerical: ComplexNumerical;
+
+    beforeEach(() => {
+      complexNumerical = new ComplexNumerical();
+    });
+
+    describe('divide', () => {
+      test('should correctly divide two complex numbers', () => {
+        const x = { real: 3, imaginary: 4 };
+        const y = { real: 2, imaginary: 1 };
+        const result = complexNumerical.divide(x, y);
+        expect(result).toEqual({ real: 2, imaginary: 1 });
+      });
+    });
+
+    describe('sqrt', () => {
+      test('should correctly calculate the square root of a complex number', () => {
+        const x = { real: 3, imaginary: 4 };
+        const result = complexNumerical.sqrt(x);
+        expect(result).toEqual({ real: 2, imaginary: 1 });
+      });
+    });
+
+    describe('fromIntegral', () => {
+      test('should correctly convert a number to a complex number', () => {
+        const n = 5;
+        const result = complexNumerical.fromIntegral(n);
+        expect(result).toEqual({ real: 5, imaginary: 0 });
+      });
+    });
+
+    describe('toIntegral', () => {
+      test('should correctly convert a complex number to a number', () => {
+        const n = { real: 5, imaginary: 0 };
+        const result = complexNumerical.toIntegral(n);
+        expect(result).toEqual(5);
+      });
+    });
+
+    describe('toString', () => {
+      test('should correctly convert a complex number to a string', () => {
+        const n = { real: 3, imaginary: 4 };
+        const result = complexNumerical.toString(n);
+        expect(result).toEqual('3 + 4i');
+      });
+    });
+
+    describe('signOperator', () => {
+      test('should correctly determine the sign of the real part of a complex number', () => {
+        const x = { real: 3, imaginary: 4 };
+        const result = complexNumerical.signOperator(x);
+        expect(result).toEqual(1);
+      });
+    });
+  });
+
+
 
 })
+
+

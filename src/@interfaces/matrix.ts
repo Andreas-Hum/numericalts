@@ -3,7 +3,7 @@ import { Numerical } from "./numerical"
 import { Matrix } from "../matrix"
 
 
-export interface MatrixInterface<T> {
+export interface MatrixInterface<T,U> {
     /** 
     * The shape of the matrix.
     * @type {string}
@@ -52,9 +52,9 @@ export interface MatrixInterface<T> {
 
     /**
      * The numercal class to use for calculations
-     * @type {Numerical<T>}
+     * @type {Numerical<U>}
      */
-    numerical: Numerical<T>
+    numerical: Numerical<U>
 
     add(B: Matrix<T>): Matrix<T>
     multiply(B: Matrix<T>): Matrix<T>
