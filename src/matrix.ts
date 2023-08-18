@@ -357,7 +357,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
 
         if (this.isSquare) {
-            if (Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.rows - 1}, min(k) =  ${1 - this.rows}`, -1)
+            if (Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.rows - 1}, min(k) =  ${1 - this.rows}`, 800, { k })
             const min: number = Math.min(this.columns, this.rows);
             const maxK: number = Math.abs(k);
 
@@ -373,7 +373,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             }
         }
         else if (this.isWide) {
-            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, -1)
+            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, 800, { k })
 
             const maxK: number = Math.abs(k);
 
@@ -395,7 +395,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         else if (this.isTall) {
-            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, -1)
+            if (k > 0 && k >= this.columns || k < 0 && Math.abs(k) >= this.rows) throw new MatrixError(`This K will result in out of bounds, max(k) = ${this.columns - 1}, min(k) =  ${1 - this.rows}`, 800, { k })
 
             const maxK: number = Math.abs(k);
 
@@ -652,8 +652,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         if (typeof columnIndex !== "number")
             throw new MatrixError("Invalid argument", 606, { columnIndex });
 
-
-
         if (columnIndex < 0 || columnIndex >= this.columns)
             throw new MatrixError("Column index out of bounds", 800, { columnIndex });
 
@@ -692,9 +690,9 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         for (let col = 0; col < this.columns; col++) {
-            const index1 = row1 * this.columns + col;
-            const index2 = row2 * this.columns + col;
-            const temp = this.mElements[index1];
+            const index1: number = row1 * this.columns + col;
+            const index2: number = row2 * this.columns + col;
+            const temp: T = this.mElements[index1];
             this.mElements[index1] = this.mElements[index2];
             this.mElements[index2] = temp;
         }
@@ -729,9 +727,9 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         for (let row = 0; row < this.rows; row++) {
-            const index1 = row * this.columns + col1;
-            const index2 = row * this.columns + col2;
-            const temp = this.mElements[index1];
+            const index1: number = row * this.columns + col1;
+            const index2: number = row * this.columns + col2;
+            const temp: T = this.mElements[index1];
             this.mElements[index1] = this.mElements[index2];
             this.mElements[index2] = temp;
         }
@@ -742,7 +740,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
     /**
     * 
-    * Sets the submatrix of a given matrix 
+    * Sets the submatrix of a given matrix
     * @public
     * @param {number} startRow - The starting row index of the submatrix.
     * @param {number} startCol - The starting column index of the submatrix.
@@ -861,7 +859,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "-3  1"
      */
     public adjugate(): Matrix<T> {
-        if (!this.isSquare) throw new MatrixError("adjugate is not defined for non-square matrix", -1);
+        if (!this.isSquare) throw new MatrixError("adjugate is not defined for non-square matrix", 817, { isSquare: this.isSquare });
         return this.cofactorMatrix().transpose()
     }
 
@@ -879,20 +877,20 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     public cond(): number {
         // Ensure the matrix is square
         if (!this.isSquare) {
-            throw new MatrixError("Matrix must be square to compute its condition number.", -1);
+            throw new MatrixError("Matrix must be square to compute its condition number.", 817, { isSquare: this.isSquare });
         }
 
         // Compute the norm of the matrix
-        const normA = this.numerical.fromIntegral(this.norm());
+        const normA: T = this.numerical.fromIntegral(this.norm());
 
         // Compute the inverse of the matrix
-        const inverseA = this.invertSquare();
+        const inverseA: Matrix<T> = this.invertSquare();
 
         // Compute the norm of the inverse matrix
-        const normInverseA = this.numerical.fromIntegral(inverseA.norm());
+        const normInverseA: T = this.numerical.fromIntegral(inverseA.norm());
 
         // Compute the condition number
-        const conditionNumber = this.numerical.multiply(normA, normInverseA);
+        const conditionNumber: T = this.numerical.multiply(normA, normInverseA);
 
         return this.numerical.toIntegral(conditionNumber);
     }
@@ -912,7 +910,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     */
     public cofactor(row: number, column: number): T {
         if (typeof row !== "number" || typeof column !== "number") throw new MatrixError("Invalid argument", 606, { row, column });
-        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", 817, { isSquare: this.isSquare });
         if (row > this.rows || column > this.columns) throw new MatrixError("Index out of bounds", 800, { row, column });
 
         const minorMatrix: Matrix<T> = this.removeRow(row).removeColumn(column)
@@ -937,7 +935,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      * 
      */
     public cofactorMatrix(): Matrix<T> {
-        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", -1);
+        if (!this.isSquare) throw new MatrixError("Cofactor is not defined for non-square matrix", 817, { isSquare: this.isSquare });
         const cofactorMatrix: Matrix<T> = Matrix.zeros(this.rows, this.columns, this.numerical)
 
         for (let i = 0; i < this.rows; i++) {
@@ -969,7 +967,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     public det(): number {
 
         if (!this.isSquare) {
-            throw new MatrixError("Matrix must be square to compute its determinant.", -1);
+            throw new MatrixError("Matrix must be square to compute its determinant.", 811, { isSquare: this.isSquare });
         }
 
         //Base case
@@ -985,7 +983,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
             let { L, U, P, permutationCount } = this.LUDecomposition();
             const det: T = math.prod(U.diag(), this.numerical);
-
 
             let numb: number = this.numerical.toIntegral(det);
             if (math.abs(numb) < Constants.DELTA) return 0
@@ -1024,11 +1021,11 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      */
     public fourier(option: { method: "dft" | "fft", sequence: "row" | "column" } = { method: "fft", sequence: "row" }): Matrix<ComplexNumber> {
         if (this.dataType !== "number") {
-            throw new MatrixError("At this moment fourier is only defined for number Matrices", -1);
+            throw new MatrixError("At this moment fourier is only defined for number Matrices", 807, { dataType: this.dataType });
         }
 
         if (option.method === "fft" && !math.isPowerOfTwo(this.size / this[`${option.sequence}s`])) {
-            throw new MatrixError("FFT expects the input sequences to be a power of two", -1);
+            throw new MatrixError("FFT expects the input sequences to be a power of two", 818, { isPowerOfTwo: math.isPowerOfTwo(this.size / this[`${option.sequence}s`]) });
         }
 
         const sequenceArray: T[][] = option.sequence === "row" ? this.toArray() : this.transpose().toArray();
@@ -1237,7 +1234,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      */
     public pNorm(p: number): number {
         if (p < 1) {
-            throw new MatrixError("Invalid argument: p should be a positive real number greater than or equal to 1.", -1);
+            throw new MatrixError("Invalid argument: p should be a positive real number greater than or equal to 1.", 606, { p });
         }
         const sum: T = this.abs().map((val: T) => math.pow(val, p, this.numerical)).sum()
         return this.numerical.toIntegral(math.pow(sum, 1 / p, this.numerical))
@@ -1278,7 +1275,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             // If the exponent is negative, calculate the inverse of the matrix
 
             if (!Matrix.isInvertible(this)) {
-                throw new MatrixError("Matrix is not invertible.", -1);
+                throw new MatrixError("Matrix is not invertible.", 819);
             }
 
             const inverseMatrix: Matrix<T> = this.invertSquare();
@@ -1293,11 +1290,11 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
         if (exp % 2 === 0) {
             // If the exponent is even, recursively calculate the square root of the matrix
-            const sqrtMatrix = this.pow(exp / 2);
+            const sqrtMatrix: Matrix<T> = this.pow(exp / 2);
             return sqrtMatrix.multiply(sqrtMatrix);
         } else {
             // If the exponent is odd, recursively calculate the square root of the matrix and multiply it with the matrix itself
-            const sqrtMatrix = this.pow((exp - 1) / 2);
+            const sqrtMatrix: Matrix<T> = this.pow((exp - 1) / 2);
             return this.multiply(sqrtMatrix.multiply(sqrtMatrix));
         }
     }
@@ -1409,39 +1406,39 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         // Pad matrices to the nearest power of two
-        const A = Matrix.padMatrixToPowerOfTwo(this as Matrix<T>);
-        const C = Matrix.padMatrixToPowerOfTwo(B);
+        const A: Matrix<T> = Matrix.padMatrixToPowerOfTwo(this as Matrix<T>);
+        const C: Matrix<T> = Matrix.padMatrixToPowerOfTwo(B);
 
         const n: number = A.rows;
         const halfN: number = Math.floor(n / 2);
 
         // Create submatrices for A and B
-        const A11 = A.getSubMatrix(0, halfN, 0, halfN);
-        const A12 = A.getSubMatrix(0, halfN, halfN, n);
-        const A21 = A.getSubMatrix(halfN, n, 0, halfN);
-        const A22 = A.getSubMatrix(halfN, n, halfN, n);
-        const B11 = C.getSubMatrix(0, halfN, 0, halfN);
-        const B12 = C.getSubMatrix(0, halfN, halfN, n);
-        const B21 = C.getSubMatrix(halfN, n, 0, halfN);
-        const B22 = C.getSubMatrix(halfN, n, halfN, n);
+        const A11: Matrix<T> = A.getSubMatrix(0, halfN, 0, halfN);
+        const A12: Matrix<T> = A.getSubMatrix(0, halfN, halfN, n);
+        const A21: Matrix<T> = A.getSubMatrix(halfN, n, 0, halfN);
+        const A22: Matrix<T> = A.getSubMatrix(halfN, n, halfN, n);
+        const B11: Matrix<T> = C.getSubMatrix(0, halfN, 0, halfN);
+        const B12: Matrix<T> = C.getSubMatrix(0, halfN, halfN, n);
+        const B21: Matrix<T> = C.getSubMatrix(halfN, n, 0, halfN);
+        const B22: Matrix<T> = C.getSubMatrix(halfN, n, halfN, n);
 
         // Compute intermediate matrices
-        const P1 = A11.strassenMultiply(B12.subtract(B22));
-        const P2 = A11.add(A12).strassenMultiply(B22);
-        const P3 = A21.add(A22).strassenMultiply(B11);
-        const P4 = A22.strassenMultiply(B21.subtract(B11));
-        const P5 = A11.add(A22).strassenMultiply(B11.add(B22));
-        const P6 = A12.subtract(A22).strassenMultiply(B21.add(B22));
-        const P7 = A11.subtract(A21).strassenMultiply(B11.add(B12));
+        const P1: Matrix<T> = A11.strassenMultiply(B12.subtract(B22));
+        const P2: Matrix<T> = A11.add(A12).strassenMultiply(B22);
+        const P3: Matrix<T> = A21.add(A22).strassenMultiply(B11);
+        const P4: Matrix<T> = A22.strassenMultiply(B21.subtract(B11));
+        const P5: Matrix<T> = A11.add(A22).strassenMultiply(B11.add(B22));
+        const P6: Matrix<T> = A12.subtract(A22).strassenMultiply(B21.add(B22));
+        const P7: Matrix<T> = A11.subtract(A21).strassenMultiply(B11.add(B12));
 
         // Compute submatrices of the result
-        const C11 = P5.add(P4).subtract(P2).add(P6);
-        const C12 = P1.add(P2);
-        const C21 = P3.add(P4);
-        const C22 = P5.add(P1).subtract(P3).subtract(P7);
+        const C11: Matrix<T> = P5.add(P4).subtract(P2).add(P6);
+        const C12: Matrix<T> = P1.add(P2);
+        const C21: Matrix<T> = P3.add(P4);
+        const C22: Matrix<T> = P5.add(P1).subtract(P3).subtract(P7);
 
         // Create the result matrix
-        const result = new Matrix(new Array((n) * (n)), { rows: n, columns: n, numerical: this.numerical });
+        const result: Matrix<T> = new Matrix(new Array((n) * (n)), { rows: n, columns: n, numerical: this.numerical });
         result.setSubMatrix(0, halfN - 1, 0, halfN - 1, C11);
         result.setSubMatrix(0, halfN - 1, halfN, n - 1, C12);
         result.setSubMatrix(halfN, n - 1, 0, halfN - 1, C21);
@@ -1502,7 +1499,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      * // Output: 15
      */
     public trace(): T {
-        if (!this.isSquare) throw new MatrixError("Trace is not defined for non-square matrix", -1);
+        if (!this.isSquare) throw new MatrixError("Trace is not defined for non-square matrix", 817, { isSquar: this.isSquare });
         const diag: T[] = this.diag();
         const sum: T = diag.reduce((acc: T, cur: T) => this.numerical.add(acc, cur), this.numerical.zeroValue);
         return sum;
@@ -1823,7 +1820,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      */
     public LUDecomposition(): { L: Matrix<T>, U: Matrix<T>, P: Matrix<T>, permutationCount: number } {
         if (!this.isSquare) {
-            throw new MatrixError("LU decomposition only supports square matrices.", -1);
+            throw new MatrixError("LU decomposition only supports square matrices.", 817, { isSquare: this.isSquare });
         }
 
         const n = this.rows;
@@ -1833,8 +1830,8 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         let permutationCount = 0; // Initialize the row exchange count
 
         for (let i = 0; i < n; i++) {
-            let max = this.numerical.zeroValue;
-            let kmax = 0;
+            let max: number = this.numerical.zeroValue;
+            let kmax: number = 0;
             for (let k = i; k < n; k++) {
                 if (math.abs(U.getElement(k, i), this.numerical) > max) {
                     max = math.abs(U.getElement(k, i), this.numerical);
@@ -1842,7 +1839,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                 }
             }
             if (max === this.numerical.zeroValue) {
-                throw new MatrixError("Matrix is singular. LU decomposition cannot be performed.", -1);
+                throw new MatrixError("Matrix is singular. LU decomposition cannot be performed.", 820);
             }
             // For each row swapping, increment permutation count
             if (i !== kmax) {
@@ -1853,7 +1850,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             L.swapRows(i, kmax);
 
             for (let j = i + 1; j < n; j++) {
-                const value = this.numerical.divide(U.getElement(j, i), U.getElement(i, i));
+                const value: T = this.numerical.divide(U.getElement(j, i), U.getElement(i, i));
                 L.setElement(j, i, value);
                 for (let k = i; k < n; k++) {
                     const newValue = this.numerical.subtract(U.getElement(j, k), this.numerical.multiply(L.getElement(j, i), U.getElement(i, k)));
@@ -2280,7 +2277,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         for (let i = 0; i < this.rows; i++) {
             const row: T[] = [];
             for (let j = 0; j < this.columns; j++) {
-                const value = this.getElement(i, j);
+                const value: T = this.getElement(i, j);
                 row.push(value);
             }
             array.push(row);

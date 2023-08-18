@@ -1,6 +1,7 @@
-import { Numerical } from './@interfaces/numerical';
-import { math } from "./math"
+import { math } from "../math"
 
+
+//? work in progress
 
 export class Fraction {
 

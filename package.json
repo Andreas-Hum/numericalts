@@ -20,7 +20,18 @@
     "vector",
     "linear algebra",
     "linear equations",
-    "typeScript"
+    "typeScript",
+    "FFT",
+    "DFT",
+    "discrete fourier transform",
+    "fast fourier transform",
+    "fourier",
+    "fourier transform",
+    "fraction", 
+    "complex number",
+    "signal processing",
+    "generic type"
+
   ],
   "dependencies": {
     "ansi-escapes": "^4.3.2",

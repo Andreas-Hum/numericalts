@@ -253,8 +253,8 @@ export namespace math {
                 throw new NumericalError("The vector is either a number array nor a bigint array and no appropriate Numeric implementation was provided.", 901);
             }
         }
-        let squaredValues = vector.map((value: T) => numerical.multiply(value, value));
-        let sumOfSquares = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
+        let squaredValues: T[] = vector.map((value: T) => numerical.multiply(value, value));
+        let sumOfSquares: T = squaredValues.reduce((acc: T, value: T) => numerical.add(acc, value), numerical.zeroValue);
         if (sumOfSquares === numerical.zeroValue) {
             throw new Error("Can't normalize a zero vector")
         }
@@ -710,7 +710,7 @@ export namespace math {
      *    toFixedNumber(2.71828, 3, 2); // Returns 2.75
      */
     export function toFixedNumber(num: number, digits: number, base: number = 10): number {
-        const pow = Math.pow(base, digits);
+        const pow: number = Math.pow(base, digits);
         return Math.round(num * pow) / pow;
     }
 
@@ -862,7 +862,7 @@ export namespace math {
      *    nextPowerOfTwo(15n);   // Returns 16n
      */
     export function nextPowerOfTwo(n: number | bigint): number | bigint {
-        let count = 0;
+        let count: number = 0;
 
         if (typeof n === 'bigint') {
             if (n > 0n && (n & (n - 1n)) === 0n) {
@@ -976,17 +976,17 @@ export namespace math {
      *   ]
      */
     export function dft(sequence: number[]): ComplexNumber[] {
-        const N = sequence.length;
+        const N: number = sequence.length;
         const dftResult: ComplexNumber[] = [];
 
         for (let k = 0; k < N; k++) {
-            let real = 0;
-            let imaginary = 0;
+            let real: number = 0;
+            let imaginary: number = 0;
 
             for (let n = 0; n < N; n++) {
-                const angle = (2 * Math.PI * k * n) / N;
-                const cos = Math.cos(angle);
-                const sin = Math.sin(angle);
+                const angle: number = (2 * Math.PI * k * n) / N;
+                const cos: number = Math.cos(angle);
+                const sin: number = Math.sin(angle);
 
                 real += sequence[n] * cos;
                 imaginary -= sequence[n] * sin;
@@ -1029,21 +1029,21 @@ export namespace math {
             throw new Error('Size of input must be a power of 2')
         }
         // Split the sequence into even and odd indices
-        const even = sequence.filter((_, index) => index % 2 === 0);
-        const odd = sequence.filter((_, index) => index % 2 !== 0);
+        const even: number[] = sequence.filter((_, index) => index % 2 === 0);
+        const odd: number[] = sequence.filter((_, index) => index % 2 !== 0);
 
         // Recursively calculate the FFT for the even and odd sequences
-        const evenCoefficients = fft(even);
-        const oddCoefficients = fft(odd);
+        const evenCoefficients: ComplexNumber[] = fft(even);
+        const oddCoefficients: ComplexNumber[] = fft(odd);
 
         // Combine the even and odd coefficients using the butterfly operation
         const fftResult: ComplexNumber[] = [];
         for (let k = 0; k < N / 2; k++) {
-            const angle = (2 * Math.PI * k) / N;
-            const twiddle = { real: Math.cos(angle), imaginary: -Math.sin(angle) };
+            const angle: number = (2 * Math.PI * k) / N;
+            const twiddle: ComplexNumber = { real: Math.cos(angle), imaginary: -Math.sin(angle) };
 
-            const evenTerm = numerical.multiply(evenCoefficients[k], twiddle);
-            const oddTerm = numerical.multiply(oddCoefficients[k], twiddle);
+            const evenTerm: ComplexNumber = numerical.multiply(evenCoefficients[k], twiddle);
+            const oddTerm: ComplexNumber = numerical.multiply(oddCoefficients[k], twiddle);
 
             fftResult[k] = numerical.add(evenTerm, oddTerm)
             fftResult[k + N / 2] = numerical.subtract(evenTerm, oddTerm)
