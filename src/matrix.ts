@@ -24,7 +24,7 @@ import _ from 'lodash';
  * The `Matrix` class represents a mathematical matrix with generic type `T`.
  * It implements the `MatrixInterface<T, any>` interface.
  *
- * @typeParam T - The type of elements contained in the matrix.
+ * @typeParam T  - The type of elements contained in the matrix.
  * @typeParam any - The type of of the Numerical implementation
  * 
  * @remarks
@@ -432,7 +432,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      * 
      * @example
      * const matrix: Matrix<number> = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-     * const row: Number[] = matrix.getRow(2);
+     * const row: number[] = matrix.getRow(2);
      * console.log(row);
      * // Output: [7, 8, 9]
      */
@@ -548,7 +548,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     /**
      * Removes a column from the matrix and returns a new matrix with the column removed.
      *
-     * @param {number} rowNum - The index of the column to remove.
+     * @param {number} columnNum - The index of the column to remove.
      * @returns {Matrix<T>} A new matrix with the specified column removed.
      *
      * @throws {MatrixError} If the columnNum argument is not a number.
