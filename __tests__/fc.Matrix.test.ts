@@ -710,7 +710,8 @@ describe("Matrix", () => {
         it('Should correctly calculate the pnorm of a matrix', () => {
             const t = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
             expect(t.pNorm(1)).toEqual(45)
-            expect(t.pNorm(2)).toBeCloseTo(16.84810335261421, 1)
+            expect(t.pNorm(2)).toBeCloseTo(16.881943016134134, 1)
+            expect(() => t.pNorm(-1)).toThrow()
 
         })
 
@@ -1736,7 +1737,7 @@ describe("Matrix", () => {
                 expect(Matrix.isIdentity(Matrix.identity(4))).toBeTruthy()
             })
 
-            it('A non symmetric matrix', () => {
+            it('A non identity matrix', () => {
                 const nonDiag = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
                 expect(Matrix.isIdentity(nonDiag)).toBeFalsy()
@@ -1746,7 +1747,13 @@ describe("Matrix", () => {
 
         })
 
+        describe('Is invertable', () => {
+            it('A identity matrix', () => {
+                expect(Matrix.isInvertable(new Matrix([[1, 1], [1, 1]]))).toBeFalsy()
+                expect(Matrix.isInvertable(Matrix.identity(3))).toBeTruthy()
+            })
 
+        })
 
 
 
