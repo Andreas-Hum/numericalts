@@ -27,11 +27,13 @@
     "fast fourier transform",
     "fourier",
     "fourier transform",
-    "fraction", 
+    "fraction",
     "complex number",
     "signal processing",
-    "generic type"
-
+    "generic type",
+    "bignumber",
+    "number",
+    "bigint"
   ],
   "dependencies": {
     "ansi-escapes": "^4.3.2",
