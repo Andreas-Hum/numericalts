@@ -209,7 +209,6 @@
     "tmpl": "^1.0.5",
     "to-fast-properties": "^2.0.0",
     "to-regex-range": "^5.0.1",
-    "ts-node": "^10.9.1",
     "type-detect": "^4.0.8",
     "type-fest": "^0.21.3",
     "update-browserslist-db": "^1.0.11",
