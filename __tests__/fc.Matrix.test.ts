@@ -758,6 +758,10 @@ describe("Matrix", () => {
                     }
                 )
             );
+
+            const t = new Matrix([[4, -6], [1, 5]])
+            t.pow(-1)
+            expect(() => new Matrix([[1, 1], [1, 1]]).pow(-1)).toThrow()
         });
 
         it('should compute the determinant of a square matrix', () => {
@@ -1749,8 +1753,8 @@ describe("Matrix", () => {
 
         describe('Is invertable', () => {
             it('A identity matrix', () => {
-                expect(Matrix.isInvertable(new Matrix([[1, 1], [1, 1]]))).toBeFalsy()
-                expect(Matrix.isInvertable(Matrix.identity(3))).toBeTruthy()
+                expect(Matrix.isInvertible(new Matrix([[1, 1], [1, 1]]))).toBeFalsy()
+                expect(Matrix.isInvertible(Matrix.identity(3))).toBeTruthy()
             })
 
         })
