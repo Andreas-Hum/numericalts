@@ -1022,6 +1022,53 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     }
 
 
+
+    /**
+     * Calculates the eigenvalues and eigenvectors of a square matrix.
+     * @param {number} numIterations The number of iterations to perform for the eigenvalue calculation. Default is 1000
+     * @returns { eigenvalues: T[]; eigenvectors: Matrix<T>[];} An object containing the eigenvalues and eigenvectors of the matrix.
+     * @throws {MatrixError} If the matrix is not square.
+     *
+     * @example
+     * const matrix: Matrix<number> = new Matrix([[4,-1],[-1,3]]);
+     * const result = matrix.eigen();
+     * 
+     * console.log(result.eigenvalues);
+     * // Output:
+     * "[ 4.618033988749896, 2.3819660112501038 ]"
+     *
+     * result.eigenvectors.map(e => console.log(e.toArray()))
+     * // Output:
+     * "[ [ 0.8506508083520401 ], [ -0.525731112119133 ] ]"
+     * "[ [ 0.5257311121191327 ], [ 0.8506508083520398 ] ]"
+     */
+    public eigen(numIterations: number = 1000): {
+        eigenvalues: T[];
+        eigenvectors: Matrix<T>[];
+    } {
+        if (!this.isSquare) {
+            throw new MatrixError("Eigenvalues and vectors are only defined for square matrices.", 817, { isSquare: this.isSquare });
+        }
+
+        let A: Matrix<T> = Matrix.clone(this);
+        let QProduct: Matrix<T> = Matrix.identity(A.rows);
+        const eigenvectors: Matrix<T>[] = []
+
+        for (let i = 0; i < numIterations; i++) {
+            const { Q, R }: { Q: Matrix<T>, R: Matrix<T> } = A.QRDecomposition();
+            A = R.multiply(Q);
+            QProduct = QProduct.multiply(Q);
+        }
+
+        for (let i = 0; i < QProduct.columns; i++) {
+            eigenvectors.push(new Matrix<T>(QProduct.getColumn(i), { rows: QProduct.columns, columns: 1, numerical: this.numerical }))
+        }
+
+        return { eigenvalues: A.diag(), eigenvectors };
+    }
+
+
+
     /**
      * Calculates the Fourier transformation of a matrix.
      *
@@ -1959,6 +2006,8 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         Matrix.roundMatrixToZero(R)
         return { Q: Q, R: R };
     }
+
+
 
 
 

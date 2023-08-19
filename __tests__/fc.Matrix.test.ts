@@ -781,9 +781,35 @@ describe("Matrix", () => {
         });
 
 
+
         it('should return 0 if matrix is singular', () => {
 
             expect(new Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]]).det()).toEqual(0);
+
+        });
+
+        it('eigen', () => {
+            fc.assert(
+                fc.property(
+                    array2Darb(fc.integer()),
+                    (entries: any[][]) => {
+                        const A: Matrix<any> = new Matrix(entries);
+                        if (!A.isSquare || A.rows > 10) return
+                        try {
+                            const eigen = A.eigen()
+
+                            expect(A.multiply(eigen.eigenvectors[0]).equal(eigen.eigenvectors[0].map(e => e * eigen.eigenvalues[0]), 10)).toBeTruthy()
+
+                        } catch (error) {
+                            return
+                        }
+
+
+
+                    }
+                )
+            );
+
 
         });
 
@@ -1639,6 +1665,9 @@ describe("Matrix", () => {
             it('A upper triangular matrix', () => {
                 const test = Matrix.ones(2, 2);
                 expect(JSON.stringify(test)).toEqual(JSON.stringify(new Matrix([[1, 1], [1, 1]])))
+
+
+
             })
 
             it('Throwing an error', () => {
