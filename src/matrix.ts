@@ -20,6 +20,7 @@ import { ComplexNumber, } from "./complex";
 import _ from 'lodash';
 
 
+
 /**
  * The `Matrix` class represents a mathematical matrix with generic type `T`.
  * It implements the `MatrixInterface<T, any>` interface.
@@ -137,6 +138,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const columns: number | undefined = options!.columns;
 
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
+                console.log(rows, columns)
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
 
@@ -516,6 +518,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                 submatrixElements[index] = this.mElements[originalIndex];
             }
         }
+
         return new Matrix(submatrixElements, { rows: numRows, columns: numCols, numerical: this.numerical });
     }
 
@@ -886,18 +889,18 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         // Compute the norm of the matrix
-        const normA: T = this.numerical.fromIntegral(this.norm());
+        const normA: number = this.norm();
 
         // Compute the inverse of the matrix
         const inverseA: Matrix<T> = this.invertSquare();
 
         // Compute the norm of the inverse matrix
-        const normInverseA: T = this.numerical.fromIntegral(inverseA.norm());
+        const normInverseA: number = inverseA.norm();
 
         // Compute the condition number
-        const conditionNumber: T = this.numerical.multiply(normA, normInverseA);
+        const conditionNumber: number = normA * normInverseA;
 
-        return this.numerical.toIntegral(conditionNumber);
+        return conditionNumber;
     }
 
     /**
@@ -945,10 +948,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.rows; j++) {
-                const minorMatrix: Matrix<T> = this.removeRow(i).removeColumn(j)
-                const det: number = minorMatrix.det()
-                const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, i + j))
-                cofactorMatrix.setElement(i, j, cofactor)
+                cofactorMatrix.setElement(i, j, this.cofactor(i, j))
             }
         }
 
@@ -1833,7 +1833,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     }
 
 
-
     /**
      * Performs LUP decomposition on the matrix with partial pivoting.
      * This method does not modify the original matrix.
@@ -1946,34 +1945,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         Matrix.roundMatrixToZero(R)
         return { Q: Q, R: R };
     }
-
-
-
-    // public choleskyDecomposition(): Matrix<T> {
-    //     if (!this.isSquare) {
-    //         throw new Error("Cholesky decomposition can only be applied to square matrices.");
-    //     }
-
-    //     const n = this.rows;
-    //     const L = Matrix.zeros<T>(n, n, this.numerical);
-
-    //     for (let i = 0; i < n; i++) {
-    //         for (let j = 0; j <= i; j++) {
-    //             let sum = this.numerical.zeroValue;
-    //             for (let k = 0; k < j; k++) {
-    //                 sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
-    //             }
-
-    //             if (i === j) {
-    //                 L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
-    //             } else {
-    //                 L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
-    //             }
-    //         }
-    //     }
-
-    //     return L;
-    // }
 
 
 
@@ -2973,6 +2944,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
 
 
-
 }
+
 
