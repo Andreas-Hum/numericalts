@@ -3,7 +3,7 @@ import { Numerical } from "./numerical"
 import { Matrix } from "../matrix"
 
 
-export interface MatrixInterface<T,U> {
+export interface MatrixInterface<T, U> {
     /** 
     * The shape of the matrix.
     * @type {string}

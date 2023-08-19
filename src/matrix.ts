@@ -20,6 +20,7 @@ import { ComplexNumber, } from "./complex";
 import _ from 'lodash';
 
 
+
 /**
  * The `Matrix` class represents a mathematical matrix with generic type `T`.
  * It implements the `MatrixInterface<T, any>` interface.
@@ -137,6 +138,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const columns: number | undefined = options!.columns;
 
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
+                console.log(rows, columns)
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
 
@@ -516,6 +518,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                 submatrixElements[index] = this.mElements[originalIndex];
             }
         }
+
         return new Matrix(submatrixElements, { rows: numRows, columns: numCols, numerical: this.numerical });
     }
 
@@ -538,11 +541,12 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "5 6"
      */
     public removeRow(rowNum: number): Matrix<T> {
-        if (typeof rowNum !== "number") throw new MatrixError("Invalid arugment", 606, { rowNum })
-        if (rowNum > this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
-        const arr: T[][] = _.cloneDeep(this.toArray())
-        arr.splice(rowNum, 1)
-        return new Matrix<T>(arr, { numerical: this.numerical })
+        if (typeof rowNum !== "number") throw new MatrixError("Invalid argument", 606, { rowNum });
+        if (rowNum >= this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
+
+        const arr: T[][] = this.toArray();
+        arr.splice(rowNum, 1);
+        return new Matrix<T>(arr, { numerical: this.numerical });
     }
 
     /**
@@ -564,10 +568,14 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "7 9"
      */
     public removeColumn(columnNum: number): Matrix<T> {
-        if (typeof columnNum !== "number") throw new MatrixError("Invalid arugment", 606, { columnNum })
-        if (columnNum > this.rows) throw new MatrixError("Index out of bounds", 800, { columnNum });
+        if (typeof columnNum !== "number") throw new MatrixError("Invalid argument", 606, { columnNum });
+        if (columnNum >= this.columns) throw new MatrixError("Index out of bounds", 800, { columnNum });
 
-        return this.transpose().removeRow(columnNum).transpose()
+        const arr: T[][] = this.toArray();
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].splice(columnNum, 1);
+        }
+        return new Matrix<T>(arr, { numerical: this.numerical });
     }
 
 
@@ -881,18 +889,18 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         }
 
         // Compute the norm of the matrix
-        const normA: T = this.numerical.fromIntegral(this.norm());
+        const normA: number = this.norm();
 
         // Compute the inverse of the matrix
         const inverseA: Matrix<T> = this.invertSquare();
 
         // Compute the norm of the inverse matrix
-        const normInverseA: T = this.numerical.fromIntegral(inverseA.norm());
+        const normInverseA: number = inverseA.norm();
 
         // Compute the condition number
-        const conditionNumber: T = this.numerical.multiply(normA, normInverseA);
+        const conditionNumber: number = normA * normInverseA;
 
-        return this.numerical.toIntegral(conditionNumber);
+        return conditionNumber;
     }
 
     /**
@@ -940,10 +948,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.rows; j++) {
-                const minorMatrix: Matrix<T> = this.removeRow(i).removeColumn(j)
-                const det: number = minorMatrix.det()
-                const cofactor: T = this.numerical.fromIntegral(det * Math.pow(-1, i + j))
-                cofactorMatrix.setElement(i, j, cofactor)
+                cofactorMatrix.setElement(i, j, this.cofactor(i, j))
             }
         }
 
@@ -1125,33 +1130,72 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         const rows: number = this.rows;
         const columns: number = this.columns;
         const matrixColumns: number = B.columns;
-        const multipliersA: T[] = _.cloneDeep(this.mElements);
-        const multipliersB: T[] = B.transpose().mElements;
 
-        const result: T[] = new Array<T>(rows * matrixColumns);
 
-        const unrollingFactor: number = Math.min(columns, 16);
 
-        for (let i = 0; i < rows; i++) {
-            const rowOffsetA: number = i * columns;
-            const rowOffsetResult: number = i * matrixColumns;
+        if (this.dataType === "number" || this.dataType === "bigint") {
+            const multipliersA: number[] | bigint[] = this.mElements as number[] | bigint[];
+            const multipliersB: number[] | bigint[] = B.transpose().mElements as number[] | bigint[];
 
-            for (let j = 0; j < matrixColumns; j++) {
-                let sum: T = this.numerical.zeroValue;
-                const colOffsetB: number = j * unrollingFactor;
+            const result: number[] | bigint[] = new Array(rows * matrixColumns);
 
-                for (let k = 0; k < columns; k += unrollingFactor) {
-                    const limit: number = Math.min(k + unrollingFactor, columns);
+            const unrollingFactor: number = Math.min(columns, 16);
 
-                    for (let u = k; u < limit; u++) {
-                        sum = this.numerical.add(sum, this.numerical.multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
+            for (let i = 0; i < rows; i++) {
+                const rowOffsetA: number = i * columns;
+                const rowOffsetResult: number = i * matrixColumns;
+
+                for (let j = 0; j < matrixColumns; j++) {
+                    let sum: number | bigint = 0;
+                    const colOffsetB: number = j * unrollingFactor;
+
+                    for (let k = 0; k < columns; k += unrollingFactor) {
+                        const limit: number = Math.min(k + unrollingFactor, columns);
+
+                        for (let u = k; u < limit; u++) {
+                            //@ts-expect-error
+                            sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
+                        }
                     }
+
+                    result[rowOffsetResult + j] = sum;
                 }
-                result[rowOffsetResult + j] = sum;
             }
+
+            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });
+        } else {
+
+
+            const multipliersA: T[] = this.mElements;
+            const multipliersB: T[] = B.transpose().mElements;
+
+            const result: T[] = new Array<T>(rows * matrixColumns);
+
+            const unrollingFactor: number = Math.min(columns, 16);
+
+            for (let i = 0; i < rows; i++) {
+                const rowOffsetA: number = i * columns;
+                const rowOffsetResult: number = i * matrixColumns;
+
+                for (let j = 0; j < matrixColumns; j++) {
+                    let sum: T = this.numerical.zeroValue;
+                    const colOffsetB: number = j * unrollingFactor;
+
+                    for (let k = 0; k < columns; k += unrollingFactor) {
+                        const limit: number = Math.min(k + unrollingFactor, columns);
+
+                        for (let u = k; u < limit; u++) {
+                            sum = this.numerical.add(sum, this.numerical.multiply(multipliersA[rowOffsetA + u], multipliersB[colOffsetB + u]));
+                        }
+                    }
+                    result[rowOffsetResult + j] = sum;
+                }
+            }
+            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
+
+
         }
 
-        return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
     }
 
     /**
@@ -1789,7 +1833,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     }
 
 
-
     /**
      * Performs LUP decomposition on the matrix with partial pivoting.
      * This method does not modify the original matrix.
@@ -1902,34 +1945,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         Matrix.roundMatrixToZero(R)
         return { Q: Q, R: R };
     }
-
-
-
-    // public choleskyDecomposition(): Matrix<T> {
-    //     if (!this.isSquare) {
-    //         throw new Error("Cholesky decomposition can only be applied to square matrices.");
-    //     }
-
-    //     const n = this.rows;
-    //     const L = Matrix.zeros<T>(n, n, this.numerical);
-
-    //     for (let i = 0; i < n; i++) {
-    //         for (let j = 0; j <= i; j++) {
-    //             let sum = this.numerical.zeroValue;
-    //             for (let k = 0; k < j; k++) {
-    //                 sum = this.numerical.add(sum, this.numerical.multiply(L.getElement(i, k), L.getElement(j, k)));
-    //             }
-
-    //             if (i === j) {
-    //                 L.setElement(i, j, this.numerical.sqrt(this.numerical.subtract(this.getElement(i, i), sum)));
-    //             } else {
-    //                 L.setElement(i, j, this.numerical.divide(this.numerical.subtract(this.getElement(i, j), sum), L.getElement(j, j)));
-    //             }
-    //         }
-    //     }
-
-    //     return L;
-    // }
 
 
 
@@ -2679,7 +2694,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const row: T[] = [];
             for (let j = 0; j <
                 columns; j++) {
-                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 10000));
+                const randomValue: T = numerical.fromIntegral(Math.floor(Math.random() * 10));
                 row.push(randomValue);
             }
             entries.push(row);
@@ -2929,6 +2944,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
 
 
-
 }
+
 
