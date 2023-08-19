@@ -23,3 +23,41 @@
 ## 2023-05-08, version 0.6.1
 
 - Updated readme and fixed two small bugs
+
+## 2023-18-08, version 0.7.0
+
+
+*means the method is static
+- abs
+- adjugate
+- cofactor
+- cofactorMatrix
+- cond (condition number)
+- fourier (a simple implementation with both DFT and FFT as options) ' I plan on improving this in the future
+- infNorm (the infinity norm)
+- isEmpty*
+- isDiagonal*
+- isIdentity
+- isInvertible
+- isSymmetric
+- manhattanNorm (the Manhattan norm)
+- map
+- max
+- min
+- nullify*
+- pNorm
+- rank
+- removeColumn
+- removeRow
+- reshape* (now works with instances of Matrix and 1D arrays)
+- sum
+- trace
+
+- DFT
+- FFT
+- max
+- min
+- nthRoot
+- pow
+- sum
+- Complex numbers
