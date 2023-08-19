@@ -3,7 +3,7 @@ import { Numerical } from '../src/@interfaces/numerical';
 import { fc } from '@fast-check/jest';
 import { math } from '../src';
 import { FractionalNumberClass } from '../src/@numerical.classes';
-import { ComplexNumerical } from '../src/@numerical.classes';
+import { NumericalComplex } from '../src/@numerical.classes';
 
 
 
@@ -663,18 +663,18 @@ describe('math', () => {
   })
 
 
-  describe('ComplexNumerical', () => {
-    let complexNumerical: ComplexNumerical;
+  describe('NumericalComplex', () => {
+    let nc: NumericalComplex;
 
     beforeEach(() => {
-      complexNumerical = new ComplexNumerical();
+      nc = new NumericalComplex();
     });
 
     describe('divide', () => {
       test('should correctly divide two complex numbers', () => {
         const x = { real: 3, imaginary: 4 };
         const y = { real: 2, imaginary: 1 };
-        const result = complexNumerical.divide(x, y);
+        const result = nc.divide(x, y);
         expect(result).toEqual({ real: 2, imaginary: 1 });
       });
     });
@@ -682,7 +682,7 @@ describe('math', () => {
     describe('sqrt', () => {
       test('should correctly calculate the square root of a complex number', () => {
         const x = { real: 3, imaginary: 4 };
-        const result = complexNumerical.sqrt(x);
+        const result = nc.sqrt(x);
         expect(result).toEqual({ real: 2, imaginary: 1 });
       });
     });
@@ -690,7 +690,7 @@ describe('math', () => {
     describe('fromIntegral', () => {
       test('should correctly convert a number to a complex number', () => {
         const n = 5;
-        const result = complexNumerical.fromIntegral(n);
+        const result = nc.fromIntegral(n);
         expect(result).toEqual({ real: 5, imaginary: 0 });
       });
     });
@@ -698,7 +698,7 @@ describe('math', () => {
     describe('toIntegral', () => {
       test('should correctly convert a complex number to a number', () => {
         const n = { real: 5, imaginary: 0 };
-        const result = complexNumerical.toIntegral(n);
+        const result = nc.toIntegral(n);
         expect(result).toEqual(5);
       });
     });
@@ -706,7 +706,7 @@ describe('math', () => {
     describe('toString', () => {
       test('should correctly convert a complex number to a string', () => {
         const n = { real: 3, imaginary: 4 };
-        const result = complexNumerical.toString(n);
+        const result = nc.toString(n);
         expect(result).toEqual('3 + 4i');
       });
     });
@@ -714,7 +714,7 @@ describe('math', () => {
     describe('signOperator', () => {
       test('should correctly determine the sign of the real part of a complex number', () => {
         const x = { real: 3, imaginary: 4 };
-        const result = complexNumerical.signOperator(x);
+        const result = nc.signOperator(x);
         expect(result).toEqual(1);
       });
     });

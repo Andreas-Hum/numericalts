@@ -2,7 +2,7 @@ import { Numerical } from "../@interfaces";
 import { ComplexNumber } from "../complex";
 
 
-export class ComplexNumerical implements Numerical<ComplexNumber> {
+export class NumericalComplex implements Numerical<ComplexNumber> {
 
     zeroValue: ComplexNumber = { real: 0, imaginary: 0 };
     oneValue: ComplexNumber = { real: 1, imaginary: 0 };

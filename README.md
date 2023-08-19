@@ -37,6 +37,26 @@ Install numerical.ts using [npm](https://www.npmts.com/package/numericalts):
 npm install numericalts
 ```
 For a full list of currently implemented methods and types please see [here](https://andreas-hum.github.io/numericalts/)
+
+### Current native Numerical implementations
+- Number
+- Bigint
+- Complex number
+
+These three Numerical interfaces have been implemented meaning you don't have to create them from scratch. Furthermore you can create matrixes without giving the constuctor the Numerical class
+
+```ts
+import { Matrix } from 'numericalts';
+
+const A: Matrix<number> = new Matrix([[1,2],[3,4]])
+const B: Matrix<bigint> = new Matrix([[1n,2n],[3n,4n]])
+const C: Matrix<ComplexNumber> = new Matrix([
+    [{real: 1, imaginary: 1},{real: 2, imaginary: 2}],
+    [{real: 3, imaginary: 3},{real: 4, imaginary: 4}]
+    ])
+
+```
+
 ### Matrix Operations
 ```ts
 
@@ -67,6 +87,8 @@ console.log(R.toArray()); // [[-3.1622776601683795, -4.427188724235731], [0, 0.6
 ```
 
 ### Example of a Custom Numerical Class
+*Notice a complex number Numerical class have since been added*
+
 This section demonstrates how to create a custom class that implements the `Numerical` interface and how to use it with the `Matrix` class.
 ```ts
 // Import The Matrix class and the Numerical interface

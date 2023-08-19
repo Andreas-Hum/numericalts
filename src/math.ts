@@ -3,7 +3,7 @@ import { Constants } from "./constants";
 import { Numerical } from "./@interfaces/numerical";
 import { NumericalError } from "./@error.types";
 
-import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "../src/@numerical.classes";
+import { NumericalNumber, NumericalBigInt, NumericalComplex } from "../src/@numerical.classes";
 
 export namespace math {
 
@@ -1017,7 +1017,7 @@ export namespace math {
      *   ]
      */
     export function fft(sequence: number[]): ComplexNumber[] {
-        const numerical: ComplexNumerical = new ComplexNumerical()
+        const numerical: NumericalComplex = new NumericalComplex()
         const N = sequence.length;
 
         // Base case: if the sequence has only one element, return it as the FFT coefficient

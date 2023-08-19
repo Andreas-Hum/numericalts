@@ -1682,6 +1682,10 @@ describe("Matrix", () => {
 
                 const lowerTriangular = new Matrix([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
                 expect(Matrix.isUpperTriangular(lowerTriangular)).toBeFalsy()
+
+
+
+                const test = new Matrix([[{ real: 2, imaginary: 2 }, { real: 2, imaginary: 2 }], [{ real: 2, imaginary: 2 }, { real: 2, imaginary: 2 }]])
             })
 
             it('Error: A not an instance of Matrix', () => {

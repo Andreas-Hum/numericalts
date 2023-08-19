@@ -13,7 +13,7 @@ import { Constants } from "./constants";
 
 //Numerical interface/classes
 import { Numerical } from "./@interfaces";
-import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "./@numerical.classes";
+import { NumericalNumber, NumericalBigInt, NumericalComplex } from "./@numerical.classes";
 import { ComplexNumber, isComplexNumber, } from "./complex";
 
 //Lodash import
@@ -177,10 +177,14 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
         if (options === undefined || options.numerical === undefined) {
             if (this.dataType === "number") {
-                this.numerical = new NumericalNumber() as unknown as Numerical<T>;
+                this.numerical = new NumericalNumber() as unknown as Numerical<number>;
             } else if (this.dataType === "bigint") {
-                this.numerical = new NumericalBigInt() as unknown as Numerical<T>;
-            } else {
+                this.numerical = new NumericalBigInt() as unknown as Numerical<bigint>;
+            } else if (this.dataType === "ComplexNumber") {
+                this.numerical = new NumericalComplex() as unknown as Numerical<ComplexNumber>;
+
+            }
+            else {
                 throw new NumericalError("Matrix datatype is neither a number nor a bigint and no appropriate Numerical implementation was provided.", 901);
             }
 
@@ -256,6 +260,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                         throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
                     }
                 }
+                typeName = "ComplexNumber"
             } else {
                 typeName = this.getInterfaceName(entries[0])
                 for (let i = 1; i < entries.length; i++) {
@@ -1048,8 +1053,8 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         const fourierArray: ComplexNumber[][] = option.method === "fft" ? sequenceArray.map((val: T[]) => math.fft(val as number[])) : sequenceArray.map((val: T[]) => math.dft(val as number[]));
 
         return option.sequence === "row"
-            ? new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new ComplexNumerical() })
-            : new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new ComplexNumerical() }).transpose();
+            ? new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() })
+            : new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() }).transpose();
     }
 
 
