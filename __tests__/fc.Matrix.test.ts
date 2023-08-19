@@ -1,3 +1,4 @@
+import { ComplexNumber } from './../src/complex';
 import { fc } from '@fast-check/jest';
 import { Matrix, math } from '../src';
 
@@ -793,6 +794,8 @@ describe("Matrix", () => {
 
             expect(() => new Matrix([[1, 2, 2], [3, 4, 2]]).fourier()).toThrow()
             expect(() => new Matrix([[1n, 2n], [3n, 4n]]).fourier()).toThrow()
+            expect(() => new Matrix([[{ real: 1, imaginary: 1 }], [{ real: 1, imaginary: 1, frank: 2 }]])).toThrow()
+
 
         });
 
@@ -880,6 +883,7 @@ describe("Matrix", () => {
     })
 
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     * Solving systems
@@ -936,6 +940,17 @@ describe("Matrix", () => {
                 const expectedResult = [30, 24, 18, 84, 69, 54, 138, 114, 90];
                 expect(JSON.stringify(result)).toEqual(JSON.stringify(new Matrix(expectedResult, { rows: 3, columns: 3 })));
 
+
+
+                function isComplexNumber(obj: any): obj is ComplexNumber {
+                    return (
+                        typeof obj === "object" &&
+                        obj !== null &&
+                        "real" in obj && typeof obj.real === "number" &&
+                        "imaginary" in obj && typeof obj.imaginary === "number" &&
+                        Object.keys(obj).length === 2
+                    );
+                }
 
             });
         });

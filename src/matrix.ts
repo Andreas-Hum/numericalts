@@ -14,7 +14,7 @@ import { Constants } from "./constants";
 //Numerical interface/classes
 import { Numerical } from "./@interfaces";
 import { NumericalNumber, NumericalBigInt, ComplexNumerical } from "./@numerical.classes";
-import { ComplexNumber, } from "./complex";
+import { ComplexNumber, isComplexNumber, } from "./complex";
 
 //Lodash import
 import _ from 'lodash';
@@ -138,7 +138,6 @@ export class Matrix<T> implements MatrixInterface<T, any> {
             const columns: number | undefined = options!.columns;
 
             if (rows === undefined || columns === undefined || typeof (rows) !== "number" || typeof (columns) !== "number" || columns <= 0 || rows <= 0) {
-                console.log(rows, columns)
                 throw new MatrixError("Rows and columns must be defined for 1D array entries, rows and columns must be of type number and not be 0 or negative", 804);
             }
 
@@ -251,20 +250,30 @@ export class Matrix<T> implements MatrixInterface<T, any> {
     private valida1Dentries(entries: T[]): void {
         let typeName: string;
         if (typeof entries[0] === "object") {
-            typeName = this.getInterfaceName(entries[0])
-            for (let i = 0; i < entries.length; i++) {
-                if (this.getInterfaceName(entries[i]) !== typeName) {
-                    throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
+            if (isComplexNumber(entries[0])) {
+                for (let i = 1; i < entries.length; i++) {
+                    if (!isComplexNumber(entries[i])) {
+                        throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
+                    }
+                }
+            } else {
+                typeName = this.getInterfaceName(entries[0])
+                for (let i = 1; i < entries.length; i++) {
+                    if (this.getInterfaceName(entries[i]) !== typeName) {
+                        throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
+                    }
                 }
             }
+
         } else {
             typeName = this.getType(entries[0])
-            for (let i = 0; i < entries.length; i++) {
+            for (let i = 1; i < entries.length; i++) {
                 if (this.getType(entries[i]) !== typeName) {
                     throw new MatrixError("Invalid entries not of the same type", 805, { entry: entries[i] });
                 }
             }
         }
+
 
         this.dataType = typeName;
 
