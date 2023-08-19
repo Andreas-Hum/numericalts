@@ -538,11 +538,12 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "5 6"
      */
     public removeRow(rowNum: number): Matrix<T> {
-        if (typeof rowNum !== "number") throw new MatrixError("Invalid arugment", 606, { rowNum })
-        if (rowNum > this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
-        const arr: T[][] = _.cloneDeep(this.toArray())
-        arr.splice(rowNum, 1)
-        return new Matrix<T>(arr, { numerical: this.numerical })
+        if (typeof rowNum !== "number") throw new MatrixError("Invalid argument", 606, { rowNum });
+        if (rowNum >= this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
+
+        const arr: T[][] = this.toArray();
+        arr.splice(rowNum, 1);
+        return new Matrix<T>(arr, { numerical: this.numerical });
     }
 
     /**
@@ -564,10 +565,14 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "7 9"
      */
     public removeColumn(columnNum: number): Matrix<T> {
-        if (typeof columnNum !== "number") throw new MatrixError("Invalid arugment", 606, { columnNum })
-        if (columnNum > this.rows) throw new MatrixError("Index out of bounds", 800, { columnNum });
+        if (typeof columnNum !== "number") throw new MatrixError("Invalid argument", 606, { columnNum });
+        if (columnNum >= this.columns) throw new MatrixError("Index out of bounds", 800, { columnNum });
 
-        return this.transpose().removeRow(columnNum).transpose()
+        const arr: T[][] = this.toArray();
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].splice(columnNum, 1);
+        }
+        return new Matrix<T>(arr, { numerical: this.numerical });
     }
 
 
@@ -1129,7 +1134,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
 
         if (this.dataType === "number" || this.dataType === "bigint") {
-            const multipliersA: number[] | bigint[] = _.cloneDeep(this.mElements) as number[] | bigint[]
+            const multipliersA: number[] | bigint[] = this.mElements as number[] | bigint[];
             const multipliersB: number[] | bigint[] = B.transpose().mElements as number[] | bigint[];
 
             const result: number[] | bigint[] = new Array(rows * matrixColumns);
@@ -1141,26 +1146,27 @@ export class Matrix<T> implements MatrixInterface<T, any> {
                 const rowOffsetResult: number = i * matrixColumns;
 
                 for (let j = 0; j < matrixColumns; j++) {
-                    let sum: number = 0;
+                    let sum: number | bigint = 0;
                     const colOffsetB: number = j * unrollingFactor;
 
                     for (let k = 0; k < columns; k += unrollingFactor) {
                         const limit: number = Math.min(k + unrollingFactor, columns);
 
                         for (let u = k; u < limit; u++) {
-                            //@ts-ignore
+                            //@ts-expect-error
                             sum += multipliersA[rowOffsetA + u] * multipliersB[colOffsetB + u];
                         }
                     }
+
                     result[rowOffsetResult + j] = sum;
                 }
             }
-            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });;
 
+            return new Matrix(result, { rows, columns: matrixColumns, numerical: this.numerical });
         } else {
 
 
-            const multipliersA: T[] = _.cloneDeep(this.mElements);
+            const multipliersA: T[] = this.mElements;
             const multipliersB: T[] = B.transpose().mElements;
 
             const result: T[] = new Array<T>(rows * matrixColumns);
