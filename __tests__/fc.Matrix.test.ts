@@ -391,6 +391,9 @@ describe("Matrix", () => {
             it('Error invalid arguemnt', () => {
                 //@ts-ignore
                 expect(() => twoByThree.removeRow("1231232131212")).toThrow();
+
+                const matrix = Matrix.random(50, 50);
+
             });
         });
 
@@ -411,7 +414,6 @@ describe("Matrix", () => {
                 expect(() => twoByThree.removeColumn("1231232131212")).toThrow();
             });
         });
-
 
         describe('setRow', () => {
             it('sets new values in the specified row', () => {
@@ -809,6 +811,9 @@ describe("Matrix", () => {
                     }
                 )
             );
+
+
+            expect(() => new Matrix([[1, 2], [3, 4], [1, 2]]).eigen()).toThrow()
 
 
         });

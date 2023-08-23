@@ -257,6 +257,8 @@
   },
   "scripts": {
     "test": "jest --detectOpenHandles --show--seed",
+    "test:Matrix": "jest Matrix --detectOpenHandles --show--seed",
+    "test:Math": "jest Matrix --detectOpenHandles --show--seed",
     "build": "tsc",
     "build:test": "npm run build && npm run test",
     "docs": "npx typedoc --entryPointStrategy expand ./src"
