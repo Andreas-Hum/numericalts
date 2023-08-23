@@ -555,14 +555,22 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "5 6"
      */
     public removeRow(rowNum: number): Matrix<T> {
-        if (typeof rowNum !== "number") throw new MatrixError("Invalid argument", 606, { rowNum });
-        if (rowNum >= this.rows) throw new MatrixError("Index out of bounds", 800, { rowNum });
+        if (typeof rowNum !== "number") {
+            throw new MatrixError("Invalid argument", 606, { rowNum });
+        }
+        if (rowNum >= this.rows) {
+            throw new MatrixError("Index out of bounds", 800, { rowNum });
+        }
 
-        const arr: T[][] = this.toArray();
-        arr.splice(rowNum, 1);
+        const arr: T[][] = [];
+        for (let i = 0; i < this.rows; i++) {
+            if (i !== rowNum) {
+                arr.push(this.mElements.slice(i * this.columns, (i + 1) * this.columns));
+            }
+        }
+
         return new Matrix<T>(arr, { numerical: this.numerical });
     }
-
     /**
      * Removes a column from the matrix and returns a new matrix with the column removed.
      *
@@ -582,16 +590,26 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "7 9"
      */
     public removeColumn(columnNum: number): Matrix<T> {
-        if (typeof columnNum !== "number") throw new MatrixError("Invalid argument", 606, { columnNum });
-        if (columnNum >= this.columns) throw new MatrixError("Index out of bounds", 800, { columnNum });
-
-        const arr: T[][] = this.toArray();
-        for (let i = 0; i < arr.length; i++) {
-            arr[i].splice(columnNum, 1);
+        if (typeof columnNum !== "number") {
+            throw new MatrixError("Invalid argument", 606, { columnNum });
         }
+        if (columnNum >= this.columns) {
+            throw new MatrixError("Index out of bounds", 800, { columnNum });
+        }
+
+        const arr: T[][] = [];
+        const columnToRemove = columnNum;
+        for (let i = 0; i < this.rows; i++) {
+            const row: T[] = [];
+            for (let j = 0; j < this.columns - 1; j++) {
+                const columnIndex = j + (j >= columnToRemove ? 1 : 0);
+                row.push(this.mElements[i * this.columns + columnIndex]);
+            }
+            arr.push(row);
+        }
+
         return new Matrix<T>(arr, { numerical: this.numerical });
     }
-
 
     /**
      * Sets the value of an element in the matrix.
@@ -919,8 +937,9 @@ export class Matrix<T> implements MatrixInterface<T, any> {
 
     /**
     * Computes the cofactor of an element given a row and column
-    *
-    * @returns {Matrix<T>} The cofactor of the element
+    * @param {number} row - The row index of the element
+    * @param {number} column - The column index of the element
+    * @returns {T} The cofactor of the element
     * 
     * @throws {MatrixError} If the matrix is not square.
     *
@@ -941,7 +960,7 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         return cofactor;
     }
 
-    /**
+    /** //:TODO: this is so slow
      * Computes the cofactor matrix.
      * @returns {Matrix<T>} The cofactor matrix
      * @throws {MatrixError} If the matrix is not square.
@@ -1054,8 +1073,9 @@ export class Matrix<T> implements MatrixInterface<T, any> {
         let QProduct: Matrix<T> = Matrix.identity(A.rows);
         const eigenvectors: Matrix<T>[] = []
 
+        const { Q, R }: { Q: Matrix<T>, R: Matrix<T> } = A.QRDecomposition();
+
         for (let i = 0; i < numIterations; i++) {
-            const { Q, R }: { Q: Matrix<T>, R: Matrix<T> } = A.QRDecomposition();
             A = R.multiply(Q);
             QProduct = QProduct.multiply(Q);
         }
@@ -1088,20 +1108,13 @@ export class Matrix<T> implements MatrixInterface<T, any> {
      *  "7 + 0i  -1 + 0i"
      */
     public fourier(option: { method: "dft" | "fft", sequence: "row" | "column" } = { method: "fft", sequence: "row" }): Matrix<ComplexNumber> {
-        if (this.dataType !== "number") {
-            throw new MatrixError("At this moment fourier is only defined for number Matrices", 807, { dataType: this.dataType });
-        }
+        if (this.dataType !== "number") throw new MatrixError("At this moment fourier is only defined for number Matrices", 807, { dataType: this.dataType });
+        if (option.method === "fft" && !math.isPowerOfTwo(this.size / this[`${option.sequence}s`])) throw new MatrixError("FFT expects the input sequences to be a power of two", 818, { isPowerOfTwo: math.isPowerOfTwo(this.size / this[`${option.sequence}s`]) });
 
-        if (option.method === "fft" && !math.isPowerOfTwo(this.size / this[`${option.sequence}s`])) {
-            throw new MatrixError("FFT expects the input sequences to be a power of two", 818, { isPowerOfTwo: math.isPowerOfTwo(this.size / this[`${option.sequence}s`]) });
-        }
+        const sequenceArray = option.sequence === "row" ? this.toArray() : this.transpose().toArray();
+        const fourierArray = option.method === "fft" ? sequenceArray.map((val: T[]) => math.fft(val as number[])) : sequenceArray.map((val: T[]) => math.dft(val as number[]));
 
-        const sequenceArray: T[][] = option.sequence === "row" ? this.toArray() : this.transpose().toArray();
-        const fourierArray: ComplexNumber[][] = option.method === "fft" ? sequenceArray.map((val: T[]) => math.fft(val as number[])) : sequenceArray.map((val: T[]) => math.dft(val as number[]));
-
-        return option.sequence === "row"
-            ? new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() })
-            : new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() }).transpose();
+        return option.sequence === "row" ? new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() }) : new Matrix(fourierArray.flat(), { rows: fourierArray.length, columns: fourierArray[0].length, numerical: new NumericalComplex() }).transpose();
     }
 
 
